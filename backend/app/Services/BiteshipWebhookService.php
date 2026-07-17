@@ -19,7 +19,10 @@ use Illuminate\Support\Facades\DB;
  */
 class BiteshipWebhookService
 {
-    public function __construct(private readonly OrderRepository $orders) {}
+    public function __construct(
+        private readonly OrderRepository $orders,
+        private readonly NotificationService $notifications,
+    ) {}
 
     public function handle(array $payload): void
     {
@@ -45,9 +48,23 @@ class BiteshipWebhookService
             if ($status === 'dikirim' && $order->status === 'diproses_produksi') {
                 $order->update(['status' => 'dikirim']);
                 $this->orders->recordStatusHistory($order, 'diproses_produksi', 'dikirim', 'system');
+                $this->notifications->notify(
+                    $order->user,
+                    'order.shipped',
+                    'Pesanan dikirim',
+                    "Pesanan {$order->order_number} sedang dalam perjalanan.",
+                    $order,
+                );
             } elseif ($status === 'delivered' && $order->status === 'dikirim') {
                 $order->update(['status' => 'menunggu_konfirmasi']);
                 $this->orders->recordStatusHistory($order, 'dikirim', 'menunggu_konfirmasi', 'system');
+                $this->notifications->notify(
+                    $order->user,
+                    'order.delivered',
+                    'Pesanan sampai',
+                    "Pesanan {$order->order_number} telah sampai. Konfirmasi penerimaan sekarang.",
+                    $order,
+                );
             }
         });
     }

@@ -21,6 +21,7 @@ class MidtransWebhookService
         private readonly OrderRepository $orders,
         private readonly InvoiceService $invoices,
         private readonly CommissionService $commissions,
+        private readonly NotificationService $notifications,
     ) {}
 
     public function handle(array $payload): void
@@ -62,6 +63,14 @@ class MidtransWebhookService
             // BR-007: commission generated automatically per paid transaction
             // involving a Creator's design (order_items with a design_id).
             $order->items->each(fn ($item) => $this->commissions->generateForOrderItem($item));
+
+            $this->notifications->notify(
+                $order->user,
+                'order.paid',
+                'Pembayaran berhasil',
+                "Pesanan {$order->order_number} telah dibayar dan menunggu approval Admin.",
+                $order,
+            );
         }
     }
 }

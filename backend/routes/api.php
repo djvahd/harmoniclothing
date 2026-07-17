@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\CreatorDesignController;
 use App\Http\Controllers\Api\CustomizationController;
 use App\Http\Controllers\Api\MarketplaceController;
 use App\Http\Controllers\Api\MidtransWebhookController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\WishlistController;
 use Illuminate\Support\Facades\Route;
@@ -67,6 +68,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/orders/{order}/reorder', [OrderController::class, 'reorder']);
     Route::get('/orders/{order}/invoice', [OrderController::class, 'invoice']); // FR-018
     Route::post('/orders/{order}/confirm-received', [OrderController::class, 'confirmReceived']); // FR-042
+
+    // 5.2_API_List.md §4 — /notifications (FR-029), scope own
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::patch('/notifications/{notification}/read', [NotificationController::class, 'markRead']);
 
     // 5.2_API_List.md §5 — Creator upgrade (FR-041/035)
     Route::post('/account/become-creator', [CreatorController::class, 'becomeCreator']);
