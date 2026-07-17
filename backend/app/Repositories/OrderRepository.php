@@ -4,10 +4,18 @@ namespace App\Repositories;
 
 use App\Models\Order;
 use App\Models\OrderStatusHistory;
+use App\Models\User;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
 
 class OrderRepository
 {
+    /** GET /orders — FR-019, scope own. */
+    public function paginateForUser(User $user, int $perPage): LengthAwarePaginator
+    {
+        return $user->orders()->with('items')->latest()->paginate($perPage);
+    }
+
     public function create(array $attributes): Order
     {
         $order = Order::create([...$attributes, 'order_number' => $this->generateOrderNumber()]);

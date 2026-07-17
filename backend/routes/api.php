@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\CatalogController;
 use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\CustomizationController;
 use App\Http\Controllers\Api\MarketplaceController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\WishlistController;
 use Illuminate\Support\Facades\Route;
 
@@ -54,6 +55,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // 5.2_API_List.md §4 — /checkout (FE-027), /checkout/bulk (FE-052/056)
     Route::post('/checkout', [CheckoutController::class, 'store']);
     Route::post('/checkout/bulk', [CheckoutController::class, 'storeBulk']);
+
+    // 5.2_API_List.md §4 — /orders (FE-028/029/031), scope own
+    Route::get('/orders', [OrderController::class, 'index']);
+    Route::get('/orders/{order}', [OrderController::class, 'show']);
+    Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel']);
+    Route::post('/orders/{order}/reorder', [OrderController::class, 'reorder']);
 });
 
 // 5.2_API_List.md §3 — Product Catalog & Marketplace (public, read-only)
