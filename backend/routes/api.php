@@ -68,6 +68,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/orders/{order}/reorder', [OrderController::class, 'reorder']);
     Route::get('/orders/{order}/invoice', [OrderController::class, 'invoice']); // FR-018
     Route::post('/orders/{order}/confirm-received', [OrderController::class, 'confirmReceived']); // FR-042
+    Route::post('/orders/{order}/reviews', [OrderController::class, 'storeReview']); // FR-027, BR-004
 
     // 5.2_API_List.md §4 — /notifications (FR-029), scope own
     Route::get('/notifications', [NotificationController::class, 'index']);

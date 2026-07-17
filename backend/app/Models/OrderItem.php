@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /** 4.3_Table_Design.md — order_items (baris item per order). */
 #[Fillable([
@@ -40,5 +41,10 @@ class OrderItem extends Model
     public function design(): BelongsTo
     {
         return $this->belongsTo(Design::class);
+    }
+
+    public function review(): HasOne
+    {
+        return $this->hasOne(Review::class);
     }
 }

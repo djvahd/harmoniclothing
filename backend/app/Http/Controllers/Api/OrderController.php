@@ -3,17 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ReviewRequest;
 use App\Http\Resources\CartItemResource;
 use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\OrderResource;
+use App\Http\Resources\ReviewResource;
 use App\Services\OrderService;
+use App\Services\ReviewService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /** 5.2_API_List.md §4 — /orders (FE-028/029/031), scope own. */
 class OrderController extends Controller
 {
-    public function __construct(private readonly OrderService $orders) {}
+    public function __construct(
+        private readonly OrderService $orders,
+        private readonly ReviewService $reviews,
+    ) {}
 
     /** GET /orders */
     public function index(Request $request): JsonResponse
@@ -72,5 +78,14 @@ class OrderController extends Controller
         $order = $this->orders->confirmReceived($order);
 
         return response()->json(['data' => new OrderResource($order)]);
+    }
+
+    /** POST /orders/{order}/reviews — FR-027, BR-004. */
+    public function storeReview(ReviewRequest $request, int $order): JsonResponse
+    {
+        $order = $request->user()->orders()->findOrFail($order);
+        $review = $this->reviews->create($order, $request->user(), $request->validated());
+
+        return response()->json(['data' => new ReviewResource($review)], 201);
     }
 }
