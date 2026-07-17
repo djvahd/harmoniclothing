@@ -5,17 +5,18 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    public function __construct(private readonly AuthService $auth)
-    {
-    }
+    public function __construct(private readonly AuthService $auth) {}
 
     /** POST /auth/register — 5.3_API_Specification.md */
     public function register(RegisterRequest $request): JsonResponse
@@ -37,7 +38,7 @@ class AuthController extends Controller
         $user = $this->auth->attemptLogin($request->only('email', 'password'));
         $request->session()->regenerate();
 
-        return response()->json(['data' => ['user' => $this->presentUser($user)]]);
+        return response()->json(['data' => ['user' => new UserResource($user)]]);
     }
 
     /** POST /auth/logout */
@@ -53,7 +54,45 @@ class AuthController extends Controller
     /** GET /me — profil sesi aktif */
     public function me(Request $request): JsonResponse
     {
-        return response()->json(['data' => $this->presentUser($request->user())]);
+        return response()->json(['data' => new UserResource($request->user())]);
+    }
+
+    /**
+     * GET /auth/verify-email/{id}/{hash} — 5.2_API_List.md §2, public.
+     * Custom (not Laravel's stock EmailVerificationRequest) because that
+     * class requires an authenticated session; this must work for a user
+     * who registered on another device and isn't logged in here.
+     */
+    public function verifyEmail(Request $request, int $id, string $hash): JsonResponse
+    {
+        if (! URL::hasValidSignature($request)) {
+            abort(403, 'Tautan verifikasi tidak valid atau sudah kedaluwarsa.');
+        }
+
+        $user = User::findOrFail($id);
+
+        if (! hash_equals(sha1($user->getEmailForVerification()), $hash)) {
+            abort(403, 'Tautan verifikasi tidak valid.');
+        }
+
+        if (! $user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
+        }
+
+        return response()->json(['data' => null, 'message' => 'Email berhasil diverifikasi.']);
+    }
+
+    /** POST /auth/verify-email/resend — lihat AuthService::resendVerification. */
+    public function resendVerification(Request $request): JsonResponse
+    {
+        $request->validate(['email' => ['required', 'email']]);
+
+        $this->auth->resendVerification($request->input('email'));
+
+        return response()->json([
+            'data' => null,
+            'message' => 'Jika email terdaftar dan belum terverifikasi, tautan verifikasi telah dikirim.',
+        ]);
     }
 
     /** POST /auth/forgot-password — FR-003, dikirim via SMTP (bukan notifikasi in-app). */
@@ -87,21 +126,11 @@ class AuthController extends Controller
         );
 
         if ($status !== Password::PASSWORD_RESET) {
-            throw \Illuminate\Validation\ValidationException::withMessages([
+            throw ValidationException::withMessages([
                 'email' => [__($status)],
             ]);
         }
 
         return response()->json(['data' => null, 'message' => 'Password berhasil diubah.']);
-    }
-
-    private function presentUser(User $user): array
-    {
-        return [
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'role' => $user->role->value,
-        ];
     }
 }
