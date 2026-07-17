@@ -75,6 +75,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // 5.2_API_List.md §5 — /creator/* proper, requires role:creator (status Aktif)
     Route::middleware('creator.active')->group(function () {
         Route::get('/creator/dashboard', [CreatorController::class, 'dashboard']); // FE-020
+        Route::get('/creator/earnings', [CreatorController::class, 'earnings']); // FR-026
 
         // 5.2_API_List.md §5 — /creator/designs (FR-024/037, Flow 16)
         Route::get('/creator/designs', [CreatorDesignController::class, 'index']);

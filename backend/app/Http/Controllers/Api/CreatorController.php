@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreatorVerificationRequest;
+use App\Http\Resources\CommissionResource;
+use App\Services\CommissionService;
 use App\Services\CreatorService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,7 +13,10 @@ use Illuminate\Http\Request;
 /** 5.2_API_List.md §5 — become-creator (FR-041) & verification (FR-035/BR-008). */
 class CreatorController extends Controller
 {
-    public function __construct(private readonly CreatorService $creators) {}
+    public function __construct(
+        private readonly CreatorService $creators,
+        private readonly CommissionService $commissions,
+    ) {}
 
     /** POST /account/become-creator */
     public function becomeCreator(Request $request): JsonResponse
@@ -33,5 +38,14 @@ class CreatorController extends Controller
     public function dashboard(Request $request): JsonResponse
     {
         return response()->json(['data' => $this->creators->dashboard($request->user())]);
+    }
+
+    /** GET /creator/earnings — FR-026. */
+    public function earnings(Request $request): JsonResponse
+    {
+        return response()->json([
+            'data' => CommissionResource::collection($this->commissions->earningsFor($request->user())),
+            'summary' => $this->commissions->summaryFor($request->user()),
+        ]);
     }
 }

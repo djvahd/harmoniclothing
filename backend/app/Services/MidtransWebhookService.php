@@ -20,6 +20,7 @@ class MidtransWebhookService
     public function __construct(
         private readonly OrderRepository $orders,
         private readonly InvoiceService $invoices,
+        private readonly CommissionService $commissions,
     ) {}
 
     public function handle(array $payload): void
@@ -57,6 +58,10 @@ class MidtransWebhookService
             $order->update(['status' => 'menunggu_approval', 'paid_at' => now()]);
             $this->orders->recordStatusHistory($order, 'belum_dibayar', 'menunggu_approval', 'system');
             $this->invoices->generateFor($order);
+
+            // BR-007: commission generated automatically per paid transaction
+            // involving a Creator's design (order_items with a design_id).
+            $order->items->each(fn ($item) => $this->commissions->generateForOrderItem($item));
         }
     }
 }
