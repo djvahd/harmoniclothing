@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DesignIndexRequest;
+use App\Http\Resources\CreatorProfileResource;
 use App\Http\Resources\DesignResource;
 use App\Services\MarketplaceService;
 use Illuminate\Http\JsonResponse;
@@ -41,5 +42,15 @@ class MarketplaceController extends Controller
         abort_if(! $design, 404);
 
         return response()->json(['data' => new DesignResource($design)]);
+    }
+
+    /** GET /marketplace/creators/{slug} — FE-011 public creator profile. */
+    public function showCreator(Request $request, string $slug): JsonResponse
+    {
+        $creator = $this->marketplace->findCreator($slug);
+
+        abort_if(! $creator, 404);
+
+        return response()->json(['data' => new CreatorProfileResource($creator)]);
     }
 }

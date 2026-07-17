@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\BulkPricingController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CatalogController;
 use App\Http\Controllers\Api\CheckoutController;
+use App\Http\Controllers\Api\CreatorController;
 use App\Http\Controllers\Api\CustomizationController;
 use App\Http\Controllers\Api\MarketplaceController;
 use App\Http\Controllers\Api\MidtransWebhookController;
@@ -65,6 +66,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/orders/{order}/reorder', [OrderController::class, 'reorder']);
     Route::get('/orders/{order}/invoice', [OrderController::class, 'invoice']); // FR-018
     Route::post('/orders/{order}/confirm-received', [OrderController::class, 'confirmReceived']); // FR-042
+
+    // 5.2_API_List.md §5 — Creator upgrade (FR-041/035)
+    Route::post('/account/become-creator', [CreatorController::class, 'becomeCreator']);
+    Route::post('/creator/verification', [CreatorController::class, 'verification']);
+
+    // 5.2_API_List.md §5 — /creator/* proper, requires role:creator (status Aktif)
+    Route::middleware('creator.active')->group(function () {
+        Route::get('/creator/dashboard', [CreatorController::class, 'dashboard']); // FE-020
+    });
 });
 
 // 5.3_API_Specification.md §8 — POST /webhooks/midtrans, signature-verified not session-auth
@@ -78,6 +88,7 @@ Route::get('/catalog/products', [CatalogController::class, 'index']);
 Route::get('/catalog/products/{slug}', [CatalogController::class, 'show']);
 Route::get('/marketplace/designs', [MarketplaceController::class, 'index']);
 Route::get('/marketplace/designs/{slug}', [MarketplaceController::class, 'show']);
+Route::get('/marketplace/creators/{slug}', [MarketplaceController::class, 'showCreator']); // FE-011
 
 // 5.2_API_List.md §4 — GET /bulk-pricing-tiers, public (BR-012)
 Route::get('/bulk-pricing-tiers', [BulkPricingController::class, 'index']);

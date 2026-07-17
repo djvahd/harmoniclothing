@@ -30,10 +30,14 @@ class Design extends Model
         ];
     }
 
-    /** BR-002: only approved designs are visible in the public marketplace. */
+    /**
+     * BR-002: only approved designs are visible in the public marketplace.
+     * BR-019: banned creators' designs are pulled from the marketplace too.
+     */
     public function scopeActive(Builder $query): void
     {
-        $query->where('status', 'aktif');
+        $query->where('status', 'aktif')
+            ->whereDoesntHave('creator.creatorProfile', fn ($q) => $q->where('status', 'banned'));
     }
 
     public function creator(): BelongsTo
