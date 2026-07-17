@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CatalogController;
+use App\Http\Controllers\Api\CustomizationController;
 use App\Http\Controllers\Api\MarketplaceController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/account/addresses', [AccountController::class, 'storeAddress']);
     Route::patch('/account/addresses/{address}', [AccountController::class, 'updateAddress']);
     Route::delete('/account/addresses/{address}', [AccountController::class, 'destroyAddress']);
+
+    // FR-010 / FE-015 — Product Customization own-design upload (not
+    // enumerated in 5.2_API_List.md, filled per the "not all ~62 endpoints
+    // are enumerated" scope note in 5.3_API_Specification.md §intro)
+    Route::post('/customization/uploads', [CustomizationController::class, 'uploadDesign']);
 });
 
 // 5.2_API_List.md §3 — Product Catalog & Marketplace (public, read-only)

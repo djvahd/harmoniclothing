@@ -25,7 +25,7 @@ class DesignRepository
     {
         return Design::query()
             ->active()
-            ->with(['category', 'creator'])
+            ->with(['category', 'creator', 'products.category', 'products.variants'])
             ->where('slug', $slug)
             ->first();
     }

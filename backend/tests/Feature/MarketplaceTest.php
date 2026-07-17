@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Category;
 use App\Models\Design;
+use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -59,5 +60,19 @@ class MarketplaceTest extends TestCase
         $design = Design::factory()->pendingApproval()->create();
 
         $this->getJson("/api/marketplace/designs/{$design->slug}")->assertNotFound();
+    }
+
+    /** FE-017: 3D Editor Mode Marketplace restricts variant choice to the apparel the Creator picked. */
+    public function test_design_detail_lists_compatible_products(): void
+    {
+        $design = Design::factory()->create();
+        $product = Product::factory()->create();
+        $design->products()->attach($product, ['preview_confirmed_at' => now()]);
+
+        $response = $this->getJson("/api/marketplace/designs/{$design->slug}");
+
+        $response->assertOk()
+            ->assertJsonCount(1, 'data.products')
+            ->assertJsonPath('data.products.0.slug', $product->slug);
     }
 }
