@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\CatalogController;
 use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\CustomizationController;
 use App\Http\Controllers\Api\MarketplaceController;
+use App\Http\Controllers\Api\MidtransWebhookController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\WishlistController;
 use Illuminate\Support\Facades\Route;
@@ -61,7 +62,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders/{order}', [OrderController::class, 'show']);
     Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel']);
     Route::post('/orders/{order}/reorder', [OrderController::class, 'reorder']);
+    Route::get('/orders/{order}/invoice', [OrderController::class, 'invoice']); // FR-018
 });
+
+// 5.3_API_Specification.md §8 — POST /webhooks/midtrans, signature-verified not session-auth
+Route::post('/webhooks/midtrans', [MidtransWebhookController::class, 'handle']);
 
 // 5.2_API_List.md §3 — Product Catalog & Marketplace (public, read-only)
 Route::get('/catalog/products', [CatalogController::class, 'index']);

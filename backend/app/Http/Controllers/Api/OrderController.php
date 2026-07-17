@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CartItemResource;
+use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\OrderResource;
 use App\Services\OrderService;
 use Illuminate\Http\JsonResponse;
@@ -53,5 +54,14 @@ class OrderController extends Controller
         $cartItems = $this->orders->reorder($order);
 
         return response()->json(['data' => CartItemResource::collection($cartItems)], 201);
+    }
+
+    /** GET /orders/{order}/invoice — FR-018. 404 if not paid yet (no invoice generated). */
+    public function invoice(Request $request, int $order): JsonResponse
+    {
+        $order = $request->user()->orders()->findOrFail($order);
+        $invoice = $order->invoice()->with('order')->firstOrFail();
+
+        return response()->json(['data' => new InvoiceResource($invoice)]);
     }
 }
