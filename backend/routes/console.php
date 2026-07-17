@@ -10,3 +10,6 @@ Artisan::command('inspire', function () {
 
 // BR-017: 24h window is coarse, hourly checks are frequent enough.
 Schedule::command('orders:cancel-unpaid')->hourly();
+
+// BR-014: 3 business-day window, hourly checks are frequent enough.
+Schedule::command('orders:auto-complete-deliveries')->hourly();

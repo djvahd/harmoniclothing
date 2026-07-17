@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BiteshipWebhookController;
 use App\Http\Controllers\Api\BulkPricingController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CatalogController;
@@ -63,10 +64,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel']);
     Route::post('/orders/{order}/reorder', [OrderController::class, 'reorder']);
     Route::get('/orders/{order}/invoice', [OrderController::class, 'invoice']); // FR-018
+    Route::post('/orders/{order}/confirm-received', [OrderController::class, 'confirmReceived']); // FR-042
 });
 
 // 5.3_API_Specification.md §8 — POST /webhooks/midtrans, signature-verified not session-auth
 Route::post('/webhooks/midtrans', [MidtransWebhookController::class, 'handle']);
+
+// FE-035 auto tracking — Biteship tracking webhook
+Route::post('/webhooks/biteship', [BiteshipWebhookController::class, 'handle']);
 
 // 5.2_API_List.md §3 — Product Catalog & Marketplace (public, read-only)
 Route::get('/catalog/products', [CatalogController::class, 'index']);

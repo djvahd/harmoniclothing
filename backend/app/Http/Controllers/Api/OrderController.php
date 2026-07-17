@@ -64,4 +64,13 @@ class OrderController extends Controller
 
         return response()->json(['data' => new InvoiceResource($invoice)]);
     }
+
+    /** POST /orders/{order}/confirm-received — FR-042, BR-014. */
+    public function confirmReceived(Request $request, int $order): JsonResponse
+    {
+        $order = $request->user()->orders()->findOrFail($order);
+        $order = $this->orders->confirmReceived($order);
+
+        return response()->json(['data' => new OrderResource($order)]);
+    }
 }

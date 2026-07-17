@@ -23,6 +23,7 @@ class OrderResource extends JsonResource
             'total' => $this->total,
             'created_at' => $this->created_at,
             'items' => OrderItemResource::collection($this->whenLoaded('items')),
+            'shipment' => $this->shipment ? new ShipmentResource($this->shipment) : null, // FE-036
         ];
     }
 }

@@ -48,6 +48,25 @@ class OrderService
     }
 
     /**
+     * FR-042/BR-014: Customer confirms receipt while "menunggu_konfirmasi",
+     * completing the order immediately (rating/review form shows in the
+     * same flow per BR-004 — the frontend's job, not this endpoint's).
+     */
+    public function confirmReceived(Order $order): Order
+    {
+        if ($order->status !== 'menunggu_konfirmasi') {
+            throw ValidationException::withMessages([
+                'status' => ['Pesanan hanya dapat dikonfirmasi selama status Menunggu Konfirmasi.'],
+            ]);
+        }
+
+        $order->update(['status' => 'selesai', 'confirmed_at' => now(), 'completed_at' => now()]);
+        $this->orders->recordStatusHistory($order, 'menunggu_konfirmasi', 'selesai', 'customer', $order->user_id);
+
+        return $order;
+    }
+
+    /**
      * FR-019 reorder: re-adds this order's items to the cart at *current*
      * prices (a fresh purchase, not a replay of the original order's locked
      * price — BR-025's snapshot lock only applies going forward from the
