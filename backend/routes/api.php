@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CatalogController;
 use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\CreatorController;
+use App\Http\Controllers\Api\CreatorDesignController;
 use App\Http\Controllers\Api\CustomizationController;
 use App\Http\Controllers\Api\MarketplaceController;
 use App\Http\Controllers\Api\MidtransWebhookController;
@@ -74,6 +75,13 @@ Route::middleware('auth:sanctum')->group(function () {
     // 5.2_API_List.md §5 — /creator/* proper, requires role:creator (status Aktif)
     Route::middleware('creator.active')->group(function () {
         Route::get('/creator/dashboard', [CreatorController::class, 'dashboard']); // FE-020
+
+        // 5.2_API_List.md §5 — /creator/designs (FR-024/037, Flow 16)
+        Route::get('/creator/designs', [CreatorDesignController::class, 'index']);
+        Route::post('/creator/designs', [CreatorDesignController::class, 'store']);
+        Route::patch('/creator/designs/{design}', [CreatorDesignController::class, 'update']);
+        Route::post('/creator/designs/{design}/apparel/{product}/confirm', [CreatorDesignController::class, 'confirmApparel']);
+        Route::post('/creator/designs/{design}/submit', [CreatorDesignController::class, 'submit']);
     });
 });
 
