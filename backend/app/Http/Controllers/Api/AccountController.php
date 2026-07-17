@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AddressRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Resources\UserResource;
-use App\Models\Address;
 use App\Services\AccountService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -40,21 +39,23 @@ class AccountController extends Controller
         return response()->json(['data' => $address], 201);
     }
 
-    /** PATCH /account/addresses/{address} */
-    public function updateAddress(AddressRequest $request, Address $address): JsonResponse
+    /**
+     * PATCH /account/addresses/{address} — scoped to the authenticated
+     * user's own addresses so a foreign id 404s (5.3_API_Specification.md
+     * §7: another user's resource is masked as 404, not 403).
+     */
+    public function updateAddress(AddressRequest $request, int $address): JsonResponse
     {
-        $this->authorize('update', $address);
-
+        $address = $request->user()->addresses()->findOrFail($address);
         $address = $this->account->updateAddress($address, $request->validated());
 
         return response()->json(['data' => $address]);
     }
 
-    /** DELETE /account/addresses/{address} */
-    public function destroyAddress(Request $request, Address $address): JsonResponse
+    /** DELETE /account/addresses/{address} — see updateAddress() note. */
+    public function destroyAddress(Request $request, int $address): JsonResponse
     {
-        $this->authorize('delete', $address);
-
+        $address = $request->user()->addresses()->findOrFail($address);
         $this->account->deleteAddress($address);
 
         return response()->json(['data' => null]);

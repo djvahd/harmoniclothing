@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CatalogController;
+use App\Http\Controllers\Api\MarketplaceController;
 use Illuminate\Support\Facades\Route;
 
 // 5.2_API_List.md §2 Authentication APIs
@@ -28,3 +30,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/account/addresses/{address}', [AccountController::class, 'updateAddress']);
     Route::delete('/account/addresses/{address}', [AccountController::class, 'destroyAddress']);
 });
+
+// 5.2_API_List.md §3 — Product Catalog & Marketplace (public, read-only)
+Route::get('/catalog/products', [CatalogController::class, 'index']);
+Route::get('/catalog/products/{slug}', [CatalogController::class, 'show']);
+Route::get('/marketplace/designs', [MarketplaceController::class, 'index']);
+Route::get('/marketplace/designs/{slug}', [MarketplaceController::class, 'show']);

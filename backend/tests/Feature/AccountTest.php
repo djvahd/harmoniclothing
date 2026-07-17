@@ -102,11 +102,11 @@ class AccountTest extends TestCase
                 'postal_code' => '00000',
                 'address_line' => 'X',
             ])
-            ->assertForbidden();
+            ->assertNotFound();
 
         $this->actingAs($intruder)
             ->deleteJson("/api/account/addresses/{$address->id}")
-            ->assertForbidden();
+            ->assertNotFound();
     }
 
     public function test_user_can_list_only_their_own_addresses(): void
