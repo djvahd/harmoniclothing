@@ -1,0 +1,58 @@
+services:
+  backend:
+    image: php:8.3-cli
+    working_dir: /var/www/backend
+    volumes:
+      - ./backend:/var/www/backend
+    ports:
+      - "8000:8000"
+    command: php artisan serve --host=0.0.0.0 --port=8000
+    depends_on:
+      - mysql
+      - redis
+    restart: always
+
+  frontend:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+    command: sh -c "corepack enable && pnpm install && pnpm dev"
+    restart: always
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: harmoni_clothing
+      MYSQL_USER: harmoni
+      MYSQL_PASSWORD: harmoni
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: always
+
+  reverb:
+    image: php:8.3-cli
+    working_dir: /var/www/backend
+    volumes:
+      - ./backend:/var/www/backend
+    ports:
+      - "8080:8080"
+    command: php artisan reverb:start --host=0.0.0.0 --port=8080
+    depends_on:
+      - mysql
+      - redis
+    restart: always
+
+volumes:
+  mysql_data:
