@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\AccountController;
+use App\Http\Controllers\Api\AdminCreatorController;
+use App\Http\Controllers\Api\AdminDashboardController;
+use App\Http\Controllers\Api\AdminUserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BiteshipWebhookController;
 use App\Http\Controllers\Api\BulkPricingController;
@@ -113,3 +116,14 @@ Route::get('/marketplace/creators/{slug}', [MarketplaceController::class, 'showC
 
 // 5.2_API_List.md §4 — GET /bulk-pricing-tiers, public (BR-012)
 Route::get('/bulk-pricing-tiers', [BulkPricingController::class, 'index']);
+
+// 5.2_API_List.md §6 — Admin APIs, requires role:admin (scope all)
+Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminDashboardController::class, 'index']); // FE-042
+    Route::get('/users', [AdminUserController::class, 'index']); // FR-030
+
+    Route::get('/creators/pending', [AdminCreatorController::class, 'pending']);
+    Route::post('/creators/{creatorProfile}/approve', [AdminCreatorController::class, 'approve']); // BR-001/008
+    Route::post('/creators/{creatorProfile}/reject', [AdminCreatorController::class, 'reject']);
+    Route::post('/creators/{creatorProfile}/ban', [AdminCreatorController::class, 'ban']); // BR-019/020/023
+});

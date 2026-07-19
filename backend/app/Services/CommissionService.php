@@ -53,4 +53,13 @@ class CommissionService
             'ditahan' => $format((clone $commissions)->where('status', 'ditahan')->sum('amount')),
         ];
     }
+
+    /** BR-020: banning a creator for a proven copyright violation holds all outstanding commissions. */
+    public function holdAllTerhutangFor(User $creator): void
+    {
+        Commission::query()
+            ->where('creator_id', $creator->id)
+            ->where('status', 'terhutang')
+            ->update(['status' => 'ditahan']);
+    }
 }
