@@ -9,7 +9,6 @@ use App\Http\Requests\ProductVariantRequest;
 use App\Http\Resources\AdminProductResource;
 use App\Http\Resources\BulkPricingTierResource;
 use App\Http\Resources\ProductVariantResource;
-use App\Models\BulkPricingTier;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Services\CatalogService;
@@ -23,7 +22,7 @@ class AdminCatalogController extends Controller
     /** POST /admin/catalog/products — FR-031. */
     public function storeProduct(ProductRequest $request): JsonResponse
     {
-        $product = $this->catalog->createProduct($request->validated());
+        $product = $this->catalog->createProduct($request->validated(), $request->user());
 
         return response()->json(['data' => new AdminProductResource($product)], 201);
     }
@@ -31,7 +30,7 @@ class AdminCatalogController extends Controller
     /** PATCH /admin/catalog/products/{product}. */
     public function updateProduct(ProductRequest $request, Product $product): JsonResponse
     {
-        $product = $this->catalog->updateProduct($product, $request->validated());
+        $product = $this->catalog->updateProduct($product, $request->validated(), $request->user());
 
         return response()->json(['data' => new AdminProductResource($product)]);
     }
@@ -39,7 +38,7 @@ class AdminCatalogController extends Controller
     /** POST /admin/catalog/products/{product}/variants — FE-046 (gap-filled). */
     public function storeVariant(ProductVariantRequest $request, Product $product): JsonResponse
     {
-        $variant = $this->catalog->createVariant($product, $request->validated());
+        $variant = $this->catalog->createVariant($product, $request->validated(), $request->user());
 
         return response()->json(['data' => new ProductVariantResource($variant)], 201);
     }
@@ -47,7 +46,7 @@ class AdminCatalogController extends Controller
     /** PATCH /admin/catalog/variants/{variant} — FE-046 (gap-filled). */
     public function updateVariant(ProductVariantRequest $request, ProductVariant $variant): JsonResponse
     {
-        $variant = $this->catalog->updateVariant($variant, $request->validated());
+        $variant = $this->catalog->updateVariant($variant, $request->validated(), $request->user());
 
         return response()->json(['data' => new ProductVariantResource($variant)]);
     }
@@ -55,7 +54,7 @@ class AdminCatalogController extends Controller
     /** POST /admin/catalog/bulk-pricing-tiers — BR-012. */
     public function storeBulkPricingTier(BulkPricingTierRequest $request): JsonResponse
     {
-        $tier = BulkPricingTier::create($request->validated());
+        $tier = $this->catalog->createBulkPricingTier($request->validated(), $request->user());
 
         return response()->json(['data' => new BulkPricingTierResource($tier)], 201);
     }

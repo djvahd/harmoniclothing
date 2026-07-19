@@ -33,7 +33,7 @@ class AdminCreatorController extends Controller
     /** POST /admin/creators/{creatorProfile}/reject */
     public function reject(ReasonRequest $request, CreatorProfile $creatorProfile): JsonResponse
     {
-        $profile = $this->creators->reject($creatorProfile, $request->validated('reason'));
+        $profile = $this->creators->reject($creatorProfile, $request->user(), $request->validated('reason'));
 
         return response()->json(['data' => new AdminCreatorProfileResource($profile)]);
     }
@@ -43,6 +43,7 @@ class AdminCreatorController extends Controller
     {
         $profile = $this->creators->ban(
             $creatorProfile,
+            $request->user(),
             $request->validated('reason'),
             $request->boolean('copyright_violation'),
         );

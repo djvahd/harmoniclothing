@@ -32,7 +32,7 @@ class AdminDesignController extends Controller
     /** POST /admin/designs/{design}/reject — reason wajib, BR-028. */
     public function reject(ReasonRequest $request, Design $design): JsonResponse
     {
-        $design = $this->designs->reject($design, $request->validated('reason'));
+        $design = $this->designs->reject($design, $request->user(), $request->validated('reason'));
 
         return response()->json(['data' => new DesignResource($design)]);
     }

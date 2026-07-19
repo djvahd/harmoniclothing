@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\BulkPricingTier;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\User;
 use App\Repositories\ProductRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
@@ -11,7 +13,10 @@ use Illuminate\Validation\ValidationException;
 
 class CatalogService
 {
-    public function __construct(private readonly ProductRepository $products) {}
+    public function __construct(
+        private readonly ProductRepository $products,
+        private readonly AuditLogService $auditLog,
+    ) {}
 
     /** GET /catalog/products — FE-012. */
     public function listProducts(?string $categorySlug, int $perPage): LengthAwarePaginator
@@ -26,39 +31,46 @@ class CatalogService
     }
 
     /** POST /admin/catalog/products — FR-031. */
-    public function createProduct(array $data): Product
+    public function createProduct(array $data, User $admin): Product
     {
-        return Product::create([
+        $product = Product::create([
             ...$data,
             'slug' => $this->generateProductSlug($data['name_id']),
             'is_active' => $data['is_active'] ?? true,
         ]);
+        $this->auditLog->record($admin, 'product.create', $product);
+
+        return $product;
     }
 
-    /** PATCH /admin/catalog/products/{id}. */
-    public function updateProduct(Product $product, array $data): Product
+    /** PATCH /admin/catalog/products/{id}. 2.5_Permission_Matrix.md §10: base_price changes are audited. */
+    public function updateProduct(Product $product, array $data, User $admin): Product
     {
         $product->update([
             ...$data,
             'is_active' => $data['is_active'] ?? $product->is_active,
         ]);
+        $this->auditLog->record($admin, 'product.update', $product, "base_price: {$product->base_price}");
 
         return $product;
     }
 
     /** POST /admin/catalog/products/{product}/variants — FE-046 (gap-filled). */
-    public function createVariant(Product $product, array $data): ProductVariant
+    public function createVariant(Product $product, array $data, User $admin): ProductVariant
     {
         $this->assertVariantCombinationIsFree($product, $data['color'], $data['size'], $data['cut_type']);
 
-        return $product->variants()->create([
+        $variant = $product->variants()->create([
             ...$data,
             'price_modifier' => $data['price_modifier'] ?? 0,
         ]);
+        $this->auditLog->record($admin, 'variant.create', $variant);
+
+        return $variant;
     }
 
-    /** PATCH /admin/catalog/variants/{variant} — FE-046 (gap-filled). */
-    public function updateVariant(ProductVariant $variant, array $data): ProductVariant
+    /** PATCH /admin/catalog/variants/{variant} — FE-046 (gap-filled). price_modifier changes are audited. */
+    public function updateVariant(ProductVariant $variant, array $data, User $admin): ProductVariant
     {
         $this->assertVariantCombinationIsFree($variant->product, $data['color'], $data['size'], $data['cut_type'], ignoreId: $variant->id);
 
@@ -66,8 +78,18 @@ class CatalogService
             ...$data,
             'price_modifier' => $data['price_modifier'] ?? $variant->price_modifier,
         ]);
+        $this->auditLog->record($admin, 'variant.update', $variant, "price_modifier: {$variant->price_modifier}");
 
         return $variant;
+    }
+
+    /** POST /admin/catalog/bulk-pricing-tiers — BR-012. 2.5_Permission_Matrix.md §10: Bulk Order tier changes are audited. */
+    public function createBulkPricingTier(array $data, User $admin): BulkPricingTier
+    {
+        $tier = BulkPricingTier::create($data);
+        $this->auditLog->record($admin, 'bulk_pricing_tier.create', $tier);
+
+        return $tier;
     }
 
     /** Mirrors the DB-level unique(product_id, color, size, cut_type) constraint as a 422 instead of a raw QueryException. */

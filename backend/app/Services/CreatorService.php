@@ -23,6 +23,7 @@ class CreatorService
     public function __construct(
         private readonly NotificationService $notifications,
         private readonly CommissionService $commissions,
+        private readonly AuditLogService $auditLog,
     ) {}
 
     public function becomeCreator(User $user): CreatorProfile
@@ -102,12 +103,13 @@ class CreatorService
             'Selamat! Pengajuan Anda sebagai Creator telah disetujui.',
             $profile,
         );
+        $this->auditLog->record($admin, 'creator.approve', $profile);
 
         return $profile;
     }
 
     /** POST /admin/creators/{id}/reject — reason wajib. */
-    public function reject(CreatorProfile $profile, string $reason): CreatorProfile
+    public function reject(CreatorProfile $profile, User $admin, string $reason): CreatorProfile
     {
         if ($profile->status !== 'menunggu_approval') {
             throw ValidationException::withMessages([
@@ -127,6 +129,7 @@ class CreatorService
             "Pengajuan Anda sebagai Creator ditolak: {$reason}",
             $profile,
         );
+        $this->auditLog->record($admin, 'creator.reject', $profile, $reason);
 
         return $profile;
     }
@@ -139,7 +142,7 @@ class CreatorService
      * a plain ban does not touch the Customer side of the account or payable
      * commissions.
      */
-    public function ban(CreatorProfile $profile, string $reason, bool $copyrightViolation): CreatorProfile
+    public function ban(CreatorProfile $profile, User $admin, string $reason, bool $copyrightViolation): CreatorProfile
     {
         $profile->update([
             'status' => 'banned',
@@ -160,6 +163,7 @@ class CreatorService
             "Akun Creator Anda telah diblokir: {$reason}",
             $profile,
         );
+        $this->auditLog->record($admin, 'creator.ban', $profile, $reason);
 
         return $profile;
     }

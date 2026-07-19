@@ -42,7 +42,7 @@ class AdminOrderController extends Controller
     /** POST /admin/orders/{order}/shipment — FR-022, Biteship booking. */
     public function bookShipment(ShipmentRequest $request, Order $order): JsonResponse
     {
-        $shipment = $this->orders->bookShipment($order, $request->validated('courier'));
+        $shipment = $this->orders->bookShipment($order, $request->user(), $request->validated('courier'));
 
         return response()->json(['data' => new ShipmentResource($shipment)], 201);
     }

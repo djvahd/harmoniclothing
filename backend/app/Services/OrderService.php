@@ -21,6 +21,7 @@ class OrderService
         private readonly PricingService $pricing,
         private readonly NotificationService $notifications,
         private readonly BiteshipService $biteship,
+        private readonly AuditLogService $auditLog,
     ) {}
 
     public function list(User $user, int $perPage): LengthAwarePaginator
@@ -116,6 +117,7 @@ class OrderService
 
         $order->update(['status' => 'diproses_produksi', 'production_started_at' => now()]);
         $this->orders->recordStatusHistory($order, 'menunggu_approval', 'diproses_produksi', 'admin', $admin->id);
+        $this->auditLog->record($admin, 'order.status_update', $order, 'diproses_produksi');
 
         return $order;
     }
@@ -142,6 +144,7 @@ class OrderService
             "Pesanan {$order->order_number} ditolak: {$reason}",
             $order,
         );
+        $this->auditLog->record($admin, 'order.reject', $order, $reason);
 
         return $order;
     }
@@ -155,7 +158,7 @@ class OrderService
      * webhook-driven (BiteshipWebhookService), since booking and "actually
      * shipped" are different moments.
      */
-    public function bookShipment(Order $order, string $courier): Shipment
+    public function bookShipment(Order $order, User $admin, string $courier): Shipment
     {
         if ($order->status !== 'diproses_produksi') {
             throw ValidationException::withMessages([
@@ -173,12 +176,15 @@ class OrderService
             ? ['biteship_order_id' => null, 'tracking_number' => null]
             : $this->biteship->createBooking($order, $courier);
 
-        return Shipment::create([
+        $shipment = Shipment::create([
             'order_id' => $order->id,
             'biteship_order_id' => $booking['biteship_order_id'],
             'tracking_number' => $booking['tracking_number'],
             'courier' => $courier,
             'status' => 'menunggu_pickup',
         ]);
+        $this->auditLog->record($admin, 'order.shipment_book', $order, "courier: {$courier}");
+
+        return $shipment;
     }
 }

@@ -21,6 +21,7 @@ class CreatorDesignService
     public function __construct(
         private readonly FileUploadService $uploads,
         private readonly NotificationService $notifications,
+        private readonly AuditLogService $auditLog,
     ) {}
 
     public function list(User $user): Collection
@@ -130,12 +131,13 @@ class CreatorDesignService
             "Desain \"{$design->title}\" telah disetujui dan tayang di marketplace.",
             $design,
         );
+        $this->auditLog->record($admin, 'design.approve', $design);
 
         return $design;
     }
 
     /** POST /admin/designs/{id}/reject — reason wajib, BR-028 (revisable via update()). */
-    public function reject(Design $design, string $reason): Design
+    public function reject(Design $design, User $admin, string $reason): Design
     {
         if ($design->status !== 'menunggu_approval') {
             throw ValidationException::withMessages([
@@ -155,6 +157,7 @@ class CreatorDesignService
             "Desain \"{$design->title}\" ditolak: {$reason}",
             $design,
         );
+        $this->auditLog->record($admin, 'design.reject', $design, $reason);
 
         return $design;
     }

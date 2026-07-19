@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AccountController;
+use App\Http\Controllers\Api\AdminAuditLogController;
 use App\Http\Controllers\Api\AdminCatalogController;
 use App\Http\Controllers\Api\AdminChatController;
 use App\Http\Controllers\Api\AdminCreatorController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\Api\AdminDesignController;
 use App\Http\Controllers\Api\AdminNotificationSettingController;
 use App\Http\Controllers\Api\AdminOrderController;
 use App\Http\Controllers\Api\AdminPaymentController;
+use App\Http\Controllers\Api\AdminReportController;
 use App\Http\Controllers\Api\AdminUserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BiteshipWebhookController;
@@ -156,4 +158,7 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
 
     Route::get('/notification-settings', [AdminNotificationSettingController::class, 'index']); // FE-038
     Route::patch('/notification-settings/{type}', [AdminNotificationSettingController::class, 'update']);
+
+    Route::get('/reports/sales', [AdminReportController::class, 'sales']); // FR-033
+    Route::get('/audit-logs', [AdminAuditLogController::class, 'index']); // 2.5_Permission_Matrix.md §10
 });
