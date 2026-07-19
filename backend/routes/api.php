@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\AdminCreatorController;
 use App\Http\Controllers\Api\AdminDashboardController;
+use App\Http\Controllers\Api\AdminDesignController;
 use App\Http\Controllers\Api\AdminUserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BiteshipWebhookController;
@@ -126,4 +127,8 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
     Route::post('/creators/{creatorProfile}/approve', [AdminCreatorController::class, 'approve']); // BR-001/008
     Route::post('/creators/{creatorProfile}/reject', [AdminCreatorController::class, 'reject']);
     Route::post('/creators/{creatorProfile}/ban', [AdminCreatorController::class, 'ban']); // BR-019/020/023
+
+    Route::get('/designs/pending', [AdminDesignController::class, 'pending']); // FR-025
+    Route::post('/designs/{design}/approve', [AdminDesignController::class, 'approve']); // BR-002
+    Route::post('/designs/{design}/reject', [AdminDesignController::class, 'reject']); // BR-028
 });

@@ -18,7 +18,10 @@ use Illuminate\Validation\ValidationException;
  */
 class CreatorDesignService
 {
-    public function __construct(private readonly FileUploadService $uploads) {}
+    public function __construct(
+        private readonly FileUploadService $uploads,
+        private readonly NotificationService $notifications,
+    ) {}
 
     public function list(User $user): Collection
     {
@@ -94,6 +97,64 @@ class CreatorDesignService
     public function submit(Design $design): Design
     {
         $design->update(['status' => 'menunggu_approval']);
+
+        return $design;
+    }
+
+    /** GET /admin/designs/pending — FR-025. */
+    public function pending(): Collection
+    {
+        return Design::query()->where('status', 'menunggu_approval')->with(['creator', 'category'])->latest()->get();
+    }
+
+    /** POST /admin/designs/{id}/approve — BR-002. */
+    public function approve(Design $design, User $admin): Design
+    {
+        if ($design->status !== 'menunggu_approval') {
+            throw ValidationException::withMessages([
+                'status' => ['Desain ini tidak sedang menunggu approval.'],
+            ]);
+        }
+
+        $design->update([
+            'status' => 'aktif',
+            'approved_by' => $admin->id,
+            'approved_at' => now(),
+            'rejection_reason' => null,
+        ]);
+
+        $this->notifications->notify(
+            $design->creator,
+            'design.approved',
+            'Desain disetujui',
+            "Desain \"{$design->title}\" telah disetujui dan tayang di marketplace.",
+            $design,
+        );
+
+        return $design;
+    }
+
+    /** POST /admin/designs/{id}/reject — reason wajib, BR-028 (revisable via update()). */
+    public function reject(Design $design, string $reason): Design
+    {
+        if ($design->status !== 'menunggu_approval') {
+            throw ValidationException::withMessages([
+                'status' => ['Desain ini tidak sedang menunggu approval.'],
+            ]);
+        }
+
+        $design->update([
+            'status' => 'ditolak',
+            'rejection_reason' => $reason,
+        ]);
+
+        $this->notifications->notify(
+            $design->creator,
+            'design.rejected',
+            'Desain ditolak',
+            "Desain \"{$design->title}\" ditolak: {$reason}",
+            $design,
+        );
 
         return $design;
     }
