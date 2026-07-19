@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\Api\AccountController;
+use App\Http\Controllers\Api\AdminCatalogController;
 use App\Http\Controllers\Api\AdminCreatorController;
 use App\Http\Controllers\Api\AdminDashboardController;
 use App\Http\Controllers\Api\AdminDesignController;
+use App\Http\Controllers\Api\AdminOrderController;
 use App\Http\Controllers\Api\AdminUserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BiteshipWebhookController;
@@ -131,4 +133,14 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
     Route::get('/designs/pending', [AdminDesignController::class, 'pending']); // FR-025
     Route::post('/designs/{design}/approve', [AdminDesignController::class, 'approve']); // BR-002
     Route::post('/designs/{design}/reject', [AdminDesignController::class, 'reject']); // BR-028
+
+    Route::post('/catalog/products', [AdminCatalogController::class, 'storeProduct']); // FR-031
+    Route::patch('/catalog/products/{product}', [AdminCatalogController::class, 'updateProduct']);
+    Route::post('/catalog/products/{product}/variants', [AdminCatalogController::class, 'storeVariant']); // FE-046
+    Route::patch('/catalog/variants/{variant}', [AdminCatalogController::class, 'updateVariant']); // FE-046
+    Route::post('/catalog/bulk-pricing-tiers', [AdminCatalogController::class, 'storeBulkPricingTier']); // BR-012
+
+    Route::get('/production-queue', [AdminOrderController::class, 'productionQueue']); // FR-021
+    Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus']); // FR-021
+    Route::post('/orders/{order}/reject', [AdminOrderController::class, 'reject']); // FR-043
 });

@@ -9,6 +9,7 @@ use App\Repositories\OrderRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
 /** FE-028 Riwayat Pesanan, FE-029 Reorder, FE-031 Pembatalan Pesanan. */
 class OrderService
@@ -17,6 +18,7 @@ class OrderService
         private readonly OrderRepository $orders,
         private readonly CartRepository $cart,
         private readonly PricingService $pricing,
+        private readonly NotificationService $notifications,
     ) {}
 
     public function list(User $user, int $perPage): LengthAwarePaginator
@@ -86,5 +88,59 @@ class OrderService
                 'quantity' => $item->quantity,
                 'unit_price_snapshot' => $this->pricing->unitPriceFor($item->productVariant),
             ]));
+    }
+
+    /** GET /admin/production-queue — FR-021: orders awaiting or already in production. */
+    public function productionQueue(): Collection
+    {
+        return Order::query()
+            ->whereIn('status', ['menunggu_approval', 'diproses_produksi'])
+            ->with('items')
+            ->oldest()
+            ->get();
+    }
+
+    /**
+     * PATCH /admin/orders/{id}/status — FR-021. The only forward transition
+     * Admin triggers directly: menunggu_approval -> diproses_produksi.
+     */
+    public function updateStatus(Order $order, User $admin): Order
+    {
+        if ($order->status !== 'menunggu_approval') {
+            throw ValidationException::withMessages([
+                'status' => ['Pesanan hanya dapat dimasukkan ke produksi selama status Menunggu Approval.'],
+            ]);
+        }
+
+        $order->update(['status' => 'diproses_produksi', 'production_started_at' => now()]);
+        $this->orders->recordStatusHistory($order, 'menunggu_approval', 'diproses_produksi', 'admin', $admin->id);
+
+        return $order;
+    }
+
+    /**
+     * POST /admin/orders/{id}/reject — FR-043. Unlike every other reject
+     * endpoint in this module (Creator/Design), 5.3_API_Specification.md §8
+     * mandates 409 Conflict here (not 422) if the order's status already
+     * moved on before the request was processed.
+     */
+    public function reject(Order $order, User $admin, string $reason): Order
+    {
+        if ($order->status !== 'menunggu_approval') {
+            throw new ConflictHttpException('Pesanan sudah tidak dalam status Menunggu Approval.');
+        }
+
+        $order->update(['status' => 'ditolak', 'rejection_reason' => $reason]);
+        $this->orders->recordStatusHistory($order, 'menunggu_approval', 'ditolak', 'admin', $admin->id, $reason);
+
+        $this->notifications->notify(
+            $order->user,
+            'order.rejected',
+            'Pesanan ditolak',
+            "Pesanan {$order->order_number} ditolak: {$reason}",
+            $order,
+        );
+
+        return $order;
     }
 }
