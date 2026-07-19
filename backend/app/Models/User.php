@@ -60,6 +60,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Notification::class);
     }
 
+    public function chatThread(): HasOne
+    {
+        return $this->hasOne(ChatThread::class, 'customer_id');
+    }
+
     /**
      * Get the attributes that should be cast.
      *

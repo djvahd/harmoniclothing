@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\BiteshipWebhookController;
 use App\Http\Controllers\Api\BulkPricingController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CatalogController;
+use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\CreatorController;
 use App\Http\Controllers\Api\CreatorDesignController;
@@ -73,6 +74,11 @@ Route::middleware('auth:sanctum')->group(function () {
     // 5.2_API_List.md §4 — /notifications (FR-029), scope own
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::patch('/notifications/{notification}/read', [NotificationController::class, 'markRead']);
+
+    // 5.2_API_List.md §4 — /chat/threads (FR-028), scope own, customer side
+    Route::get('/chat/threads', [ChatController::class, 'index']);
+    Route::get('/chat/threads/{thread}/messages', [ChatController::class, 'messages']);
+    Route::post('/chat/threads/{thread}/messages', [ChatController::class, 'storeMessage']);
 
     // 5.2_API_List.md §5 — Creator upgrade (FR-041/035)
     Route::post('/account/become-creator', [CreatorController::class, 'becomeCreator']);
