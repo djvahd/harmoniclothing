@@ -85,4 +85,39 @@ class AdminOrderTest extends TestCase
             'reason' => 'Terlambat menolak pesanan ini.',
         ])->assertStatus(409);
     }
+
+    /** FR-022: booking degrades gracefully without Biteship credentials configured locally. */
+    public function test_admin_can_book_a_shipment_for_an_order_in_production(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $order = Order::factory()->diprosesProduksi()->create();
+
+        $response = $this->actingAs($admin)->postJson("/api/admin/orders/{$order->id}/shipment", [
+            'courier' => 'jne',
+        ]);
+
+        $response->assertCreated()
+            ->assertJsonPath('data.courier', 'jne')
+            ->assertJsonPath('data.status', 'menunggu_pickup');
+    }
+
+    public function test_cannot_book_a_shipment_before_production_starts(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $order = Order::factory()->menungguApproval()->create();
+
+        $this->actingAs($admin)->postJson("/api/admin/orders/{$order->id}/shipment", [
+            'courier' => 'jne',
+        ])->assertUnprocessable();
+    }
+
+    public function test_cannot_book_a_second_shipment_for_the_same_order(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $order = Order::factory()->diprosesProduksi()->create();
+        $this->actingAs($admin)->postJson("/api/admin/orders/{$order->id}/shipment", ['courier' => 'jne']);
+
+        $this->actingAs($admin)->postJson("/api/admin/orders/{$order->id}/shipment", ['courier' => 'sicepat'])
+            ->assertUnprocessable();
+    }
 }

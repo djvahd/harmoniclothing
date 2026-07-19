@@ -2,10 +2,13 @@
 
 use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\AdminCatalogController;
+use App\Http\Controllers\Api\AdminChatController;
 use App\Http\Controllers\Api\AdminCreatorController;
 use App\Http\Controllers\Api\AdminDashboardController;
 use App\Http\Controllers\Api\AdminDesignController;
+use App\Http\Controllers\Api\AdminNotificationSettingController;
 use App\Http\Controllers\Api\AdminOrderController;
+use App\Http\Controllers\Api\AdminPaymentController;
 use App\Http\Controllers\Api\AdminUserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BiteshipWebhookController;
@@ -143,4 +146,14 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
     Route::get('/production-queue', [AdminOrderController::class, 'productionQueue']); // FR-021
     Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus']); // FR-021
     Route::post('/orders/{order}/reject', [AdminOrderController::class, 'reject']); // FR-043
+
+    Route::get('/payments', [AdminPaymentController::class, 'index']); // FR-032
+    Route::post('/orders/{order}/shipment', [AdminOrderController::class, 'bookShipment']); // FR-022
+
+    Route::get('/chat/threads', [AdminChatController::class, 'index']); // FE-041
+    Route::get('/chat/threads/{thread}/messages', [AdminChatController::class, 'messages']);
+    Route::post('/chat/threads/{thread}/messages', [AdminChatController::class, 'storeMessage']);
+
+    Route::get('/notification-settings', [AdminNotificationSettingController::class, 'index']); // FE-038
+    Route::patch('/notification-settings/{type}', [AdminNotificationSettingController::class, 'update']);
 });

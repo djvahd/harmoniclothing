@@ -15,6 +15,13 @@ class ChatThreadResource extends JsonResource
             'id' => $this->id,
             'assigned_admin_id' => $this->assigned_admin_id,
             'last_message_at' => $this->last_message_at,
+            // Only populated for the Admin-side listing (FE-041), which
+            // eager-loads 'customer' — the Customer-side response never
+            // loads it, since the caller already knows who they are.
+            'customer' => $this->whenLoaded('customer', fn () => [
+                'id' => $this->customer->id,
+                'name' => $this->customer->name,
+            ]),
         ];
     }
 }

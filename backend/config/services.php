@@ -41,4 +41,8 @@ return [
         'is_production' => env('MIDTRANS_IS_PRODUCTION', false),
     ],
 
+    'biteship' => [
+        'api_key' => env('BITESHIP_API_KEY'),
+    ],
+
 ];

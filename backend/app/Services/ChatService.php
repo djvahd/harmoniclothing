@@ -33,8 +33,19 @@ class ChatService
         return $thread->messages()->with('sender')->oldest()->get();
     }
 
+    /** GET /admin/chat/threads — FE-041, scope all. */
+    public function listForAdmin(): Collection
+    {
+        return ChatThread::query()->with('customer')->orderByDesc('last_message_at')->get();
+    }
+
     public function sendMessage(ChatThread $thread, User $sender, string $senderRole, string $message): ChatMessage
     {
+        // FE-041: a thread is assigned to whichever admin replies first.
+        if ($senderRole === 'admin' && ! $thread->assigned_admin_id) {
+            $thread->update(['assigned_admin_id' => $sender->id]);
+        }
+
         $chatMessage = $thread->messages()->create([
             'sender_id' => $sender->id,
             'sender_role' => $senderRole,

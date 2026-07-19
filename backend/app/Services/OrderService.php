@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Order;
+use App\Models\Shipment;
 use App\Models\User;
 use App\Repositories\CartRepository;
 use App\Repositories\OrderRepository;
@@ -19,6 +20,7 @@ class OrderService
         private readonly CartRepository $cart,
         private readonly PricingService $pricing,
         private readonly NotificationService $notifications,
+        private readonly BiteshipService $biteship,
     ) {}
 
     public function list(User $user, int $perPage): LengthAwarePaginator
@@ -142,5 +144,41 @@ class OrderService
         );
 
         return $order;
+    }
+
+    /**
+     * POST /admin/orders/{id}/shipment — FR-022. Only creates the Shipment
+     * row (menunggu_pickup) and attempts a real Biteship booking when
+     * credentials are configured — degrades to a booking-less row otherwise,
+     * same pattern as PaymentService/Midtrans. Deliberately does NOT
+     * transition order.status to "dikirim" here — that stays exclusively
+     * webhook-driven (BiteshipWebhookService), since booking and "actually
+     * shipped" are different moments.
+     */
+    public function bookShipment(Order $order, string $courier): Shipment
+    {
+        if ($order->status !== 'diproses_produksi') {
+            throw ValidationException::withMessages([
+                'status' => ['Pengiriman hanya dapat dibuat selama status Diproses Produksi.'],
+            ]);
+        }
+
+        if ($order->shipment()->exists()) {
+            throw ValidationException::withMessages([
+                'order' => ['Pesanan ini sudah memiliki data pengiriman.'],
+            ]);
+        }
+
+        $booking = blank(config('services.biteship.api_key'))
+            ? ['biteship_order_id' => null, 'tracking_number' => null]
+            : $this->biteship->createBooking($order, $courier);
+
+        return Shipment::create([
+            'order_id' => $order->id,
+            'biteship_order_id' => $booking['biteship_order_id'],
+            'tracking_number' => $booking['tracking_number'],
+            'courier' => $courier,
+            'status' => 'menunggu_pickup',
+        ]);
     }
 }

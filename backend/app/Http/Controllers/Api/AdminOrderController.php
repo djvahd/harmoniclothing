@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderStatusRequest;
 use App\Http\Requests\ReasonRequest;
+use App\Http\Requests\ShipmentRequest;
 use App\Http\Resources\OrderResource;
+use App\Http\Resources\ShipmentResource;
 use App\Models\Order;
 use App\Services\OrderService;
 use Illuminate\Http\JsonResponse;
@@ -35,5 +37,13 @@ class AdminOrderController extends Controller
         $order = $this->orders->reject($order, $request->user(), $request->validated('reason'));
 
         return response()->json(['data' => new OrderResource($order)]);
+    }
+
+    /** POST /admin/orders/{order}/shipment — FR-022, Biteship booking. */
+    public function bookShipment(ShipmentRequest $request, Order $order): JsonResponse
+    {
+        $shipment = $this->orders->bookShipment($order, $request->validated('courier'));
+
+        return response()->json(['data' => new ShipmentResource($shipment)], 201);
     }
 }
