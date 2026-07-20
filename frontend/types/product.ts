@@ -41,7 +41,7 @@ export interface Design {
   status: DesignStatus;
   rejection_reason: string | null;
   category?: Category;
-  creator: { id: number; name: string };
+  creator: { id: number; name: string; slug: string | null };
   products?: Product[];
   apparel?: DesignApparel[];
 }

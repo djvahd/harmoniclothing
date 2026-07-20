@@ -23,6 +23,7 @@ class DesignResource extends JsonResource
             'creator' => [
                 'id' => $this->creator->id,
                 'name' => $this->creator->name,
+                'slug' => $this->creator->creatorProfile?->slug,
             ],
             // FE-017: 3D Editor Mode Marketplace only offers the apparel the
             // Creator picked for this design (design_product pivot).

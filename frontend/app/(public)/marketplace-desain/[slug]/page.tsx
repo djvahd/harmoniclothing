@@ -33,12 +33,18 @@ export default function DetailDesainPage() {
 
       <div className="flex flex-1 flex-col gap-4">
         <h1 className="font-heading text-2xl font-semibold text-text-primary">{design.title}</h1>
-        {/* DesignResource.creator only exposes {id, name}, no slug, so the
-            public creator profile (/kreator/{slug}) can't be linked from
-            here - shown as plain text until that gap is closed. */}
-        <p className="font-body text-sm font-medium text-text-secondary">
-          by {design.creator.name}
-        </p>
+        {design.creator.slug ? (
+          <Link
+            href={`/kreator/${design.creator.slug}`}
+            className="font-body text-sm font-medium text-primary"
+          >
+            by {design.creator.name}
+          </Link>
+        ) : (
+          <p className="font-body text-sm font-medium text-text-secondary">
+            by {design.creator.name}
+          </p>
+        )}
         <p className="font-body text-sm text-text-secondary">{design.description}</p>
 
         <div className="flex flex-col gap-3">
