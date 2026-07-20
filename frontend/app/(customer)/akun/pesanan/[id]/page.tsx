@@ -17,7 +17,7 @@ import { ORDER_STATUS_LABEL, ORDER_STATUS_VARIANT } from "@/lib/order-status";
 const TIMELINE_STEPS: { status: string; label: string }[] = [
   { status: "belum_dibayar", label: "Pesanan Dibuat" },
   { status: "menunggu_approval", label: "Menunggu Approval" },
-  { status: "diproses", label: "Pesanan Diproduksi" },
+  { status: "diproses_produksi", label: "Pesanan Diproduksi" },
   { status: "dikirim", label: "Pesanan Dikirim" },
   { status: "selesai", label: "Pesanan Selesai" },
 ];

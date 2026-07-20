@@ -3,7 +3,7 @@ import type { Design, ProductVariant } from "./product";
 export type OrderStatus =
   | "belum_dibayar"
   | "menunggu_approval"
-  | "diproses"
+  | "diproses_produksi"
   | "dikirim"
   | "selesai"
   | "dibatalkan";
