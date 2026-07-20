@@ -3,6 +3,7 @@ import Image from "next/image";
 import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
 import type { Design } from "@/types/product";
+import WishlistButton from "./WishlistButton";
 
 interface DesignCardProps {
   design: Design;
@@ -21,6 +22,7 @@ export default function DesignCard({ design, startingPrice }: DesignCardProps) {
         {thumbnail && (
           <Image src={thumbnail} alt={design.title} fill sizes="220px" className="object-cover" />
         )}
+        <WishlistButton designId={design.id} className="absolute right-2 top-2" />
       </div>
       <p className="font-body text-sm font-semibold text-text-primary">{design.title}</p>
       <div className="flex items-center gap-1.5">
