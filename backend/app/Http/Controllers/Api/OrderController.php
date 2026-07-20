@@ -39,7 +39,7 @@ class OrderController extends Controller
     /** GET /orders/{order} — scoped to the user's own orders, 404s on a foreign id. */
     public function show(Request $request, int $order): JsonResponse
     {
-        $order = $request->user()->orders()->with('items.productVariant', 'items.design')->findOrFail($order);
+        $order = $request->user()->orders()->with('items.productVariant.product', 'items.design')->findOrFail($order);
 
         return response()->json(['data' => new OrderResource($order)]);
     }

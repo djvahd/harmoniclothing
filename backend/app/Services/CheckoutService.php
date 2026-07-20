@@ -59,7 +59,7 @@ class CheckoutService
 
             $items->each(fn (CartItem $item) => $item->delete());
 
-            return $order->load('items');
+            return $order->load('items.productVariant.product', 'items.design');
         });
     }
 
@@ -108,7 +108,7 @@ class CheckoutService
 
             $items->each(fn (CartItem $item) => $item->delete());
 
-            return $order->load('items');
+            return $order->load('items.productVariant.product', 'items.design');
         });
     }
 

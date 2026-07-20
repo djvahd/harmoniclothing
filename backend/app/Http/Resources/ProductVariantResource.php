@@ -6,9 +6,21 @@ use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin ProductVariant */
+/**
+ * @mixin ProductVariant
+ *
+ * The 'product' key is only present when the `product` relation is eager-
+ * loaded (cart/order contexts, where the frontend needs the product name
+ * to show what's actually in the cart/order - discovered missing via live
+ * browser testing 2026-07-20, product names were silently blank on Cart/
+ * Checkout/Riwayat Pesanan). Deliberately omitted from the public Katalog
+ * listing (ProductResource already has the name at the top level there;
+ * re-embedding it per-variant would be redundant payload).
+ */
 class ProductVariantResource extends JsonResource
 {
+    use ResolvesLocale;
+
     public function toArray(Request $request): array
     {
         return [
@@ -19,6 +31,10 @@ class ProductVariantResource extends JsonResource
             'material' => $this->material,
             'price_modifier' => $this->price_modifier,
             'mockup_asset_path' => $this->mockup_asset_path,
+            'product' => $this->whenLoaded('product', fn () => [
+                'name' => $this->product->{'name_'.$this->locale($request)},
+                'slug' => $this->product->slug,
+            ]),
         ];
     }
 }

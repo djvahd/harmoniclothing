@@ -10,10 +10,19 @@ use Illuminate\Support\Str;
 
 class OrderRepository
 {
-    /** GET /orders — FR-019, scope own. */
+    /**
+     * GET /orders — FR-019, scope own. Eager-loads the same nested relations
+     * as OrderController::show() (items.productVariant.product, items.design,
+     * shipment) - OrderItemResource/OrderResource read these unconditionally,
+     * so omitting them here crashed the frontend list view with `product_variant`
+     * missing on every item (caught via live browser testing 2026-07-20).
+     */
     public function paginateForUser(User $user, int $perPage): LengthAwarePaginator
     {
-        return $user->orders()->with('items')->latest()->paginate($perPage);
+        return $user->orders()
+            ->with(['items.productVariant.product', 'items.design', 'shipment'])
+            ->latest()
+            ->paginate($perPage);
     }
 
     public function create(array $attributes): Order
