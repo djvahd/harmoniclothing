@@ -16,10 +16,11 @@ export interface Address {
   label: string;
   recipient_name: string;
   phone: string;
-  full_address: string;
-  city: string;
   province: string;
+  city: string;
+  district: string;
   postal_code: string;
+  address_line: string;
   is_default: boolean;
 }
 
