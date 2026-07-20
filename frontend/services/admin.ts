@@ -45,7 +45,7 @@ export interface SalesReport {
   period: { from: string; to: string };
   revenue: { total: string; average_order_value: string };
   orders: { total: number; by_status: Record<string, number> };
-  top_products: { product_id: number; name: string; total_sold: number }[];
+  top_products: { product_id: number; name: string; quantity_sold: number; revenue: string }[];
 }
 
 export interface AuditLog {

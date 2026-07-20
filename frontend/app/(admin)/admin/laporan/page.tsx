@@ -48,7 +48,7 @@ export default function SalesReportPage() {
                 {report.top_products.map((p) => (
                   <div key={p.product_id} className="flex justify-between font-body text-sm">
                     <span className="text-text-primary">{p.name}</span>
-                    <span className="text-text-secondary">{p.total_sold} terjual</span>
+                    <span className="text-text-secondary">{p.quantity_sold} terjual</span>
                   </div>
                 ))}
                 {report.top_products.length === 0 && (
