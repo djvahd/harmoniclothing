@@ -18,8 +18,12 @@ export function getProductBySlug(slug: string) {
   return apiFetch<{ data: Product }>(`/catalog/products/${slug}`);
 }
 
+export interface BulkPricingTier {
+  min_qty: number;
+  max_qty: number | null;
+  price_per_unit: number;
+}
+
 export function getBulkPricingTiers() {
-  return apiFetch<{ data: { min_quantity: number; max_quantity: number | null; discount_percent: number }[] }>(
-    "/bulk-pricing-tiers",
-  );
+  return apiFetch<{ data: BulkPricingTier[] }>("/bulk-pricing-tiers");
 }

@@ -1,5 +1,6 @@
 import { apiFetch } from "@/lib/api";
 import type { Order } from "@/types/order";
+import type { Invoice } from "@/types/wishlist";
 
 export function getOrders() {
   return apiFetch<{ data: Order[] }>("/orders");
@@ -19,6 +20,10 @@ export function reorder(id: number) {
 
 export function confirmReceived(id: number) {
   return apiFetch<{ data: Order }>(`/orders/${id}/confirm-received`, { method: "POST" });
+}
+
+export function getInvoice(orderId: number) {
+  return apiFetch<{ data: Invoice }>(`/orders/${orderId}/invoice`);
 }
 
 export function submitReview(
