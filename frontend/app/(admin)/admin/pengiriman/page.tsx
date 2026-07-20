@@ -6,16 +6,19 @@ import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
+import PromptModal from "@/components/ui/PromptModal";
 import { bookShipment, getProductionQueue } from "@/services/admin";
 
 export default function KelolaPengirimanPage() {
   const { data, isLoading } = useSWR("/admin/production-queue", getProductionQueue);
   const orders = (data?.data ?? []).filter((o) => o.status === "diproses_produksi");
   const [loadingId, setLoadingId] = useState<number | null>(null);
+  const [bookingId, setBookingId] = useState<number | null>(null);
 
-  async function handleBook(id: number) {
-    const courier = window.prompt("Nama kurir (mis. JNE, J&T):");
-    if (!courier) return;
+  async function handleBook(courier: string) {
+    if (bookingId === null) return;
+    const id = bookingId;
+    setBookingId(null);
     setLoadingId(id);
     try {
       await bookShipment(id, courier);
@@ -67,7 +70,7 @@ export default function KelolaPengirimanPage() {
                   </td>
                   <td className="p-4">
                     {!order.shipment && (
-                      <Button loading={loadingId === order.id} onClick={() => handleBook(order.id)}>
+                      <Button loading={loadingId === order.id} onClick={() => setBookingId(order.id)}>
                         Booking Kurir
                       </Button>
                     )}
@@ -78,6 +81,15 @@ export default function KelolaPengirimanPage() {
           </table>
         </div>
       </div>
+      <PromptModal
+        open={bookingId !== null}
+        title="Booking Kurir"
+        label="Nama kurir (mis. JNE, J&T)"
+        minLength={1}
+        confirmLabel="Booking"
+        onConfirm={handleBook}
+        onCancel={() => setBookingId(null)}
+      />
     </SidebarPageShell>
   );
 }

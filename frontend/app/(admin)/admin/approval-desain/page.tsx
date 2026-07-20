@@ -6,6 +6,7 @@ import useSWR, { mutate } from "swr";
 import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Button from "@/components/ui/Button";
+import PromptModal from "@/components/ui/PromptModal";
 import { approveDesign, getPendingDesigns, rejectDesign } from "@/services/admin";
 import { storageUrl } from "@/lib/storage";
 
@@ -13,6 +14,7 @@ export default function ApprovalDesainPage() {
   const { data, isLoading } = useSWR("/admin/designs/pending", getPendingDesigns);
   const designs = data?.data ?? [];
   const [loadingId, setLoadingId] = useState<number | null>(null);
+  const [rejectingId, setRejectingId] = useState<number | null>(null);
 
   async function handleApprove(id: number) {
     setLoadingId(id);
@@ -24,9 +26,10 @@ export default function ApprovalDesainPage() {
     }
   }
 
-  async function handleReject(id: number) {
-    const reason = window.prompt("Alasan penolakan (minimal 10 karakter):");
-    if (!reason || reason.length < 10) return;
+  async function handleReject(reason: string) {
+    if (rejectingId === null) return;
+    const id = rejectingId;
+    setRejectingId(null);
     setLoadingId(id);
     try {
       await rejectDesign(id, reason);
@@ -65,7 +68,7 @@ export default function ApprovalDesainPage() {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="secondary" loading={loadingId === design.id} onClick={() => handleReject(design.id)}>
+                  <Button variant="secondary" loading={loadingId === design.id} onClick={() => setRejectingId(design.id)}>
                     Tolak
                   </Button>
                   <Button loading={loadingId === design.id} onClick={() => handleApprove(design.id)}>
@@ -77,6 +80,15 @@ export default function ApprovalDesainPage() {
           })}
         </div>
       </div>
+      <PromptModal
+        open={rejectingId !== null}
+        title="Tolak Desain"
+        label="Alasan penolakan"
+        minLength={10}
+        confirmLabel="Tolak"
+        onConfirm={handleReject}
+        onCancel={() => setRejectingId(null)}
+      />
     </SidebarPageShell>
   );
 }

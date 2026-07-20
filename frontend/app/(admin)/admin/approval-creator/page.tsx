@@ -5,12 +5,14 @@ import useSWR, { mutate } from "swr";
 import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Button from "@/components/ui/Button";
+import PromptModal from "@/components/ui/PromptModal";
 import { approveCreator, getPendingCreators, rejectCreator } from "@/services/admin";
 
 export default function ApprovalCreatorPage() {
   const { data, isLoading } = useSWR("/admin/creators/pending", getPendingCreators);
   const creators = data?.data ?? [];
   const [loadingId, setLoadingId] = useState<number | null>(null);
+  const [rejectingId, setRejectingId] = useState<number | null>(null);
 
   async function handleApprove(id: number) {
     setLoadingId(id);
@@ -22,9 +24,10 @@ export default function ApprovalCreatorPage() {
     }
   }
 
-  async function handleReject(id: number) {
-    const reason = window.prompt("Alasan penolakan (minimal 10 karakter):");
-    if (!reason || reason.length < 10) return;
+  async function handleReject(reason: string) {
+    if (rejectingId === null) return;
+    const id = rejectingId;
+    setRejectingId(null);
     setLoadingId(id);
     try {
       await rejectCreator(id, reason);
@@ -61,7 +64,7 @@ export default function ApprovalCreatorPage() {
                 <Button
                   variant="secondary"
                   loading={loadingId === creator.id}
-                  onClick={() => handleReject(creator.id)}
+                  onClick={() => setRejectingId(creator.id)}
                 >
                   Tolak
                 </Button>
@@ -73,6 +76,15 @@ export default function ApprovalCreatorPage() {
           ))}
         </div>
       </div>
+      <PromptModal
+        open={rejectingId !== null}
+        title="Tolak Pengajuan Creator"
+        label="Alasan penolakan"
+        minLength={10}
+        confirmLabel="Tolak"
+        onConfirm={handleReject}
+        onCancel={() => setRejectingId(null)}
+      />
     </SidebarPageShell>
   );
 }

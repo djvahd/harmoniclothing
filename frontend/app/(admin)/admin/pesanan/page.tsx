@@ -6,6 +6,7 @@ import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
+import PromptModal from "@/components/ui/PromptModal";
 import { getProductionQueue, rejectOrder } from "@/services/admin";
 import { formatCurrency } from "@/lib/format";
 import { ORDER_STATUS_LABEL, ORDER_STATUS_VARIANT } from "@/lib/order-status";
@@ -14,10 +15,12 @@ export default function KelolaPesananPage() {
   const { data, isLoading } = useSWR("/admin/production-queue", getProductionQueue);
   const orders = data?.data ?? [];
   const [loadingId, setLoadingId] = useState<number | null>(null);
+  const [rejectingId, setRejectingId] = useState<number | null>(null);
 
-  async function handleReject(id: number) {
-    const reason = window.prompt("Alasan penolakan pesanan (minimal 10 karakter):");
-    if (!reason || reason.length < 10) return;
+  async function handleReject(reason: string) {
+    if (rejectingId === null) return;
+    const id = rejectingId;
+    setRejectingId(null);
     setLoadingId(id);
     try {
       await rejectOrder(id, reason);
@@ -62,7 +65,7 @@ export default function KelolaPesananPage() {
                   </td>
                   <td className="p-4">
                     {order.status === "menunggu_approval" && (
-                      <Button variant="danger" loading={loadingId === order.id} onClick={() => handleReject(order.id)}>
+                      <Button variant="danger" loading={loadingId === order.id} onClick={() => setRejectingId(order.id)}>
                         Tolak
                       </Button>
                     )}
@@ -73,6 +76,15 @@ export default function KelolaPesananPage() {
           </table>
         </div>
       </div>
+      <PromptModal
+        open={rejectingId !== null}
+        title="Tolak Pesanan"
+        label="Alasan penolakan"
+        minLength={10}
+        confirmLabel="Tolak"
+        onConfirm={handleReject}
+        onCancel={() => setRejectingId(null)}
+      />
     </SidebarPageShell>
   );
 }
