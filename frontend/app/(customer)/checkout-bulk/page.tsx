@@ -8,6 +8,7 @@ import PriceSummaryRow from "@/components/ui/PriceSummaryRow";
 import Button from "@/components/ui/Button";
 import { getCart } from "@/services/cart";
 import { getAddresses } from "@/services/account";
+import { getBulkPricingTiers } from "@/services/catalog";
 import { checkoutBulk } from "@/services/checkout";
 import { ApiError } from "@/lib/api";
 
@@ -15,11 +16,23 @@ export default function CheckoutBulkPage() {
   const router = useRouter();
   const { data: cartData } = useSWR("/cart", getCart);
   const { data: addressData } = useSWR("/account/addresses", getAddresses);
+  const { data: tiersData } = useSWR("/bulk-pricing-tiers", getBulkPricingTiers);
 
   const items = cartData?.data ?? [];
   const addresses = addressData?.data ?? [];
-  const subtotal = items.reduce((sum, item) => sum + Number(item.subtotal), 0);
+  const tiers = tiersData?.data ?? [];
   const totalQty = items.reduce((sum, item) => sum + item.quantity, 0);
+
+  // Mirrors PricingService::bulkUnitPriceFor() - the backend recomputes the
+  // tier fresh from total quantity at checkout (BR-012), it does NOT use the
+  // cart items' regular-price subtotal snapshots. Summing item.subtotal here
+  // showed a wildly wrong total (regular price x qty) before the real bulk
+  // price was even applied - caught via live browser testing 2026-07-20.
+  const tier = tiers.find(
+    (t) => totalQty >= t.min_qty && (t.max_qty === null || totalQty <= t.max_qty),
+  );
+  const unitPrice = Number(tier?.price_per_unit ?? 0);
+  const subtotal = unitPrice * totalQty;
 
   const [addressId, setAddressId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
