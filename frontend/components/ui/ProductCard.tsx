@@ -9,7 +9,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
   return (
     <Link
-      href={`/customize/${product.slug}`}
+      href={`/katalog/${product.slug}`}
       className="flex w-[220px] flex-col gap-1.5 rounded-md border border-border bg-surface p-4"
     >
       <div className="relative h-[174px] w-full shrink-0 overflow-hidden rounded-sm bg-border">

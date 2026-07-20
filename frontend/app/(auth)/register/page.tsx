@@ -95,7 +95,15 @@ export default function RegisterPage() {
             className="mt-0.5"
             required
           />
-          Saya menyetujui Syarat & Ketentuan dan Kebijakan Privasi Harmoni Clothing.
+          Saya menyetujui{" "}
+          <Link href="/syarat-ketentuan" className="font-medium text-primary" target="_blank">
+            Syarat & Ketentuan
+          </Link>{" "}
+          dan{" "}
+          <Link href="/kebijakan-privasi" className="font-medium text-primary" target="_blank">
+            Kebijakan Privasi
+          </Link>{" "}
+          Harmoni Clothing.
         </label>
         {errors.general && <p className="font-body text-xs text-red-500">{errors.general[0]}</p>}
         <Button type="submit" fullWidth loading={loading}>
