@@ -24,5 +24,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call(CatalogSeeder::class);
         $this->call(BulkPricingTierSeeder::class);
+        $this->call(NotificationSettingSeeder::class);
     }
 }
