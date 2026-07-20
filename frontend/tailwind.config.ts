@@ -9,8 +9,25 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        background: "var(--color-background)",
+        primary: "var(--color-primary)",
+        accent: "var(--color-accent)",
+        surface: "var(--color-surface)",
+        border: "var(--color-border)",
+        text: {
+          primary: "var(--color-text-primary)",
+          secondary: "var(--color-text-secondary)",
+          "on-accent": "var(--color-text-on-accent)",
+        },
+      },
+      fontFamily: {
+        heading: ["var(--font-montserrat)", "sans-serif"],
+        body: ["var(--font-inter)", "sans-serif"],
+      },
+      borderRadius: {
+        sm: "8px",
+        md: "10px",
+        lg: "12px",
       },
     },
   },
