@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import AuthCard from "@/components/layout/AuthCard";
 import PasswordInput from "@/components/ui/PasswordInput";
@@ -8,7 +8,7 @@ import Button from "@/components/ui/Button";
 import { resetPassword } from "@/services/auth";
 import { ApiError } from "@/lib/api";
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const router = useRouter();
   const params = useSearchParams();
   const [password, setPassword] = useState("");
@@ -58,5 +58,13 @@ export default function ResetPasswordPage() {
         </Button>
       </form>
     </AuthCard>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={null}>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }

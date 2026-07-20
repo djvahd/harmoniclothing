@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import useSWR from "swr";
 import { Search, SlidersHorizontal } from "lucide-react";
 import ProductCard from "@/components/ui/ProductCard";
@@ -16,7 +17,7 @@ export default function KatalogPage() {
     getProducts({ category: category ?? undefined, per_page: 40 }),
   );
 
-  const products = data?.data ?? [];
+  const products = useMemo(() => data?.data ?? [], [data]);
   const categories = useMemo(() => {
     const map = new Map<string, string>();
     products.forEach((p) => {
@@ -45,8 +46,12 @@ export default function KatalogPage() {
             sesuai keinginan sendiri.
           </p>
           <div className="flex gap-3">
-            <Button variant="primary">Mulai Custom Design</Button>
-            <Button variant="secondary">Lihat Marketplace</Button>
+            <a href="#product-grid">
+              <Button variant="primary">Mulai Custom Design</Button>
+            </a>
+            <Link href="/marketplace-desain">
+              <Button variant="secondary">Lihat Marketplace</Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -77,7 +82,10 @@ export default function KatalogPage() {
         </button>
       </section>
 
-      <section className="mx-auto flex w-full max-w-6xl flex-wrap justify-center gap-6 px-4 py-10 md:justify-start md:px-8">
+      <section
+        id="product-grid"
+        className="mx-auto flex w-full max-w-6xl flex-wrap justify-center gap-6 px-4 py-10 md:justify-start md:px-8"
+      >
         {isLoading && <p className="font-body text-sm text-text-secondary">Memuat produk...</p>}
         {!isLoading && filtered.length === 0 && (
           <p className="font-body text-sm text-text-secondary">Belum ada produk ditemukan.</p>
