@@ -8,6 +8,7 @@ export default function Logo({ variant = "color" }: { variant?: "color" | "white
         src={variant === "white" ? "/logo-white.png" : "/logo.png"}
         alt="Harmoni Clothing"
         fill
+        sizes="100px"
         className="object-contain object-left"
         priority
       />

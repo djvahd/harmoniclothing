@@ -12,7 +12,7 @@ export default function KeranjangPage() {
   const router = useRouter();
   const { data, isLoading } = useSWR("/cart", getCart);
   const items = data?.data ?? [];
-  const subtotal = items.reduce((sum, item) => sum + item.subtotal, 0);
+  const subtotal = items.reduce((sum, item) => sum + Number(item.subtotal), 0);
 
   async function handleQuantityChange(id: number, quantity: number) {
     await updateCartItem(id, quantity);

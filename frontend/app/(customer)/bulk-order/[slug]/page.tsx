@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { getProductBySlug, getBulkPricingTiers } from "@/services/catalog";
 import { addToCart } from "@/services/cart";
 import { formatCurrency } from "@/lib/format";
@@ -46,6 +46,7 @@ export default function BulkOrderPage() {
       for (const [variantId, qty] of entries) {
         await addToCart({ product_variant_id: Number(variantId), quantity: qty });
       }
+      await mutate("/cart");
       router.push("/checkout-bulk");
     } finally {
       setSubmitting(false);

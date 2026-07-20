@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import OptionRow from "@/components/ui/OptionRow";
@@ -18,14 +18,19 @@ export default function CheckoutBulkPage() {
 
   const items = cartData?.data ?? [];
   const addresses = addressData?.data ?? [];
-  const subtotal = items.reduce((sum, item) => sum + item.subtotal, 0);
+  const subtotal = items.reduce((sum, item) => sum + Number(item.subtotal), 0);
   const totalQty = items.reduce((sum, item) => sum + item.quantity, 0);
 
-  const [addressId, setAddressId] = useState<number | null>(
-    addresses.find((a) => a.is_default)?.id ?? null,
-  );
+  const [addressId, setAddressId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (addressId === null && addresses.length > 0) {
+      setAddressId(addresses.find((a) => a.is_default)?.id ?? addresses[0].id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [addresses]);
 
   async function handleSubmit() {
     if (!addressId) {

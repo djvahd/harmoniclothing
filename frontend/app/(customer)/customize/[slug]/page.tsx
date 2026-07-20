@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { Upload } from "lucide-react";
 import Tag from "@/components/ui/Tag";
 import QuantityStepper from "@/components/ui/QuantityStepper";
@@ -60,7 +60,7 @@ function ProductEditorForm() {
   const selectedVariant = product?.variants?.find(
     (v) => v.color === color && v.size === size,
   );
-  const unitPrice = (product?.base_price ?? 0) + (selectedVariant?.price_modifier ?? 0);
+  const unitPrice = Number(product?.base_price ?? 0) + Number(selectedVariant?.price_modifier ?? 0);
   const total = unitPrice * quantity;
   const previewImage = storageUrl(
     design?.thumbnail_path ?? selectedVariant?.mockup_asset_path ?? product?.variants?.[0]?.mockup_asset_path,
@@ -94,6 +94,7 @@ function ProductEditorForm() {
         quantity,
         custom_design_file_path: uploadedPath ?? undefined,
       });
+      await mutate("/cart");
       router.push("/keranjang");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Terjadi kesalahan, coba lagi.");
