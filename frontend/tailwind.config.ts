@@ -37,6 +37,15 @@ const config: Config = {
         md: "10px",
         lg: "12px",
       },
+      keyframes: {
+        marquee: {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
+      },
+      animation: {
+        marquee: "marquee 100s linear infinite",
+      },
     },
   },
   plugins: [],

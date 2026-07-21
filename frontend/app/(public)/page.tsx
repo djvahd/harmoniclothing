@@ -3,10 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import useSWR from "swr";
-import { ClipboardCheck, Palette, ShoppingBag, Truck, Award, Zap } from "lucide-react";
+import { ArrowRight, ClipboardCheck, Palette, ShoppingBag, Truck } from "lucide-react";
 import ProductCard from "@/components/ui/ProductCard";
 import DesignCard from "@/components/ui/DesignCard";
-import FeatureCard from "@/components/ui/FeatureCard";
 import TestimonialCard from "@/components/ui/TestimonialCard";
 import StepItem from "@/components/ui/StepItem";
 import Button from "@/components/ui/Button";
@@ -32,22 +31,55 @@ const TESTIMONIALS = [
     quote: "Kualitas produknya keren, sablonnya rapi dan bahannya nyaman dipakai.",
     name: "Dimas Alfarizi",
     role: "Founder Local Brand",
+    rating: 5,
   },
   {
     quote: "Proses custom desainnya gampang banget, hasilnya sesuai ekspektasi.",
     name: "Sarah Amelia",
     role: "Mahasiswa",
+    rating: 5,
   },
   {
     quote: "Pengiriman cepat dan tim CS-nya responsif kalau ada kendala.",
     name: "Rizky Ramadhan",
     role: "Pemilik Toko Online",
+    rating: 4,
+  },
+  {
+    quote: "Beli desain dari Marketplace terus tinggal cetak ke produk, praktis banget.",
+    name: "Nadia Kirana",
+    role: "Content Creator",
+    rating: 5,
+  },
+  {
+    quote: "Order bulk buat acara komunitas lancar, harga per pcs jadi jauh lebih murah.",
+    name: "Fajar Nugroho",
+    role: "Ketua Komunitas Motor",
+    rating: 5,
+  },
+  {
+    quote: "Sebagai kreator, royalti dari desain yang kejual kelihatan jelas di dashboard.",
+    name: "Bella Anastasya",
+    role: "Kreator Desain",
+    rating: 4,
+  },
+  {
+    quote: "Bahan hoodie-nya tebal dan sablonnya awet, udah dicuci berkali-kali masih bagus.",
+    name: "Yoga Pratama",
+    role: "Pemilik Clothing Line",
+    rating: 5,
+  },
+  {
+    quote: "Revisi desain gampang lewat editor, nggak perlu bolak-balik chat admin.",
+    name: "Putri Wulandari",
+    role: "Event Organizer",
+    rating: 4,
   },
 ];
 
 export default function BerandaPage() {
-  const { data: productsData } = useSWR("/catalog/products?home", () => getProducts({ per_page: 5 }));
-  const { data: designsData } = useSWR("/marketplace/designs?home", () => getDesigns({ per_page: 4 }));
+  const { data: productsData } = useSWR("/catalog/products?home", () => getProducts({ per_page: 8 }));
+  const { data: designsData } = useSWR("/marketplace/designs?home", () => getDesigns({ per_page: 8 }));
 
   return (
     <div className="flex flex-col">
@@ -173,11 +205,15 @@ export default function BerandaPage() {
         </div>
       </section>
 
-      <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-16 md:px-20">
-        <h2 className="text-center font-heading text-h3 font-semibold text-text-primary md:text-h2">
+      <section className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-2 px-4 py-16 md:px-20">
+        <p className="font-body text-caption font-bold uppercase tracking-[0.6px] text-primary">
           Cara Kerja
+        </p>
+        <h2 className="text-center font-heading text-h3 font-semibold text-text-primary md:text-h2">
+          Mudah dalam 4 Langkah
         </h2>
-        <div className="flex flex-wrap justify-center gap-10">
+        <div className="relative mt-6 flex w-full flex-wrap justify-center gap-10">
+          <div className="absolute left-[12%] right-[12%] top-8 hidden border-t-2 border-dashed border-primary/40 md:block" />
           {STEPS.map((step, i) => (
             <StepItem key={step.title} number={i + 1} {...step} />
           ))}
@@ -185,75 +221,114 @@ export default function BerandaPage() {
       </section>
 
       <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-16 md:px-20">
-        <div className="flex items-center justify-between">
-          <h2 className="font-heading text-h3 font-semibold text-text-primary md:text-h2">
-            Produk Populer
-          </h2>
-          <Link href="/katalog" className="font-body text-sm font-medium text-primary">
-            Lihat Semua
+        <div className="flex items-end justify-between">
+          <div className="flex flex-col gap-1">
+            <p className="font-body text-caption font-bold uppercase tracking-[0.6px] text-primary">
+              Produk Populer
+            </p>
+            <h2 className="font-heading text-h3 font-semibold text-text-primary md:text-h2">
+              Beragam Produk, Bebas Berkreasi
+            </h2>
+          </div>
+          <Link href="/katalog" className="shrink-0 font-body text-sm font-medium text-primary">
+            Lihat Semua Produk →
           </Link>
         </div>
-        <div className="flex flex-wrap justify-center gap-6 md:justify-start">
-          {(productsData?.data ?? []).map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      </section>
-
-      <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-16 md:px-20">
-        <div className="flex items-center justify-between">
-          <h2 className="font-heading text-h3 font-semibold text-text-primary md:text-h2">
-            Desain Populer
-          </h2>
-          <Link href="/marketplace-desain" className="font-body text-sm font-medium text-primary">
-            Lihat Semua
-          </Link>
-        </div>
-        <div className="flex flex-wrap justify-center gap-6 md:justify-start">
-          {(designsData?.data ?? []).map((design) => (
-            <DesignCard key={design.id} design={design} />
-          ))}
-        </div>
-      </section>
-
-      <section className="bg-surface px-4 py-16 md:px-20">
-        <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-8">
-          <h2 className="text-center font-heading text-h3 font-semibold text-text-primary md:text-h2">
-            Kenapa Memilih Harmoni?
-          </h2>
-          <div className="flex flex-wrap justify-center gap-6">
-            <FeatureCard icon={Palette} title="Custom Design Mudah" description="Buat desain sendiri dengan editor intuitif." />
-            <FeatureCard icon={ShoppingBag} title="Marketplace Desain" description="Ratusan desain siap pakai dari kreator lokal." />
-            <FeatureCard icon={Award} title="Kualitas Premium" description="Bahan dan sablon terstandar untuk hasil terbaik." />
-            <FeatureCard icon={Zap} title="Produksi Cepat" description="Estimasi produksi jelas di setiap pesanan." />
+        <div className="relative overflow-hidden">
+          <div className="flex snap-x items-center gap-6 overflow-x-auto pb-2 [mask-image:linear-gradient(to_right,black_92%,transparent_100%)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {(productsData?.data ?? []).map((product) => (
+              <div key={product.id} className="shrink-0 snap-start">
+                <ProductCard product={product} />
+              </div>
+            ))}
+            <Link
+              href="/katalog?sort=populer"
+              aria-label="Lihat semua produk terpopuler"
+              className="flex size-11 shrink-0 snap-start items-center justify-center rounded-full border border-border bg-surface text-text-primary transition-colors hover:bg-background"
+            >
+              <ArrowRight className="size-5" />
+            </Link>
+            <div className="w-10 shrink-0" aria-hidden="true" />
           </div>
         </div>
       </section>
 
-      <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-16 md:px-20">
-        <h2 className="text-center font-heading text-h3 font-semibold text-text-primary md:text-h2">
+      <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-16 md:px-20">
+        <div className="flex items-end justify-between">
+          <div className="flex flex-col gap-1">
+            <p className="font-body text-caption font-bold uppercase tracking-[0.6px] text-primary">
+              Desain Populer
+            </p>
+            <h2 className="font-heading text-h3 font-semibold text-text-primary md:text-h2">
+              Karya Kreator Pilihan
+            </h2>
+          </div>
+          <Link href="/marketplace-desain" className="shrink-0 font-body text-sm font-medium text-primary">
+            Lihat Semua Desain →
+          </Link>
+        </div>
+        <div className="relative overflow-hidden">
+          <div className="flex snap-x items-center gap-6 overflow-x-auto pb-2 [mask-image:linear-gradient(to_right,black_92%,transparent_100%)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {(designsData?.data ?? []).map((design) => (
+              <div key={design.id} className="shrink-0 snap-start">
+                <DesignCard design={design} />
+              </div>
+            ))}
+            <Link
+              href="/marketplace-desain?sort=populer"
+              aria-label="Lihat semua desain terpopuler"
+              className="flex size-11 shrink-0 snap-start items-center justify-center rounded-full border border-border bg-surface text-text-primary transition-colors hover:bg-background"
+            >
+              <ArrowRight className="size-5" />
+            </Link>
+            <div className="w-10 shrink-0" aria-hidden="true" />
+          </div>
+        </div>
+      </section>
+
+      <section className="flex w-full flex-col items-center gap-2 py-16">
+        <p className="font-body text-caption font-bold uppercase tracking-[0.6px] text-primary">
           Apa Kata Mereka
+        </p>
+        <h2 className="text-center font-heading text-h3 font-semibold text-text-primary md:text-h2">
+          Dipercaya Banyak Kreator & Brand
         </h2>
-        <div className="flex flex-wrap justify-center gap-6">
-          {TESTIMONIALS.map((t) => (
-            <TestimonialCard key={t.name} {...t} />
-          ))}
+        <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent_0%,black_5%,black_95%,transparent_100%)]">
+          <div className="flex w-max animate-marquee gap-6 hover:[animation-play-state:paused]">
+            {[...TESTIMONIALS, ...TESTIMONIALS].map((t, i) => (
+              <TestimonialCard key={`${t.name}-${i}`} {...t} />
+            ))}
+          </div>
         </div>
       </section>
 
       <section className="px-4 py-16 md:px-20">
-        <div className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-5 rounded-lg bg-primary px-8 py-14 text-center">
-          <h2 className="font-heading text-h3 font-semibold text-text-on-accent md:text-h2">
-            Siap Wujudkan Desainmu Sendiri?
-          </h2>
-          <p className="max-w-xl font-body text-sm text-text-on-accent/90">
-            Daftar sekarang dan mulai custom apparel pertamamu bersama Harmoni Clothing.
-          </p>
-          <Link href="/register">
-            <Button variant="primary" className="bg-accent">
-              Daftar Gratis
-            </Button>
-          </Link>
+        <div className="mx-auto flex w-full max-w-[1440px] flex-col items-start justify-between gap-6 rounded-lg bg-primary px-8 py-10 md:flex-row md:items-center">
+          <div className="flex flex-col gap-2">
+            <h2 className="font-heading text-h3 font-bold leading-snug text-text-on-accent">
+              Siap Mewujudkan
+              <br />
+              Ide Menjadi Produk Nyata?
+            </h2>
+            <p className="font-body text-body-sm text-text-on-accent">
+              Gabung bersama ribuan kreator dan brand yang percaya pada Harmoni.
+            </p>
+          </div>
+          <div className="flex shrink-0 gap-3">
+            <Link href="/katalog">
+              <Button variant="primary" className="!bg-white !text-primary hover:!bg-white/90">
+                Mulai Custom Design →
+              </Button>
+            </Link>
+            <Link href="/register">
+              <Button
+                variant="secondary"
+                className="!border-white !bg-transparent !text-text-on-accent hover:!bg-white/10"
+              >
+                Daftar Gratis →
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
     </div>
