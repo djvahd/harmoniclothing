@@ -79,6 +79,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'status' => UserStatus::class,
             'privacy_accepted_at' => 'datetime',
             'terms_accepted_at' => 'datetime',
+            'phone' => 'encrypted', // NFR-011, added 2026-07-21
         ];
     }
 }

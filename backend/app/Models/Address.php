@@ -25,6 +25,8 @@ class Address extends Model
     {
         return [
             'address_line' => 'encrypted', // NFR-011
+            'recipient_name' => 'encrypted', // NFR-011, added 2026-07-21
+            'phone' => 'encrypted', // NFR-011, added 2026-07-21
             'is_default' => 'boolean',
         ];
     }
