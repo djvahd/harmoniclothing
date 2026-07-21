@@ -22,7 +22,6 @@ export default function CheckoutPage() {
   const subtotal = items.reduce((sum, item) => sum + Number(item.subtotal), 0);
 
   const [addressId, setAddressId] = useState<number | null>(null);
-  const [notes, setNotes] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -44,7 +43,6 @@ export default function CheckoutPage() {
       const { data: order } = await checkout({
         address_id: addressId,
         cart_item_ids: items.map((i) => i.id),
-        notes: notes || undefined,
       });
       if (order.midtrans_redirect_url) {
         window.location.href = order.midtrans_redirect_url;
@@ -83,19 +81,6 @@ export default function CheckoutPage() {
               />
             ))}
           </section>
-
-          <section className="flex flex-col gap-3 rounded-md border border-border bg-surface p-5">
-            <p className="font-heading text-lg font-semibold text-text-primary">
-              Catatan (opsional)
-            </p>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              rows={3}
-              className="w-full rounded-sm border border-border bg-surface px-3 py-2.5 font-body text-sm text-text-primary outline-none"
-              placeholder="Catatan untuk pesananmu..."
-            />
-          </section>
         </div>
 
         <div className="flex w-full flex-col gap-4 rounded-md border border-border bg-surface p-5 md:w-[320px]">
@@ -103,13 +88,20 @@ export default function CheckoutPage() {
             Ringkasan Pesanan
           </p>
           {items.map((item) => (
-            <div key={item.id} className="flex justify-between font-body text-sm">
-              <span className="text-text-secondary">
-                {item.product_variant.product?.name} x{item.quantity}
-              </span>
-              <span className="font-semibold text-text-primary">
-                {new Intl.NumberFormat("id-ID").format(item.subtotal)}
-              </span>
+            <div key={item.id} className="flex flex-col gap-1 font-body text-sm">
+              <div className="flex justify-between">
+                <span className="text-text-secondary">
+                  {item.product_variant.product?.name} x{item.quantity}
+                </span>
+                <span className="font-semibold text-text-primary">
+                  {new Intl.NumberFormat("id-ID").format(item.subtotal)}
+                </span>
+              </div>
+              {item.notes && (
+                <p className="font-body text-xs italic text-text-secondary">
+                  Catatan: {item.notes}
+                </p>
+              )}
             </div>
           ))}
           <div className="border-t border-border pt-3">

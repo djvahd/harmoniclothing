@@ -42,6 +42,7 @@ function ProductEditorForm() {
   const [quantity, setQuantity] = useState(1);
   const [uploadedPath, setUploadedPath] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [notes, setNotes] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -92,6 +93,7 @@ function ProductEditorForm() {
         product_variant_id: selectedVariant.id,
         design_id: design?.id,
         quantity,
+        notes: notes || undefined,
         custom_design_file_path: uploadedPath ?? undefined,
       });
       await mutate("/cart");
@@ -206,6 +208,17 @@ function ProductEditorForm() {
         <div className="flex items-center justify-between">
           <p className="font-body text-sm font-medium text-text-primary">Jumlah</p>
           <QuantityStepper value={quantity} onChange={setQuantity} />
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <p className="font-body text-sm font-medium text-text-primary">Catatan (opsional)</p>
+          <textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            rows={3}
+            className="w-full rounded-sm border border-border bg-surface px-3 py-2.5 font-body text-sm text-text-primary outline-none"
+            placeholder="Permintaan revisi/khusus untuk produk ini..."
+          />
         </div>
 
         <div className="border-t border-border pt-4">
