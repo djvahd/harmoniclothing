@@ -293,7 +293,7 @@ export default function BerandaPage() {
         <h2 className="text-center font-heading text-h3 font-semibold text-text-primary md:text-h2">
           Dipercaya Banyak Kreator & Brand
         </h2>
-        <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent_0%,black_5%,black_95%,transparent_100%)]">
+        <div className="mx-auto w-full max-w-[1440px] overflow-hidden px-4 [mask-image:linear-gradient(to_right,transparent_0%,black_5%,black_95%,transparent_100%)] md:px-20">
           <div className="flex w-max animate-marquee gap-6 hover:[animation-play-state:paused]">
             {[...TESTIMONIALS, ...TESTIMONIALS].map((t, i) => (
               <TestimonialCard key={`${t.name}-${i}`} {...t} />
