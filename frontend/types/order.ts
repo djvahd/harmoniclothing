@@ -5,8 +5,10 @@ export type OrderStatus =
   | "menunggu_approval"
   | "diproses_produksi"
   | "dikirim"
+  | "menunggu_konfirmasi"
   | "selesai"
-  | "dibatalkan";
+  | "dibatalkan"
+  | "ditolak";
 
 export interface Shipment {
   courier: string;

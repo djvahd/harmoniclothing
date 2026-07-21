@@ -17,10 +17,13 @@ import type { OrderStatus } from "@/types/order";
 const TABS: { value: OrderStatus | "semua"; label: string }[] = [
   { value: "semua", label: "Semua" },
   { value: "belum_dibayar", label: "Belum Dibayar" },
-  { value: "menunggu_approval", label: "Diproses" },
+  { value: "menunggu_approval", label: "Menunggu Approval" },
+  { value: "diproses_produksi", label: "Diproses" },
   { value: "dikirim", label: "Dikirim" },
+  { value: "menunggu_konfirmasi", label: "Menunggu Konfirmasi" },
   { value: "selesai", label: "Selesai" },
   { value: "dibatalkan", label: "Dibatalkan" },
+  { value: "ditolak", label: "Ditolak" },
 ];
 
 export default function RiwayatPesananPage() {

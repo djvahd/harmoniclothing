@@ -19,6 +19,7 @@ const TIMELINE_STEPS: { status: string; label: string }[] = [
   { status: "menunggu_approval", label: "Menunggu Approval" },
   { status: "diproses_produksi", label: "Pesanan Diproduksi" },
   { status: "dikirim", label: "Pesanan Dikirim" },
+  { status: "menunggu_konfirmasi", label: "Menunggu Konfirmasi" },
   { status: "selesai", label: "Pesanan Selesai" },
 ];
 
@@ -77,7 +78,14 @@ export default function DetailPesananPage() {
           </Badge>
         </div>
 
-        {order.status !== "dibatalkan" && (
+        {order.status === "ditolak" && order.rejection_reason && (
+          <div className="rounded-md border border-red-200 bg-red-50 p-4">
+            <p className="font-body text-sm font-semibold text-red-700">Pesanan Ditolak</p>
+            <p className="font-body text-sm text-red-600">{order.rejection_reason}</p>
+          </div>
+        )}
+
+        {order.status !== "dibatalkan" && order.status !== "ditolak" && (
           <div className="rounded-md border border-border bg-surface p-5">
             {TIMELINE_STEPS.map((step, i) => (
               <OrderStatusItem
@@ -134,7 +142,7 @@ export default function DetailPesananPage() {
               Batalkan Pesanan
             </Button>
           )}
-          {order.status === "dikirim" && (
+          {order.status === "menunggu_konfirmasi" && (
             <Button loading={loading} onClick={handleConfirmReceived}>
               Konfirmasi Diterima
             </Button>
