@@ -19,7 +19,7 @@ export default function ProductCard({ product }: { product: Product }) {
         )}
         <WishlistButton productId={product.id} className="absolute right-2 top-2" />
       </div>
-      <p className="font-heading text-[16px] font-medium text-text-primary">{product.name}</p>
+      <p className="font-heading text-body-sm font-medium text-text-primary">{product.name}</p>
       <p className="font-body text-[12px] text-text-secondary">
         Mulai dari {formatCurrency(product.base_price)}
       </p>

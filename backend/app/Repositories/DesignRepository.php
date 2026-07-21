@@ -11,7 +11,7 @@ class DesignRepository
     {
         return Design::query()
             ->active()
-            ->with(['category', 'creator'])
+            ->with(['category', 'creator', 'products'])
             ->when($categorySlug, fn ($query) => $query->whereHas(
                 'category',
                 fn ($q) => $q->where('slug', $categorySlug)
