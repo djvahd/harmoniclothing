@@ -56,7 +56,7 @@ export default function AddressBookPage() {
     <SidebarPageShell sidebar={<AccountSidebar />}>
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between">
-          <h1 className="font-heading text-2xl font-semibold text-text-primary">Address Book</h1>
+          <h1 className="font-heading text-h3 font-semibold text-text-primary">Address Book</h1>
           <Button onClick={() => setShowForm((v) => !v)}>
             <Plus className="size-4" /> Tambah Alamat
           </Button>

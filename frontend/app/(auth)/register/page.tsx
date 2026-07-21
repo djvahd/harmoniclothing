@@ -109,7 +109,7 @@ export default function RegisterPage() {
         <Button type="submit" fullWidth loading={loading}>
           Daftar Gratis
         </Button>
-        <p className="font-body text-[13px] text-text-secondary">
+        <p className="font-body text-body-sm text-text-secondary">
           Sudah punya akun?{" "}
           <Link href="/login" className="font-medium text-primary">
             Masuk

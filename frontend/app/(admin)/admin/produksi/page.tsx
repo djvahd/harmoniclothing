@@ -28,7 +28,7 @@ export default function KelolaAntrianProduksiPage() {
   return (
     <SidebarPageShell sidebar={<AdminSidebar />}>
       <div className="flex flex-col gap-6">
-        <h1 className="font-heading text-2xl font-semibold text-text-primary">
+        <h1 className="font-heading text-h3 font-semibold text-text-primary">
           Kelola Antrian Produksi
         </h1>
         <div className="overflow-x-auto rounded-md border border-border bg-surface">

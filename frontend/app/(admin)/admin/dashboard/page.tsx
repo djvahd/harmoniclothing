@@ -17,7 +17,7 @@ export default function AdminDashboardPage() {
   return (
     <SidebarPageShell sidebar={<AdminSidebar />}>
       <div className="flex flex-col gap-6">
-        <h1 className="font-heading text-2xl font-semibold text-text-primary">
+        <h1 className="font-heading text-h3 font-semibold text-text-primary">
           Dashboard Admin
         </h1>
 

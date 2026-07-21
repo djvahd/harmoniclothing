@@ -56,8 +56,8 @@ export default function BulkOrderPage() {
   if (!product) return <p className="p-8 font-body text-sm text-text-secondary">Memuat produk...</p>;
 
   return (
-    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8 md:px-8">
-      <h1 className="font-heading text-2xl font-semibold text-text-primary">
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 py-8 md:px-20">
+      <h1 className="font-heading text-h3 font-semibold text-text-primary">
         Bulk Order - {product.name}
       </h1>
 

@@ -56,7 +56,7 @@ export default function LupaPasswordPage() {
           </Button>
         </form>
       )}
-      <p className="font-body text-[13px] text-text-secondary">
+      <p className="font-body text-body-sm text-text-secondary">
         Kembali ke{" "}
         <Link href="/login" className="font-medium text-primary">
           Masuk

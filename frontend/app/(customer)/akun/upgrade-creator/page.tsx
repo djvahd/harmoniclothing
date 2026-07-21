@@ -31,7 +31,7 @@ export default function AjukanUpgradeCreatorPage() {
   return (
     <SidebarPageShell sidebar={<AccountSidebar />}>
       <div className="flex max-w-2xl flex-col gap-6">
-        <h1 className="font-heading text-2xl font-semibold text-text-primary">
+        <h1 className="font-heading text-h3 font-semibold text-text-primary">
           Ajukan Upgrade Creator
         </h1>
         <p className="font-body text-sm text-text-secondary">

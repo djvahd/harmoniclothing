@@ -55,9 +55,9 @@ export default function BerandaPage() {
         className="relative overflow-hidden"
         style={{ background: "linear-gradient(28deg, #f8fafc 25%, #eef6f3 64%, #e0f1ea 96%)" }}
       >
-        <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-10 px-4 py-16 md:px-8 lg:grid-cols-2">
+        <div className="mx-auto grid w-full max-w-[1440px] grid-cols-1 items-center gap-6 px-4 py-16 md:px-20 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_518px] min-[1440px]:grid-cols-[1fr_690px]">
           <div className="flex flex-col items-start gap-7">
-            <h1 className="font-heading text-4xl font-semibold leading-tight text-text-primary md:text-6xl md:leading-[1.1]">
+            <h1 className="font-heading text-h3 font-semibold leading-tight text-text-primary md:text-h1 md:leading-[1.1]">
               Wujudkan Ide.
               <br />
               Ciptakan Produk.
@@ -92,14 +92,15 @@ export default function BerandaPage() {
                   </div>
                   <div className="flex flex-col">
                     <p className="font-body text-sm font-semibold text-text-primary">{item.title}</p>
-                    <p className="font-body text-[13px] text-text-secondary">{item.subtitle}</p>
+                    <p className="font-body text-body-sm text-text-secondary">{item.subtitle}</p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="relative mx-auto hidden h-[526px] w-[690px] shrink-0 lg:block">
+          <div className="hidden overflow-hidden lg:block lg:h-[289px] lg:w-[380px] xl:h-[395px] xl:w-[518px] min-[1440px]:h-[526px] min-[1440px]:w-[690px]">
+          <div className="relative h-[526px] w-[690px] origin-top-left scale-[0.55] xl:scale-[0.75] min-[1440px]:scale-100">
             <div className="absolute left-[50px] top-[408px] h-[118px] w-[578px]">
               <Image src="/hero/podium-shadow.svg" alt="" fill sizes="578px" priority />
             </div>
@@ -154,7 +155,7 @@ export default function BerandaPage() {
             </div>
 
             <div className="absolute left-[406px] top-[374px] flex w-[180px] flex-col gap-1.5 rounded-md bg-white px-4 py-3 shadow-[0px_4px_16px_0px_rgba(0,0,0,0.12)]">
-              <p className="font-body text-[13px] font-semibold text-text-primary">Custom by You</p>
+              <p className="font-body text-body-sm font-semibold text-text-primary">Custom by You</p>
               <p className="font-body text-xs text-text-secondary">Made with Harmoni</p>
               <div className="flex items-center gap-2">
                 <div className="flex -space-x-1.5">
@@ -168,11 +169,12 @@ export default function BerandaPage() {
               </div>
             </div>
           </div>
+          </div>
         </div>
       </section>
 
-      <section className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-16 md:px-8">
-        <h2 className="text-center font-heading text-2xl font-semibold text-text-primary md:text-3xl">
+      <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-16 md:px-20">
+        <h2 className="text-center font-heading text-h3 font-semibold text-text-primary md:text-h2">
           Cara Kerja
         </h2>
         <div className="flex flex-wrap justify-center gap-10">
@@ -182,9 +184,9 @@ export default function BerandaPage() {
         </div>
       </section>
 
-      <section className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-16 md:px-8">
+      <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-16 md:px-20">
         <div className="flex items-center justify-between">
-          <h2 className="font-heading text-2xl font-semibold text-text-primary md:text-3xl">
+          <h2 className="font-heading text-h3 font-semibold text-text-primary md:text-h2">
             Produk Populer
           </h2>
           <Link href="/katalog" className="font-body text-sm font-medium text-primary">
@@ -198,9 +200,9 @@ export default function BerandaPage() {
         </div>
       </section>
 
-      <section className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-16 md:px-8">
+      <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-16 md:px-20">
         <div className="flex items-center justify-between">
-          <h2 className="font-heading text-2xl font-semibold text-text-primary md:text-3xl">
+          <h2 className="font-heading text-h3 font-semibold text-text-primary md:text-h2">
             Desain Populer
           </h2>
           <Link href="/marketplace-desain" className="font-body text-sm font-medium text-primary">
@@ -214,9 +216,9 @@ export default function BerandaPage() {
         </div>
       </section>
 
-      <section className="bg-surface px-4 py-16 md:px-8">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
-          <h2 className="text-center font-heading text-2xl font-semibold text-text-primary md:text-3xl">
+      <section className="bg-surface px-4 py-16 md:px-20">
+        <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-8">
+          <h2 className="text-center font-heading text-h3 font-semibold text-text-primary md:text-h2">
             Kenapa Memilih Harmoni?
           </h2>
           <div className="flex flex-wrap justify-center gap-6">
@@ -228,8 +230,8 @@ export default function BerandaPage() {
         </div>
       </section>
 
-      <section className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-16 md:px-8">
-        <h2 className="text-center font-heading text-2xl font-semibold text-text-primary md:text-3xl">
+      <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-16 md:px-20">
+        <h2 className="text-center font-heading text-h3 font-semibold text-text-primary md:text-h2">
           Apa Kata Mereka
         </h2>
         <div className="flex flex-wrap justify-center gap-6">
@@ -239,9 +241,9 @@ export default function BerandaPage() {
         </div>
       </section>
 
-      <section className="px-4 py-16 md:px-8">
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-5 rounded-lg bg-primary px-8 py-14 text-center">
-          <h2 className="font-heading text-2xl font-semibold text-text-on-accent md:text-3xl">
+      <section className="px-4 py-16 md:px-20">
+        <div className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-5 rounded-lg bg-primary px-8 py-14 text-center">
+          <h2 className="font-heading text-h3 font-semibold text-text-on-accent md:text-h2">
             Siap Wujudkan Desainmu Sendiri?
           </h2>
           <p className="max-w-xl font-body text-sm text-text-on-accent/90">

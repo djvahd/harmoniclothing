@@ -35,7 +35,7 @@ export default function DetailProdukPage() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-10 md:flex-row md:px-8">
+    <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-10 md:flex-row md:px-20">
       <div className="relative h-[420px] w-full shrink-0 overflow-hidden rounded-md bg-border md:w-[480px]">
         {previewImage && (
           <Image src={previewImage} alt={product.name} fill className="object-cover" />
@@ -44,7 +44,7 @@ export default function DetailProdukPage() {
 
       <div className="flex flex-1 flex-col gap-4">
         {product.category && <Tag>{product.category.name}</Tag>}
-        <h1 className="font-heading text-2xl font-semibold text-text-primary">{product.name}</h1>
+        <h1 className="font-heading text-h3 font-semibold text-text-primary">{product.name}</h1>
         <p className="font-heading text-xl font-semibold text-primary">
           Mulai dari {formatCurrency(product.base_price)}
         </p>

@@ -30,10 +30,10 @@ export default function TentangKamiPage() {
   return (
     <div className="flex flex-col">
       <section
-        className="flex flex-col items-center gap-4 px-4 py-16 text-center md:px-8"
+        className="flex flex-col items-center gap-4 px-4 py-16 text-center md:px-20"
         style={{ background: "linear-gradient(28deg, #f8fafc 25%, #eef6f3 64%, #e0f1ea 96%)" }}
       >
-        <h1 className="font-heading text-4xl font-semibold text-text-primary md:text-5xl">
+        <h1 className="font-heading text-h3 font-semibold text-text-primary md:text-h1">
           Tentang Harmoni Clothing
         </h1>
         <p className="max-w-2xl font-body text-base text-text-secondary">
@@ -42,8 +42,8 @@ export default function TentangKamiPage() {
         </p>
       </section>
 
-      <section className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-16 md:px-8">
-        <h2 className="text-center font-heading text-2xl font-semibold text-text-primary md:text-3xl">
+      <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-16 md:px-20">
+        <h2 className="text-center font-heading text-h3 font-semibold text-text-primary md:text-h2">
           Kenapa Memilih Harmoni?
         </h2>
         <div className="flex flex-wrap justify-center gap-6">
@@ -53,8 +53,8 @@ export default function TentangKamiPage() {
         </div>
       </section>
 
-      <section className="bg-surface px-4 py-16 md:px-8">
-        <div className="mx-auto flex w-full max-w-6xl flex-wrap justify-center gap-10">
+      <section className="bg-surface px-4 py-16 md:px-20">
+        <div className="mx-auto flex w-full max-w-[1440px] flex-wrap justify-center gap-10">
           {STATS.map((stat) => (
             <div key={stat.label} className="flex flex-col items-center gap-1 text-center">
               <span className="flex size-12 items-center justify-center rounded-full bg-accent/10">
@@ -67,8 +67,8 @@ export default function TentangKamiPage() {
         </div>
       </section>
 
-      <section className="mx-auto flex w-full max-w-4xl flex-col gap-8 px-4 py-16 md:px-8">
-        <h2 className="text-center font-heading text-2xl font-semibold text-text-primary md:text-3xl">
+      <section className="mx-auto flex w-full max-w-4xl flex-col gap-8 px-4 py-16 md:px-20">
+        <h2 className="text-center font-heading text-h3 font-semibold text-text-primary md:text-h2">
           Cerita Harmoni
         </h2>
         <div className="flex flex-col gap-6">
@@ -86,8 +86,8 @@ export default function TentangKamiPage() {
         </div>
       </section>
 
-      <section className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-16 md:px-8">
-        <h2 className="text-center font-heading text-2xl font-semibold text-text-primary md:text-3xl">
+      <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-16 md:px-20">
+        <h2 className="text-center font-heading text-h3 font-semibold text-text-primary md:text-h2">
           Proses Kami
         </h2>
         <div className="flex flex-wrap justify-center gap-10">
@@ -98,9 +98,9 @@ export default function TentangKamiPage() {
         </div>
       </section>
 
-      <section className="px-4 py-16 md:px-8">
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-5 rounded-lg bg-primary px-8 py-14 text-center">
-          <h2 className="font-heading text-2xl font-semibold text-text-on-accent md:text-3xl">
+      <section className="px-4 py-16 md:px-20">
+        <div className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-5 rounded-lg bg-primary px-8 py-14 text-center">
+          <h2 className="font-heading text-h3 font-semibold text-text-on-accent md:text-h2">
             Mari Wujudkan Desainmu Bersama Kami
           </h2>
           <Link href="/register">

@@ -110,7 +110,7 @@ function ProductEditorForm() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-8 md:flex-row md:px-8">
+    <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-8 md:flex-row md:px-20">
       <div className="flex flex-1 flex-col gap-3">
         <div className="flex gap-4 font-body text-sm font-medium text-text-secondary">
           <span>Depan</span>
@@ -135,7 +135,7 @@ function ProductEditorForm() {
       </div>
 
       <div className="flex w-full flex-col gap-6 md:w-[480px]">
-        <h1 className="font-heading text-2xl font-semibold text-text-primary">
+        <h1 className="font-heading text-h3 font-semibold text-text-primary">
           Kustomisasi {product.name}
         </h1>
 

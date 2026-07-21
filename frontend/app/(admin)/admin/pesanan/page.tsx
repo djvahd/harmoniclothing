@@ -33,7 +33,7 @@ export default function KelolaPesananPage() {
   return (
     <SidebarPageShell sidebar={<AdminSidebar />}>
       <div className="flex flex-col gap-6">
-        <h1 className="font-heading text-2xl font-semibold text-text-primary">Kelola Pesanan</h1>
+        <h1 className="font-heading text-h3 font-semibold text-text-primary">Kelola Pesanan</h1>
         <p className="font-body text-xs text-text-secondary">
           Menampilkan pesanan aktif (menunggu approval/diproses) - tidak ada endpoint admin untuk
           daftar semua pesanan termasuk yang selesai/dibatalkan.

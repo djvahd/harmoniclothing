@@ -21,7 +21,7 @@ const FOOTER_COLUMNS = [
 
 export default function Footer() {
   return (
-    <footer className="flex w-full flex-col gap-6 bg-primary px-4 py-6 md:px-8">
+    <footer className="flex w-full flex-col gap-6 bg-primary px-4 py-6 md:px-20">
       <div className="flex flex-col gap-10 md:flex-row md:gap-16">
         <div className="flex flex-col gap-1.5">
           <Logo variant="white" />
@@ -41,7 +41,7 @@ export default function Footer() {
         ))}
       </div>
       <div className="h-px w-full bg-text-on-accent/40" />
-      <p className="font-body text-[11px] text-text-on-accent">
+      <p className="font-body text-caption text-text-on-accent">
         © 2026 Harmoni Clothing. All rights reserved.
       </p>
     </footer>

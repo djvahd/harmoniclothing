@@ -36,9 +36,9 @@ export default function KatalogPage() {
 
   return (
     <div className="flex flex-col">
-      <section className="flex flex-col gap-6 bg-surface px-4 py-10 md:flex-row md:items-center md:justify-between md:px-8">
+      <section className="flex flex-col gap-6 bg-surface px-4 py-10 md:flex-row md:items-center md:justify-between md:px-20">
         <div className="flex max-w-xl flex-col gap-4">
-          <h1 className="font-heading text-3xl font-semibold text-text-primary md:text-[41px]">
+          <h1 className="font-heading text-h3 font-semibold text-text-primary md:text-h1">
             Katalog Produk
           </h1>
           <p className="font-body text-sm text-text-secondary md:text-base">
@@ -56,7 +56,7 @@ export default function KatalogPage() {
         </div>
       </section>
 
-      <section className="flex flex-col gap-4 border-b border-border px-4 py-4 md:flex-row md:items-center md:justify-between md:px-8">
+      <section className="flex flex-col gap-4 border-b border-border px-4 py-4 md:flex-row md:items-center md:justify-between md:px-20">
         <div className="flex flex-1 flex-wrap items-center gap-3">
           <div className="flex w-full max-w-[420px] items-center gap-2 rounded-sm border border-border bg-surface px-3 py-2.5 md:w-auto">
             <Search className="size-4 shrink-0 text-text-secondary" />
@@ -84,7 +84,7 @@ export default function KatalogPage() {
 
       <section
         id="product-grid"
-        className="mx-auto flex w-full max-w-6xl flex-wrap justify-center gap-6 px-4 py-10 md:justify-start md:px-8"
+        className="mx-auto flex w-full max-w-[1440px] flex-wrap justify-center gap-6 px-4 py-10 md:justify-start md:px-20"
       >
         {isLoading && <p className="font-body text-sm text-text-secondary">Memuat produk...</p>}
         {!isLoading && filtered.length === 0 && (

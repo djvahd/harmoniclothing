@@ -20,11 +20,11 @@ export default function ProfilPublikCreatorPage() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-10 md:px-8">
+    <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-10 md:px-20">
       <div className="flex items-center gap-4">
         <span className="size-16 shrink-0 rounded-full bg-border" />
         <div className="flex flex-col">
-          <h1 className="font-heading text-2xl font-semibold text-text-primary">
+          <h1 className="font-heading text-h3 font-semibold text-text-primary">
             {creator.name}
           </h1>
           {creator.since && (

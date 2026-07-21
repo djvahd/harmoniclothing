@@ -13,7 +13,7 @@ export default function AdminHeader() {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
-    <header className="flex w-full items-center justify-between border-b border-border bg-surface px-4 py-4 md:px-8">
+    <header className="flex w-full items-center justify-between border-b border-border bg-surface px-4 py-4 md:px-20">
       <Logo />
 
       <div className="hidden items-center gap-4 md:flex">
@@ -24,8 +24,8 @@ export default function AdminHeader() {
         <div className="flex items-center gap-2.5">
           <span className="size-8 rounded-full bg-border" />
           <div className="flex flex-col">
-            <p className="font-body text-[13px] font-medium text-text-primary">{user?.name}</p>
-            <p className="font-body text-[11px] text-text-secondary">Admin</p>
+            <p className="font-body text-body-sm font-medium text-text-primary">{user?.name}</p>
+            <p className="font-body text-caption text-text-secondary">Admin</p>
           </div>
           <button type="button" onClick={() => logout()} aria-label="Keluar">
             <ChevronDown className="size-3.5 text-text-secondary" />

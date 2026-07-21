@@ -17,7 +17,7 @@ export default function AuthCard({
     >
       <div className="flex w-full max-w-[420px] flex-col gap-5 rounded-lg border border-border bg-surface p-8 shadow-[0_4px_16px_0_rgba(0,0,0,0.15)]">
         <Logo />
-        <h1 className="font-heading text-[22px] font-semibold text-text-primary">{title}</h1>
+        <h1 className="font-heading text-h3 font-semibold text-text-primary">{title}</h1>
         {children}
       </div>
     </div>

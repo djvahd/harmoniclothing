@@ -54,14 +54,14 @@ export default function LoginPage() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <Link href="/lupa-password" className="font-body text-[13px] font-medium text-primary">
+        <Link href="/lupa-password" className="font-body text-body-sm font-medium text-primary">
           Lupa password?
         </Link>
         {error && <p className="font-body text-xs text-red-500">{error}</p>}
         <Button type="submit" fullWidth loading={loading}>
           Masuk
         </Button>
-        <p className="font-body text-[13px] text-text-secondary">
+        <p className="font-body text-body-sm text-text-secondary">
           Belum punya akun?{" "}
           <Link href="/register" className="font-medium text-primary">
             Daftar

@@ -15,8 +15,8 @@ export default function MarketplaceDesainPage() {
 
   return (
     <div className="flex flex-col">
-      <section className="flex flex-col gap-4 bg-surface px-4 py-10 md:px-8">
-        <h1 className="font-heading text-3xl font-semibold text-text-primary md:text-[41px]">
+      <section className="flex flex-col gap-4 bg-surface px-4 py-10 md:px-20">
+        <h1 className="font-heading text-h3 font-semibold text-text-primary md:text-h1">
           Marketplace Desain
         </h1>
         <p className="max-w-xl font-body text-sm text-text-secondary md:text-base">
@@ -33,7 +33,7 @@ export default function MarketplaceDesainPage() {
         </div>
       </section>
 
-      <section className="mx-auto flex w-full max-w-6xl flex-wrap justify-center gap-6 px-4 py-10 md:justify-start md:px-8">
+      <section className="mx-auto flex w-full max-w-[1440px] flex-wrap justify-center gap-6 px-4 py-10 md:justify-start md:px-20">
         {isLoading && <p className="font-body text-sm text-text-secondary">Memuat desain...</p>}
         {!isLoading && designs.length === 0 && (
           <p className="font-body text-sm text-text-secondary">Belum ada desain ditemukan.</p>

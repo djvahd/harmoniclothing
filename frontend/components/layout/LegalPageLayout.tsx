@@ -16,15 +16,15 @@ export default function LegalPageLayout({
   sections: LegalSection[];
 }) {
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-10 md:flex-row md:px-8">
+    <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-10 md:flex-row md:px-20">
       <div className="flex-1">
-        <h1 className="font-heading text-3xl font-semibold text-text-primary">{title}</h1>
+        <h1 className="font-heading text-h2 font-semibold text-text-primary">{title}</h1>
         <p className="mt-2 font-body text-xs text-text-secondary">Terakhir diperbarui: {updatedAt}</p>
 
         <div className="mt-8 flex flex-col gap-8">
           {sections.map((section) => (
             <div key={section.id} id={section.id} className="scroll-mt-24">
-              <h2 className="font-heading text-lg font-semibold text-text-primary">
+              <h2 className="font-heading text-h3 font-semibold text-text-primary">
                 {section.title}
               </h2>
               <div className="mt-2 font-body text-sm text-text-secondary [&>p]:mb-3">

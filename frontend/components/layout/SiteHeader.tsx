@@ -34,7 +34,7 @@ export default function SiteHeader() {
   const unreadCount = notifications?.data.filter((n) => !n.is_read).length ?? 0;
 
   return (
-    <header className="flex w-full items-center justify-between border-b border-border bg-surface px-4 py-4 md:px-8">
+    <header className="flex w-full items-center justify-between border-b border-border bg-surface px-4 py-4 md:px-20">
       <Logo />
 
       <nav className="hidden items-center gap-6 font-body text-sm text-text-primary md:flex">

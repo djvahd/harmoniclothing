@@ -60,7 +60,7 @@ export default function UploadDesainPage() {
   return (
     <SidebarPageShell sidebar={<CreatorSidebar />}>
       <div className="flex max-w-2xl flex-col gap-6">
-        <h1 className="font-heading text-2xl font-semibold text-text-primary">Upload Desain</h1>
+        <h1 className="font-heading text-h3 font-semibold text-text-primary">Upload Desain</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-md border border-border bg-surface p-5">
           <Input label="Judul Desain" value={title} onChange={(e) => setTitle(e.target.value)} required />
           <div className="flex flex-col gap-1.5">

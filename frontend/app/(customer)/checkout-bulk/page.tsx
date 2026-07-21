@@ -70,8 +70,8 @@ export default function CheckoutBulkPage() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8 md:px-8">
-      <h1 className="font-heading text-2xl font-semibold text-text-primary">Checkout Bulk Order</h1>
+    <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-8 md:px-20">
+      <h1 className="font-heading text-h3 font-semibold text-text-primary">Checkout Bulk Order</h1>
 
       <div className="flex flex-col gap-6 md:flex-row">
         <div className="flex flex-1 flex-col gap-3 rounded-md border border-border bg-surface p-5">

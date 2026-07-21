@@ -29,14 +29,14 @@ export default function TestimonialCard({
           />
         ))}
       </div>
-      <p className="font-body text-[13px] text-text-primary">&ldquo;{quote}&rdquo;</p>
+      <p className="font-body text-body-sm text-text-primary">&ldquo;{quote}&rdquo;</p>
       <div className="flex items-center gap-2">
         <div
           className="size-8 shrink-0 rounded-full bg-border bg-cover bg-center"
           style={avatarSrc ? { backgroundImage: `url(${avatarSrc})` } : undefined}
         />
         <div className="flex flex-col">
-          <p className="font-body text-[13px] font-semibold text-text-primary">{name}</p>
+          <p className="font-body text-body-sm font-semibold text-text-primary">{name}</p>
           <p className="font-body text-xs text-text-secondary">{role}</p>
         </div>
       </div>

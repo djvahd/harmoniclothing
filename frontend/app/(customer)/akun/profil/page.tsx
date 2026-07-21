@@ -38,7 +38,7 @@ export default function KelolaProfilPage() {
   return (
     <SidebarPageShell sidebar={<AccountSidebar />}>
       <div className="flex max-w-lg flex-col gap-6">
-        <h1 className="font-heading text-2xl font-semibold text-text-primary">Kelola Profil</h1>
+        <h1 className="font-heading text-h3 font-semibold text-text-primary">Kelola Profil</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-md border border-border bg-surface p-5">
           <Input label="Nama Lengkap" value={name} onChange={(e) => setName(e.target.value)} required />
           <Input label="Nomor Telepon" value={phone} onChange={(e) => setPhone(e.target.value)} />

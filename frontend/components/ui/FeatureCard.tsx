@@ -12,8 +12,8 @@ export default function FeatureCard({ icon: Icon, title, description }: FeatureC
       <div className="flex size-10 items-center justify-center rounded-md bg-accent">
         <Icon className="size-5 text-text-on-accent" />
       </div>
-      <p className="font-body text-[15px] font-semibold text-text-primary">{title}</p>
-      <p className="font-body text-[13px] text-text-secondary">{description}</p>
+      <p className="font-body text-body font-semibold text-text-primary">{title}</p>
+      <p className="font-body text-body-sm text-text-secondary">{description}</p>
     </div>
   );
 }

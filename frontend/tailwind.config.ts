@@ -24,6 +24,14 @@ const config: Config = {
         heading: ["var(--font-montserrat)", "sans-serif"],
         body: ["var(--font-inter)", "sans-serif"],
       },
+      fontSize: {
+        h1: ["48px", { lineHeight: "1.1" }],
+        h2: ["32px", { lineHeight: "1.15" }],
+        h3: ["24px", { lineHeight: "1.2" }],
+        body: ["16px", { lineHeight: "1.5" }],
+        "body-sm": ["14px", { lineHeight: "1.5" }],
+        caption: ["12px", { lineHeight: "1.4" }],
+      },
       borderRadius: {
         sm: "8px",
         md: "10px",

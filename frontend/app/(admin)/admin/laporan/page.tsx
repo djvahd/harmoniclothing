@@ -15,7 +15,7 @@ export default function SalesReportPage() {
   return (
     <SidebarPageShell sidebar={<AdminSidebar />}>
       <div className="flex flex-col gap-6">
-        <h1 className="font-heading text-2xl font-semibold text-text-primary">Sales Report</h1>
+        <h1 className="font-heading text-h3 font-semibold text-text-primary">Sales Report</h1>
         {report && (
           <p className="font-body text-xs text-text-secondary">
             Periode: {report.period.from} - {report.period.to} (30 hari terakhir)
