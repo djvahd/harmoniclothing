@@ -19,8 +19,21 @@ export interface AdminCreatorProfile {
   id: number;
   user: { id: number; name: string; email: string };
   slug: string;
+  brand_name: string | null;
+  bio: string | null;
+  portfolio_url: string | null;
   kyc_full_name: string;
   kyc_id_number: string;
+  birth_date: string | null;
+  is_minor: boolean;
+  address: string | null;
+  has_ktp_photo: boolean;
+  payout_method: string | null;
+  payout_account_number: string | null;
+  payout_account_holder: string | null;
+  guardian_name: string | null;
+  guardian_id_number: string | null;
+  guardian_consent_at: string | null;
   status: string;
   rejection_reason: string | null;
   approved_at: string | null;
@@ -77,6 +90,12 @@ export function getUsers(params?: { role?: string; status?: string }) {
 
 export function getPendingCreators() {
   return apiFetch<{ data: AdminCreatorProfile[] }>("/admin/creators/pending");
+}
+
+/** Sanctum session cookie auth means an <img> tag sends it automatically — no separate fetch/blob needed. */
+export function kycDocumentUrl(creatorProfileId: number): string {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+  return `${API_URL}/api/admin/creators/${creatorProfileId}/kyc-document`;
 }
 
 export function approveCreator(id: number) {

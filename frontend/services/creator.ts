@@ -22,16 +22,50 @@ export interface CommissionSummary {
   ditahan: string;
 }
 
-export function becomeCreator() {
+export function becomeCreator(payload: {
+  terms_accepted: boolean;
+  brand_name?: string;
+  bio?: string;
+  portfolio_url?: string;
+}) {
   return apiFetch<{ data: { slug: string; status: string } }>("/account/become-creator", {
     method: "POST",
+    body: payload,
   });
 }
 
-export function submitVerification(payload: { kyc_full_name: string; kyc_id_number: string }) {
+export interface VerificationPayload {
+  kyc_full_name: string;
+  kyc_id_number: string;
+  birth_date: string;
+  address: string;
+  ktp_photo: File;
+  payout_method: "bank_transfer" | "gopay" | "ovo" | "dana" | "shopeepay";
+  payout_account_number: string;
+  payout_account_holder: string;
+  guardian_name?: string;
+  guardian_id_number?: string;
+  guardian_consent?: boolean;
+}
+
+export function submitVerification(payload: VerificationPayload) {
+  const formData = new FormData();
+  formData.append("kyc_full_name", payload.kyc_full_name);
+  formData.append("kyc_id_number", payload.kyc_id_number);
+  formData.append("birth_date", payload.birth_date);
+  formData.append("address", payload.address);
+  formData.append("ktp_photo", payload.ktp_photo);
+  formData.append("payout_method", payload.payout_method);
+  formData.append("payout_account_number", payload.payout_account_number);
+  formData.append("payout_account_holder", payload.payout_account_holder);
+  if (payload.guardian_name) formData.append("guardian_name", payload.guardian_name);
+  if (payload.guardian_id_number) formData.append("guardian_id_number", payload.guardian_id_number);
+  if (payload.guardian_consent) formData.append("guardian_consent", "1");
+
   return apiFetch<{ data: { status: string } }>("/creator/verification", {
     method: "POST",
-    body: payload,
+    body: formData,
+    isFormData: true,
   });
 }
 
