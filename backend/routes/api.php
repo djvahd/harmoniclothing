@@ -131,6 +131,7 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
     Route::get('/users', [AdminUserController::class, 'index']); // FR-030
 
     Route::get('/creators/pending', [AdminCreatorController::class, 'pending']);
+    Route::get('/creators/{creatorProfile}/kyc-document', [AdminCreatorController::class, 'kycDocument']);
     Route::post('/creators/{creatorProfile}/approve', [AdminCreatorController::class, 'approve']); // BR-001/008
     Route::post('/creators/{creatorProfile}/reject', [AdminCreatorController::class, 'reject']);
     Route::post('/creators/{creatorProfile}/ban', [AdminCreatorController::class, 'ban']); // BR-019/020/023

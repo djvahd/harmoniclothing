@@ -30,4 +30,17 @@ class FileUploadService
     {
         return Storage::disk('public')->url($path);
     }
+
+    /**
+     * KYC documents (KTP photo) are sensitive ID data — stored on the
+     * private 'local' disk, never given a public URL. Admin views it via
+     * an authenticated streamed download instead (AdminCreatorController).
+     */
+    public function storeKycDocument(UploadedFile $file, string $directory = 'kyc-uploads'): string
+    {
+        $extension = $file->getMimeType() === 'image/png' ? 'png' : 'jpg';
+        $filename = Str::uuid().'.'.$extension;
+
+        return $file->storeAs($directory, $filename, 'local');
+    }
 }

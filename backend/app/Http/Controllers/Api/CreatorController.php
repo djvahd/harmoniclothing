@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreatorApplicationRequest;
 use App\Http\Requests\CreatorVerificationRequest;
 use App\Http\Resources\CommissionResource;
 use App\Services\CommissionService;
@@ -19,9 +20,9 @@ class CreatorController extends Controller
     ) {}
 
     /** POST /account/become-creator */
-    public function becomeCreator(Request $request): JsonResponse
+    public function becomeCreator(CreatorApplicationRequest $request): JsonResponse
     {
-        $profile = $this->creators->becomeCreator($request->user());
+        $profile = $this->creators->becomeCreator($request->user(), $request->validated());
 
         return response()->json(['data' => ['slug' => $profile->slug, 'status' => $profile->status]], 201);
     }

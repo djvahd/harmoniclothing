@@ -45,4 +45,11 @@ return [
         'api_key' => env('BITESHIP_API_KEY'),
     ],
 
+    // BR-007 (2026-07-22): automatic commission payout. No account signed up
+    // yet — PayoutService degrades gracefully (no api_key = no real transfer
+    // attempted) until a real disbursement provider (Midtrans Iris/Xendit/etc) is chosen.
+    'disbursement' => [
+        'api_key' => env('DISBURSEMENT_API_KEY'),
+    ],
+
 ];

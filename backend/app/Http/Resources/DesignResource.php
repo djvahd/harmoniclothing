@@ -22,7 +22,7 @@ class DesignResource extends JsonResource
             'category' => new CategoryResource($this->whenLoaded('category')),
             'creator' => [
                 'id' => $this->creator->id,
-                'name' => $this->creator->name,
+                'name' => $this->creator->creatorProfile?->brand_name ?? $this->creator->name,
                 'slug' => $this->creator->creatorProfile?->slug,
             ],
             // FE-017: 3D Editor Mode Marketplace only offers the apparel the

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /** 4.3_Table_Design.md — commissions (komisi Creator per order item). */
-#[Fillable(['creator_id', 'order_item_id', 'amount', 'status', 'paid_at'])]
+#[Fillable(['creator_id', 'order_item_id', 'amount', 'status', 'paid_at', 'payout_reference'])]
 class Commission extends Model
 {
     /** @use HasFactory<CommissionFactory> */

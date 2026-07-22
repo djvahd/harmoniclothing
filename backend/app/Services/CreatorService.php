@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\UserStatus;
 use App\Models\CreatorProfile;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -24,9 +25,11 @@ class CreatorService
         private readonly NotificationService $notifications,
         private readonly CommissionService $commissions,
         private readonly AuditLogService $auditLog,
+        private readonly FileUploadService $files,
     ) {}
 
-    public function becomeCreator(User $user): CreatorProfile
+    /** POST /account/become-creator — FR-041, plus brand_name/bio/portfolio_url (2026-07-22). */
+    public function becomeCreator(User $user, array $data): CreatorProfile
     {
         if ($user->creatorProfile) {
             throw ValidationException::withMessages([
@@ -36,11 +39,20 @@ class CreatorService
 
         return CreatorProfile::create([
             'user_id' => $user->id,
-            'slug' => $this->generateSlug($user->name),
+            'slug' => $this->generateSlug($data['brand_name'] ?? $user->name),
+            'brand_name' => $data['brand_name'] ?? null,
+            'bio' => $data['bio'] ?? null,
+            'portfolio_url' => $data['portfolio_url'] ?? null,
+            'terms_accepted_at' => now(),
         ]);
     }
 
-    /** BR-008: KYC required before approval can be requested. */
+    /**
+     * BR-008 (expanded 2026-07-22): full identity + payout destination,
+     * plus a guardian branch when the submitted birth_date makes the
+     * applicant under 18 — payout then goes to the guardian's account, not
+     * the minor's own.
+     */
     public function submitVerification(User $user, array $data): CreatorProfile
     {
         $profile = $user->creatorProfile;
@@ -51,9 +63,20 @@ class CreatorService
             ]);
         }
 
+        $isMinor = Carbon::parse($data['birth_date'])->age < 18;
+
         $profile->update([
             'kyc_full_name' => $data['kyc_full_name'],
             'kyc_id_number' => $data['kyc_id_number'],
+            'birth_date' => $data['birth_date'],
+            'address' => $data['address'],
+            'ktp_photo_path' => $this->files->storeKycDocument($data['ktp_photo']),
+            'payout_method' => $data['payout_method'],
+            'payout_account_number' => $data['payout_account_number'],
+            'payout_account_holder' => $data['payout_account_holder'],
+            'guardian_name' => $isMinor ? $data['guardian_name'] : null,
+            'guardian_id_number' => $isMinor ? $data['guardian_id_number'] : null,
+            'guardian_consent_at' => $isMinor ? now() : null,
             'status' => 'menunggu_approval',
         ]);
 

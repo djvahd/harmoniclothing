@@ -13,3 +13,6 @@ Schedule::command('orders:cancel-unpaid')->hourly();
 
 // BR-014: 3 business-day window, hourly checks are frequent enough.
 Schedule::command('orders:auto-complete-deliveries')->hourly();
+
+// BR-007 (2026-07-22 revision): automatic weekly creator commission payout.
+Schedule::command('commissions:payout')->weekly();

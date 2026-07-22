@@ -7,6 +7,8 @@ use App\Models\Commission;
 use App\Models\CreatorProfile;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 /** Admin creator approval queue — BR-001/008/019/020/023. */
@@ -88,6 +90,30 @@ class AdminCreatorTest extends TestCase
         $response->assertOk()->assertJsonPath('data.status', 'banned');
         $this->assertSame(UserStatus::Aktif, $profile->user->fresh()->status);
         $this->assertSame('terhutang', $commission->fresh()->status);
+    }
+
+    public function test_admin_can_view_the_ktp_photo_for_a_pending_creator(): void
+    {
+        Storage::fake('local');
+        $admin = User::factory()->admin()->create();
+        $profile = CreatorProfile::factory()->menungguApproval()->create();
+        $path = UploadedFile::fake()->image('ktp.jpg')->store('kyc-uploads', 'local');
+        $profile->update(['ktp_photo_path' => $path]);
+
+        $this->actingAs($admin)->get("/api/admin/creators/{$profile->id}/kyc-document")
+            ->assertOk();
+    }
+
+    public function test_customer_cannot_view_a_creators_ktp_photo(): void
+    {
+        Storage::fake('local');
+        $user = User::factory()->create();
+        $profile = CreatorProfile::factory()->menungguApproval()->create();
+        $path = UploadedFile::fake()->image('ktp.jpg')->store('kyc-uploads', 'local');
+        $profile->update(['ktp_photo_path' => $path]);
+
+        $this->actingAs($user)->get("/api/admin/creators/{$profile->id}/kyc-document")
+            ->assertForbidden();
     }
 
     /** BR-020: copyright-violation ban suspends the account and holds outstanding commissions. */

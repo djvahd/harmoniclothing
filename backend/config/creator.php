@@ -18,4 +18,19 @@ return [
 
     'commission_rate' => (float) env('CREATOR_COMMISSION_RATE', 0.20),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Creator Payout Minimum
+    |--------------------------------------------------------------------------
+    |
+    | BR-007 (2026-07-22 revision): commission payout is now automatic,
+    | batched weekly. A creator's total outstanding ("terhutang") commission
+    | must reach this amount before the weekly job pays it out — avoids
+    | disbursing tiny amounts every week. Not specified in any planning doc;
+    | a placeholder default, adjust via CREATOR_PAYOUT_MINIMUM before launch.
+    |
+    */
+
+    'payout_minimum_amount' => (float) env('CREATOR_PAYOUT_MINIMUM', 50000),
+
 ];

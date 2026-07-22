@@ -9,18 +9,21 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /**
  * @mixin CreatorProfile
  *
- * FE-011 public creator profile. Public-facing name comes from users.name
- * (not kyc_full_name, which is private KYC data — same field the
- * marketplace design listing already shows as "creator"). Assumes the
- * caller eager-loaded `user.designs` (only active ones, filtered by the
- * repository) before constructing this resource.
+ * FE-011 public creator profile. Public-facing name prefers brand_name
+ * (2026-07-22 addition — public-facing, not KYC data), falling back to
+ * users.name when no brand_name was set (same fallback DesignResource
+ * uses for the "by {creator}" byline). Assumes the caller eager-loaded
+ * `user.designs` (only active ones, filtered by the repository) before
+ * constructing this resource.
  */
 class CreatorProfileResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
-            'name' => $this->user->name,
+            'name' => $this->brand_name ?? $this->user->name,
+            'bio' => $this->bio,
+            'portfolio_url' => $this->portfolio_url,
             'slug' => $this->slug,
             'since' => $this->approved_at,
             'designs' => DesignResource::collection($this->user->designs),
