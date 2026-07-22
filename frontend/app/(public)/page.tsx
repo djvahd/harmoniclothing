@@ -81,19 +81,21 @@ const TESTIMONIALS = [
 
 // depth: signed scroll factor — negative recedes upward (background), positive advances downward (foreground)
 // scaleDelta: extra scale applied at max scroll (negative shrinks, positive grows)
-// grouped so visually-paired layers share identical motion and never drift apart: podium trio (static),
-// hoodie+kaos (garments), daun+benang (ground props), label+topi+card (bottom-right cluster)
+// grouped so visually-paired layers move alike without drifting apart, but each layer gets slight
+// jitter (phase/amp/freq) so paired layers don't look mechanically identical: podium trio (static),
+// hoodie+kaos (garments), daun+benang (ground props — benang now drifts down-right toward daun),
+// label+topi+card (bottom-right cluster)
 const HERO_MOTION = [
   { depth: -0.08, hFactor: 0.05, ampY: 0, ampX: 0, freq: 0.15, phase: 0.5, scaleDelta: -0.1 },
   { depth: -0.1, hFactor: 0.05, ampY: 0, ampX: 0, freq: 0.15, phase: 0.5, scaleDelta: -0.12 },
   { depth: -0.12, hFactor: 0.05, ampY: 0, ampX: 0, freq: 0.15, phase: 0.5, scaleDelta: -0.14 },
-  { depth: 0.08, hFactor: 0, ampY: 13, ampX: 5, freq: 0.2, phase: 1, scaleDelta: 0.05 },
-  { depth: 0.08, hFactor: 0, ampY: 13, ampX: 5, freq: 0.2, phase: 1, scaleDelta: 0.05 },
-  { depth: -0.09, hFactor: 0.08, ampY: 16, ampX: 6, freq: 0.28, phase: 4, scaleDelta: -0.1 },
-  { depth: -0.09, hFactor: 0.08, ampY: 16, ampX: 6, freq: 0.28, phase: 4, scaleDelta: -0.1 },
-  { depth: 0.08, hFactor: -0.1, ampY: 15, ampX: 6, freq: 0.24, phase: 2, scaleDelta: 0.03 },
-  { depth: 0.08, hFactor: -0.1, ampY: 15, ampX: 6, freq: 0.24, phase: 2, scaleDelta: 0.03 },
-  { depth: 0.08, hFactor: -0.1, ampY: 15, ampX: 6, freq: 0.24, phase: 2, scaleDelta: 0.03 },
+  { depth: 0.08, hFactor: -0.02, ampY: 13, ampX: 5, freq: 0.2, phase: 1, scaleDelta: 0.05 },
+  { depth: 0.085, hFactor: 0.03, ampY: 14.5, ampX: 5.5, freq: 0.21, phase: 1.6, scaleDelta: 0.055 },
+  { depth: 0.08, hFactor: 0.09, ampY: 15, ampX: 6.5, freq: 0.3, phase: 3.4, scaleDelta: -0.05 },
+  { depth: -0.09, hFactor: 0.08, ampY: 16, ampX: 6, freq: 0.28, phase: 4.2, scaleDelta: -0.1 },
+  { depth: 0.075, hFactor: -0.09, ampY: 14, ampX: 5.5, freq: 0.23, phase: 1.7, scaleDelta: 0.025 },
+  { depth: 0.085, hFactor: -0.11, ampY: 16, ampX: 6.5, freq: 0.25, phase: 2.4, scaleDelta: 0.035 },
+  { depth: 0.08, hFactor: -0.1, ampY: 15, ampX: 6, freq: 0.24, phase: 2.1, scaleDelta: 0.03 },
 ];
 
 const EASE_SETTLE = "cubic-bezier(0.22, 1, 0.36, 1)";
