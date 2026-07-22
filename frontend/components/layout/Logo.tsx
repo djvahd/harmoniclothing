@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Logo({ variant = "color" }: { variant?: "color" | "white" }) {
   return (
-    <Link href="/" className="relative block h-7 w-[100px] shrink-0">
+    <Link href="/" className="relative block h-9 w-[121px] shrink-0">
       <Image
         src={variant === "white" ? "/logo-white.png" : "/logo.png"}
         alt="Harmoni Clothing"
