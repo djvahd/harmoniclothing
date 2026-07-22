@@ -139,12 +139,14 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
     Route::post('/designs/{design}/approve', [AdminDesignController::class, 'approve']); // BR-002
     Route::post('/designs/{design}/reject', [AdminDesignController::class, 'reject']); // BR-028
 
+    Route::get('/catalog/products', [AdminCatalogController::class, 'index']); // admin management list (gap-filled)
     Route::post('/catalog/products', [AdminCatalogController::class, 'storeProduct']); // FR-031
     Route::patch('/catalog/products/{product}', [AdminCatalogController::class, 'updateProduct']);
     Route::post('/catalog/products/{product}/variants', [AdminCatalogController::class, 'storeVariant']); // FE-046
     Route::patch('/catalog/variants/{variant}', [AdminCatalogController::class, 'updateVariant']); // FE-046
     Route::post('/catalog/bulk-pricing-tiers', [AdminCatalogController::class, 'storeBulkPricingTier']); // BR-012
 
+    Route::get('/orders', [AdminOrderController::class, 'index']); // admin management list (gap-filled)
     Route::get('/production-queue', [AdminOrderController::class, 'productionQueue']); // FR-021
     Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus']); // FR-021
     Route::post('/orders/{order}/reject', [AdminOrderController::class, 'reject']); // FR-043

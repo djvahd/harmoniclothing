@@ -13,11 +13,30 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Services\CatalogService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /** 5.2_API_List.md §6 — Product Catalog management (FR-031, BR-012). */
 class AdminCatalogController extends Controller
 {
     public function __construct(private readonly CatalogService $catalog) {}
+
+    /** GET /admin/catalog/products — admin management list (gap-filled); shows inactive products too, unlike the public list. */
+    public function index(Request $request): JsonResponse
+    {
+        $products = $this->catalog->listProductsForAdmin(
+            $request->query('category'),
+            (int) $request->query('per_page', 20),
+        );
+
+        return response()->json([
+            'data' => AdminProductResource::collection($products),
+            'meta' => [
+                'current_page' => $products->currentPage(),
+                'per_page' => $products->perPage(),
+                'total' => $products->total(),
+            ],
+        ]);
+    }
 
     /** POST /admin/catalog/products — FR-031. */
     public function storeProduct(ProductRequest $request): JsonResponse

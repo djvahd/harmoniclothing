@@ -93,6 +93,12 @@ class OrderService
             ]));
     }
 
+    /** GET /admin/orders — admin management list (gap-filled), all 8 statuses, optional filter. */
+    public function listAllOrders(?string $status, int $perPage): LengthAwarePaginator
+    {
+        return $this->orders->paginateAll($status, $perPage);
+    }
+
     /** GET /admin/production-queue — FR-021: orders awaiting or already in production. */
     public function productionQueue(): Collection
     {

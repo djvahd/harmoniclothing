@@ -19,6 +19,38 @@ class AdminOrderTest extends TestCase
         $this->actingAs($user)->getJson('/api/admin/production-queue')->assertForbidden();
     }
 
+    public function test_customer_cannot_list_all_admin_orders(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->getJson('/api/admin/orders')->assertForbidden();
+    }
+
+    public function test_admin_order_list_includes_every_status_and_buyer(): void
+    {
+        $admin = User::factory()->admin()->create();
+        Order::factory()->menungguApproval()->create();
+        Order::factory()->diprosesProduksi()->create();
+        Order::factory()->create(['status' => 'selesai']);
+
+        $response = $this->actingAs($admin)->getJson('/api/admin/orders');
+
+        $response->assertOk()->assertJsonCount(3, 'data');
+        $this->assertNotNull($response->json('data.0.user.email'));
+    }
+
+    public function test_admin_order_list_can_filter_by_status(): void
+    {
+        $admin = User::factory()->admin()->create();
+        Order::factory()->menungguApproval()->create();
+        Order::factory()->create(['status' => 'selesai']);
+
+        $response = $this->actingAs($admin)->getJson('/api/admin/orders?status=selesai');
+
+        $response->assertOk()->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.status', 'selesai');
+    }
+
     public function test_production_queue_lists_only_relevant_statuses(): void
     {
         $admin = User::factory()->admin()->create();

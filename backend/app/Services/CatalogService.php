@@ -30,6 +30,12 @@ class CatalogService
         return $this->products->findBySlug($slug);
     }
 
+    /** GET /admin/catalog/products — admin management list (gap-filled), includes inactive products. */
+    public function listProductsForAdmin(?string $categorySlug, int $perPage): LengthAwarePaginator
+    {
+        return $this->products->paginateForAdmin($categorySlug, $perPage);
+    }
+
     /** POST /admin/catalog/products — FR-031. */
     public function createProduct(array $data, User $admin): Product
     {

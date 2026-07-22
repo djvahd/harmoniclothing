@@ -24,6 +24,7 @@ class OrderResource extends JsonResource
             'created_at' => $this->created_at,
             'items' => OrderItemResource::collection($this->whenLoaded('items')),
             'shipment' => $this->shipment ? new ShipmentResource($this->shipment) : null, // FE-036
+            'user' => $this->whenLoaded('user', fn () => new UserResource($this->user)), // GET /admin/orders (gap-filled)
         ];
     }
 }

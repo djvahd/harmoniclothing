@@ -88,6 +88,24 @@ class AdminCatalogTest extends TestCase
         ])->assertUnprocessable();
     }
 
+    public function test_customer_cannot_list_admin_products(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->getJson('/api/admin/catalog/products')->assertForbidden();
+    }
+
+    public function test_admin_product_list_includes_inactive_products(): void
+    {
+        $admin = User::factory()->admin()->create();
+        Product::factory()->create(['is_active' => true]);
+        Product::factory()->create(['is_active' => false]);
+
+        $response = $this->actingAs($admin)->getJson('/api/admin/catalog/products');
+
+        $response->assertOk()->assertJsonCount(2, 'data');
+    }
+
     public function test_admin_can_create_a_bulk_pricing_tier(): void
     {
         $admin = User::factory()->admin()->create();

@@ -11,11 +11,30 @@ use App\Http\Resources\ShipmentResource;
 use App\Models\Order;
 use App\Services\OrderService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /** 5.2_API_List.md §6 — Production queue & order status (FR-021, FR-043). */
 class AdminOrderController extends Controller
 {
     public function __construct(private readonly OrderService $orders) {}
+
+    /** GET /admin/orders — admin management list (gap-filled); all 8 statuses, unlike production-queue's 2. */
+    public function index(Request $request): JsonResponse
+    {
+        $orders = $this->orders->listAllOrders(
+            $request->query('status'),
+            (int) $request->query('per_page', 20),
+        );
+
+        return response()->json([
+            'data' => OrderResource::collection($orders),
+            'meta' => [
+                'current_page' => $orders->currentPage(),
+                'per_page' => $orders->perPage(),
+                'total' => $orders->total(),
+            ],
+        ]);
+    }
 
     /** GET /admin/production-queue — FR-021. */
     public function productionQueue(): JsonResponse

@@ -25,6 +25,21 @@ class OrderRepository
             ->paginate($perPage);
     }
 
+    /**
+     * GET /admin/orders — admin management list (gap-filled). Unlike
+     * OrderService::productionQueue() (only 2 of 8 statuses, unpaginated),
+     * this covers every status with an optional filter, paginated, same
+     * eager-load set as paginateForUser() plus 'user' for the admin view.
+     */
+    public function paginateAll(?string $status, int $perPage): LengthAwarePaginator
+    {
+        return Order::query()
+            ->when($status, fn ($query, $status) => $query->where('status', $status))
+            ->with(['items.productVariant.product', 'items.design', 'shipment', 'user'])
+            ->latest()
+            ->paginate($perPage);
+    }
+
     public function create(array $attributes): Order
     {
         $order = Order::create([...$attributes, 'order_number' => $this->generateOrderNumber()]);
