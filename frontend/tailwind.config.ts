@@ -54,11 +54,16 @@ const config: Config = {
           "13%": { clipPath: "inset(0 0% 0 0)", opacity: "0" },
           "13.5%, 100%": { clipPath: "inset(0 100% 0 0)", opacity: "0" },
         },
+        "hero-float": {
+          "0%, 100%": { transform: "translateY(var(--parallax-y, 0px))" },
+          "50%": { transform: "translateY(calc(var(--parallax-y, 0px) - 18px))" },
+        },
       },
       animation: {
         marquee: "marquee 100s linear infinite",
         "step-glow": "step-glow 10.5s ease-in-out infinite",
-        "line-glow": "line-glow 10.5s ease-out infinite",
+        "line-glow": "line-glow 10.5s ease-out infinite backwards",
+        "hero-float": "hero-float 6s ease-in-out infinite",
       },
     },
   },

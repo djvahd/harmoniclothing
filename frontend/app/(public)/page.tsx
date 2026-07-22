@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import useSWR from "swr";
@@ -8,6 +9,7 @@ import ProductCard from "@/components/ui/ProductCard";
 import DesignCard from "@/components/ui/DesignCard";
 import TestimonialCard from "@/components/ui/TestimonialCard";
 import StepItem from "@/components/ui/StepItem";
+import Reveal from "@/components/ui/Reveal";
 import Button from "@/components/ui/Button";
 import { getProducts } from "@/services/catalog";
 import { getDesigns } from "@/services/marketplace";
@@ -77,9 +79,51 @@ const TESTIMONIALS = [
   },
 ];
 
+const PARALLAX_DEPTHS: Record<string, number> = {
+  bg: 0.1,
+  mid: 0.24,
+  fg: 0.4,
+};
+
 export default function BerandaPage() {
-  const { data: productsData } = useSWR("/catalog/products?home", () => getProducts({ per_page: 8 }));
-  const { data: designsData } = useSWR("/marketplace/designs?home", () => getDesigns({ per_page: 8 }));
+  const { data: productsData, isLoading: productsLoading } = useSWR("/catalog/products?home", () =>
+    getProducts({ per_page: 8 }),
+  );
+  const { data: designsData, isLoading: designsLoading } = useSWR("/marketplace/designs?home", () =>
+    getDesigns({ per_page: 8 }),
+  );
+  const heroCollageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const collage = heroCollageRef.current;
+    if (!collage) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const layers = Array.from(
+      collage.querySelectorAll<HTMLElement>("[data-parallax-depth]"),
+    );
+    let frame = 0;
+
+    const applyOffset = () => {
+      const scrollY = Math.min(window.scrollY, 600);
+      for (const layer of layers) {
+        const depth = PARALLAX_DEPTHS[layer.dataset.parallaxDepth ?? ""] ?? 0;
+        layer.style.setProperty("--parallax-y", `${-scrollY * depth}px`);
+      }
+      frame = 0;
+    };
+
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(applyOffset);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
 
   return (
     <div className="flex flex-col">
@@ -132,61 +176,88 @@ export default function BerandaPage() {
           </div>
 
           <div className="hidden overflow-hidden lg:block lg:h-[289px] lg:w-[380px] xl:h-[395px] xl:w-[518px] min-[1440px]:h-[526px] min-[1440px]:w-[690px]">
-          <div className="relative h-[526px] w-[690px] origin-top-left scale-[0.55] xl:scale-[0.75] min-[1440px]:scale-100">
-            <div className="absolute left-[50px] top-[408px] h-[118px] w-[578px]">
+          <div
+            ref={heroCollageRef}
+            className="relative h-[526px] w-[690px] origin-top-left scale-[0.55] xl:scale-[0.75] min-[1440px]:scale-100"
+          >
+            <div
+              data-parallax-depth="bg"
+              className="absolute left-[50px] top-[408px] h-[118px] w-[578px] animate-hero-float motion-reduce:animate-none"
+            >
               <Image src="/hero/podium-shadow.svg" alt="" fill sizes="578px" priority />
             </div>
-            <div className="absolute left-0 top-[293px] h-[223px] w-[690px]">
+            <div
+              data-parallax-depth="bg"
+              className="absolute left-0 top-[293px] h-[223px] w-[690px] animate-hero-float motion-reduce:animate-none"
+              style={{ animationDelay: "0.3s" }}
+            >
               <Image src="/hero/podium.png" alt="" fill sizes="690px" className="object-cover" priority />
             </div>
-            <div className="absolute left-[156px] top-[15px] h-[365px] w-[306px]">
+            <div
+              data-parallax-depth="bg"
+              className="absolute left-[156px] top-[15px] h-[365px] w-[306px] animate-hero-float motion-reduce:animate-none"
+              style={{ animationDelay: "0.6s" }}
+            >
               <Image src="/hero/background.png" alt="" fill sizes="306px" className="object-cover" priority />
             </div>
             <div
-              className="absolute flex items-center justify-center"
-              style={{ left: 73.9, top: 41.9, width: 302.5, height: 324.2 }}
+              data-parallax-depth="mid"
+              className="absolute flex items-center justify-center animate-hero-float motion-reduce:animate-none"
+              style={{ left: 73.9, top: 41.9, width: 302.5, height: 324.2, animationDelay: "0.9s" }}
             >
               <div className="relative h-[293px] w-[268px] rotate-[-7.2deg]">
                 <Image src="/hero/hoodie.png" alt="Hoodie" fill sizes="268px" className="object-cover" priority />
               </div>
             </div>
             <div
-              className="absolute flex items-center justify-center"
-              style={{ left: 163.8, top: 0, width: 485.4, height: 449.3 }}
+              data-parallax-depth="mid"
+              className="absolute flex items-center justify-center animate-hero-float motion-reduce:animate-none"
+              style={{ left: 163.8, top: 0, width: 485.4, height: 449.3, animationDelay: "1.2s" }}
             >
               <div className="relative h-[374px] w-[420px] rotate-[11.37deg]">
                 <Image src="/hero/kaos.png" alt="Kaos" fill sizes="420px" className="object-cover" priority />
               </div>
             </div>
-            <div className="absolute left-[45px] top-[137px] h-[57px] w-[58px]">
+            <div
+              data-parallax-depth="fg"
+              className="absolute left-[45px] top-[137px] h-[57px] w-[58px] animate-hero-float motion-reduce:animate-none"
+              style={{ animationDelay: "1.5s" }}
+            >
               <Image src="/hero/benang.png" alt="" fill sizes="58px" className="object-cover" priority />
             </div>
             <div
-              className="absolute flex items-center justify-center"
-              style={{ left: 7, top: 321, width: 61.2, height: 69.3 }}
+              data-parallax-depth="fg"
+              className="absolute flex items-center justify-center animate-hero-float motion-reduce:animate-none"
+              style={{ left: 7, top: 321, width: 61.2, height: 69.3, animationDelay: "1.8s" }}
             >
               <div className="relative h-[59px] w-[48px] rotate-[-14.66deg]">
                 <Image src="/hero/daun.png" alt="" fill sizes="48px" className="object-cover" priority />
               </div>
             </div>
             <div
-              className="absolute flex items-center justify-center"
-              style={{ left: 537.7, top: 251.6, width: 93.3, height: 73 }}
+              data-parallax-depth="fg"
+              className="absolute flex items-center justify-center animate-hero-float motion-reduce:animate-none"
+              style={{ left: 537.7, top: 251.6, width: 93.3, height: 73, animationDelay: "2.1s" }}
             >
               <div className="relative h-[70px] w-[91px] rotate-[1.95deg]">
                 <Image src="/hero/label.png" alt="" fill sizes="91px" className="object-cover" priority />
               </div>
             </div>
             <div
-              className="absolute flex items-center justify-center"
-              style={{ left: 449.6, top: 293.5, width: 148.5, height: 114.6 }}
+              data-parallax-depth="fg"
+              className="absolute flex items-center justify-center animate-hero-float motion-reduce:animate-none"
+              style={{ left: 449.6, top: 293.5, width: 148.5, height: 114.6, animationDelay: "2.4s" }}
             >
               <div className="relative h-[83px] w-[131px] rotate-15">
                 <Image src="/hero/topi.png" alt="" fill sizes="131px" className="object-cover" priority />
               </div>
             </div>
 
-            <div className="absolute left-[406px] top-[374px] flex w-[180px] flex-col gap-1.5 rounded-md bg-white px-4 py-3 shadow-[0px_4px_16px_0px_rgba(0,0,0,0.12)]">
+            <div
+              data-parallax-depth="fg"
+              className="absolute left-[406px] top-[374px] flex w-[180px] flex-col gap-1.5 rounded-md bg-white px-4 py-3 shadow-[0px_4px_16px_0px_rgba(0,0,0,0.12)] animate-hero-float motion-reduce:animate-none"
+              style={{ animationDelay: "2.7s" }}
+            >
               <p className="font-body text-body-sm font-semibold text-text-primary">Custom by You</p>
               <p className="font-body text-xs text-text-secondary">Made with Harmoni</p>
               <div className="flex items-center gap-2">
@@ -205,116 +276,140 @@ export default function BerandaPage() {
         </div>
       </section>
 
-      <section className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-2 px-4 py-16 md:px-20">
-        <p className="font-body text-caption font-bold uppercase tracking-[0.6px] text-primary">
-          Cara Kerja
-        </p>
-        <h2 className="text-center font-heading text-h3 font-semibold text-text-primary md:text-h2">
-          Mudah dalam 4 Langkah
-        </h2>
-        <div className="mt-6 flex w-full flex-wrap justify-center">
-          <div className="relative inline-flex flex-wrap gap-10">
-            {[0, 1, 2].map((segment) => (
-              <div
-                key={segment}
-                className="absolute top-5 hidden h-0 w-[200px] animate-line-glow border-t-2 border-dashed border-primary md:block"
-                style={{
-                  left: `${80 + segment * 200}px`,
-                  animationDelay: `${3 * segment + 1.5}s`,
-                }}
-              />
-            ))}
-            {STEPS.map((step, i) => (
-              <StepItem key={step.title} number={i + 1} {...step} />
-            ))}
+      <section className="px-4 py-16 md:px-20">
+        <Reveal className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-2">
+          <p className="font-body text-caption font-bold uppercase tracking-[0.6px] text-primary">
+            Cara Kerja
+          </p>
+          <h2 className="text-center font-heading text-h3 font-semibold text-text-primary md:text-h2">
+            Mudah dalam 4 Langkah
+          </h2>
+          <div className="mt-6 flex w-full flex-wrap justify-center">
+            <div className="relative inline-flex flex-wrap gap-10">
+              {[0, 1, 2].map((segment) => (
+                <div
+                  key={segment}
+                  className="absolute top-5 hidden h-0 w-[200px] animate-line-glow border-t-2 border-dashed border-primary md:block"
+                  style={{
+                    left: `${80 + segment * 200}px`,
+                    animationDelay: `${3 * segment + 1.5}s`,
+                  }}
+                />
+              ))}
+              {STEPS.map((step, i) => (
+                <StepItem key={step.title} number={i + 1} {...step} />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
-
-      <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-16 md:px-20">
-        <div className="flex items-end justify-between">
-          <div className="flex flex-col gap-1">
-            <p className="font-body text-caption font-bold uppercase tracking-[0.6px] text-primary">
-              Produk Populer
-            </p>
-            <h2 className="font-heading text-h3 font-semibold text-text-primary md:text-h2">
-              Beragam Produk, Bebas Berkreasi
-            </h2>
-          </div>
-          <Link href="/katalog" className="shrink-0 font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4">
-            Lihat Semua Produk →
-          </Link>
-        </div>
-        <div className="relative overflow-hidden">
-          <div className="flex snap-x items-center gap-6 overflow-x-auto pb-2 [mask-image:linear-gradient(to_right,black_92%,transparent_100%)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {(productsData?.data ?? []).map((product) => (
-              <div key={product.id} className="shrink-0 snap-start">
-                <ProductCard product={product} />
-              </div>
-            ))}
-            <Link
-              href="/katalog?sort=populer"
-              aria-label="Lihat semua produk terpopuler"
-              className="flex size-11 shrink-0 snap-start items-center justify-center rounded-full border border-border bg-surface text-text-primary transition-all duration-150 hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-text-on-accent hover:shadow-md active:translate-y-0 active:scale-95"
-            >
-              <ArrowRight className="size-5" />
-            </Link>
-            <div className="w-10 shrink-0" aria-hidden="true" />
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-16 md:px-20">
-        <div className="flex items-end justify-between">
-          <div className="flex flex-col gap-1">
-            <p className="font-body text-caption font-bold uppercase tracking-[0.6px] text-primary">
-              Desain Populer
-            </p>
-            <h2 className="font-heading text-h3 font-semibold text-text-primary md:text-h2">
-              Karya Kreator Pilihan
-            </h2>
-          </div>
-          <Link href="/marketplace-desain" className="shrink-0 font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4">
-            Lihat Semua Desain →
-          </Link>
-        </div>
-        <div className="relative overflow-hidden">
-          <div className="flex snap-x items-center gap-6 overflow-x-auto pb-2 [mask-image:linear-gradient(to_right,black_92%,transparent_100%)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {(designsData?.data ?? []).map((design) => (
-              <div key={design.id} className="shrink-0 snap-start">
-                <DesignCard design={design} />
-              </div>
-            ))}
-            <Link
-              href="/marketplace-desain?sort=populer"
-              aria-label="Lihat semua desain terpopuler"
-              className="flex size-11 shrink-0 snap-start items-center justify-center rounded-full border border-border bg-surface text-text-primary transition-all duration-150 hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-text-on-accent hover:shadow-md active:translate-y-0 active:scale-95"
-            >
-              <ArrowRight className="size-5" />
-            </Link>
-            <div className="w-10 shrink-0" aria-hidden="true" />
-          </div>
-        </div>
-      </section>
-
-      <section className="flex w-full flex-col items-center gap-2 py-16">
-        <p className="font-body text-caption font-bold uppercase tracking-[0.6px] text-primary">
-          Apa Kata Mereka
-        </p>
-        <h2 className="text-center font-heading text-h3 font-semibold text-text-primary md:text-h2">
-          Dipercaya Banyak Kreator & Brand
-        </h2>
-        <div className="mx-auto w-full max-w-[1440px] overflow-hidden px-4 [mask-image:linear-gradient(to_right,transparent_0%,black_5%,black_95%,transparent_100%)] md:px-20">
-          <div className="flex w-max animate-marquee gap-6 hover:[animation-play-state:paused]">
-            {[...TESTIMONIALS, ...TESTIMONIALS].map((t, i) => (
-              <TestimonialCard key={`${t.name}-${i}`} {...t} />
-            ))}
-          </div>
-        </div>
+        </Reveal>
       </section>
 
       <section className="px-4 py-16 md:px-20">
-        <div className="mx-auto flex w-full max-w-[1440px] flex-col items-start justify-between gap-6 rounded-lg bg-primary px-8 py-10 md:flex-row md:items-center">
+        <Reveal className="mx-auto flex w-full max-w-[1440px] flex-col gap-6">
+          <div className="flex items-end justify-between">
+            <div className="flex flex-col gap-1">
+              <p className="font-body text-caption font-bold uppercase tracking-[0.6px] text-primary">
+                Produk Populer
+              </p>
+              <h2 className="font-heading text-h3 font-semibold text-text-primary md:text-h2">
+                Beragam Produk, Bebas Berkreasi
+              </h2>
+            </div>
+            <Link href="/katalog" className="shrink-0 font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4">
+              Lihat Semua Produk →
+            </Link>
+          </div>
+          {productsLoading && (
+            <p className="font-body text-sm text-text-secondary">Memuat produk...</p>
+          )}
+          {!productsLoading && (productsData?.data ?? []).length === 0 && (
+            <p className="font-body text-sm text-text-secondary">Belum ada produk ditemukan.</p>
+          )}
+          {!productsLoading && (productsData?.data ?? []).length > 0 && (
+            <div className="relative overflow-hidden">
+              <div className="flex snap-x items-center gap-6 overflow-x-auto pb-2 [mask-image:linear-gradient(to_right,black_92%,transparent_100%)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {(productsData?.data ?? []).map((product) => (
+                  <div key={product.id} className="shrink-0 snap-start">
+                    <ProductCard product={product} />
+                  </div>
+                ))}
+                <Link
+                  href="/katalog?sort=populer"
+                  aria-label="Lihat semua produk terpopuler"
+                  className="flex size-11 shrink-0 snap-start items-center justify-center rounded-full border border-border bg-surface text-text-primary transition-all duration-150 hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-text-on-accent hover:shadow-md active:translate-y-0 active:scale-95"
+                >
+                  <ArrowRight className="size-5" />
+                </Link>
+                <div className="w-10 shrink-0" aria-hidden="true" />
+              </div>
+            </div>
+          )}
+        </Reveal>
+      </section>
+
+      <section className="px-4 py-16 md:px-20">
+        <Reveal className="mx-auto flex w-full max-w-[1440px] flex-col gap-6">
+          <div className="flex items-end justify-between">
+            <div className="flex flex-col gap-1">
+              <p className="font-body text-caption font-bold uppercase tracking-[0.6px] text-primary">
+                Desain Populer
+              </p>
+              <h2 className="font-heading text-h3 font-semibold text-text-primary md:text-h2">
+                Karya Kreator Pilihan
+              </h2>
+            </div>
+            <Link href="/marketplace-desain" className="shrink-0 font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4">
+              Lihat Semua Desain →
+            </Link>
+          </div>
+          {designsLoading && (
+            <p className="font-body text-sm text-text-secondary">Memuat desain...</p>
+          )}
+          {!designsLoading && (designsData?.data ?? []).length === 0 && (
+            <p className="font-body text-sm text-text-secondary">Belum ada desain ditemukan.</p>
+          )}
+          {!designsLoading && (designsData?.data ?? []).length > 0 && (
+            <div className="relative overflow-hidden">
+              <div className="flex snap-x items-center gap-6 overflow-x-auto pb-2 [mask-image:linear-gradient(to_right,black_92%,transparent_100%)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {(designsData?.data ?? []).map((design) => (
+                  <div key={design.id} className="shrink-0 snap-start">
+                    <DesignCard design={design} />
+                  </div>
+                ))}
+                <Link
+                  href="/marketplace-desain?sort=populer"
+                  aria-label="Lihat semua desain terpopuler"
+                  className="flex size-11 shrink-0 snap-start items-center justify-center rounded-full border border-border bg-surface text-text-primary transition-all duration-150 hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-text-on-accent hover:shadow-md active:translate-y-0 active:scale-95"
+                >
+                  <ArrowRight className="size-5" />
+                </Link>
+                <div className="w-10 shrink-0" aria-hidden="true" />
+              </div>
+            </div>
+          )}
+        </Reveal>
+      </section>
+
+      <section className="py-16">
+        <Reveal className="flex w-full flex-col items-center gap-2">
+          <p className="font-body text-caption font-bold uppercase tracking-[0.6px] text-primary">
+            Apa Kata Mereka
+          </p>
+          <h2 className="text-center font-heading text-h3 font-semibold text-text-primary md:text-h2">
+            Dipercaya Banyak Kreator & Brand
+          </h2>
+          <div className="mx-auto w-full max-w-[1440px] overflow-hidden px-4 [mask-image:linear-gradient(to_right,transparent_0%,black_5%,black_95%,transparent_100%)] md:px-20">
+            <div className="flex w-max animate-marquee gap-6 hover:[animation-play-state:paused]">
+              {[...TESTIMONIALS, ...TESTIMONIALS].map((t, i) => (
+                <TestimonialCard key={`${t.name}-${i}`} {...t} />
+              ))}
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
+      <section className="px-4 py-16 md:px-20">
+        <Reveal className="mx-auto flex w-full max-w-[1440px] flex-col items-start justify-between gap-6 rounded-lg bg-primary px-8 py-10 md:flex-row md:items-center">
           <div className="flex flex-col gap-2">
             <h2 className="font-heading text-h3 font-bold leading-snug text-text-on-accent">
               Siap Mewujudkan
@@ -340,7 +435,7 @@ export default function BerandaPage() {
               </Button>
             </Link>
           </div>
-        </div>
+        </Reveal>
       </section>
     </div>
   );
