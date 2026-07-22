@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import useSWR, { mutate } from "swr";
+import clsx from "clsx";
 import { Bell, ChevronDown, Menu, Palette, ShoppingCart } from "lucide-react";
 import Logo from "./Logo";
 import MobileDrawer from "./MobileDrawer";
@@ -22,6 +24,7 @@ const NAV_LINKS = [
 ];
 
 export default function SiteHeader() {
+  const pathname = usePathname();
   const { user, logout } = useAuthStore();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -37,12 +40,24 @@ export default function SiteHeader() {
     <header className="flex w-full items-center justify-between border-b border-border bg-surface px-4 py-4 md:px-20">
       <Logo />
 
-      <nav className="hidden items-center gap-6 font-body text-sm text-text-primary md:flex">
-        {NAV_LINKS.map((link) => (
-          <Link key={link.href} href={link.href}>
-            {link.label}
-          </Link>
-        ))}
+      <nav className="hidden items-center gap-6 font-body text-sm md:flex">
+        {NAV_LINKS.map((link) => {
+          const isActive = pathname === link.href;
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={clsx(
+                "relative py-1 transition-colors after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:bg-primary after:transition-all after:content-['']",
+                isActive
+                  ? "font-semibold text-primary after:w-full"
+                  : "text-text-primary after:w-0 hover:text-primary hover:after:w-full",
+              )}
+            >
+              {link.label}
+            </Link>
+          );
+        })}
       </nav>
 
       <div className="hidden items-center gap-4 md:flex">

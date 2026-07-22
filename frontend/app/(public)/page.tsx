@@ -212,11 +212,22 @@ export default function BerandaPage() {
         <h2 className="text-center font-heading text-h3 font-semibold text-text-primary md:text-h2">
           Mudah dalam 4 Langkah
         </h2>
-        <div className="relative mt-6 flex w-full flex-wrap justify-center gap-10">
-          <div className="absolute left-[12%] right-[12%] top-8 hidden border-t-2 border-dashed border-primary/40 md:block" />
-          {STEPS.map((step, i) => (
-            <StepItem key={step.title} number={i + 1} {...step} />
-          ))}
+        <div className="mt-6 flex w-full flex-wrap justify-center">
+          <div className="relative inline-flex flex-wrap gap-10">
+            {[0, 1, 2].map((segment) => (
+              <div
+                key={segment}
+                className="absolute top-5 hidden h-0 w-[200px] animate-line-glow border-t-2 border-dashed border-primary md:block"
+                style={{
+                  left: `${80 + segment * 200}px`,
+                  animationDelay: `${3 * segment + 1.5}s`,
+                }}
+              />
+            ))}
+            {STEPS.map((step, i) => (
+              <StepItem key={step.title} number={i + 1} {...step} />
+            ))}
+          </div>
         </div>
       </section>
 
@@ -230,7 +241,7 @@ export default function BerandaPage() {
               Beragam Produk, Bebas Berkreasi
             </h2>
           </div>
-          <Link href="/katalog" className="shrink-0 font-body text-sm font-medium text-primary">
+          <Link href="/katalog" className="shrink-0 font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4">
             Lihat Semua Produk →
           </Link>
         </div>
@@ -244,7 +255,7 @@ export default function BerandaPage() {
             <Link
               href="/katalog?sort=populer"
               aria-label="Lihat semua produk terpopuler"
-              className="flex size-11 shrink-0 snap-start items-center justify-center rounded-full border border-border bg-surface text-text-primary transition-colors hover:bg-background"
+              className="flex size-11 shrink-0 snap-start items-center justify-center rounded-full border border-border bg-surface text-text-primary transition-all duration-150 hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-text-on-accent hover:shadow-md active:translate-y-0 active:scale-95"
             >
               <ArrowRight className="size-5" />
             </Link>
@@ -263,7 +274,7 @@ export default function BerandaPage() {
               Karya Kreator Pilihan
             </h2>
           </div>
-          <Link href="/marketplace-desain" className="shrink-0 font-body text-sm font-medium text-primary">
+          <Link href="/marketplace-desain" className="shrink-0 font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4">
             Lihat Semua Desain →
           </Link>
         </div>
@@ -277,7 +288,7 @@ export default function BerandaPage() {
             <Link
               href="/marketplace-desain?sort=populer"
               aria-label="Lihat semua desain terpopuler"
-              className="flex size-11 shrink-0 snap-start items-center justify-center rounded-full border border-border bg-surface text-text-primary transition-colors hover:bg-background"
+              className="flex size-11 shrink-0 snap-start items-center justify-center rounded-full border border-border bg-surface text-text-primary transition-all duration-150 hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-text-on-accent hover:shadow-md active:translate-y-0 active:scale-95"
             >
               <ArrowRight className="size-5" />
             </Link>

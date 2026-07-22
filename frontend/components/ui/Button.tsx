@@ -21,11 +21,12 @@ export default function Button({
     <button
       disabled={disabled || loading}
       className={clsx(
-        "inline-flex items-center justify-center gap-2 rounded-sm px-5 py-3 font-body text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60",
-        variant === "primary" && "bg-accent text-text-on-accent hover:brightness-95",
+        "inline-flex items-center justify-center gap-2 rounded-sm px-5 py-3 font-body text-sm font-medium transition-all duration-150 ease-out hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:active:scale-100",
+        variant === "primary" &&
+          "bg-accent text-text-on-accent shadow-sm hover:bg-primary hover:shadow-md",
         variant === "secondary" &&
-          "border border-primary text-primary hover:bg-primary/5",
-        variant === "danger" && "bg-red-600 text-white hover:bg-red-700",
+          "border border-primary text-primary hover:bg-primary hover:text-text-on-accent hover:shadow-md",
+        variant === "danger" && "bg-red-600 text-white shadow-sm hover:bg-red-700 hover:shadow-md",
         fullWidth && "w-full",
         className,
       )}
