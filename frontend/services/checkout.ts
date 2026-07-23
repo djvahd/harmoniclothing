@@ -10,7 +10,3 @@ interface CheckoutPayload {
 export function checkout(payload: CheckoutPayload) {
   return apiFetch<{ data: Order }>("/checkout", { method: "POST", body: payload });
 }
-
-export function checkoutBulk(payload: CheckoutPayload) {
-  return apiFetch<{ data: Order }>("/checkout/bulk", { method: "POST", body: payload });
-}

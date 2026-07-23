@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import Button from "./Button";
 import type { CatalogFilterOptions } from "@/services/catalog";
 import type { GenderSegment, PrintArea } from "@/types/product";
 
@@ -53,12 +52,12 @@ function CheckboxRow({
   onChange: () => void;
 }) {
   return (
-    <label className="flex cursor-pointer items-center gap-3 py-1.5">
+    <label className="flex cursor-pointer items-center gap-2 py-1">
       <input
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className="size-4 shrink-0 rounded border-border accent-primary"
+        className="size-3.5 shrink-0 rounded border-border accent-primary"
       />
       <span className="font-body text-sm text-text-secondary">{label}</span>
     </label>
@@ -77,15 +76,15 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className="border-b border-border py-4">
+    <div className="border-b border-border py-3">
       <button
         onClick={onToggle}
         className="flex w-full items-center justify-between font-heading text-sm font-semibold text-text-primary"
       >
         {title}
-        {isOpen ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
+        {isOpen ? <ChevronUp className="size-3.5" /> : <ChevronDown className="size-3.5" />}
       </button>
-      {isOpen && <div className="mt-3 flex flex-col">{children}</div>}
+      {isOpen && <div className="mt-2 flex flex-col">{children}</div>}
     </div>
   );
 }
@@ -93,13 +92,12 @@ function Section({
 export default function FilterSidebar({
   options,
   value,
-  onApply,
+  onChange,
 }: {
   options?: CatalogFilterOptions;
   value: FilterSidebarValue;
-  onApply: (value: FilterSidebarValue) => void;
+  onChange: (value: FilterSidebarValue) => void;
 }) {
-  const [draft, setDraft] = useState<FilterSidebarValue>(value);
   const [openSections, setOpenSections] = useState({
     kategori: true,
     segmen: true,
@@ -108,24 +106,45 @@ export default function FilterSidebar({
     ukuran: true,
     harga: true,
   });
+  const [priceDraft, setPriceDraft] = useState({ min: value.priceMin, max: value.priceMax });
+
+  useEffect(() => {
+    setPriceDraft({ min: value.priceMin, max: value.priceMax });
+  }, [value.priceMin, value.priceMax]);
 
   const toggleSection = (key: keyof typeof openSections) =>
     setOpenSections((s) => ({ ...s, [key]: !s[key] }));
 
   const activeCount =
-    draft.categories.length +
-    draft.genders.length +
-    draft.sizes.length +
-    draft.colors.length +
-    draft.printAreas.length +
-    (draft.priceMin ? 1 : 0) +
-    (draft.priceMax ? 1 : 0);
+    value.categories.length +
+    value.genders.length +
+    value.sizes.length +
+    value.colors.length +
+    value.printAreas.length +
+    (value.priceMin ? 1 : 0) +
+    (value.priceMax ? 1 : 0);
+
+  const applyPrice = () => {
+    if (priceDraft.min !== value.priceMin || priceDraft.max !== value.priceMax) {
+      onChange({ ...value, priceMin: priceDraft.min, priceMax: priceDraft.max });
+    }
+  };
 
   return (
-    <aside className="flex w-[260px] shrink-0 flex-col">
-      <h2 className="border-b border-border pb-4 font-heading text-h4 font-semibold text-text-primary">
-        Filter
-      </h2>
+    <aside className="flex w-[220px] shrink-0 flex-col">
+      <div className="flex items-center justify-between border-b border-border pb-3">
+        <h2 className="font-heading text-sm font-semibold text-text-primary">
+          Filter{activeCount > 0 ? ` (${activeCount})` : ""}
+        </h2>
+        {activeCount > 0 && (
+          <button
+            onClick={() => onChange(EMPTY_FILTER_VALUE)}
+            className="font-body text-sm text-text-secondary underline"
+          >
+            Reset
+          </button>
+        )}
+      </div>
 
       <div className="flex flex-col">
         {!!options?.categories.length && (
@@ -134,8 +153,8 @@ export default function FilterSidebar({
               <CheckboxRow
                 key={c.slug}
                 label={c.name}
-                checked={draft.categories.includes(c.slug)}
-                onChange={() => setDraft((d) => ({ ...d, categories: toggle(d.categories, c.slug) }))}
+                checked={value.categories.includes(c.slug)}
+                onChange={() => onChange({ ...value, categories: toggle(value.categories, c.slug) })}
               />
             ))}
           </Section>
@@ -147,8 +166,8 @@ export default function FilterSidebar({
               <CheckboxRow
                 key={g}
                 label={GENDER_LABELS[g]}
-                checked={draft.genders.includes(g)}
-                onChange={() => setDraft((d) => ({ ...d, genders: toggle(d.genders, g) }))}
+                checked={value.genders.includes(g)}
+                onChange={() => onChange({ ...value, genders: toggle(value.genders, g) })}
               />
             ))}
           </Section>
@@ -160,8 +179,8 @@ export default function FilterSidebar({
               <CheckboxRow
                 key={c}
                 label={c}
-                checked={draft.colors.includes(c)}
-                onChange={() => setDraft((d) => ({ ...d, colors: toggle(d.colors, c) }))}
+                checked={value.colors.includes(c)}
+                onChange={() => onChange({ ...value, colors: toggle(value.colors, c) })}
               />
             ))}
           </Section>
@@ -173,8 +192,8 @@ export default function FilterSidebar({
               <CheckboxRow
                 key={p}
                 label={PRINT_AREA_LABELS[p]}
-                checked={draft.printAreas.includes(p)}
-                onChange={() => setDraft((d) => ({ ...d, printAreas: toggle(d.printAreas, p) }))}
+                checked={value.printAreas.includes(p)}
+                onChange={() => onChange({ ...value, printAreas: toggle(value.printAreas, p) })}
               />
             ))}
           </Section>
@@ -186,51 +205,43 @@ export default function FilterSidebar({
               <CheckboxRow
                 key={s}
                 label={s}
-                checked={draft.sizes.includes(s)}
-                onChange={() => setDraft((d) => ({ ...d, sizes: toggle(d.sizes, s) }))}
+                checked={value.sizes.includes(s)}
+                onChange={() => onChange({ ...value, sizes: toggle(value.sizes, s) })}
               />
             ))}
           </Section>
         )}
 
         <Section title="Harga" isOpen={openSections.harga} onToggle={() => toggleSection("harga")}>
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2 rounded-sm border border-border bg-surface px-3 py-2.5">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-1.5 rounded-sm border border-border bg-surface px-2 py-2">
               <span className="font-body text-sm font-medium text-text-secondary">Rp</span>
               <input
                 type="number"
                 min={0}
-                placeholder="Harga Minimum"
-                value={draft.priceMin}
-                onChange={(e) => setDraft((d) => ({ ...d, priceMin: e.target.value }))}
-                className="w-full bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
+                placeholder="Minimum"
+                value={priceDraft.min}
+                onChange={(e) => setPriceDraft((d) => ({ ...d, min: e.target.value }))}
+                onBlur={applyPrice}
+                onKeyDown={(e) => e.key === "Enter" && applyPrice()}
+                className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
               />
             </div>
-            <div className="flex items-center gap-2 rounded-sm border border-border bg-surface px-3 py-2.5">
+            <div className="flex items-center gap-1.5 rounded-sm border border-border bg-surface px-2 py-2">
               <span className="font-body text-sm font-medium text-text-secondary">Rp</span>
               <input
                 type="number"
                 min={0}
-                placeholder="Harga Maksimum"
-                value={draft.priceMax}
-                onChange={(e) => setDraft((d) => ({ ...d, priceMax: e.target.value }))}
-                className="w-full bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
+                placeholder="Maksimum"
+                value={priceDraft.max}
+                onChange={(e) => setPriceDraft((d) => ({ ...d, max: e.target.value }))}
+                onBlur={applyPrice}
+                onKeyDown={(e) => e.key === "Enter" && applyPrice()}
+                className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
               />
             </div>
           </div>
         </Section>
-      </div>
-
-      <div className="sticky bottom-0 flex items-center gap-3 border-t border-border bg-surface pt-4">
-        <button
-          onClick={() => setDraft(EMPTY_FILTER_VALUE)}
-          className="font-body text-sm text-text-secondary underline"
-        >
-          Reset
-        </button>
-        <Button variant="primary" fullWidth onClick={() => onApply(draft)}>
-          Terapkan{activeCount > 0 ? ` (${activeCount})` : ""}
-        </Button>
       </div>
     </aside>
   );

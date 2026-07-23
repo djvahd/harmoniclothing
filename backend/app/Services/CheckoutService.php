@@ -23,17 +23,25 @@ class CheckoutService
         private readonly PricingService $pricing,
     ) {}
 
-    /** POST /checkout — FR-017. */
+    /**
+     * POST /checkout — FR-017, FR-040/044, BR-012/026.
+     *
+     * BR-012: when the cart's total quantity qualifies for a bulk pricing
+     * tier, that tiered price-per-unit applies to every item instead of
+     * each item's regular cart-time snapshot (BR-025) — there's no separate
+     * "bulk checkout" flow, the discount just applies automatically.
+     */
     public function checkout(User $user, CheckoutDTO $dto): Order
     {
         $items = $this->fetchAndValidateCartItems($user, $dto->cartItemIds);
+        $totalQuantity = $items->sum('quantity');
+        $bulkUnitPrice = $this->pricing->bulkUnitPriceFor($totalQuantity);
 
-        $subtotal = $items->reduce(
-            fn ($carry, CartItem $item) => bcadd($carry, $item->subtotal(), 2),
-            '0'
-        );
+        $subtotal = $bulkUnitPrice !== null
+            ? bcmul($bulkUnitPrice, (string) $totalQuantity, 2)
+            : $items->reduce(fn ($carry, CartItem $item) => bcadd($carry, $item->subtotal(), 2), '0');
 
-        return DB::transaction(function () use ($user, $dto, $items, $subtotal) {
+        return DB::transaction(function () use ($user, $dto, $items, $subtotal, $bulkUnitPrice) {
             $order = $this->orders->create([
                 'user_id' => $user->id,
                 'address_id' => $dto->addressId,
@@ -51,57 +59,11 @@ class CheckoutService
                 'custom_design_file_path' => $item->custom_design_file_path,
                 'design_position' => $item->design_position,
                 'quantity' => $item->quantity,
-                'unit_price' => $item->unit_price_snapshot, // BR-025: carry the locked-in price
-                'subtotal' => $item->subtotal(),
-            ])->all());
-
-            $this->orders->recordStatusHistory($order, null, 'belum_dibayar', 'customer', $user->id);
-
-            $items->each(fn (CartItem $item) => $item->delete());
-
-            return $order->load('items.productVariant.product', 'items.design');
-        });
-    }
-
-    /** POST /checkout/bulk — FR-040/044, BR-012/026. */
-    public function checkoutBulk(User $user, CheckoutDTO $dto): Order
-    {
-        $items = $this->fetchAndValidateCartItems($user, $dto->cartItemIds);
-        $totalQuantity = $items->sum('quantity');
-
-        // BR-012: bulk price is tiered by *total* quantity, computed fresh
-        // at checkout — unlike BR-025's cart-time lock for regular items,
-        // this can't be known until all the bulk order's items are chosen.
-        $unitPrice = $this->pricing->bulkUnitPriceFor($totalQuantity);
-
-        if ($unitPrice === null) {
-            throw ValidationException::withMessages([
-                'cart_item_ids' => ['Tidak ada tingkat harga Bulk Order untuk kuantitas ini.'],
-            ]);
-        }
-
-        $subtotal = bcmul($unitPrice, (string) $totalQuantity, 2);
-
-        return DB::transaction(function () use ($user, $dto, $items, $subtotal, $unitPrice) {
-            $order = $this->orders->create([
-                'user_id' => $user->id,
-                'address_id' => $dto->addressId,
-                'type' => 'bulk',
-                'status' => 'belum_dibayar',
-                'notes' => $dto->notes,
-                'subtotal' => $subtotal,
-                'shipping_cost' => 0,
-                'total' => $subtotal,
-            ]);
-
-            $this->orders->addItems($order, $items->map(fn (CartItem $item) => [
-                'product_variant_id' => $item->product_variant_id,
-                'design_id' => $item->design_id,
-                'custom_design_file_path' => $item->custom_design_file_path,
-                'design_position' => $item->design_position,
-                'quantity' => $item->quantity,
-                'unit_price' => $unitPrice,
-                'subtotal' => bcmul($unitPrice, (string) $item->quantity, 2),
+                // BR-025: carry the locked-in cart price, unless a bulk tier overrides it.
+                'unit_price' => $bulkUnitPrice ?? $item->unit_price_snapshot,
+                'subtotal' => $bulkUnitPrice !== null
+                    ? bcmul($bulkUnitPrice, (string) $item->quantity, 2)
+                    : $item->subtotal(),
             ])->all());
 
             $this->orders->recordStatusHistory($order, null, 'belum_dibayar', 'customer', $user->id);

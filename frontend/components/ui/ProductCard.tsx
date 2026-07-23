@@ -3,7 +3,6 @@ import Image from "next/image";
 import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
 import type { Product } from "@/types/product";
-import Badge from "./Badge";
 import WishlistButton from "./WishlistButton";
 
 export default function ProductCard({ product }: { product: Product }) {
@@ -30,9 +29,6 @@ export default function ProductCard({ product }: { product: Product }) {
       <p className="font-body text-[12px] text-text-secondary">
         Mulai dari {formatCurrency(product.base_price)}
       </p>
-      <Badge variant="neutral" className="w-fit">
-        Bulk Order
-      </Badge>
     </Link>
   );
 }

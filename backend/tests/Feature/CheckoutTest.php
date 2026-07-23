@@ -11,7 +11,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-/** 5.2_API_List.md §4 — POST /checkout (FE-027), POST /checkout/bulk (FE-052/056). */
+/** 5.2_API_List.md §4 — POST /checkout (FE-027, FE-052/056: bulk tier pricing applies automatically). */
 class CheckoutTest extends TestCase
 {
     use RefreshDatabase;
@@ -76,7 +76,7 @@ class CheckoutTest extends TestCase
         ])->assertUnprocessable()->assertJsonValidationErrors('cart_item_ids.0');
     }
 
-    public function test_bulk_checkout_prices_by_total_quantity_not_cart_snapshot(): void
+    public function test_checkout_prices_by_total_quantity_when_a_bulk_tier_qualifies(): void
     {
         BulkPricingTier::factory()->create(['min_qty' => 1, 'max_qty' => 49, 'price_per_unit' => 80000]);
         BulkPricingTier::factory()->create(['min_qty' => 50, 'max_qty' => null, 'price_per_unit' => 60000]);
@@ -90,14 +90,14 @@ class CheckoutTest extends TestCase
         $itemM = CartItem::factory()->for($user)->for($variantM, 'productVariant')
             ->create(['quantity' => 25, 'unit_price_snapshot' => 999999]);
 
-        $response = $this->actingAs($user)->postJson('/api/checkout/bulk', [
+        $response = $this->actingAs($user)->postJson('/api/checkout', [
             'address_id' => $address->id,
             'cart_item_ids' => [$itemS->id, $itemM->id],
         ]);
 
         // total qty = 55 -> tiered price 60000/unit, not the 999999 cart snapshot
         $response->assertCreated()
-            ->assertJsonPath('data.type', 'bulk')
+            ->assertJsonPath('data.type', 'reguler')
             ->assertJsonPath('data.total', '3300000.00');
     }
 }

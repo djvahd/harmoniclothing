@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import useSWR from "swr";
 import { ArrowUpDown, Search } from "lucide-react";
 import clsx from "clsx";
@@ -19,11 +20,24 @@ const SORT_OPTIONS: { value: ProductSort; label: string }[] = [
 ];
 
 export default function KatalogPage() {
+  const searchParams = useSearchParams();
+  const kategoriParam = searchParams.get("kategori");
+
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<ProductSort>("terbaru");
-  const [filters, setFilters] = useState<FilterSidebarValue>(EMPTY_FILTER_VALUE);
+  const [filters, setFilters] = useState<FilterSidebarValue>(() =>
+    kategoriParam ? { ...EMPTY_FILTER_VALUE, categories: [kategoriParam] } : EMPTY_FILTER_VALUE,
+  );
   const [showSort, setShowSort] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (kategoriParam) {
+      setFilters((f) =>
+        f.categories.includes(kategoriParam) ? f : { ...f, categories: [kategoriParam] },
+      );
+    }
+  }, [kategoriParam]);
 
   useEffect(() => {
     if (!showSort) return;
@@ -85,8 +99,8 @@ export default function KatalogPage() {
         </div>
       </section>
 
-      <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-8 md:flex-row md:px-20">
-        <FilterSidebar options={filterOptions} value={filters} onApply={setFilters} />
+      <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-8 md:flex-row md:px-20">
+        <FilterSidebar options={filterOptions} value={filters} onChange={setFilters} />
 
         <div className="flex flex-1 flex-col gap-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
