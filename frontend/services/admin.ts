@@ -1,6 +1,6 @@
 import { apiFetch } from "@/lib/api";
 import type { User } from "@/types/user";
-import type { Design, Product, ProductVariant } from "@/types/product";
+import type { Design, PrintArea, Product, ProductVariant } from "@/types/product";
 import type { Order } from "@/types/order";
 
 export interface AdminDashboardSummary {
@@ -135,6 +135,7 @@ export function rejectDesign(id: number, reason: string) {
 
 export function createProduct(payload: {
   category_id?: number;
+  gender_segment?: "pria" | "wanita" | "unisex" | "anak";
   name_id: string;
   name_en: string;
   description_id?: string;
@@ -161,6 +162,7 @@ export function createVariant(
     color: string;
     size: string;
     cut_type: string;
+    print_areas?: PrintArea[];
     material: string;
     price_modifier?: number;
     mockup_asset_path: string;
@@ -168,6 +170,13 @@ export function createVariant(
 ) {
   return apiFetch<{ data: ProductVariant }>(`/admin/catalog/products/${productId}/variants`, {
     method: "POST",
+    body: payload,
+  });
+}
+
+export function updateVariant(variantId: number, payload: Partial<Parameters<typeof createVariant>[1]>) {
+  return apiFetch<{ data: ProductVariant }>(`/admin/catalog/variants/${variantId}`, {
+    method: "PATCH",
     body: payload,
   });
 }

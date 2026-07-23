@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * 4.3_Table_Design.md — products (blank product / Katalog Produk).
  */
 #[Fillable([
-    'category_id', 'name_id', 'name_en', 'description_id', 'description_en',
+    'category_id', 'gender_segment', 'name_id', 'name_en', 'description_id', 'description_en',
     'slug', 'base_price', 'is_active',
 ])]
 class Product extends Model

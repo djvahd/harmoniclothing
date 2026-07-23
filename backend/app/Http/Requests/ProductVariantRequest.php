@@ -24,6 +24,8 @@ class ProductVariantRequest extends FormRequest
             'color' => ['required', 'string', 'max:50'],
             'size' => ['required', 'string', 'max:20'],
             'cut_type' => ['required', 'string', 'max:50'],
+            'print_areas' => ['sometimes', 'array'],
+            'print_areas.*' => ['string', 'in:depan,belakang,lengan'],
             'material' => ['required', 'string', 'max:100'],
             'price_modifier' => ['sometimes', 'numeric'],
             'mockup_asset_path' => ['required', 'string'],

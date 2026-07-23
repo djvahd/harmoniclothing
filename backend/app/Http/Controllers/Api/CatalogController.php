@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductIndexRequest;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\ResolvesLocale;
 use App\Services\CatalogService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,14 +13,16 @@ use Illuminate\Http\Request;
 /** 5.2_API_List.md §3 — /catalog/* (Product Catalog, FE-012/013). Public, read-only. */
 class CatalogController extends Controller
 {
+    use ResolvesLocale;
+
     public function __construct(private readonly CatalogService $catalog) {}
 
     /** GET /catalog/products */
     public function index(ProductIndexRequest $request): JsonResponse
     {
         $products = $this->catalog->listProducts(
-            $request->validated('category'),
-            (int) $request->validated('per_page', 20)
+            $request->safe()->only(['categories', 'genders', 'sizes', 'colors', 'print_areas', 'price_min', 'price_max', 'sort']),
+            (int) $request->validated('per_page', 20),
         );
 
         return response()->json([
@@ -30,6 +33,12 @@ class CatalogController extends Controller
                 'total' => $products->total(),
             ],
         ]);
+    }
+
+    /** GET /catalog/products/filters — sidebar facets for the katalog filter drawer. */
+    public function filters(Request $request): JsonResponse
+    {
+        return response()->json(['data' => $this->catalog->getFilterOptions($this->locale($request))]);
     }
 
     /** GET /catalog/products/{slug} */

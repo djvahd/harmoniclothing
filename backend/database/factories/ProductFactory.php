@@ -18,6 +18,7 @@ class ProductFactory extends Factory
 
         return [
             'category_id' => Category::factory()->product(),
+            'gender_segment' => fake()->randomElement(['pria', 'wanita', 'unisex', 'anak']),
             'name_id' => ucfirst($name),
             'name_en' => ucfirst($name),
             'description_id' => fake()->paragraph(),

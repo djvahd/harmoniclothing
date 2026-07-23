@@ -21,6 +21,7 @@ class ProductRequest extends FormRequest
     {
         return [
             'category_id' => ['nullable', 'integer', 'exists:categories,id'],
+            'gender_segment' => ['nullable', 'string', 'in:pria,wanita,unisex,anak'],
             'name_id' => ['required', 'string', 'max:150'],
             'name_en' => ['required', 'string', 'max:150'],
             'description_id' => ['nullable', 'string'],

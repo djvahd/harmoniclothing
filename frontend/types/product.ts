@@ -4,11 +4,16 @@ export interface Category {
   slug: string;
 }
 
+export type GenderSegment = "pria" | "wanita" | "unisex" | "anak";
+
+export type PrintArea = "depan" | "belakang" | "lengan";
+
 export interface ProductVariant {
   id: number;
   color: string;
   size: string;
   cut_type: string;
+  print_areas: PrintArea[] | null;
   material: string;
   price_modifier: number;
   mockup_asset_path: string | null;
@@ -20,6 +25,7 @@ export interface Product {
   description: string;
   slug: string;
   base_price: number;
+  gender_segment: GenderSegment | null;
   category?: Category;
   variants?: ProductVariant[];
 }

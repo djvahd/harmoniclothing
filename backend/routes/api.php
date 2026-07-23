@@ -117,6 +117,7 @@ Route::post('/webhooks/biteship', [BiteshipWebhookController::class, 'handle']);
 
 // 5.2_API_List.md §3 — Product Catalog & Marketplace (public, read-only)
 Route::get('/catalog/products', [CatalogController::class, 'index']);
+Route::get('/catalog/products/filters', [CatalogController::class, 'filters']);
 Route::get('/catalog/products/{slug}', [CatalogController::class, 'show']);
 Route::get('/marketplace/designs', [MarketplaceController::class, 'index']);
 Route::get('/marketplace/designs/{slug}', [MarketplaceController::class, 'show']);

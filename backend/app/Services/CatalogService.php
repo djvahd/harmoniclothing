@@ -18,10 +18,20 @@ class CatalogService
         private readonly AuditLogService $auditLog,
     ) {}
 
-    /** GET /catalog/products — FE-012. */
-    public function listProducts(?string $categorySlug, int $perPage): LengthAwarePaginator
+    /**
+     * GET /catalog/products — FE-012.
+     *
+     * @param  array{categories?: array<int,string>, genders?: array<int,string>, sizes?: array<int,string>, colors?: array<int,string>, print_areas?: array<int,string>, price_min?: float, price_max?: float, sort?: string}  $filters
+     */
+    public function listProducts(array $filters, int $perPage): LengthAwarePaginator
     {
-        return $this->products->paginate($categorySlug, $perPage);
+        return $this->products->paginate($filters, $perPage);
+    }
+
+    /** GET /catalog/products/filters — sidebar filter facets (categories, genders, sizes, colors, print areas, price range). */
+    public function getFilterOptions(string $lang = 'id'): array
+    {
+        return $this->products->filterOptions($lang);
     }
 
     /** GET /catalog/products/{slug} — FE-013, termasuk variants. */

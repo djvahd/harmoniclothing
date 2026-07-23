@@ -28,6 +28,7 @@ class ProductVariantResource extends JsonResource
             'color' => $this->color,
             'size' => $this->size,
             'cut_type' => $this->cut_type,
+            'print_areas' => $this->print_areas,
             'material' => $this->material,
             'price_modifier' => $this->price_modifier,
             'mockup_asset_path' => $this->mockup_asset_path,

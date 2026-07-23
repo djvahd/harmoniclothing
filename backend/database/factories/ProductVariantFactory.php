@@ -18,6 +18,7 @@ class ProductVariantFactory extends Factory
             'color' => fake()->randomElement(['Hitam', 'Putih', 'Navy', 'Merah', 'Abu-abu']),
             'size' => fake()->randomElement(['S', 'M', 'L', 'XL', 'XXL']),
             'cut_type' => fake()->randomElement(['Regular Fit', 'Oversize']),
+            'print_areas' => fake()->randomElements(['depan', 'belakang', 'lengan'], fake()->numberBetween(1, 3)),
             'material' => fake()->randomElement(['Cotton Combed 24s', 'Cotton Combed 30s', 'Fleece']),
             'price_modifier' => 0,
             'mockup_asset_path' => 'mockups/'.fake()->uuid().'.glb',
