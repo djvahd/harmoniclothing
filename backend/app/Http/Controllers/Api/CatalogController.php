@@ -21,7 +21,7 @@ class CatalogController extends Controller
     public function index(ProductIndexRequest $request): JsonResponse
     {
         $products = $this->catalog->listProducts(
-            $request->safe()->only(['categories', 'genders', 'sizes', 'colors', 'print_areas', 'price_min', 'price_max', 'sort']),
+            $request->safe()->only(['categories', 'genders', 'sizes', 'colors', 'materials', 'print_areas', 'price_min', 'price_max', 'sort']),
             (int) $request->validated('per_page', 20),
         );
 

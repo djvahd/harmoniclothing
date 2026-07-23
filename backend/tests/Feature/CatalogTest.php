@@ -131,6 +131,19 @@ class CatalogTest extends TestCase
             ->assertJsonPath('data.0.id', $matching->id);
     }
 
+    public function test_products_can_be_filtered_by_material(): void
+    {
+        $matching = Product::factory()->create();
+        ProductVariant::factory()->for($matching)->create(['material' => 'Fleece']);
+
+        $other = Product::factory()->create();
+        ProductVariant::factory()->for($other)->create(['material' => 'Cotton Combed 24s']);
+
+        $response = $this->getJson('/api/catalog/products?materials[]=Fleece');
+
+        $response->assertOk()->assertJsonCount(1, 'data')->assertJsonPath('data.0.id', $matching->id);
+    }
+
     public function test_size_filter_is_multiselect(): void
     {
         $small = Product::factory()->create();
@@ -202,11 +215,11 @@ class CatalogTest extends TestCase
     {
         $category = Category::factory()->product()->create(['name_id' => 'Kaos', 'name_en' => 'T-Shirt']);
         $product = Product::factory()->for($category)->create(['base_price' => 100000, 'gender_segment' => 'pria']);
-        ProductVariant::factory()->for($product)->create(['size' => 'M', 'color' => 'Hitam', 'print_areas' => ['depan']]);
-        ProductVariant::factory()->for($product)->create(['size' => 'L', 'color' => 'Hitam', 'print_areas' => ['belakang']]);
+        ProductVariant::factory()->for($product)->create(['size' => 'M', 'color' => 'Hitam', 'material' => 'Fleece', 'print_areas' => ['depan']]);
+        ProductVariant::factory()->for($product)->create(['size' => 'L', 'color' => 'Hitam', 'material' => 'Fleece', 'print_areas' => ['belakang']]);
 
         $other = Product::factory()->create(['base_price' => 250000, 'gender_segment' => 'wanita']);
-        ProductVariant::factory()->for($other)->create(['size' => 'M', 'color' => 'Putih', 'print_areas' => ['lengan']]);
+        ProductVariant::factory()->for($other)->create(['size' => 'M', 'color' => 'Putih', 'material' => 'Cotton Combed 24s', 'print_areas' => ['lengan']]);
 
         $response = $this->getJson('/api/catalog/products/filters?lang=id')->assertOk();
 
@@ -214,6 +227,7 @@ class CatalogTest extends TestCase
             ->assertJsonPath('data.price_max', 250000);
         $this->assertEqualsCanonicalizing(['L', 'M'], $response->json('data.sizes'));
         $this->assertEqualsCanonicalizing(['Hitam', 'Putih'], $response->json('data.colors'));
+        $this->assertEqualsCanonicalizing(['Cotton Combed 24s', 'Fleece'], $response->json('data.materials'));
         $this->assertEqualsCanonicalizing(['pria', 'wanita'], $response->json('data.genders'));
         $this->assertEqualsCanonicalizing(['belakang', 'depan', 'lengan'], $response->json('data.print_areas'));
         $categories = collect($response->json('data.categories'));

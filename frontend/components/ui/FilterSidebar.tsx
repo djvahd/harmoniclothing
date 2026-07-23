@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, LayoutGrid, Shirt } from "lucide-react";
+import clsx from "clsx";
 import type { CatalogFilterOptions } from "@/services/catalog";
-import type { GenderSegment, PrintArea } from "@/types/product";
+import type { GenderSegment } from "@/types/product";
 
 export interface FilterSidebarValue {
   categories: string[];
   genders: GenderSegment[];
   sizes: string[];
   colors: string[];
-  printAreas: PrintArea[];
+  materials: string[];
   priceMin: string;
   priceMax: string;
 }
@@ -22,46 +23,49 @@ const GENDER_LABELS: Record<GenderSegment, string> = {
   anak: "Kids",
 };
 
-const PRINT_AREA_LABELS: Record<PrintArea, string> = {
-  depan: "Depan",
-  belakang: "Belakang",
-  lengan: "Lengan",
+const GENDER_ORDER: GenderSegment[] = ["pria", "wanita", "unisex", "anak"];
+
+/** Variant color is free text (admin-entered), so this only covers common
+ * Indonesian names — anything else falls through as a raw CSS color value
+ * (works for hex codes / English names, degrades gracefully otherwise). */
+const COLOR_SWATCH_MAP: Record<string, string> = {
+  hitam: "#111827",
+  putih: "#ffffff",
+  navy: "#1e2a4a",
+  merah: "#dc2626",
+  "abu-abu": "#9ca3af",
+  abu: "#9ca3af",
+  biru: "#2563eb",
+  hijau: "#16a34a",
+  kuning: "#eab308",
+  coklat: "#78350f",
+  cokelat: "#78350f",
+  krem: "#f5e9d3",
+  maroon: "#7f1d1d",
+  oranye: "#f97316",
+  ungu: "#7c3aed",
+  pink: "#ec4899",
+  "merah muda": "#ec4899",
+  emas: "#d4af37",
+  perak: "#c0c0c0",
 };
+
+function swatchColor(name: string): string {
+  return COLOR_SWATCH_MAP[name.trim().toLowerCase()] ?? name;
+}
 
 export const EMPTY_FILTER_VALUE: FilterSidebarValue = {
   categories: [],
   genders: [],
   sizes: [],
   colors: [],
-  printAreas: [],
+  materials: [],
   priceMin: "",
   priceMax: "",
 };
 
 function toggle<T>(list: T[], item: T): T[] {
   return list.includes(item) ? list.filter((i) => i !== item) : [...list, item];
-}
-
-function CheckboxRow({
-  checked,
-  label,
-  onChange,
-}: {
-  checked: boolean;
-  label: string;
-  onChange: () => void;
-}) {
-  return (
-    <label className="flex cursor-pointer items-center gap-2 py-1">
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={onChange}
-        className="size-3.5 shrink-0 rounded border-border accent-primary"
-      />
-      <span className="font-body text-sm text-text-secondary">{label}</span>
-    </label>
-  );
 }
 
 function Section({
@@ -99,10 +103,6 @@ export default function FilterSidebar({
   onChange: (value: FilterSidebarValue) => void;
 }) {
   const [openSections, setOpenSections] = useState({
-    segmen: true,
-    warna: true,
-    printArea: false,
-    ukuran: true,
     harga: true,
   });
   const [priceDraft, setPriceDraft] = useState({ min: value.priceMin, max: value.priceMax });
@@ -115,11 +115,10 @@ export default function FilterSidebar({
     setOpenSections((s) => ({ ...s, [key]: !s[key] }));
 
   const activeCount =
-    value.categories.length +
     value.genders.length +
     value.sizes.length +
     value.colors.length +
-    value.printAreas.length +
+    value.materials.length +
     (value.priceMin ? 1 : 0) +
     (value.priceMax ? 1 : 0);
 
@@ -130,104 +129,179 @@ export default function FilterSidebar({
   };
 
   return (
-    <aside className="flex w-[220px] shrink-0 flex-col">
-      <div className="flex items-center justify-between border-b border-border pb-3">
-        <h2 className="font-heading text-sm font-semibold text-text-primary">
-          Filter{activeCount > 0 ? ` (${activeCount})` : ""}
-        </h2>
-        {activeCount > 0 && (
-          <button
-            onClick={() => onChange(EMPTY_FILTER_VALUE)}
-            className="font-body text-sm text-text-secondary underline"
-          >
-            Reset
-          </button>
-        )}
-      </div>
+    <aside className="flex w-[220px] shrink-0 flex-col gap-6">
+      {!!options?.categories.length && (
+        <div className="flex flex-col">
+          <p className="mb-2 font-heading text-xs font-semibold uppercase tracking-wide text-text-secondary">
+            Kategori
+          </p>
+          <div className="flex flex-col gap-0.5">
+            <button
+              onClick={() => onChange({ ...value, categories: [] })}
+              className={clsx(
+                "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-left font-body text-sm transition-colors",
+                value.categories.length === 0
+                  ? "bg-accent text-text-on-accent"
+                  : "text-text-secondary hover:bg-border/50",
+              )}
+            >
+              <LayoutGrid className="size-4 shrink-0" />
+              Semua
+            </button>
+            {options.categories.map((c) => (
+              <button
+                key={c.slug}
+                onClick={() => onChange({ ...value, categories: [c.slug] })}
+                className={clsx(
+                  "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-left font-body text-sm transition-colors",
+                  value.categories.includes(c.slug)
+                    ? "bg-accent text-text-on-accent"
+                    : "text-text-secondary hover:bg-border/50",
+                )}
+              >
+                <Shirt className="size-4 shrink-0" />
+                {c.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="flex flex-col">
-        {!!options?.genders.length && (
-          <Section title="Segmen" isOpen={openSections.segmen} onToggle={() => toggleSection("segmen")}>
-            {options.genders.map((g) => (
-              <CheckboxRow
-                key={g}
-                label={GENDER_LABELS[g]}
-                checked={value.genders.includes(g)}
-                onChange={() => onChange({ ...value, genders: toggle(value.genders, g) })}
-              />
-            ))}
-          </Section>
-        )}
+        <div className="flex items-center justify-between border-b border-border pb-3">
+          <h2 className="font-heading text-sm font-semibold text-text-primary">
+            Filter{activeCount > 0 ? ` (${activeCount})` : ""}
+          </h2>
+          {activeCount > 0 && (
+            <button
+              onClick={() => onChange({ ...EMPTY_FILTER_VALUE, categories: value.categories })}
+              className="font-body text-sm text-text-secondary underline"
+            >
+              Reset
+            </button>
+          )}
+        </div>
 
-        {!!options?.colors.length && (
-          <Section title="Warna" isOpen={openSections.warna} onToggle={() => toggleSection("warna")}>
-            {options.colors.map((c) => (
-              <CheckboxRow
-                key={c}
-                label={c}
-                checked={value.colors.includes(c)}
-                onChange={() => onChange({ ...value, colors: toggle(value.colors, c) })}
-              />
-            ))}
-          </Section>
-        )}
-
-        {!!options?.print_areas.length && (
-          <Section title="Print Area" isOpen={openSections.printArea} onToggle={() => toggleSection("printArea")}>
-            {options.print_areas.map((p) => (
-              <CheckboxRow
-                key={p}
-                label={PRINT_AREA_LABELS[p]}
-                checked={value.printAreas.includes(p)}
-                onChange={() => onChange({ ...value, printAreas: toggle(value.printAreas, p) })}
-              />
-            ))}
-          </Section>
-        )}
-
-        {!!options?.sizes.length && (
-          <Section title="Ukuran" isOpen={openSections.ukuran} onToggle={() => toggleSection("ukuran")}>
-            {options.sizes.map((s) => (
-              <CheckboxRow
-                key={s}
-                label={s}
-                checked={value.sizes.includes(s)}
-                onChange={() => onChange({ ...value, sizes: toggle(value.sizes, s) })}
-              />
-            ))}
-          </Section>
-        )}
-
-        <Section title="Harga" isOpen={openSections.harga} onToggle={() => toggleSection("harga")}>
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-1.5 rounded-sm border border-border bg-surface px-2 py-2">
-              <span className="font-body text-sm font-medium text-text-secondary">Rp</span>
-              <input
-                type="number"
-                min={0}
-                placeholder="Minimum"
-                value={priceDraft.min}
-                onChange={(e) => setPriceDraft((d) => ({ ...d, min: e.target.value }))}
-                onBlur={applyPrice}
-                onKeyDown={(e) => e.key === "Enter" && applyPrice()}
-                className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
-              />
+        <div className="flex flex-col">
+          {!!options?.genders.length && (
+            <div className="border-b border-border py-3">
+              <p className="mb-2 font-heading text-sm font-semibold text-text-primary">Segmen</p>
+              <div className="flex flex-wrap gap-2">
+                {GENDER_ORDER.filter((g) => options.genders.includes(g)).map((g) => (
+                  <button
+                    key={g}
+                    onClick={() => onChange({ ...value, genders: toggle(value.genders, g) })}
+                    className={clsx(
+                      "rounded-sm border px-3 py-1.5 text-center font-body text-sm transition-colors",
+                      value.genders.includes(g)
+                        ? "border-accent bg-accent text-text-on-accent"
+                        : "border-border text-text-secondary hover:border-primary/40",
+                    )}
+                  >
+                    {GENDER_LABELS[g]}
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="flex items-center gap-1.5 rounded-sm border border-border bg-surface px-2 py-2">
-              <span className="font-body text-sm font-medium text-text-secondary">Rp</span>
-              <input
-                type="number"
-                min={0}
-                placeholder="Maksimum"
-                value={priceDraft.max}
-                onChange={(e) => setPriceDraft((d) => ({ ...d, max: e.target.value }))}
-                onBlur={applyPrice}
-                onKeyDown={(e) => e.key === "Enter" && applyPrice()}
-                className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
-              />
+          )}
+
+          {!!options?.colors.length && (
+            <div className="border-b border-border py-3">
+              <p className="mb-2 font-heading text-sm font-semibold text-text-primary">Warna</p>
+              <div className="flex flex-wrap gap-2">
+                {options.colors.map((c) => (
+                  <button
+                    key={c}
+                    title={c}
+                    onClick={() => onChange({ ...value, colors: toggle(value.colors, c) })}
+                    className={clsx(
+                      "size-7 shrink-0 rounded-full border-2 transition-all",
+                      value.colors.includes(c)
+                        ? "border-accent ring-2 ring-accent/30"
+                        : "border-border",
+                    )}
+                    style={{ backgroundColor: swatchColor(c) }}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        </Section>
+          )}
+
+          {!!options?.sizes.length && (
+            <div className="border-b border-border py-3">
+              <p className="mb-2 font-heading text-sm font-semibold text-text-primary">Ukuran</p>
+              <div className="flex flex-wrap gap-2">
+                {options.sizes.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => onChange({ ...value, sizes: toggle(value.sizes, s) })}
+                    className={clsx(
+                      "min-w-[40px] rounded-sm border px-2.5 py-1.5 text-center font-body text-sm transition-colors",
+                      value.sizes.includes(s)
+                        ? "border-accent bg-accent text-text-on-accent"
+                        : "border-border text-text-secondary hover:border-primary/40",
+                    )}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {!!options?.materials.length && (
+            <div className="border-b border-border py-3">
+              <p className="mb-2 font-heading text-sm font-semibold text-text-primary">Material</p>
+              <div className="flex flex-wrap gap-2">
+                {options.materials.map((m) => (
+                  <button
+                    key={m}
+                    onClick={() => onChange({ ...value, materials: toggle(value.materials, m) })}
+                    className={clsx(
+                      "rounded-sm border px-3 py-1.5 text-center font-body text-sm transition-colors",
+                      value.materials.includes(m)
+                        ? "border-accent bg-accent text-text-on-accent"
+                        : "border-border text-text-secondary hover:border-primary/40",
+                    )}
+                  >
+                    {m}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <Section title="Harga" isOpen={openSections.harga} onToggle={() => toggleSection("harga")}>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-1.5 rounded-sm border border-border bg-surface px-2 py-2">
+                <span className="font-body text-sm font-medium text-text-secondary">Rp</span>
+                <input
+                  type="number"
+                  min={0}
+                  placeholder="Minimum"
+                  value={priceDraft.min}
+                  onChange={(e) => setPriceDraft((d) => ({ ...d, min: e.target.value }))}
+                  onBlur={applyPrice}
+                  onKeyDown={(e) => e.key === "Enter" && applyPrice()}
+                  className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
+                />
+              </div>
+              <div className="flex items-center gap-1.5 rounded-sm border border-border bg-surface px-2 py-2">
+                <span className="font-body text-sm font-medium text-text-secondary">Rp</span>
+                <input
+                  type="number"
+                  min={0}
+                  placeholder="Maksimum"
+                  value={priceDraft.max}
+                  onChange={(e) => setPriceDraft((d) => ({ ...d, max: e.target.value }))}
+                  onBlur={applyPrice}
+                  onKeyDown={(e) => e.key === "Enter" && applyPrice()}
+                  className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
+                />
+              </div>
+            </div>
+          </Section>
+        </div>
       </div>
     </aside>
   );

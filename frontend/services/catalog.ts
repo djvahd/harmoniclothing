@@ -16,6 +16,7 @@ export interface GetProductsParams {
   price_max?: number;
   sizes?: string[];
   colors?: string[];
+  materials?: string[];
   print_areas?: PrintArea[];
   sort?: ProductSort;
 }
@@ -30,6 +31,7 @@ export function getProducts(params?: GetProductsParams) {
   appendArrayParam(qs, "genders", params?.genders);
   appendArrayParam(qs, "sizes", params?.sizes);
   appendArrayParam(qs, "colors", params?.colors);
+  appendArrayParam(qs, "materials", params?.materials);
   appendArrayParam(qs, "print_areas", params?.print_areas);
   if (params?.per_page) qs.set("per_page", String(params.per_page));
   if (params?.price_min != null) qs.set("price_min", String(params.price_min));
@@ -44,6 +46,7 @@ export interface CatalogFilterOptions {
   genders: GenderSegment[];
   sizes: string[];
   colors: string[];
+  materials: string[];
   print_areas: PrintArea[];
   price_min: number;
   price_max: number;

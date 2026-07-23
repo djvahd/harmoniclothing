@@ -25,6 +25,8 @@ class ProductIndexRequest extends FormRequest
             'sizes.*' => ['string'],
             'colors' => ['sometimes', 'array'],
             'colors.*' => ['string'],
+            'materials' => ['sometimes', 'array'],
+            'materials.*' => ['string'],
             'print_areas' => ['sometimes', 'array'],
             'print_areas.*' => ['string', 'in:depan,belakang,lengan'],
             'sort' => ['sometimes', 'string', 'in:terbaru,harga_asc,harga_desc,terlaris,rating'],

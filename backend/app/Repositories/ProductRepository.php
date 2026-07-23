@@ -17,7 +17,7 @@ class ProductRepository
      * sizes, colors, print_areas) are multi-select (OR within a dimension,
      * AND across dimensions), price_min/price_max are a single range.
      *
-     * @param  array{categories?: array<int,string>, genders?: array<int,string>, sizes?: array<int,string>, colors?: array<int,string>, print_areas?: array<int,string>, price_min?: float, price_max?: float, sort?: string}  $filters
+     * @param  array{categories?: array<int,string>, genders?: array<int,string>, sizes?: array<int,string>, colors?: array<int,string>, materials?: array<int,string>, print_areas?: array<int,string>, price_min?: float, price_max?: float, sort?: string}  $filters
      */
     public function paginate(array $filters, int $perPage): LengthAwarePaginator
     {
@@ -39,6 +39,10 @@ class ProductRepository
                 'variants',
                 fn ($q) => $q->whereIn('color', $filters['colors'])
             ))
+            ->when(!empty($filters['materials']), fn ($query) => $query->whereHas(
+                'variants',
+                fn ($q) => $q->whereIn('material', $filters['materials'])
+            ))
             ->when(!empty($filters['print_areas']), fn ($query) => $query->whereHas(
                 'variants',
                 fn ($q) => $q->where(function ($qq) use ($filters) {
@@ -57,13 +61,13 @@ class ProductRepository
      * combination. `$lang` picks the bilingual category name the same way
      * CategoryResource does (NFR-008).
      *
-     * @return array{categories: array<int, array{slug: string, name: string}>, genders: array<int, string>, sizes: array<int, string>, colors: array<int, string>, print_areas: array<int, string>, price_min: float, price_max: float}
+     * @return array{categories: array<int, array{slug: string, name: string}>, genders: array<int, string>, sizes: array<int, string>, colors: array<int, string>, materials: array<int, string>, print_areas: array<int, string>, price_min: float, price_max: float}
      */
     public function filterOptions(string $lang = 'id'): array
     {
         $variantValues = ProductVariant::query()
             ->whereHas('product', fn ($q) => $q->active())
-            ->get(['size', 'color', 'print_areas']);
+            ->get(['size', 'color', 'material', 'print_areas']);
 
         $priceRange = Product::query()->active()->selectRaw('min(base_price) as min, max(base_price) as max')->first();
 
@@ -84,6 +88,7 @@ class ProductRepository
             'genders' => $genders->sort()->values()->all(),
             'sizes' => $variantValues->pluck('size')->unique()->sort()->values()->all(),
             'colors' => $variantValues->pluck('color')->unique()->sort()->values()->all(),
+            'materials' => $variantValues->pluck('material')->unique()->sort()->values()->all(),
             'print_areas' => $variantValues->pluck('print_areas')->filter()->flatten()->unique()->sort()->values()->all(),
             'price_min' => (float) ($priceRange->min ?? 0),
             'price_max' => (float) ($priceRange->max ?? 0),

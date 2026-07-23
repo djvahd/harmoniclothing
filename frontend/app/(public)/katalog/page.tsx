@@ -8,7 +8,6 @@ import { ArrowUpDown, Search } from "lucide-react";
 import clsx from "clsx";
 import ProductCard from "@/components/ui/ProductCard";
 import Button from "@/components/ui/Button";
-import Tag from "@/components/ui/Tag";
 import FilterSidebar, { EMPTY_FILTER_VALUE, type FilterSidebarValue } from "@/components/ui/FilterSidebar";
 import { getProducts, getCatalogFilters, type ProductSort } from "@/services/catalog";
 
@@ -54,6 +53,12 @@ export default function KatalogPage() {
   const { data: filtersData } = useSWR("/catalog/products/filters", getCatalogFilters);
   const filterOptions = filtersData?.data;
 
+  // Unfiltered grand total for the "Menampilkan X dari Y produk" count — Y
+  // is the whole catalog, not the filtered result set, so this is fetched
+  // independently of `filters`/`sort`.
+  const { data: totalData } = useSWR("/catalog/products/total", () => getProducts({ per_page: 1 }));
+  const grandTotal = totalData?.meta.total;
+
   const { data, isLoading } = useSWR(["/catalog/products", sort, filters], () =>
     getProducts({
       per_page: 40,
@@ -62,7 +67,7 @@ export default function KatalogPage() {
       genders: filters.genders.length ? filters.genders : undefined,
       sizes: filters.sizes.length ? filters.sizes : undefined,
       colors: filters.colors.length ? filters.colors : undefined,
-      print_areas: filters.printAreas.length ? filters.printAreas : undefined,
+      materials: filters.materials.length ? filters.materials : undefined,
       price_min: filters.priceMin ? Number(filters.priceMin) : undefined,
       price_max: filters.priceMax ? Number(filters.priceMax) : undefined,
     }),
@@ -105,42 +110,17 @@ export default function KatalogPage() {
 
         <div className="flex flex-1 flex-col gap-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="flex min-w-0 flex-1 items-center gap-3">
-              <div className="flex w-full max-w-[300px] shrink-0 items-center gap-2 rounded-sm border border-border bg-surface px-2.5 py-2">
-                <Search className="size-4 shrink-0 text-text-secondary" />
-                <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Cari produk..."
-                  className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
-                />
-              </div>
-
-              {!!filterOptions?.categories.length && (
-                <div className="relative min-w-0 flex-1">
-                  <div className="flex items-center gap-2 overflow-x-auto pr-6 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                    <button
-                      onClick={() => setFilters((f) => ({ ...f, categories: [] }))}
-                      className="shrink-0"
-                    >
-                      <Tag size="sm" active={filters.categories.length === 0}>Semua</Tag>
-                    </button>
-                    {filterOptions.categories.map((c) => (
-                      <button
-                        key={c.slug}
-                        onClick={() => setFilters((f) => ({ ...f, categories: [c.slug] }))}
-                        className="shrink-0"
-                      >
-                        <Tag size="sm" active={filters.categories.includes(c.slug)}>{c.name}</Tag>
-                      </button>
-                    ))}
-                  </div>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background to-transparent" />
-                </div>
-              )}
+            <div className="flex w-full max-w-[420px] shrink-0 items-center gap-2 rounded-sm border border-border bg-surface px-3 py-2.5">
+              <Search className="size-4 shrink-0 text-text-secondary" />
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Cari produk..."
+                className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
+              />
             </div>
 
-            <div ref={sortRef} className="relative">
+            <div ref={sortRef} className="relative shrink-0">
               <button
                 onClick={() => setShowSort((v) => !v)}
                 className="flex items-center gap-1.5 rounded-full border border-border bg-surface px-4 py-2 font-body text-sm text-text-secondary transition-colors hover:border-primary/40 hover:text-text-primary"
@@ -171,6 +151,12 @@ export default function KatalogPage() {
               )}
             </div>
           </div>
+
+          {!isLoading && (
+            <p className="font-body text-sm text-text-secondary">
+              Menampilkan {filtered.length} dari {grandTotal ?? filtered.length} produk
+            </p>
+          )}
 
           <div id="product-grid" className="flex flex-wrap gap-6">
             {isLoading && <p className="font-body text-sm text-text-secondary">Memuat produk...</p>}
