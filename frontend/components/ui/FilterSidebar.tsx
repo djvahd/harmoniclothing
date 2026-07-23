@@ -99,7 +99,6 @@ export default function FilterSidebar({
   onChange: (value: FilterSidebarValue) => void;
 }) {
   const [openSections, setOpenSections] = useState({
-    kategori: true,
     segmen: true,
     warna: true,
     printArea: false,
@@ -147,19 +146,6 @@ export default function FilterSidebar({
       </div>
 
       <div className="flex flex-col">
-        {!!options?.categories.length && (
-          <Section title="Kategori" isOpen={openSections.kategori} onToggle={() => toggleSection("kategori")}>
-            {options.categories.map((c) => (
-              <CheckboxRow
-                key={c.slug}
-                label={c.name}
-                checked={value.categories.includes(c.slug)}
-                onChange={() => onChange({ ...value, categories: toggle(value.categories, c.slug) })}
-              />
-            ))}
-          </Section>
-        )}
-
         {!!options?.genders.length && (
           <Section title="Segmen" isOpen={openSections.segmen} onToggle={() => toggleSection("segmen")}>
             {options.genders.map((g) => (

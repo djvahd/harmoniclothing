@@ -8,6 +8,7 @@ import { ArrowUpDown, Search } from "lucide-react";
 import clsx from "clsx";
 import ProductCard from "@/components/ui/ProductCard";
 import Button from "@/components/ui/Button";
+import Tag from "@/components/ui/Tag";
 import FilterSidebar, { EMPTY_FILTER_VALUE, type FilterSidebarValue } from "@/components/ui/FilterSidebar";
 import { getProducts, getCatalogFilters, type ProductSort } from "@/services/catalog";
 
@@ -104,14 +105,39 @@ export default function KatalogPage() {
 
         <div className="flex flex-1 flex-col gap-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="flex w-full max-w-[420px] items-center gap-2 rounded-sm border border-border bg-surface px-3 py-2.5">
-              <Search className="size-4 shrink-0 text-text-secondary" />
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Cari produk..."
-                className="w-full bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
-              />
+            <div className="flex min-w-0 flex-1 items-center gap-3">
+              <div className="flex w-full max-w-[300px] shrink-0 items-center gap-2 rounded-sm border border-border bg-surface px-2.5 py-2">
+                <Search className="size-4 shrink-0 text-text-secondary" />
+                <input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Cari produk..."
+                  className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
+                />
+              </div>
+
+              {!!filterOptions?.categories.length && (
+                <div className="relative min-w-0 flex-1">
+                  <div className="flex items-center gap-2 overflow-x-auto pr-6 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                    <button
+                      onClick={() => setFilters((f) => ({ ...f, categories: [] }))}
+                      className="shrink-0"
+                    >
+                      <Tag size="sm" active={filters.categories.length === 0}>Semua</Tag>
+                    </button>
+                    {filterOptions.categories.map((c) => (
+                      <button
+                        key={c.slug}
+                        onClick={() => setFilters((f) => ({ ...f, categories: [c.slug] }))}
+                        className="shrink-0"
+                      >
+                        <Tag size="sm" active={filters.categories.includes(c.slug)}>{c.name}</Tag>
+                      </button>
+                    ))}
+                  </div>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background to-transparent" />
+                </div>
+              )}
             </div>
 
             <div ref={sortRef} className="relative">
