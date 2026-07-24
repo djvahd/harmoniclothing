@@ -83,10 +83,16 @@ function Section({
     <div className="border-b border-border py-3">
       <button
         onClick={onToggle}
-        className="flex w-full items-center justify-between rounded-sm font-heading text-sm font-semibold text-text-primary transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+        className="group flex w-full items-center justify-between rounded-sm font-heading text-sm font-semibold text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
       >
         {title}
-        {isOpen ? <ChevronUp className="size-3.5" /> : <ChevronDown className="size-3.5" />}
+        <span className="rounded-full p-1 transition-colors group-hover:bg-border/50">
+          {isOpen ? (
+            <ChevronUp className="size-3.5 text-text-secondary" />
+          ) : (
+            <ChevronDown className="size-3.5 text-text-secondary" />
+          )}
+        </span>
       </button>
       {isOpen && <div className="mt-2 flex flex-col">{children}</div>}
     </div>
@@ -171,10 +177,10 @@ export default function FilterSidebar({
             <button
               onClick={() => onChange({ ...value, categories: [] })}
               className={clsx(
-                "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-left font-body text-sm transition-colors active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
+                "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-left font-body text-sm transition-all duration-150 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
                 value.categories.length === 0
                   ? "bg-accent text-text-on-accent"
-                  : "text-text-secondary hover:bg-border/50",
+                  : "text-text-secondary hover:translate-x-0.5 hover:bg-border/50 hover:text-text-primary",
               )}
             >
               <LayoutGrid className="size-4 shrink-0" />
@@ -185,10 +191,10 @@ export default function FilterSidebar({
                 key={c.slug}
                 onClick={() => onChange({ ...value, categories: [c.slug] })}
                 className={clsx(
-                  "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-left font-body text-sm transition-colors active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
+                  "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-left font-body text-sm transition-all duration-150 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
                   value.categories.includes(c.slug)
                     ? "bg-accent text-text-on-accent"
-                    : "text-text-secondary hover:bg-border/50",
+                    : "text-text-secondary hover:translate-x-0.5 hover:bg-border/50 hover:text-text-primary",
                 )}
               >
                 <Shirt className="size-4 shrink-0" />
@@ -226,7 +232,7 @@ export default function FilterSidebar({
                       "rounded-sm border px-3 py-1.5 text-center font-body text-sm transition-colors active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
                       value.genders.includes(g)
                         ? "border-accent bg-accent text-text-on-accent"
-                        : "border-border text-text-secondary hover:border-primary/40",
+                        : "border-border text-text-secondary hover:border-primary hover:bg-border/40 hover:text-text-primary",
                     )}
                   >
                     {GENDER_LABELS[g]}
@@ -248,7 +254,7 @@ export default function FilterSidebar({
                       "size-7 shrink-0 rounded-full border-2 transition-all hover:scale-110 active:scale-[0.9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2",
                       value.colors.includes(c)
                         ? "border-accent ring-2 ring-accent/30"
-                        : "border-border hover:border-primary/60",
+                        : "border-border hover:border-primary",
                     )}
                     style={{ backgroundColor: swatchColor(c) }}
                   />
@@ -268,7 +274,7 @@ export default function FilterSidebar({
                       "min-w-[40px] rounded-sm border px-2.5 py-1.5 text-center font-body text-sm transition-colors active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
                       value.sizes.includes(s)
                         ? "border-accent bg-accent text-text-on-accent"
-                        : "border-border text-text-secondary hover:border-primary/40",
+                        : "border-border text-text-secondary hover:border-primary hover:bg-border/40 hover:text-text-primary",
                     )}
                   >
                     {s}
@@ -289,7 +295,7 @@ export default function FilterSidebar({
                       "rounded-sm border px-3 py-1.5 text-center font-body text-sm transition-colors active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
                       value.materials.includes(m)
                         ? "border-accent bg-accent text-text-on-accent"
-                        : "border-border text-text-secondary hover:border-primary/40",
+                        : "border-border text-text-secondary hover:border-primary hover:bg-border/40 hover:text-text-primary",
                     )}
                   >
                     {m}
@@ -301,7 +307,7 @@ export default function FilterSidebar({
 
           <Section title="Harga" isOpen={openSections.harga} onToggle={() => toggleSection("harga")}>
             <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-1.5 rounded-sm border border-border bg-surface px-2 py-2 transition-colors focus-within:border-primary/40">
+              <div className="flex items-center gap-1.5 rounded-sm border border-border bg-surface px-2 py-2 transition-colors hover:border-primary hover:bg-border/40 focus-within:border-primary focus-within:bg-surface">
                 <span className="font-body text-sm font-medium text-text-secondary">Rp</span>
                 <input
                   type="number"
@@ -314,7 +320,7 @@ export default function FilterSidebar({
                   className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
                 />
               </div>
-              <div className="flex items-center gap-1.5 rounded-sm border border-border bg-surface px-2 py-2 transition-colors focus-within:border-primary/40">
+              <div className="flex items-center gap-1.5 rounded-sm border border-border bg-surface px-2 py-2 transition-colors hover:border-primary hover:bg-border/40 focus-within:border-primary focus-within:bg-surface">
                 <span className="font-body text-sm font-medium text-text-secondary">Rp</span>
                 <input
                   type="number"

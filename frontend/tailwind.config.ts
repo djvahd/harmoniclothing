@@ -9,15 +9,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--color-background)",
-        primary: "var(--color-primary)",
-        accent: "var(--color-accent)",
-        surface: "var(--color-surface)",
-        border: "var(--color-border)",
+        background: "rgb(var(--color-background) / <alpha-value>)",
+        primary: "rgb(var(--color-primary) / <alpha-value>)",
+        accent: "rgb(var(--color-accent) / <alpha-value>)",
+        surface: "rgb(var(--color-surface) / <alpha-value>)",
+        border: "rgb(var(--color-border) / <alpha-value>)",
         text: {
-          primary: "var(--color-text-primary)",
-          secondary: "var(--color-text-secondary)",
-          "on-accent": "var(--color-text-on-accent)",
+          primary: "rgb(var(--color-text-primary) / <alpha-value>)",
+          secondary: "rgb(var(--color-text-secondary) / <alpha-value>)",
+          "on-accent": "rgb(var(--color-text-on-accent) / <alpha-value>)",
         },
       },
       fontFamily: {
