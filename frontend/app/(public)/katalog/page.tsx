@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import useSWR from "swr";
-import { ArrowUpDown, Search, X } from "lucide-react";
+import { ArrowUpDown, PackageSearch, Search, X } from "lucide-react";
 import clsx from "clsx";
 import ProductCard, { ProductCardSkeleton } from "@/components/ui/ProductCard";
 import Button from "@/components/ui/Button";
@@ -103,6 +103,16 @@ export default function KatalogPage() {
   const isLoadingInitial = isLoading && accumulated.length === 0;
   const isLoadingMore = isLoading && page > 1;
 
+  const hasActiveQuery =
+    !!search ||
+    filters.categories.length > 0 ||
+    filters.genders.length > 0 ||
+    filters.sizes.length > 0 ||
+    filters.colors.length > 0 ||
+    filters.materials.length > 0 ||
+    !!filters.priceMin ||
+    !!filters.priceMax;
+
   return (
     <div className="flex flex-col">
       <section className="flex flex-col gap-6 bg-surface px-4 py-10 md:flex-row md:items-center md:justify-between md:px-20">
@@ -188,8 +198,25 @@ export default function KatalogPage() {
           )}
 
           <div id="product-grid" className="flex flex-wrap gap-6">
-            {(isLoadingInitial || error || filtered.length === 0) &&
+            {(isLoadingInitial || error || (!hasActiveQuery && filtered.length === 0)) &&
               Array.from({ length: 8 }).map((_, i) => <ProductCardSkeleton key={i} />)}
+            {!isLoadingInitial && !error && hasActiveQuery && filtered.length === 0 && (
+              <div className="flex w-full flex-col items-center gap-3 py-16 text-center">
+                <PackageSearch className="size-10 text-text-secondary" />
+                <p className="font-body text-sm text-text-secondary">
+                  Belum ada produk ditemukan untuk filter ini.
+                </p>
+                <button
+                  onClick={() => {
+                    setSearch("");
+                    setFilters(EMPTY_FILTER_VALUE);
+                  }}
+                  className="font-body text-sm font-medium text-primary underline"
+                >
+                  Reset pencarian & filter
+                </button>
+              </div>
+            )}
             {filtered.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
