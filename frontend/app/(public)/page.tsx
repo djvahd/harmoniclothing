@@ -398,17 +398,16 @@ export default function BerandaPage() {
               Lihat Semua Produk →
             </Link>
           </div>
-          {productsLoading && (
+          {(productsLoading || (productsData?.data ?? []).length === 0) && (
             <div className="relative overflow-hidden">
               <div className="flex items-center gap-6 overflow-x-hidden pb-2">
                 {Array.from({ length: 8 }).map((_, i) => (
-                  <ProductCardSkeleton key={i} />
+                  <div key={i} className="shrink-0">
+                    <ProductCardSkeleton />
+                  </div>
                 ))}
               </div>
             </div>
-          )}
-          {!productsLoading && (productsData?.data ?? []).length === 0 && (
-            <p className="font-body text-sm text-text-secondary">Belum ada produk ditemukan.</p>
           )}
           {!productsLoading && (productsData?.data ?? []).length > 0 && (
             <div className="relative overflow-hidden">
@@ -447,17 +446,16 @@ export default function BerandaPage() {
               Lihat Semua Desain →
             </Link>
           </div>
-          {designsLoading && (
+          {(designsLoading || (designsData?.data ?? []).length === 0) && (
             <div className="relative overflow-hidden">
               <div className="flex items-center gap-6 overflow-x-hidden pb-2">
                 {Array.from({ length: 8 }).map((_, i) => (
-                  <DesignCardSkeleton key={i} />
+                  <div key={i} className="shrink-0">
+                    <DesignCardSkeleton />
+                  </div>
                 ))}
               </div>
             </div>
-          )}
-          {!designsLoading && (designsData?.data ?? []).length === 0 && (
-            <p className="font-body text-sm text-text-secondary">Belum ada desain ditemukan.</p>
           )}
           {!designsLoading && (designsData?.data ?? []).length > 0 && (
             <div className="relative overflow-hidden">

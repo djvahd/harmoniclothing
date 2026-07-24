@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import useSWR from "swr";
-import { ArrowUpDown, PackageSearch, Search, X } from "lucide-react";
+import { ArrowUpDown, Search, X } from "lucide-react";
 import clsx from "clsx";
 import ProductCard, { ProductCardSkeleton } from "@/components/ui/ProductCard";
 import Button from "@/components/ui/Button";
@@ -69,7 +69,7 @@ export default function KatalogPage() {
   const { data: totalData } = useSWR("/catalog/products/total", () => getProducts({ per_page: 1 }));
   const grandTotal = totalData?.meta.total;
 
-  const { data, isLoading } = useSWR(["/catalog/products", sort, filters, page], () =>
+  const { data, error, isLoading } = useSWR(["/catalog/products", sort, filters, page], () =>
     getProducts({
       page,
       per_page: PER_PAGE,
@@ -102,16 +102,6 @@ export default function KatalogPage() {
   const hasMore = !!data && accumulated.length < data.meta.total;
   const isLoadingInitial = isLoading && accumulated.length === 0;
   const isLoadingMore = isLoading && page > 1;
-
-  const hasActiveQuery =
-    !!search ||
-    filters.categories.length > 0 ||
-    filters.genders.length > 0 ||
-    filters.sizes.length > 0 ||
-    filters.colors.length > 0 ||
-    filters.materials.length > 0 ||
-    !!filters.priceMin ||
-    !!filters.priceMax;
 
   return (
     <div className="flex flex-col">
@@ -191,34 +181,15 @@ export default function KatalogPage() {
             </div>
           </div>
 
-          {!isLoadingInitial && (
+          {!isLoadingInitial && !error && (
             <p className="font-body text-sm text-text-secondary">
               Menampilkan {filtered.length} dari {grandTotal ?? filtered.length} produk
             </p>
           )}
 
           <div id="product-grid" className="flex flex-wrap gap-6">
-            {isLoadingInitial &&
+            {(isLoadingInitial || error || filtered.length === 0) &&
               Array.from({ length: 8 }).map((_, i) => <ProductCardSkeleton key={i} />)}
-            {!isLoadingInitial && filtered.length === 0 && (
-              <div className="flex w-full flex-col items-center gap-3 py-16 text-center">
-                <PackageSearch className="size-10 text-text-secondary" />
-                <p className="font-body text-sm text-text-secondary">
-                  Belum ada produk ditemukan untuk filter ini.
-                </p>
-                {hasActiveQuery && (
-                  <button
-                    onClick={() => {
-                      setSearch("");
-                      setFilters(EMPTY_FILTER_VALUE);
-                    }}
-                    className="font-body text-sm font-medium text-primary underline"
-                  >
-                    Reset pencarian & filter
-                  </button>
-                )}
-              </div>
-            )}
             {filtered.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
