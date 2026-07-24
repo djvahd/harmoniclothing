@@ -129,7 +129,7 @@ export default function KatalogPage() {
               <Button variant="primary">Mulai Custom Design</Button>
             </a>
             <Link href="/marketplace-desain">
-              <Button variant="secondary">Lihat Marketplace</Button>
+              <Button variant="secondary">Lihat Desain</Button>
             </Link>
           </div>
         </div>

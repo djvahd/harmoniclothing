@@ -210,10 +210,10 @@ export default function BerandaPage() {
             </Reveal>
             <Reveal delay={240}>
               <div className="flex flex-wrap gap-3">
-                <Link href="/katalog">
+                <Link href="/katalog-produk">
                   <Button variant="primary">Mulai Custom Design →</Button>
                 </Link>
-                <Link href="/katalog">
+                <Link href="/katalog-produk">
                   <Button variant="secondary">Jelajahi Produk</Button>
                 </Link>
               </div>
@@ -394,7 +394,7 @@ export default function BerandaPage() {
                 Beragam Produk, Bebas Berkreasi
               </h2>
             </div>
-            <Link href="/katalog" className="shrink-0 font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4">
+            <Link href="/katalog-produk" className="shrink-0 font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4">
               Lihat Semua Produk →
             </Link>
           </div>
@@ -418,7 +418,7 @@ export default function BerandaPage() {
                   </div>
                 ))}
                 <Link
-                  href="/katalog?sort=populer"
+                  href="/katalog-produk?sort=populer"
                   aria-label="Lihat semua produk terpopuler"
                   className="flex size-11 shrink-0 snap-start items-center justify-center rounded-full border border-border bg-surface text-text-primary transition-all duration-150 hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-text-on-accent hover:shadow-md active:translate-y-0 active:scale-95"
                 >
@@ -510,7 +510,7 @@ export default function BerandaPage() {
             </p>
           </div>
           <div className="flex shrink-0 gap-3">
-            <Link href="/katalog">
+            <Link href="/katalog-produk">
               <Button variant="primary" className="!bg-white !text-primary hover:!bg-white/90">
                 Mulai Custom Design →
               </Button>

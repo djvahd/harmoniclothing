@@ -47,7 +47,7 @@ export default function WishlistPage() {
           ))}
         </div>
         {items.length === 0 && !isLoading && (
-          <Link href="/katalog" className="font-body text-sm font-medium text-primary">
+          <Link href="/katalog-produk" className="font-body text-sm font-medium text-primary">
             Jelajahi Katalog
           </Link>
         )}

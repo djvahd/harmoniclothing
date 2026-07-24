@@ -18,8 +18,8 @@ import { formatCurrency } from "@/lib/format";
 
 const NAV_LINKS = [
   { href: "/", label: "Beranda" },
-  { href: "/katalog", label: "Produk" },
-  { href: "/marketplace-desain", label: "Marketplace" },
+  { href: "/katalog-produk", label: "Produk" },
+  { href: "/marketplace-desain", label: "Desain" },
   { href: "/tentang-kami", label: "Tentang Kami" },
 ];
 

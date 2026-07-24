@@ -33,7 +33,7 @@ export default function KeranjangPage() {
       {!isLoading && items.length === 0 && (
         <div className="flex flex-col items-center gap-4 rounded-md border border-border bg-surface p-10 text-center">
           <p className="font-body text-sm text-text-secondary">Keranjangmu masih kosong.</p>
-          <Link href="/katalog">
+          <Link href="/katalog-produk">
             <Button>Mulai Belanja</Button>
           </Link>
         </div>
