@@ -52,17 +52,15 @@ export default function DesignCard({ design, startingPrice }: DesignCardProps) {
         <WishlistButton designId={design.id} className="absolute right-2 top-2" />
       </div>
       <div className="flex flex-col gap-0">
-        <p className="font-body text-body-sm text-text-primary transition-colors group-hover:text-primary">{design.title}</p>
+        <p className="line-clamp-1 min-h-[21px] font-body text-body-sm text-text-primary transition-colors group-hover:text-primary">{design.title}</p>
         <div className="flex items-center gap-1.5">
           <span className="size-[14px] shrink-0 rounded-full bg-border" />
           <p className="font-body text-[11px] text-text-secondary">by {design.creator.name}</p>
         </div>
       </div>
-      {price !== undefined && (
-        <p className="font-body text-[12px] text-text-primary">
-          Mulai dari {formatCurrency(price)}
-        </p>
-      )}
+      <p className="font-body text-[12px] text-text-primary">
+        {price !== undefined ? `Mulai dari ${formatCurrency(price)}` : " "}
+      </p>
     </Link>
   );
 }
