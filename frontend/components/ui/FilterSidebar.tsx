@@ -83,7 +83,7 @@ function Section({
     <div className="border-b border-border py-3">
       <button
         onClick={onToggle}
-        className="flex w-full items-center justify-between font-heading text-sm font-semibold text-text-primary"
+        className="flex w-full items-center justify-between rounded-sm font-heading text-sm font-semibold text-text-primary transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
       >
         {title}
         {isOpen ? <ChevronUp className="size-3.5" /> : <ChevronDown className="size-3.5" />}
@@ -103,6 +103,10 @@ export default function FilterSidebar({
   onChange: (value: FilterSidebarValue) => void;
 }) {
   const [openSections, setOpenSections] = useState({
+    segmen: true,
+    warna: true,
+    ukuran: true,
+    material: true,
     harga: true,
   });
   const [priceDraft, setPriceDraft] = useState({ min: value.priceMin, max: value.priceMax });
@@ -132,14 +136,12 @@ export default function FilterSidebar({
     <aside className="flex w-[220px] shrink-0 flex-col gap-6">
       {!!options?.categories.length && (
         <div className="flex flex-col">
-          <p className="mb-2 font-heading text-xs font-semibold uppercase tracking-wide text-text-secondary">
-            Kategori
-          </p>
+          <p className="mb-2 font-heading text-sm font-semibold text-text-primary">Kategori</p>
           <div className="flex flex-col gap-0.5">
             <button
               onClick={() => onChange({ ...value, categories: [] })}
               className={clsx(
-                "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-left font-body text-sm transition-colors",
+                "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-left font-body text-sm transition-colors active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
                 value.categories.length === 0
                   ? "bg-accent text-text-on-accent"
                   : "text-text-secondary hover:bg-border/50",
@@ -153,7 +155,7 @@ export default function FilterSidebar({
                 key={c.slug}
                 onClick={() => onChange({ ...value, categories: [c.slug] })}
                 className={clsx(
-                  "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-left font-body text-sm transition-colors",
+                  "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-left font-body text-sm transition-colors active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
                   value.categories.includes(c.slug)
                     ? "bg-accent text-text-on-accent"
                     : "text-text-secondary hover:bg-border/50",
@@ -175,7 +177,7 @@ export default function FilterSidebar({
           {activeCount > 0 && (
             <button
               onClick={() => onChange({ ...EMPTY_FILTER_VALUE, categories: value.categories })}
-              className="font-body text-sm text-text-secondary underline"
+              className="rounded-sm font-body text-sm text-text-secondary underline transition-colors hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
             >
               Reset
             </button>
@@ -184,15 +186,14 @@ export default function FilterSidebar({
 
         <div className="flex flex-col">
           {!!options?.genders.length && (
-            <div className="border-b border-border py-3">
-              <p className="mb-2 font-heading text-sm font-semibold text-text-primary">Segmen</p>
+            <Section title="Segmen" isOpen={openSections.segmen} onToggle={() => toggleSection("segmen")}>
               <div className="flex flex-wrap gap-2">
                 {GENDER_ORDER.filter((g) => options.genders.includes(g)).map((g) => (
                   <button
                     key={g}
                     onClick={() => onChange({ ...value, genders: toggle(value.genders, g) })}
                     className={clsx(
-                      "rounded-sm border px-3 py-1.5 text-center font-body text-sm transition-colors",
+                      "rounded-sm border px-3 py-1.5 text-center font-body text-sm transition-colors active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
                       value.genders.includes(g)
                         ? "border-accent bg-accent text-text-on-accent"
                         : "border-border text-text-secondary hover:border-primary/40",
@@ -202,12 +203,11 @@ export default function FilterSidebar({
                   </button>
                 ))}
               </div>
-            </div>
+            </Section>
           )}
 
           {!!options?.colors.length && (
-            <div className="border-b border-border py-3">
-              <p className="mb-2 font-heading text-sm font-semibold text-text-primary">Warna</p>
+            <Section title="Warna" isOpen={openSections.warna} onToggle={() => toggleSection("warna")}>
               <div className="flex flex-wrap gap-2">
                 {options.colors.map((c) => (
                   <button
@@ -215,28 +215,27 @@ export default function FilterSidebar({
                     title={c}
                     onClick={() => onChange({ ...value, colors: toggle(value.colors, c) })}
                     className={clsx(
-                      "size-7 shrink-0 rounded-full border-2 transition-all",
+                      "size-7 shrink-0 rounded-full border-2 transition-all hover:scale-110 active:scale-[0.9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2",
                       value.colors.includes(c)
                         ? "border-accent ring-2 ring-accent/30"
-                        : "border-border",
+                        : "border-border hover:border-primary/60",
                     )}
                     style={{ backgroundColor: swatchColor(c) }}
                   />
                 ))}
               </div>
-            </div>
+            </Section>
           )}
 
           {!!options?.sizes.length && (
-            <div className="border-b border-border py-3">
-              <p className="mb-2 font-heading text-sm font-semibold text-text-primary">Ukuran</p>
+            <Section title="Ukuran" isOpen={openSections.ukuran} onToggle={() => toggleSection("ukuran")}>
               <div className="flex flex-wrap gap-2">
                 {options.sizes.map((s) => (
                   <button
                     key={s}
                     onClick={() => onChange({ ...value, sizes: toggle(value.sizes, s) })}
                     className={clsx(
-                      "min-w-[40px] rounded-sm border px-2.5 py-1.5 text-center font-body text-sm transition-colors",
+                      "min-w-[40px] rounded-sm border px-2.5 py-1.5 text-center font-body text-sm transition-colors active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
                       value.sizes.includes(s)
                         ? "border-accent bg-accent text-text-on-accent"
                         : "border-border text-text-secondary hover:border-primary/40",
@@ -246,19 +245,18 @@ export default function FilterSidebar({
                   </button>
                 ))}
               </div>
-            </div>
+            </Section>
           )}
 
           {!!options?.materials.length && (
-            <div className="border-b border-border py-3">
-              <p className="mb-2 font-heading text-sm font-semibold text-text-primary">Material</p>
+            <Section title="Material" isOpen={openSections.material} onToggle={() => toggleSection("material")}>
               <div className="flex flex-wrap gap-2">
                 {options.materials.map((m) => (
                   <button
                     key={m}
                     onClick={() => onChange({ ...value, materials: toggle(value.materials, m) })}
                     className={clsx(
-                      "rounded-sm border px-3 py-1.5 text-center font-body text-sm transition-colors",
+                      "rounded-sm border px-3 py-1.5 text-center font-body text-sm transition-colors active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
                       value.materials.includes(m)
                         ? "border-accent bg-accent text-text-on-accent"
                         : "border-border text-text-secondary hover:border-primary/40",
@@ -268,12 +266,12 @@ export default function FilterSidebar({
                   </button>
                 ))}
               </div>
-            </div>
+            </Section>
           )}
 
           <Section title="Harga" isOpen={openSections.harga} onToggle={() => toggleSection("harga")}>
             <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-1.5 rounded-sm border border-border bg-surface px-2 py-2">
+              <div className="flex items-center gap-1.5 rounded-sm border border-border bg-surface px-2 py-2 transition-colors focus-within:border-primary/40">
                 <span className="font-body text-sm font-medium text-text-secondary">Rp</span>
                 <input
                   type="number"
@@ -286,7 +284,7 @@ export default function FilterSidebar({
                   className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
                 />
               </div>
-              <div className="flex items-center gap-1.5 rounded-sm border border-border bg-surface px-2 py-2">
+              <div className="flex items-center gap-1.5 rounded-sm border border-border bg-surface px-2 py-2 transition-colors focus-within:border-primary/40">
                 <span className="font-body text-sm font-medium text-text-secondary">Rp</span>
                 <input
                   type="number"

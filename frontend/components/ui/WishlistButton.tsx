@@ -49,14 +49,14 @@ export default function WishlistButton({ productId, designId, className }: Wishl
       onClick={handleClick}
       disabled={pending}
       className={clsx(
-        "flex size-8 items-center justify-center rounded-full bg-white shadow-[0px_2px_8px_0px_rgba(0,0,0,0.15)] disabled:opacity-60",
+        "flex size-8 items-center justify-center rounded-full bg-white shadow-[0px_2px_8px_0px_rgba(0,0,0,0.15)] transition-transform duration-150 hover:scale-110 active:scale-95 disabled:opacity-60 disabled:hover:scale-100",
         className,
       )}
     >
       <Heart
         className={clsx(
-          "size-4",
-          existing ? "fill-accent text-accent" : "text-text-secondary",
+          "size-4 transition-colors",
+          existing ? "fill-accent text-accent" : "text-text-secondary hover:text-accent",
         )}
       />
     </button>

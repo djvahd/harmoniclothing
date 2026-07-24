@@ -4,12 +4,15 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import useSWR from "swr";
-import { ArrowUpDown, Search } from "lucide-react";
+import { ArrowUpDown, PackageSearch, Search, X } from "lucide-react";
 import clsx from "clsx";
 import ProductCard from "@/components/ui/ProductCard";
 import Button from "@/components/ui/Button";
 import FilterSidebar, { EMPTY_FILTER_VALUE, type FilterSidebarValue } from "@/components/ui/FilterSidebar";
 import { getProducts, getCatalogFilters, type ProductSort } from "@/services/catalog";
+import type { Product } from "@/types/product";
+
+const PER_PAGE = 40;
 
 const SORT_OPTIONS: { value: ProductSort; label: string }[] = [
   { value: "terbaru", label: "Terbaru" },
@@ -18,6 +21,16 @@ const SORT_OPTIONS: { value: ProductSort; label: string }[] = [
   { value: "terlaris", label: "Terlaris" },
   { value: "rating", label: "Rating Tertinggi" },
 ];
+
+function ProductCardSkeleton() {
+  return (
+    <div className="flex w-[196px] animate-pulse flex-col gap-[5px] rounded-md border border-border bg-surface p-[14px]">
+      <div className="h-[155px] w-full shrink-0 rounded-sm bg-border" />
+      <div className="h-3.5 w-4/5 rounded-sm bg-border" />
+      <div className="h-3 w-1/2 rounded-sm bg-border" />
+    </div>
+  );
+}
 
 export default function KatalogPage() {
   const searchParams = useSearchParams();
@@ -29,6 +42,8 @@ export default function KatalogPage() {
     kategoriParam ? { ...EMPTY_FILTER_VALUE, categories: [kategoriParam] } : EMPTY_FILTER_VALUE,
   );
   const [showSort, setShowSort] = useState(false);
+  const [page, setPage] = useState(1);
+  const [accumulated, setAccumulated] = useState<Product[]>([]);
   const sortRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -38,6 +53,11 @@ export default function KatalogPage() {
       );
     }
   }, [kategoriParam]);
+
+  // A new filter/sort combination starts over from page 1.
+  useEffect(() => {
+    setPage(1);
+  }, [filters, sort]);
 
   useEffect(() => {
     if (!showSort) return;
@@ -59,9 +79,10 @@ export default function KatalogPage() {
   const { data: totalData } = useSWR("/catalog/products/total", () => getProducts({ per_page: 1 }));
   const grandTotal = totalData?.meta.total;
 
-  const { data, isLoading } = useSWR(["/catalog/products", sort, filters], () =>
+  const { data, isLoading } = useSWR(["/catalog/products", sort, filters, page], () =>
     getProducts({
-      per_page: 40,
+      page,
+      per_page: PER_PAGE,
       sort,
       categories: filters.categories.length ? filters.categories : undefined,
       genders: filters.genders.length ? filters.genders : undefined,
@@ -73,15 +94,34 @@ export default function KatalogPage() {
     }),
   );
 
-  const products = useMemo(() => data?.data ?? [], [data]);
+  // Page 1 of a (possibly new) filter/sort combination replaces the
+  // accumulated list; "Muat Lebih Banyak" appends subsequent pages onto it.
+  useEffect(() => {
+    if (!data) return;
+    setAccumulated((prev) => (page === 1 ? data.data : [...prev, ...data.data]));
+  }, [data, page]);
 
   const filtered = useMemo(
     () =>
       search
-        ? products.filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))
-        : products,
-    [products, search],
+        ? accumulated.filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))
+        : accumulated,
+    [accumulated, search],
   );
+
+  const hasMore = !!data && accumulated.length < data.meta.total;
+  const isLoadingInitial = isLoading && accumulated.length === 0;
+  const isLoadingMore = isLoading && page > 1;
+
+  const hasActiveQuery =
+    !!search ||
+    filters.categories.length > 0 ||
+    filters.genders.length > 0 ||
+    filters.sizes.length > 0 ||
+    filters.colors.length > 0 ||
+    filters.materials.length > 0 ||
+    !!filters.priceMin ||
+    !!filters.priceMax;
 
   return (
     <div className="flex flex-col">
@@ -110,7 +150,7 @@ export default function KatalogPage() {
 
         <div className="flex flex-1 flex-col gap-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="flex w-full max-w-[420px] shrink-0 items-center gap-2 rounded-sm border border-border bg-surface px-3 py-2.5">
+            <div className="flex w-full max-w-[420px] shrink-0 items-center gap-2 rounded-sm border border-border bg-surface px-3 py-2.5 transition-colors hover:border-primary/40 focus-within:border-primary">
               <Search className="size-4 shrink-0 text-text-secondary" />
               <input
                 value={search}
@@ -118,12 +158,21 @@ export default function KatalogPage() {
                 placeholder="Cari produk..."
                 className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
               />
+              {search && (
+                <button
+                  onClick={() => setSearch("")}
+                  aria-label="Hapus pencarian"
+                  className="shrink-0 rounded-full p-0.5 text-text-secondary transition-colors hover:bg-border/50 hover:text-text-primary"
+                >
+                  <X className="size-3.5" />
+                </button>
+              )}
             </div>
 
             <div ref={sortRef} className="relative shrink-0">
               <button
                 onClick={() => setShowSort((v) => !v)}
-                className="flex items-center gap-1.5 rounded-full border border-border bg-surface px-4 py-2 font-body text-sm text-text-secondary transition-colors hover:border-primary/40 hover:text-text-primary"
+                className="flex items-center gap-1.5 rounded-full border border-border bg-surface px-4 py-2 font-body text-sm text-text-secondary transition-colors hover:border-primary hover:bg-border/40 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
               >
                 <ArrowUpDown className="size-3.5" />
                 Urutkan
@@ -140,7 +189,7 @@ export default function KatalogPage() {
                       className={clsx(
                         "block w-full rounded-sm px-3 py-2 text-left font-body text-sm transition-colors",
                         sort === opt.value
-                          ? "bg-primary text-text-on-accent"
+                          ? "bg-accent text-text-on-accent"
                           : "text-text-secondary hover:bg-border/50",
                       )}
                     >
@@ -152,23 +201,46 @@ export default function KatalogPage() {
             </div>
           </div>
 
-          {!isLoading && (
+          {!isLoadingInitial && (
             <p className="font-body text-sm text-text-secondary">
               Menampilkan {filtered.length} dari {grandTotal ?? filtered.length} produk
             </p>
           )}
 
           <div id="product-grid" className="flex flex-wrap gap-6">
-            {isLoading && <p className="font-body text-sm text-text-secondary">Memuat produk...</p>}
-            {!isLoading && filtered.length === 0 && (
-              <p className="font-body text-sm text-text-secondary">
-                Belum ada produk ditemukan untuk filter ini.
-              </p>
+            {isLoadingInitial &&
+              Array.from({ length: 8 }).map((_, i) => <ProductCardSkeleton key={i} />)}
+            {!isLoadingInitial && filtered.length === 0 && (
+              <div className="flex w-full flex-col items-center gap-3 py-16 text-center">
+                <PackageSearch className="size-10 text-text-secondary" />
+                <p className="font-body text-sm text-text-secondary">
+                  Belum ada produk ditemukan untuk filter ini.
+                </p>
+                {hasActiveQuery && (
+                  <button
+                    onClick={() => {
+                      setSearch("");
+                      setFilters(EMPTY_FILTER_VALUE);
+                    }}
+                    className="font-body text-sm font-medium text-primary underline"
+                  >
+                    Reset pencarian & filter
+                  </button>
+                )}
+              </div>
             )}
             {filtered.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
+
+          {hasMore && (
+            <div className="flex justify-center pt-2">
+              <Button variant="secondary" loading={isLoadingMore} onClick={() => setPage((p) => p + 1)}>
+                Muat Lebih Banyak
+              </Button>
+            </div>
+          )}
         </div>
       </section>
     </div>

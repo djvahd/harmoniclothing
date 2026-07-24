@@ -11,6 +11,7 @@ export type ProductSort = "terbaru" | "harga_asc" | "harga_desc" | "terlaris" | 
 export interface GetProductsParams {
   categories?: string[];
   genders?: GenderSegment[];
+  page?: number;
   per_page?: number;
   price_min?: number;
   price_max?: number;
@@ -33,6 +34,7 @@ export function getProducts(params?: GetProductsParams) {
   appendArrayParam(qs, "colors", params?.colors);
   appendArrayParam(qs, "materials", params?.materials);
   appendArrayParam(qs, "print_areas", params?.print_areas);
+  if (params?.page) qs.set("page", String(params.page));
   if (params?.per_page) qs.set("per_page", String(params.per_page));
   if (params?.price_min != null) qs.set("price_min", String(params.price_min));
   if (params?.price_max != null) qs.set("price_max", String(params.price_max));
