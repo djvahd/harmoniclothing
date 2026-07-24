@@ -5,6 +5,22 @@ import { formatCurrency } from "@/lib/format";
 import type { Design } from "@/types/product";
 import WishlistButton from "./WishlistButton";
 
+export function DesignCardSkeleton() {
+  return (
+    <div className="flex w-[196px] animate-pulse flex-col gap-[5px] rounded-md border border-border bg-surface p-[11px]">
+      <div className="h-[155px] w-full shrink-0 rounded-sm bg-border" />
+      <div className="flex flex-col gap-1.5">
+        <div className="h-3.5 w-4/5 rounded-sm bg-border" />
+        <div className="flex items-center gap-1.5">
+          <span className="size-[14px] shrink-0 rounded-full bg-border" />
+          <div className="h-2.5 w-16 rounded-sm bg-border" />
+        </div>
+      </div>
+      <div className="h-3 w-1/2 rounded-sm bg-border" />
+    </div>
+  );
+}
+
 interface DesignCardProps {
   design: Design;
   startingPrice?: number;

@@ -5,8 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import useSWR from "swr";
 import { ArrowRight, ClipboardCheck, Palette, ShoppingBag, Truck } from "lucide-react";
-import ProductCard from "@/components/ui/ProductCard";
-import DesignCard from "@/components/ui/DesignCard";
+import ProductCard, { ProductCardSkeleton } from "@/components/ui/ProductCard";
+import DesignCard, { DesignCardSkeleton } from "@/components/ui/DesignCard";
 import TestimonialCard from "@/components/ui/TestimonialCard";
 import StepItem from "@/components/ui/StepItem";
 import Reveal from "@/components/ui/Reveal";
@@ -399,7 +399,13 @@ export default function BerandaPage() {
             </Link>
           </div>
           {productsLoading && (
-            <p className="font-body text-sm text-text-secondary">Memuat produk...</p>
+            <div className="relative overflow-hidden">
+              <div className="flex items-center gap-6 overflow-x-hidden pb-2">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <ProductCardSkeleton key={i} />
+                ))}
+              </div>
+            </div>
           )}
           {!productsLoading && (productsData?.data ?? []).length === 0 && (
             <p className="font-body text-sm text-text-secondary">Belum ada produk ditemukan.</p>
@@ -442,7 +448,13 @@ export default function BerandaPage() {
             </Link>
           </div>
           {designsLoading && (
-            <p className="font-body text-sm text-text-secondary">Memuat desain...</p>
+            <div className="relative overflow-hidden">
+              <div className="flex items-center gap-6 overflow-x-hidden pb-2">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <DesignCardSkeleton key={i} />
+                ))}
+              </div>
+            </div>
           )}
           {!designsLoading && (designsData?.data ?? []).length === 0 && (
             <p className="font-body text-sm text-text-secondary">Belum ada desain ditemukan.</p>

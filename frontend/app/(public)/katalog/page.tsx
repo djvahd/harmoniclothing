@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import useSWR from "swr";
 import { ArrowUpDown, PackageSearch, Search, X } from "lucide-react";
 import clsx from "clsx";
-import ProductCard from "@/components/ui/ProductCard";
+import ProductCard, { ProductCardSkeleton } from "@/components/ui/ProductCard";
 import Button from "@/components/ui/Button";
 import FilterSidebar, { EMPTY_FILTER_VALUE, type FilterSidebarValue } from "@/components/ui/FilterSidebar";
 import { getProducts, getCatalogFilters, type ProductSort } from "@/services/catalog";
@@ -21,16 +21,6 @@ const SORT_OPTIONS: { value: ProductSort; label: string }[] = [
   { value: "terlaris", label: "Terlaris" },
   { value: "rating", label: "Rating Tertinggi" },
 ];
-
-function ProductCardSkeleton() {
-  return (
-    <div className="flex w-[196px] animate-pulse flex-col gap-[5px] rounded-md border border-border bg-surface p-[14px]">
-      <div className="h-[155px] w-full shrink-0 rounded-sm bg-border" />
-      <div className="h-3.5 w-4/5 rounded-sm bg-border" />
-      <div className="h-3 w-1/2 rounded-sm bg-border" />
-    </div>
-  );
-}
 
 export default function KatalogPage() {
   const searchParams = useSearchParams();

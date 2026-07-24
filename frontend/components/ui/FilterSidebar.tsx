@@ -132,6 +132,36 @@ export default function FilterSidebar({
     }
   };
 
+  // Skeleton for the whole panel (Kategori + Filter) so it doesn't sit
+  // empty — and so nothing shows partially (e.g. just Harga) while the
+  // rest of the facets are still loading.
+  if (!options) {
+    return (
+      <aside className="flex w-[220px] shrink-0 animate-pulse flex-col gap-6">
+        <div className="flex flex-col gap-2">
+          <div className="h-3 w-16 rounded-sm bg-border" />
+          <div className="flex flex-col gap-1.5">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="h-8 w-full rounded-md bg-border" />
+            ))}
+          </div>
+        </div>
+        <div className="flex flex-col gap-4 border-t border-border pt-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="flex flex-col gap-2">
+              <div className="h-3.5 w-14 rounded-sm bg-border" />
+              <div className="flex flex-wrap gap-2">
+                {Array.from({ length: 4 }).map((_, j) => (
+                  <div key={j} className="h-7 w-14 rounded-sm bg-border" />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </aside>
+    );
+  }
+
   return (
     <aside className="flex w-[220px] shrink-0 flex-col gap-6">
       {!!options?.categories.length && (

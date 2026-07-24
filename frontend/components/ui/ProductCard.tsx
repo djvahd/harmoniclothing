@@ -5,6 +5,16 @@ import { formatCurrency } from "@/lib/format";
 import type { Product } from "@/types/product";
 import WishlistButton from "./WishlistButton";
 
+export function ProductCardSkeleton() {
+  return (
+    <div className="flex w-[196px] animate-pulse flex-col gap-[5px] rounded-md border border-border bg-surface p-[14px]">
+      <div className="h-[155px] w-full shrink-0 rounded-sm bg-border" />
+      <div className="h-3.5 w-4/5 rounded-sm bg-border" />
+      <div className="h-3 w-1/2 rounded-sm bg-border" />
+    </div>
+  );
+}
+
 export default function ProductCard({ product }: { product: Product }) {
   const thumbnail = storageUrl(product.variants?.[0]?.mockup_asset_path);
 
