@@ -24,6 +24,9 @@ class ProductRepository
         $query = Product::query()
             ->active()
             ->with(['category', 'variants'])
+            ->addSelect(['sold_count' => $this->soldCountSubquery()])
+            ->addSelect(['avg_rating' => $this->avgRatingSubquery()])
+            ->addSelect(['review_count' => $this->reviewCountSubquery()])
             ->when(!empty($filters['categories']), fn ($query) => $query->whereHas(
                 'category',
                 fn ($q) => $q->whereIn('slug', $filters['categories'])
@@ -96,36 +99,53 @@ class ProductRepository
     }
 
     /**
-     * 'terlaris' sums order_items.quantity through variants, excluding
-     * cancelled/rejected orders. 'rating' averages reviews left on this
-     * product's order items. Eloquent's withSum/withAvg don't support
-     * dot-chained nested relations (only withCount does), so these are
-     * hand-rolled correlated subqueries instead.
+     * sold_count/avg_rating/review_count are always selected by paginate()
+     * (see subquery helpers below), so sorting by 'terlaris'/'rating' just
+     * orders by the alias — no need to re-add the subquery here.
      */
     private function applySort(Builder $query, string $sort): Builder
     {
         return match ($sort) {
             'harga_asc' => $query->orderBy('base_price'),
             'harga_desc' => $query->orderByDesc('base_price'),
-            'terlaris' => $query
-                ->addSelect(['sold_count' => OrderItem::query()
-                    ->selectRaw('coalesce(sum(order_items.quantity), 0)')
-                    ->join('product_variants', 'product_variants.id', '=', 'order_items.product_variant_id')
-                    ->join('orders', 'orders.id', '=', 'order_items.order_id')
-                    ->whereColumn('product_variants.product_id', 'products.id')
-                    ->whereNotIn('orders.status', ['dibatalkan', 'ditolak']),
-                ])
-                ->orderByDesc('sold_count'),
-            'rating' => $query
-                ->addSelect(['avg_rating' => Review::query()
-                    ->selectRaw('avg(reviews.rating)')
-                    ->join('order_items', 'order_items.id', '=', 'reviews.order_item_id')
-                    ->join('product_variants', 'product_variants.id', '=', 'order_items.product_variant_id')
-                    ->whereColumn('product_variants.product_id', 'products.id'),
-                ])
-                ->orderByDesc('avg_rating'),
+            'terlaris' => $query->orderByDesc('sold_count'),
+            'rating' => $query->orderByDesc('avg_rating'),
             default => $query->latest(),
         };
+    }
+
+    /**
+     * Sums order_items.quantity through variants, excluding
+     * cancelled/rejected orders.
+     */
+    private function soldCountSubquery(): Builder
+    {
+        return OrderItem::query()
+            ->selectRaw('coalesce(sum(order_items.quantity), 0)')
+            ->join('product_variants', 'product_variants.id', '=', 'order_items.product_variant_id')
+            ->join('orders', 'orders.id', '=', 'order_items.order_id')
+            ->whereColumn('product_variants.product_id', 'products.id')
+            ->whereNotIn('orders.status', ['dibatalkan', 'ditolak']);
+    }
+
+    /** Averages reviews left on this product's order items. */
+    private function avgRatingSubquery(): Builder
+    {
+        return Review::query()
+            ->selectRaw('avg(reviews.rating)')
+            ->join('order_items', 'order_items.id', '=', 'reviews.order_item_id')
+            ->join('product_variants', 'product_variants.id', '=', 'order_items.product_variant_id')
+            ->whereColumn('product_variants.product_id', 'products.id');
+    }
+
+    /** Counts reviews left on this product's order items. */
+    private function reviewCountSubquery(): Builder
+    {
+        return Review::query()
+            ->selectRaw('count(*)')
+            ->join('order_items', 'order_items.id', '=', 'reviews.order_item_id')
+            ->join('product_variants', 'product_variants.id', '=', 'order_items.product_variant_id')
+            ->whereColumn('product_variants.product_id', 'products.id');
     }
 
     /**
@@ -150,6 +170,9 @@ class ProductRepository
         return Product::query()
             ->active()
             ->with(['category', 'variants'])
+            ->addSelect(['sold_count' => $this->soldCountSubquery()])
+            ->addSelect(['avg_rating' => $this->avgRatingSubquery()])
+            ->addSelect(['review_count' => $this->reviewCountSubquery()])
             ->where('slug', $slug)
             ->first();
     }

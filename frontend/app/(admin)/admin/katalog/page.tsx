@@ -144,7 +144,7 @@ export default function KelolaKatalogPage() {
   const products = data?.data ?? [];
 
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ name_id: "", name_en: "", base_price: "", gender_segment: "" });
+  const [form, setForm] = useState({ name_id: "", name_en: "", base_price: "", compare_price: "", gender_segment: "" });
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -162,12 +162,13 @@ export default function KelolaKatalogPage() {
         name_id: form.name_id,
         name_en: form.name_en,
         base_price: Number(form.base_price),
+        compare_price: form.compare_price ? Number(form.compare_price) : null,
         gender_segment: form.gender_segment
           ? (form.gender_segment as "pria" | "wanita" | "unisex" | "anak")
           : undefined,
       });
       await mutate("/catalog/products?admin");
-      setForm({ name_id: "", name_en: "", base_price: "", gender_segment: "" });
+      setForm({ name_id: "", name_en: "", base_price: "", compare_price: "", gender_segment: "" });
       setShowForm(false);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Terjadi kesalahan, coba lagi.");
@@ -223,6 +224,7 @@ export default function KelolaKatalogPage() {
               <Input label="Nama (ID)" value={form.name_id} onChange={(e) => setForm((f) => ({ ...f, name_id: e.target.value }))} required />
               <Input label="Nama (EN)" value={form.name_en} onChange={(e) => setForm((f) => ({ ...f, name_en: e.target.value }))} required />
               <Input label="Harga Dasar" type="number" value={form.base_price} onChange={(e) => setForm((f) => ({ ...f, base_price: e.target.value }))} required />
+              <Input label="Harga Sebelum Diskon (opsional)" type="number" value={form.compare_price} onChange={(e) => setForm((f) => ({ ...f, compare_price: e.target.value }))} />
               <div className="flex flex-col gap-1.5">
                 <label className="font-body text-xs font-medium text-text-secondary">Segmen</label>
                 <select

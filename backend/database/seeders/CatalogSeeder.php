@@ -4,8 +4,11 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use App\Models\Design;
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\Review;
 use Illuminate\Database\Seeder;
 
 /** Local dev demo data for Product Catalog & Marketplace (no admin/creator upload UI yet). */
@@ -21,7 +24,41 @@ class CatalogSeeder extends Seeder
             ->recycle($productCategories)
             ->create()
             ->each(function (Product $product) {
-                ProductVariant::factory()->count(3)->for($product)->create();
+                // Distinct colors per product sidestep the (product_id, color,
+                // size, cut_type) unique constraint — ProductVariantFactory's
+                // independent random draws occasionally collide otherwise.
+                ProductVariant::factory()
+                    ->count(3)
+                    ->for($product)
+                    ->sequence(['color' => 'Hitam'], ['color' => 'Putih'], ['color' => 'Navy'])
+                    ->create();
+            });
+
+        // Every other product carries a "was" price so the katalog card's
+        // discount badge has something to show in local dev.
+        $products->each(function (Product $product, int $index) {
+            if ($index % 2 === 0) {
+                $factor = fake()->randomFloat(2, 1.15, 1.6);
+                $product->update(['compare_price' => (int) round(($product->base_price * $factor) / 1000) * 1000]);
+            }
+        });
+
+        // Completed orders against random variants give products a real
+        // sold_count/rating_average — without this every card would show
+        // "0 terjual" and no rating.
+        Order::factory()
+            ->count(30)
+            ->state(['status' => 'selesai'])
+            ->create()
+            ->each(function (Order $order) use ($products) {
+                foreach (range(1, random_int(1, 2)) as $ignored) {
+                    $variant = $products->random()->variants()->inRandomOrder()->first();
+                    $item = OrderItem::factory()->for($order, 'order')->for($variant, 'productVariant')->create();
+
+                    if (fake()->boolean(60)) {
+                        Review::factory()->for($item, 'orderItem')->create();
+                    }
+                }
             });
 
         Design::factory()

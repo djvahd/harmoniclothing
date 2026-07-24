@@ -25,7 +25,12 @@ export interface Product {
   description: string;
   slug: string;
   base_price: number;
+  compare_price?: number | string | null;
+  discount_percent?: number | null;
   gender_segment: GenderSegment | null;
+  sold_count?: number;
+  rating_average?: number | null;
+  review_count?: number;
   category?: Category;
   variants?: ProductVariant[];
 }

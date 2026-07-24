@@ -413,7 +413,7 @@ export default function BerandaPage() {
             <div className="relative overflow-hidden">
               <div className="flex snap-x gap-6 overflow-x-auto pb-2 [mask-image:linear-gradient(to_right,black_92%,transparent_100%)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {(productsData?.data ?? []).map((product) => (
-                  <div key={product.id} className="shrink-0 snap-start">
+                  <div key={product.id} className="flex shrink-0 snap-start">
                     <ProductCard product={product} />
                   </div>
                 ))}
@@ -461,7 +461,7 @@ export default function BerandaPage() {
             <div className="relative overflow-hidden">
               <div className="flex snap-x gap-6 overflow-x-auto pb-2 [mask-image:linear-gradient(to_right,black_92%,transparent_100%)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {(designsData?.data ?? []).map((design) => (
-                  <div key={design.id} className="shrink-0 snap-start">
+                  <div key={design.id} className="flex shrink-0 snap-start">
                     <DesignCard design={design} />
                   </div>
                 ))}

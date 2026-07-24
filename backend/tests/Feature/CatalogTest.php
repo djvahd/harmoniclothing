@@ -211,6 +211,47 @@ class CatalogTest extends TestCase
         $response->assertJsonPath('data.0.id', $highRated->id);
     }
 
+    public function test_product_list_always_includes_sold_count_and_rating_regardless_of_sort(): void
+    {
+        $product = Product::factory()->create();
+        $variant = ProductVariant::factory()->for($product)->create();
+        $item = OrderItem::factory()->for($variant, 'productVariant')
+            ->for(Order::factory()->create(['status' => 'selesai']))
+            ->create(['quantity' => 3]);
+        Review::factory()->for($item, 'orderItem')->create(['rating' => 4]);
+
+        $response = $this->getJson('/api/catalog/products?sort=terbaru')->assertOk();
+
+        $response->assertJsonPath('data.0.sold_count', 3)
+            ->assertJsonPath('data.0.rating_average', 4)
+            ->assertJsonPath('data.0.review_count', 1);
+    }
+
+    public function test_product_with_no_sales_shows_zero_sold_and_null_rating(): void
+    {
+        Product::factory()->create();
+
+        $response = $this->getJson('/api/catalog/products')->assertOk();
+
+        $response->assertJsonPath('data.0.sold_count', 0)
+            ->assertJsonPath('data.0.rating_average', null)
+            ->assertJsonPath('data.0.review_count', 0);
+    }
+
+    public function test_compare_price_yields_discount_percent(): void
+    {
+        $discounted = Product::factory()->create(['base_price' => 80000, 'compare_price' => 100000]);
+        $fullPrice = Product::factory()->create(['base_price' => 50000, 'compare_price' => null]);
+
+        $this->getJson("/api/catalog/products/{$discounted->slug}")
+            ->assertJsonPath('data.compare_price', '100000.00')
+            ->assertJsonPath('data.discount_percent', 20);
+
+        $this->getJson("/api/catalog/products/{$fullPrice->slug}")
+            ->assertJsonPath('data.compare_price', null)
+            ->assertJsonPath('data.discount_percent', null);
+    }
+
     public function test_filter_facets_return_distinct_sizes_colors_and_price_range(): void
     {
         $category = Category::factory()->product()->create(['name_id' => 'Kaos', 'name_en' => 'T-Shirt']);

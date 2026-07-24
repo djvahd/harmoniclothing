@@ -28,6 +28,7 @@ class AdminProductResource extends JsonResource
             'description_en' => $this->description_en,
             'slug' => $this->slug,
             'base_price' => $this->base_price,
+            'compare_price' => $this->compare_price,
             'is_active' => $this->is_active,
             'variants' => ProductVariantResource::collection($this->whenLoaded('variants')),
         ];
