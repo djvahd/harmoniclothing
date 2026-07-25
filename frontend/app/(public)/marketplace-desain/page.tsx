@@ -60,7 +60,10 @@ export default function MarketplaceDesainPage() {
 
   return (
     <div className="flex flex-col">
-      <section className="flex flex-col gap-6 bg-surface px-4 py-10 md:flex-row md:items-center md:justify-between md:px-20">
+      <section
+        className="flex flex-col gap-6 px-4 py-10 md:flex-row md:items-center md:justify-between md:px-20"
+        style={{ background: "linear-gradient(28deg, #f8fafc 25%, #eef6f3 64%, #e0f1ea 96%)" }}
+      >
         <div className="flex max-w-xl flex-col gap-4">
           <h1 className="font-heading text-h3 font-semibold text-text-primary md:text-h1">
             Marketplace Desain
