@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Design;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
@@ -45,8 +46,9 @@ class CreatorDesignService
         ]);
 
         $design->products()->attach($data['product_ids']);
+        $design->tags()->attach($this->resolveTagIds($data['tags'] ?? []));
 
-        return $design->load('products');
+        return $design->load(['products', 'tags']);
     }
 
     /** BR-028: a rejected design is revised in place, not resubmitted from scratch. */
@@ -77,7 +79,25 @@ class CreatorDesignService
             collect($data['product_ids'])->mapWithKeys(fn ($id) => [$id => ['preview_confirmed_at' => null]])
         );
 
-        return $design->fresh('products');
+        if (array_key_exists('tags', $data)) {
+            $design->tags()->sync($this->resolveTagIds($data['tags']));
+        }
+
+        return $design->fresh(['products', 'tags']);
+    }
+
+    /** Resolves freeform tag names into Tag ids, deduping by slug (case-insensitive) and creating new ones as needed. */
+    private function resolveTagIds(array $names): array
+    {
+        return collect($names)
+            ->map(fn ($name) => trim($name))
+            ->filter()
+            ->unique(fn ($name) => Str::slug($name))
+            ->map(fn ($name) => Tag::firstOrCreate(
+                ['slug' => Str::slug($name)],
+                ['name' => $name],
+            )->id)
+            ->all();
     }
 
     /** FR-037: Creator confirms the design's placement preview on one apparel product. */

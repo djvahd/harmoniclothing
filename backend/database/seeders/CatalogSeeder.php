@@ -3,12 +3,14 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\CreatorProfile;
 use App\Models\Design;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\Review;
+use App\Models\Tag;
 use Illuminate\Database\Seeder;
 
 /** Local dev demo data for Product Catalog & Marketplace (no admin/creator upload UI yet). */
@@ -52,15 +54,60 @@ class CatalogSeeder extends Seeder
                 }
             });
 
-        Design::factory()
+        // Active Creator profiles with a real brand_name — without these the
+        // Creator tab of Marketplace Desain is permanently empty (only
+        // status=aktif profiles are publicly listed) and designs fall back
+        // to a plain fake user name instead of a brand.
+        $creators = CreatorProfile::factory()
+            ->aktif()
+            ->count(8)
+            ->state(fn () => [
+                'brand_name' => fake()->unique()->company(),
+                'bio' => fake()->sentence(12),
+            ])
+            ->create();
+        $creatorUsers = $creators->map(fn (CreatorProfile $c) => $c->user);
+
+        $tags = Tag::factory()
+            ->count(10)
+            ->state(fn () => ['name' => ucfirst(fake()->unique()->word())])
+            ->create();
+
+        $designs = Design::factory()
             ->count(15)
             ->recycle($designCategories)
+            ->recycle($creatorUsers)
             ->create()
-            ->each(function (Design $design) use ($products) {
+            ->each(function (Design $design) use ($products, $tags) {
+                // Every design gets at least one apparel attached so
+                // starting_price ("Mulai dari Rp ...") is never null.
                 $design->products()->attach(
                     $products->random(random_int(1, 3))->pluck('id'),
                     ['preview_confirmed_at' => now()]
                 );
+                $design->tags()->attach($tags->random(random_int(0, 3))->pluck('id'));
             });
+
+        // Completed orders against a majority of designs give them a real
+        // sold_count/rating_average too, same reasoning as the products
+        // block above — otherwise every design card shows a blank row.
+        foreach ($designs->random(min(10, $designs->count())) as $design) {
+            $variant = $design->products()->inRandomOrder()->first()?->variants()->inRandomOrder()->first();
+            if (! $variant) {
+                continue;
+            }
+
+            foreach (range(1, random_int(1, 3)) as $ignored) {
+                $order = Order::factory()->state(['status' => 'selesai'])->create();
+                $item = OrderItem::factory()
+                    ->for($order, 'order')
+                    ->for($variant, 'productVariant')
+                    ->create(['design_id' => $design->id]);
+
+                if (fake()->boolean(70)) {
+                    Review::factory()->for($item, 'orderItem')->create();
+                }
+            }
+        }
     }
 }

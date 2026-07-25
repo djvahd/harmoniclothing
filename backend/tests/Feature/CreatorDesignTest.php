@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\CreatorProfile;
 use App\Models\Design;
 use App\Models\Product;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -129,5 +130,57 @@ class CreatorDesignTest extends TestCase
 
         $this->actingAs($creator)->postJson("/api/creator/designs/{$design->id}/submit")
             ->assertNotFound();
+    }
+
+    public function test_creator_can_upload_a_design_with_tags(): void
+    {
+        $creator = $this->activeCreator();
+        $product = Product::factory()->create();
+
+        $response = $this->actingAs($creator)->post('/api/creator/designs', [
+            'title' => 'Kucing Astronot',
+            'file' => UploadedFile::fake()->image('design.png'),
+            'product_ids' => [$product->id],
+            'tags' => ['Anime', 'Kucing'],
+        ]);
+
+        $response->assertCreated();
+        $tags = collect($response->json('data.tags'))->pluck('name')->sort()->values()->all();
+        $this->assertSame(['Anime', 'Kucing'], $tags);
+    }
+
+    /** Tags dedupe case-insensitively so "Anime"/"anime"/" Anime " don't fragment into 3 rows. */
+    public function test_duplicate_tags_are_deduped_case_insensitively(): void
+    {
+        $creator = $this->activeCreator();
+        $product = Product::factory()->create();
+
+        $response = $this->actingAs($creator)->post('/api/creator/designs', [
+            'title' => 'Kucing Astronot',
+            'file' => UploadedFile::fake()->image('design.png'),
+            'product_ids' => [$product->id],
+            'tags' => ['Anime', 'anime', ' Anime '],
+        ]);
+
+        $response->assertCreated()->assertJsonCount(1, 'data.tags');
+        $this->assertDatabaseCount('tags', 1);
+    }
+
+    public function test_rejected_design_revision_can_replace_tags(): void
+    {
+        $creator = $this->activeCreator();
+        $design = Design::factory()->rejected()->for($creator, 'creator')->create();
+        $product = Product::factory()->create();
+        $oldTag = Tag::factory()->create(['name' => 'Vintage', 'slug' => 'vintage']);
+        $design->tags()->attach($oldTag);
+
+        $response = $this->actingAs($creator)->patchJson("/api/creator/designs/{$design->id}", [
+            'title' => 'Revisi Judul',
+            'product_ids' => [$product->id],
+            'tags' => ['Modern'],
+        ]);
+
+        $response->assertOk()->assertJsonCount(1, 'data.tags')
+            ->assertJsonPath('data.tags.0.name', 'Modern');
     }
 }

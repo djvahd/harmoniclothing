@@ -7,8 +7,10 @@ use App\Models\Design;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Review;
+use App\Models\Tag;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 class DesignRepository
 {
@@ -22,15 +24,18 @@ class DesignRepository
      * design's own dimensions: category comes from designs.category_id,
      * price is the "mulai dari" starting_price derived from the apparel
      * (design_product -> products) the Creator attached, since a design has
-     * no base_price of its own.
+     * no base_price of its own. product_categories and tags are two
+     * additional dimensions layered on top per the 2026-07-25 filter
+     * expansion: product_categories filters by the compatible apparel's own
+     * category (e.g. "hoodie"), tags filters by Creator-assigned keywords.
      *
-     * @param  array{categories?: array<int,string>, search?: string, price_min?: float, price_max?: float, sort?: string}  $filters
+     * @param  array{categories?: array<int,string>, product_categories?: array<int,string>, tags?: array<int,string>, search?: string, price_min?: float, price_max?: float, sort?: string}  $filters
      */
     public function paginate(array $filters, int $perPage): LengthAwarePaginator
     {
         $query = Design::query()
             ->active()
-            ->with(['category', 'creator', 'products'])
+            ->with(['category', 'creator', 'products', 'tags'])
             ->addSelect(['sold_count' => $this->soldCountSubquery()])
             ->addSelect(['avg_rating' => $this->avgRatingSubquery()])
             ->addSelect(['review_count' => $this->reviewCountSubquery()])
@@ -39,7 +44,21 @@ class DesignRepository
                 'category',
                 fn ($q) => $q->whereIn('slug', $filters['categories'])
             ))
-            ->when($filters['search'] ?? null, fn ($query) => $query->where('title', 'like', '%'.$filters['search'].'%'))
+            ->when(! empty($filters['product_categories']), fn ($query) => $query->whereHas(
+                'products.category',
+                fn ($q) => $q->whereIn('slug', $filters['product_categories'])
+            ))
+            ->when(! empty($filters['tags']), fn ($query) => $query->whereHas(
+                'tags',
+                fn ($q) => $q->whereIn('slug', collect($filters['tags'])->map(fn ($t) => Str::slug($t))->all())
+            ))
+            // Search matches title OR tag name — grouped in its own closure
+            // so the orWhereHas doesn't leak out as a top-level OR against
+            // the rest of the query's AND-chained filters/scopes.
+            ->when($filters['search'] ?? null, fn ($query) => $query->where(
+                fn ($q) => $q->where('title', 'like', '%'.$filters['search'].'%')
+                    ->orWhereHas('tags', fn ($qq) => $qq->where('name', 'like', '%'.$filters['search'].'%'))
+            ))
             // starting_price has no real column to filter on (it's a
             // computed "cheapest attached apparel" value) — HAVING on the
             // SELECT alias breaks Laravel's paginate() count() query (which
@@ -61,11 +80,12 @@ class DesignRepository
     }
 
     /**
-     * Sidebar filter facets for Marketplace Desain — only categories (type
-     * 'design') and a price range apply here; unlike products, designs have
-     * no gender/size/color/material dimensions of their own.
+     * Sidebar filter facets for Marketplace Desain — design's own category,
+     * a price range, the compatible apparel's own category
+     * (product_categories), and the most-used Creator tags (popular_tags,
+     * capped rather than exhaustive since tags are freeform/unbounded).
      *
-     * @return array{categories: array<int, array{slug: string, name: string}>, price_min: float, price_max: float}
+     * @return array{categories: array<int, array{slug: string, name: string}>, product_categories: array<int, array{slug: string, name: string}>, popular_tags: array<int, array{slug: string, name: string}>, price_min: float, price_max: float}
      */
     public function filterOptions(string $lang = 'id'): array
     {
@@ -82,8 +102,31 @@ class DesignRepository
             ->orderBy("categories.name_{$lang}")
             ->get(['categories.slug as slug', "categories.name_{$lang} as name"]);
 
+        $productCategories = Category::query()
+            ->where('categories.type', 'product')
+            ->whereIn('categories.id', function ($query) {
+                $query->select('products.category_id')
+                    ->from('products')
+                    ->join('design_product', 'design_product.product_id', '=', 'products.id')
+                    ->join('designs', 'designs.id', '=', 'design_product.design_id')
+                    ->where('designs.status', 'aktif');
+            })
+            ->orderBy("categories.name_{$lang}")
+            ->get(['categories.slug as slug', "categories.name_{$lang} as name"]);
+
+        $popularTags = Tag::query()
+            ->join('design_tag', 'design_tag.tag_id', '=', 'tags.id')
+            ->join('designs', 'designs.id', '=', 'design_tag.design_id')
+            ->where('designs.status', 'aktif')
+            ->groupBy('tags.id', 'tags.name', 'tags.slug')
+            ->orderByRaw('count(*) desc')
+            ->limit(15)
+            ->get(['tags.slug as slug', 'tags.name as name']);
+
         return [
             'categories' => $categories->map(fn ($c) => ['slug' => $c->slug, 'name' => $c->name])->all(),
+            'product_categories' => $productCategories->map(fn ($c) => ['slug' => $c->slug, 'name' => $c->name])->all(),
+            'popular_tags' => $popularTags->map(fn ($t) => ['slug' => $t->slug, 'name' => $t->name])->all(),
             'price_min' => (float) ($priceRange->min ?? 0),
             'price_max' => (float) ($priceRange->max ?? 0),
         ];
@@ -141,7 +184,7 @@ class DesignRepository
     {
         return Design::query()
             ->active()
-            ->with(['category', 'creator', 'products.category', 'products.variants'])
+            ->with(['category', 'creator', 'products.category', 'products.variants', 'tags'])
             ->addSelect(['sold_count' => $this->soldCountSubquery()])
             ->addSelect(['avg_rating' => $this->avgRatingSubquery()])
             ->addSelect(['review_count' => $this->reviewCountSubquery()])

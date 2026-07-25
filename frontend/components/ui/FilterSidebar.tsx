@@ -1,17 +1,31 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, ChevronUp, LayoutGrid, Shirt } from "lucide-react";
+import { ChevronDown, ChevronUp, LayoutGrid, Shirt, Tag as TagIcon } from "lucide-react";
 import clsx from "clsx";
-import type { CatalogFilterOptions } from "@/services/catalog";
 import type { GenderSegment } from "@/types/product";
 
-export interface FilterSidebarValue {
-  categories: string[];
+export interface FilterSidebarOptions {
+  categories: { slug: string; name: string }[];
   genders: GenderSegment[];
   sizes: string[];
   colors: string[];
   materials: string[];
+  /** Design-only facets — omitted (or empty) on Katalog Produk, so these sections simply don't render there. */
+  product_categories?: { slug: string; name: string }[];
+  popular_tags?: { slug: string; name: string }[];
+  price_min: number;
+  price_max: number;
+}
+
+export interface FilterSidebarValue {
+  categories: string[];
+  productCategories: string[];
+  genders: GenderSegment[];
+  sizes: string[];
+  colors: string[];
+  materials: string[];
+  tags: string[];
   priceMin: string;
   priceMax: string;
 }
@@ -70,10 +84,12 @@ function formatPriceDigits(digits: string): string {
 
 export const EMPTY_FILTER_VALUE: FilterSidebarValue = {
   categories: [],
+  productCategories: [],
   genders: [],
   sizes: [],
   colors: [],
   materials: [],
+  tags: [],
   priceMin: "",
   priceMax: "",
 };
@@ -113,20 +129,74 @@ function Section({
   );
 }
 
+/** Single-select "Semua | A | B | ..." list, shared by Kategori (design/product's own theme), Kategori Produk (compatible apparel type), and the Creator tab's category filter. */
+export function CategoryList({
+  label,
+  icon: Icon,
+  items,
+  selected,
+  onSelect,
+}: {
+  label: string;
+  icon: typeof LayoutGrid;
+  items: { slug: string; name: string }[];
+  selected: string[];
+  onSelect: (slugs: string[]) => void;
+}) {
+  return (
+    <div className="flex flex-col">
+      <p className="mb-2 font-heading text-sm font-semibold text-text-primary">{label}</p>
+      <div className="flex flex-col gap-0.5">
+        <button
+          onClick={() => onSelect([])}
+          className={clsx(
+            "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-left font-body text-sm transition-all duration-150 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
+            selected.length === 0
+              ? "bg-accent text-text-on-accent"
+              : "text-text-secondary hover:translate-x-0.5 hover:bg-border/50 hover:text-text-primary",
+          )}
+        >
+          <Icon className="size-4 shrink-0" />
+          Semua
+        </button>
+        {items.map((c) => (
+          <button
+            key={c.slug}
+            onClick={() => onSelect([c.slug])}
+            className={clsx(
+              "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-left font-body text-sm transition-all duration-150 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
+              selected.includes(c.slug)
+                ? "bg-accent text-text-on-accent"
+                : "text-text-secondary hover:translate-x-0.5 hover:bg-border/50 hover:text-text-primary",
+            )}
+          >
+            <Icon className="size-4 shrink-0" />
+            {c.name}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function FilterSidebar({
   options,
   value,
   onChange,
+  categoryLabel = "Kategori",
 }: {
-  options?: CatalogFilterOptions;
+  options?: FilterSidebarOptions;
   value: FilterSidebarValue;
   onChange: (value: FilterSidebarValue) => void;
+  /** "Kategori" on Katalog Produk, "Kategori Desain" on Marketplace Desain (to disambiguate from the sibling "Kategori Produk" section there). */
+  categoryLabel?: string;
 }) {
   const [openSections, setOpenSections] = useState({
     segmen: true,
     warna: true,
     ukuran: true,
     material: true,
+    tag: true,
     harga: true,
   });
   const [priceDraft, setPriceDraft] = useState({ min: value.priceMin, max: value.priceMax });
@@ -150,6 +220,7 @@ export default function FilterSidebar({
     value.sizes.length +
     value.colors.length +
     value.materials.length +
+    value.tags.length +
     (value.priceMin ? 1 : 0) +
     (value.priceMax ? 1 : 0);
 
@@ -211,38 +282,23 @@ export default function FilterSidebar({
   return (
     <aside className="flex w-[220px] shrink-0 flex-col gap-6">
       {!!options?.categories.length && (
-        <div className="flex flex-col">
-          <p className="mb-2 font-heading text-sm font-semibold text-text-primary">Kategori</p>
-          <div className="flex flex-col gap-0.5">
-            <button
-              onClick={() => onChange({ ...value, categories: [] })}
-              className={clsx(
-                "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-left font-body text-sm transition-all duration-150 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
-                value.categories.length === 0
-                  ? "bg-accent text-text-on-accent"
-                  : "text-text-secondary hover:translate-x-0.5 hover:bg-border/50 hover:text-text-primary",
-              )}
-            >
-              <LayoutGrid className="size-4 shrink-0" />
-              Semua
-            </button>
-            {options.categories.map((c) => (
-              <button
-                key={c.slug}
-                onClick={() => onChange({ ...value, categories: [c.slug] })}
-                className={clsx(
-                  "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-left font-body text-sm transition-all duration-150 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
-                  value.categories.includes(c.slug)
-                    ? "bg-accent text-text-on-accent"
-                    : "text-text-secondary hover:translate-x-0.5 hover:bg-border/50 hover:text-text-primary",
-                )}
-              >
-                <Shirt className="size-4 shrink-0" />
-                {c.name}
-              </button>
-            ))}
-          </div>
-        </div>
+        <CategoryList
+          label={categoryLabel}
+          icon={LayoutGrid}
+          items={options.categories}
+          selected={value.categories}
+          onSelect={(categories) => onChange({ ...value, categories })}
+        />
+      )}
+
+      {!!options?.product_categories?.length && (
+        <CategoryList
+          label="Kategori Produk"
+          icon={Shirt}
+          items={options.product_categories}
+          selected={value.productCategories}
+          onSelect={(productCategories) => onChange({ ...value, productCategories })}
+        />
       )}
 
       <div className="flex flex-col">
@@ -252,7 +308,13 @@ export default function FilterSidebar({
           </h2>
           {activeCount > 0 && (
             <button
-              onClick={() => onChange({ ...EMPTY_FILTER_VALUE, categories: value.categories })}
+              onClick={() =>
+                onChange({
+                  ...EMPTY_FILTER_VALUE,
+                  categories: value.categories,
+                  productCategories: value.productCategories,
+                })
+              }
               className="rounded-sm font-body text-sm text-text-secondary underline transition-colors hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
             >
               Reset
@@ -339,6 +401,28 @@ export default function FilterSidebar({
                     )}
                   >
                     {m}
+                  </button>
+                ))}
+              </div>
+            </Section>
+          )}
+
+          {!!options?.popular_tags?.length && (
+            <Section title="Tag" isOpen={openSections.tag} onToggle={() => toggleSection("tag")}>
+              <div className="flex flex-wrap gap-2">
+                {options.popular_tags.map((t) => (
+                  <button
+                    key={t.slug}
+                    onClick={() => onChange({ ...value, tags: toggle(value.tags, t.slug) })}
+                    className={clsx(
+                      "flex items-center gap-1 rounded-full border px-3 py-1.5 text-center font-body text-sm transition-colors active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
+                      value.tags.includes(t.slug)
+                        ? "border-accent bg-accent text-text-on-accent"
+                        : "border-border text-text-secondary hover:border-primary hover:bg-border/40 hover:text-text-primary",
+                    )}
+                  >
+                    <TagIcon className="size-3" />
+                    {t.name}
                   </button>
                 ))}
               </div>

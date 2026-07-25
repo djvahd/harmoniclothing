@@ -4,12 +4,16 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import useSWR from "swr";
-import { ArrowUpDown, PackageSearch, Search, UserSearch, X } from "lucide-react";
+import { ArrowUpDown, LayoutGrid, PackageSearch, Search, UserSearch, X } from "lucide-react";
 import clsx from "clsx";
 import DesignCard, { DesignCardSkeleton } from "@/components/ui/DesignCard";
 import CreatorCard, { CreatorCardSkeleton } from "@/components/ui/CreatorCard";
 import Button from "@/components/ui/Button";
-import FilterSidebar, { EMPTY_FILTER_VALUE, type FilterSidebarValue } from "@/components/ui/FilterSidebar";
+import FilterSidebar, {
+  CategoryList,
+  EMPTY_FILTER_VALUE,
+  type FilterSidebarValue,
+} from "@/components/ui/FilterSidebar";
 import {
   getDesigns,
   getDesignFilters,
@@ -141,11 +145,11 @@ function DesainTab({
   }, [showSort]);
 
   const { data: filtersData } = useSWR("/marketplace/designs/filters", getDesignFilters);
-  // FilterSidebar is shared with Katalog Produk — designs only have a
-  // category+price dimension, so the gender/size/color/material facets are
+  // FilterSidebar is shared with Katalog Produk — designs have no
+  // gender/size/color/material dimensions of their own, so those facets are
   // always empty and those sections simply don't render.
   const filterOptions = filtersData?.data
-    ? { ...filtersData.data, genders: [], sizes: [], colors: [], materials: [], print_areas: [] }
+    ? { ...filtersData.data, genders: [], sizes: [], colors: [], materials: [] }
     : undefined;
 
   const { data: totalData } = useSWR("/marketplace/designs/total", () => getDesigns({ per_page: 1 }));
@@ -157,6 +161,8 @@ function DesainTab({
       per_page: PER_PAGE,
       sort,
       categories: filters.categories.length ? filters.categories : undefined,
+      product_categories: filters.productCategories.length ? filters.productCategories : undefined,
+      tags: filters.tags.length ? filters.tags : undefined,
       price_min: filters.priceMin ? Number(filters.priceMin) : undefined,
       price_max: filters.priceMax ? Number(filters.priceMax) : undefined,
     }),
@@ -180,11 +186,21 @@ function DesainTab({
   const isLoadingMore = isLoading && page > 1;
 
   const hasActiveQuery =
-    !!search || filters.categories.length > 0 || !!filters.priceMin || !!filters.priceMax;
+    !!search ||
+    filters.categories.length > 0 ||
+    filters.productCategories.length > 0 ||
+    filters.tags.length > 0 ||
+    !!filters.priceMin ||
+    !!filters.priceMax;
 
   return (
     <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-8 md:flex-row md:px-20">
-      <FilterSidebar options={filterOptions} value={filters} onChange={setFilters} />
+      <FilterSidebar
+        options={filterOptions}
+        value={filters}
+        onChange={setFilters}
+        categoryLabel="Kategori Desain"
+      />
 
       <div className="flex flex-1 flex-col gap-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -193,7 +209,7 @@ function DesainTab({
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Cari desain..."
+              placeholder="Cari desain atau tag..."
               className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
             />
             {search && (
@@ -284,15 +300,21 @@ function DesainTab({
 
 function CreatorTab() {
   const [search, setSearch] = useState("");
+  const [category, setCategory] = useState<string | null>(null);
   const [sort, setSort] = useState<CreatorSort>("terbaru");
   const [showSort, setShowSort] = useState(false);
   const [page, setPage] = useState(1);
   const [accumulated, setAccumulated] = useState<CreatorSummary[]>([]);
   const sortRef = useRef<HTMLDivElement>(null);
 
+  // Reuses the Desain tab's category list (same taxonomy, same SWR cache
+  // key) — no dedicated filters endpoint needed for the Creator tab.
+  const { data: filtersData } = useSWR("/marketplace/designs/filters", getDesignFilters);
+  const categories = filtersData?.data.categories ?? [];
+
   useEffect(() => {
     setPage(1);
-  }, [sort, search]);
+  }, [sort, search, category]);
 
   useEffect(() => {
     if (!showSort) return;
@@ -305,8 +327,14 @@ function CreatorTab() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showSort]);
 
-  const { data, error, isLoading } = useSWR(["/marketplace/creators", sort, search, page], () =>
-    getCreators({ page, per_page: PER_PAGE, sort, search: search || undefined }),
+  const { data, error, isLoading } = useSWR(["/marketplace/creators", sort, search, category, page], () =>
+    getCreators({
+      page,
+      per_page: PER_PAGE,
+      sort,
+      search: search || undefined,
+      categories: category ? [category] : undefined,
+    }),
   );
 
   useEffect(() => {
@@ -317,95 +345,112 @@ function CreatorTab() {
   const hasMore = !!data && accumulated.length < data.meta.total;
   const isLoadingInitial = isLoading && accumulated.length === 0;
   const isLoadingMore = isLoading && page > 1;
-  const hasActiveQuery = !!search;
+  const hasActiveQuery = !!search || !!category;
 
   return (
-    <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-8 md:px-20">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div className="flex w-full max-w-[420px] shrink-0 items-center gap-2 rounded-sm border border-border bg-surface px-3 py-2.5 transition-colors hover:border-primary hover:bg-border/40 focus-within:border-primary focus-within:bg-surface">
-          <Search className="size-4 shrink-0 text-text-secondary" />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari kreator..."
-            className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
+    <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-8 md:flex-row md:px-20">
+      {!!categories.length && (
+        <aside className="flex w-[220px] shrink-0 flex-col">
+          <CategoryList
+            label="Kategori"
+            icon={LayoutGrid}
+            items={categories}
+            selected={category ? [category] : []}
+            onSelect={(slugs) => setCategory(slugs[0] ?? null)}
           />
-          {search && (
+        </aside>
+      )}
+
+      <div className="flex flex-1 flex-col gap-6">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex w-full max-w-[420px] shrink-0 items-center gap-2 rounded-sm border border-border bg-surface px-3 py-2.5 transition-colors hover:border-primary hover:bg-border/40 focus-within:border-primary focus-within:bg-surface">
+            <Search className="size-4 shrink-0 text-text-secondary" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Cari kreator..."
+              className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                aria-label="Hapus pencarian"
+                className="shrink-0 rounded-full p-0.5 text-text-secondary transition-colors hover:bg-border/50 hover:text-text-primary"
+              >
+                <X className="size-3.5" />
+              </button>
+            )}
+          </div>
+
+          <div ref={sortRef} className="relative shrink-0">
             <button
-              onClick={() => setSearch("")}
-              aria-label="Hapus pencarian"
-              className="shrink-0 rounded-full p-0.5 text-text-secondary transition-colors hover:bg-border/50 hover:text-text-primary"
+              onClick={() => setShowSort((v) => !v)}
+              className="flex items-center gap-1.5 rounded-full border border-border bg-surface px-4 py-2 font-body text-sm text-text-secondary transition-colors hover:border-primary hover:bg-border/40 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
             >
-              <X className="size-3.5" />
+              <ArrowUpDown className="size-3.5" />
+              Urutkan
             </button>
-          )}
+            {showSort && (
+              <div className="absolute right-0 top-full z-10 mt-2 w-56 rounded-md border border-border bg-surface p-1.5 shadow-md">
+                {CREATOR_SORT_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => {
+                      setSort(opt.value);
+                      setShowSort(false);
+                    }}
+                    className={clsx(
+                      "block w-full rounded-sm px-3 py-2 text-left font-body text-sm transition-colors",
+                      sort === opt.value
+                        ? "bg-accent text-text-on-accent"
+                        : "text-text-secondary hover:bg-border/50",
+                    )}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
-        <div ref={sortRef} className="relative shrink-0">
-          <button
-            onClick={() => setShowSort((v) => !v)}
-            className="flex items-center gap-1.5 rounded-full border border-border bg-surface px-4 py-2 font-body text-sm text-text-secondary transition-colors hover:border-primary hover:bg-border/40 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
-          >
-            <ArrowUpDown className="size-3.5" />
-            Urutkan
-          </button>
-          {showSort && (
-            <div className="absolute right-0 top-full z-10 mt-2 w-56 rounded-md border border-border bg-surface p-1.5 shadow-md">
-              {CREATOR_SORT_OPTIONS.map((opt) => (
-                <button
-                  key={opt.value}
-                  onClick={() => {
-                    setSort(opt.value);
-                    setShowSort(false);
-                  }}
-                  className={clsx(
-                    "block w-full rounded-sm px-3 py-2 text-left font-body text-sm transition-colors",
-                    sort === opt.value
-                      ? "bg-accent text-text-on-accent"
-                      : "text-text-secondary hover:bg-border/50",
-                  )}
-                >
-                  {opt.label}
-                </button>
-              ))}
+        {!isLoadingInitial && !error && (
+          <p className="font-body text-sm text-text-secondary">
+            Menampilkan {accumulated.length} dari {data?.meta.total ?? accumulated.length} kreator
+          </p>
+        )}
+
+        <div className="flex flex-wrap gap-6">
+          {(isLoadingInitial || error || (!hasActiveQuery && accumulated.length === 0)) &&
+            Array.from({ length: 8 }).map((_, i) => <CreatorCardSkeleton key={i} />)}
+          {!isLoadingInitial && !error && hasActiveQuery && accumulated.length === 0 && (
+            <div className="flex w-full flex-col items-center gap-3 py-16 text-center">
+              <UserSearch className="size-10 text-text-secondary" />
+              <p className="font-body text-sm text-text-secondary">Belum ada kreator ditemukan.</p>
+              <button
+                onClick={() => {
+                  setSearch("");
+                  setCategory(null);
+                }}
+                className="font-body text-sm font-medium text-primary underline"
+              >
+                Reset pencarian & kategori
+              </button>
             </div>
           )}
+          {accumulated.map((creator) => (
+            <CreatorCard key={creator.slug} creator={creator} />
+          ))}
         </div>
-      </div>
 
-      {!isLoadingInitial && !error && (
-        <p className="font-body text-sm text-text-secondary">
-          Menampilkan {accumulated.length} dari {data?.meta.total ?? accumulated.length} kreator
-        </p>
-      )}
-
-      <div className="flex flex-wrap justify-center gap-6 md:justify-start">
-        {(isLoadingInitial || error || (!hasActiveQuery && accumulated.length === 0)) &&
-          Array.from({ length: 8 }).map((_, i) => <CreatorCardSkeleton key={i} />)}
-        {!isLoadingInitial && !error && hasActiveQuery && accumulated.length === 0 && (
-          <div className="flex w-full flex-col items-center gap-3 py-16 text-center">
-            <UserSearch className="size-10 text-text-secondary" />
-            <p className="font-body text-sm text-text-secondary">Belum ada kreator ditemukan.</p>
-            <button
-              onClick={() => setSearch("")}
-              className="font-body text-sm font-medium text-primary underline"
-            >
-              Reset pencarian
-            </button>
+        {hasMore && (
+          <div className="flex justify-center pt-2">
+            <Button variant="secondary" loading={isLoadingMore} onClick={() => setPage((p) => p + 1)}>
+              Muat Lebih Banyak
+            </Button>
           </div>
         )}
-        {accumulated.map((creator) => (
-          <CreatorCard key={creator.slug} creator={creator} />
-        ))}
       </div>
-
-      {hasMore && (
-        <div className="flex justify-center pt-2">
-          <Button variant="secondary" loading={isLoadingMore} onClick={() => setPage((p) => p + 1)}>
-            Muat Lebih Banyak
-          </Button>
-        </div>
-      )}
     </section>
   );
 }

@@ -17,6 +17,10 @@ class DesignIndexRequest extends FormRequest
         return [
             'categories' => ['sometimes', 'array'],
             'categories.*' => ['string'],
+            'product_categories' => ['sometimes', 'array'],
+            'product_categories.*' => ['string'],
+            'tags' => ['sometimes', 'array'],
+            'tags.*' => ['string'],
             'search' => ['sometimes', 'string', 'max:150'],
             'price_min' => ['sometimes', 'numeric', 'min:0'],
             // gte:price_min only makes sense when both bounds are present -

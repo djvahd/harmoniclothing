@@ -8,6 +8,7 @@ import CreatorSidebar from "@/components/layout/CreatorSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import TagInput from "@/components/ui/TagInput";
 import { getProducts } from "@/services/catalog";
 import { createDesign } from "@/services/creator";
 import { ApiError } from "@/lib/api";
@@ -21,6 +22,7 @@ export default function UploadDesainPage() {
   const [description, setDescription] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -48,6 +50,7 @@ export default function UploadDesainPage() {
         description: description || undefined,
         file,
         product_ids: selectedProducts,
+        tags,
       });
       router.push(`/creator/desain/${design.id}`);
     } catch (err) {
@@ -105,6 +108,8 @@ export default function UploadDesainPage() {
               ))}
             </div>
           </div>
+
+          <TagInput value={tags} onChange={setTags} />
 
           {error && <p className="font-body text-xs text-red-500">{error}</p>}
           <Button type="submit" loading={loading}>

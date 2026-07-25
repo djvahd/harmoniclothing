@@ -57,4 +57,9 @@ class Design extends Model
             ->withPivot('preview_confirmed_at')
             ->withTimestamps();
     }
+
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class);
+    }
 }

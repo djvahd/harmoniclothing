@@ -87,6 +87,7 @@ export function createDesign(payload: {
   category_id?: number;
   file: File;
   product_ids: number[];
+  tags?: string[];
 }) {
   const formData = new FormData();
   formData.append("title", payload.title);
@@ -94,6 +95,7 @@ export function createDesign(payload: {
   if (payload.category_id) formData.append("category_id", String(payload.category_id));
   formData.append("file", payload.file);
   payload.product_ids.forEach((id) => formData.append("product_ids[]", String(id)));
+  payload.tags?.forEach((tag) => formData.append("tags[]", tag));
 
   return apiFetch<{ data: Design }>("/creator/designs", {
     method: "POST",

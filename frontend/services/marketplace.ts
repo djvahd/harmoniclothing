@@ -10,6 +10,8 @@ export type DesignSort = "terbaru" | "harga_asc" | "harga_desc" | "terlaris" | "
 
 export interface GetDesignsParams {
   categories?: string[];
+  product_categories?: string[];
+  tags?: string[];
   search?: string;
   price_min?: number;
   price_max?: number;
@@ -25,6 +27,8 @@ function appendArrayParam(qs: URLSearchParams, key: string, values?: string[]) {
 export function getDesigns(params?: GetDesignsParams) {
   const qs = new URLSearchParams();
   appendArrayParam(qs, "categories", params?.categories);
+  appendArrayParam(qs, "product_categories", params?.product_categories);
+  appendArrayParam(qs, "tags", params?.tags);
   if (params?.search) qs.set("search", params.search);
   if (params?.price_min != null) qs.set("price_min", String(params.price_min));
   if (params?.price_max != null) qs.set("price_max", String(params.price_max));
@@ -37,6 +41,8 @@ export function getDesigns(params?: GetDesignsParams) {
 
 export interface DesignFilterOptions {
   categories: { slug: string; name: string }[];
+  product_categories: { slug: string; name: string }[];
+  popular_tags: { slug: string; name: string }[];
   price_min: number;
   price_max: number;
 }
@@ -69,9 +75,16 @@ export interface CreatorSummary {
   review_count: number;
 }
 
-export function getCreators(params?: { search?: string; sort?: CreatorSort; page?: number; per_page?: number }) {
+export function getCreators(params?: {
+  search?: string;
+  categories?: string[];
+  sort?: CreatorSort;
+  page?: number;
+  per_page?: number;
+}) {
   const qs = new URLSearchParams();
   if (params?.search) qs.set("search", params.search);
+  appendArrayParam(qs, "categories", params?.categories);
   if (params?.sort) qs.set("sort", params.sort);
   if (params?.page) qs.set("page", String(params.page));
   if (params?.per_page) qs.set("per_page", String(params.per_page));

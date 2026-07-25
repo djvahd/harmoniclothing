@@ -53,6 +53,7 @@ export interface Design {
   sold_count?: number;
   rating_average?: number | null;
   review_count?: number;
+  tags?: { slug: string; name: string }[];
   category?: Category;
   creator: { id: number; name: string; slug: string | null };
   products?: Product[];

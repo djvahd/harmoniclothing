@@ -24,7 +24,7 @@ class MarketplaceController extends Controller
     public function index(DesignIndexRequest $request): JsonResponse
     {
         $designs = $this->marketplace->listDesigns(
-            $request->safe()->only(['categories', 'search', 'price_min', 'price_max', 'sort']),
+            $request->safe()->only(['categories', 'product_categories', 'tags', 'search', 'price_min', 'price_max', 'sort']),
             (int) $request->validated('per_page', 20)
         );
 
@@ -59,6 +59,7 @@ class MarketplaceController extends Controller
     {
         $creators = $this->marketplace->listCreators(
             $request->validated('search'),
+            $request->validated('categories', []),
             $request->validated('sort', 'terbaru'),
             (int) $request->validated('per_page', 20)
         );

@@ -23,6 +23,10 @@ class DesignResource extends JsonResource
             'sold_count' => (int) ($this->sold_count ?? 0),
             'rating_average' => $this->avg_rating !== null ? round((float) $this->avg_rating, 1) : null,
             'review_count' => (int) ($this->review_count ?? 0),
+            'tags' => $this->whenLoaded('tags', fn () => $this->tags->map(fn ($tag) => [
+                'slug' => $tag->slug,
+                'name' => $tag->name,
+            ])),
             'category' => new CategoryResource($this->whenLoaded('category')),
             'creator' => [
                 'id' => $this->creator->id,

@@ -37,10 +37,14 @@ class MarketplaceService
         return $this->designs->findBySlug($slug);
     }
 
-    /** GET /marketplace/creators — Creator tab of Marketplace Desain. */
-    public function listCreators(?string $search, string $sort, int $perPage): LengthAwarePaginator
+    /**
+     * GET /marketplace/creators — Creator tab of Marketplace Desain.
+     *
+     * @param  array<int,string>  $categories
+     */
+    public function listCreators(?string $search, array $categories, string $sort, int $perPage): LengthAwarePaginator
     {
-        return $this->creators->paginate($search, $sort, $perPage);
+        return $this->creators->paginate($search, $categories, $sort, $perPage);
     }
 
     /** GET /marketplace/creators/{slug} — FE-011. */

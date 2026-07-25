@@ -25,6 +25,8 @@ class CreatorDesignRequest extends FormRequest
             'file' => ['required', 'file', 'mimetypes:image/png,image/svg+xml', 'max:20480'],
             'product_ids' => ['required', 'array', 'min:1'],
             'product_ids.*' => ['integer', 'exists:products,id'],
+            'tags' => ['sometimes', 'array', 'max:10'],
+            'tags.*' => ['string', 'max:30'],
         ];
     }
 }

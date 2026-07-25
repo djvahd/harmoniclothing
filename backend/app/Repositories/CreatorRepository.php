@@ -12,7 +12,8 @@ use Illuminate\Database\Eloquent\Builder;
 /** Creator tab of Marketplace Desain — public, read-only, mirrors DesignRepository's shape. */
 class CreatorRepository
 {
-    public function paginate(?string $search, string $sort, int $perPage): LengthAwarePaginator
+    /** @param  array<int,string>  $categories  design category slugs — creator must have ≥ 1 active design in one of them */
+    public function paginate(?string $search, array $categories, string $sort, int $perPage): LengthAwarePaginator
     {
         $query = CreatorProfile::query()
             ->where('status', 'aktif')
@@ -24,6 +25,10 @@ class CreatorRepository
             ->when($search, fn ($query) => $query->where(
                 fn ($q) => $q->where('brand_name', 'like', "%{$search}%")
                     ->orWhereHas('user', fn ($u) => $u->where('name', 'like', "%{$search}%"))
+            ))
+            ->when(! empty($categories), fn ($query) => $query->whereHas(
+                'user.designs',
+                fn ($q) => $q->active()->whereHas('category', fn ($qq) => $qq->whereIn('slug', $categories))
             ));
 
         return $this->applySort($query, $sort)->paginate($perPage);

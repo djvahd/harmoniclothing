@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Review;
+use App\Models\Tag;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -154,6 +155,76 @@ class MarketplaceTest extends TestCase
         $response->assertJsonPath('data.categories.0.slug', $category->slug)
             ->assertJsonPath('data.price_min', 200000)
             ->assertJsonPath('data.price_max', 200000);
+    }
+
+    public function test_designs_can_be_searched_by_tag(): void
+    {
+        $tagged = Design::factory()->create(['title' => 'Karya Satu']);
+        $tagged->tags()->attach(Tag::factory()->create(['name' => 'Anime', 'slug' => 'anime']));
+        Design::factory()->create(['title' => 'Karya Dua']);
+
+        $response = $this->getJson('/api/marketplace/designs?search=Anime');
+
+        $response->assertOk()->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $tagged->id);
+    }
+
+    public function test_designs_can_be_filtered_by_tag(): void
+    {
+        $tagged = Design::factory()->create();
+        $tagged->tags()->attach(Tag::factory()->create(['name' => 'Vintage', 'slug' => 'vintage']));
+        Design::factory()->create(); // untagged
+
+        $response = $this->getJson('/api/marketplace/designs?tags[]=vintage');
+
+        $response->assertOk()->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $tagged->id);
+    }
+
+    public function test_designs_can_be_filtered_by_product_category(): void
+    {
+        $hoodieCategory = Category::factory()->product()->create();
+        $hoodie = Product::factory()->for($hoodieCategory)->create();
+        $onHoodie = Design::factory()->create();
+        $onHoodie->products()->attach($hoodie);
+
+        $otherProduct = Product::factory()->create();
+        $onOther = Design::factory()->create();
+        $onOther->products()->attach($otherProduct);
+
+        $response = $this->getJson("/api/marketplace/designs?product_categories[]={$hoodieCategory->slug}");
+
+        $response->assertOk()->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $onHoodie->id);
+    }
+
+    public function test_design_filters_endpoint_returns_product_categories_and_popular_tags(): void
+    {
+        $productCategory = Category::factory()->product()->create();
+        $product = Product::factory()->for($productCategory)->create();
+        $design = Design::factory()->create();
+        $design->products()->attach($product);
+        $design->tags()->attach(Tag::factory()->create(['name' => 'Anime', 'slug' => 'anime']));
+
+        $response = $this->getJson('/api/marketplace/designs/filters')->assertOk();
+
+        $response->assertJsonPath('data.product_categories.0.slug', $productCategory->slug)
+            ->assertJsonPath('data.popular_tags.0.slug', 'anime');
+    }
+
+    public function test_creators_can_be_filtered_by_category(): void
+    {
+        $category = Category::factory()->design()->create();
+        $matching = CreatorProfile::factory()->aktif()->create();
+        Design::factory()->for($category)->create(['creator_id' => $matching->user_id]);
+
+        $nonMatching = CreatorProfile::factory()->aktif()->create();
+        Design::factory()->create(['creator_id' => $nonMatching->user_id]); // different category
+
+        $response = $this->getJson("/api/marketplace/creators?categories[]={$category->slug}");
+
+        $response->assertOk()->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.slug', $matching->slug);
     }
 
     public function test_guest_can_view_design_detail(): void
