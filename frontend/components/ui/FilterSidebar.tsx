@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronUp, LayoutGrid, Shirt } from "lucide-react";
 import clsx from "clsx";
 import type { CatalogFilterOptions } from "@/services/catalog";
@@ -52,6 +52,20 @@ const COLOR_SWATCH_MAP: Record<string, string> = {
 
 function swatchColor(name: string): string {
   return COLOR_SWATCH_MAP[name.trim().toLowerCase()] ?? name;
+}
+
+/** Debounce before auto-applying a typed price, mirroring the search bar's
+ * live-as-you-type feel without firing a request on every keystroke. */
+const PRICE_APPLY_DELAY_MS = 500;
+
+const PRICE_STEP = { min: 50_000, max: 50_000 };
+
+function parsePriceDigits(raw: string): string {
+  return raw.replace(/\D/g, "");
+}
+
+function formatPriceDigits(digits: string): string {
+  return digits ? new Intl.NumberFormat("id-ID").format(Number(digits)) : "";
 }
 
 export const EMPTY_FILTER_VALUE: FilterSidebarValue = {
@@ -116,10 +130,17 @@ export default function FilterSidebar({
     harga: true,
   });
   const [priceDraft, setPriceDraft] = useState({ min: value.priceMin, max: value.priceMax });
+  const priceApplyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setPriceDraft({ min: value.priceMin, max: value.priceMax });
   }, [value.priceMin, value.priceMax]);
+
+  useEffect(() => {
+    return () => {
+      if (priceApplyTimer.current) clearTimeout(priceApplyTimer.current);
+    };
+  }, []);
 
   const toggleSection = (key: keyof typeof openSections) =>
     setOpenSections((s) => ({ ...s, [key]: !s[key] }));
@@ -132,10 +153,29 @@ export default function FilterSidebar({
     (value.priceMin ? 1 : 0) +
     (value.priceMax ? 1 : 0);
 
-  const applyPrice = () => {
-    if (priceDraft.min !== value.priceMin || priceDraft.max !== value.priceMax) {
-      onChange({ ...value, priceMin: priceDraft.min, priceMax: priceDraft.max });
+  const applyPrice = (draft: { min: string; max: string }) => {
+    if (priceApplyTimer.current) {
+      clearTimeout(priceApplyTimer.current);
+      priceApplyTimer.current = null;
     }
+    if (draft.min !== value.priceMin || draft.max !== value.priceMax) {
+      onChange({ ...value, priceMin: draft.min, priceMax: draft.max });
+    }
+  };
+
+  const handlePriceInput = (field: "min" | "max", raw: string) => {
+    const next = { ...priceDraft, [field]: parsePriceDigits(raw) };
+    setPriceDraft(next);
+    if (priceApplyTimer.current) clearTimeout(priceApplyTimer.current);
+    priceApplyTimer.current = setTimeout(() => applyPrice(next), PRICE_APPLY_DELAY_MS);
+  };
+
+  const stepPrice = (field: "min" | "max", direction: 1 | -1) => {
+    const current = Number(priceDraft[field] || 0);
+    const stepped = Math.max(0, current + direction * PRICE_STEP[field]);
+    const next = { ...priceDraft, [field]: stepped ? String(stepped) : "" };
+    setPriceDraft(next);
+    applyPrice(next);
   };
 
   // Skeleton for the whole panel (Kategori + Filter) so it doesn't sit
@@ -307,31 +347,67 @@ export default function FilterSidebar({
 
           <Section title="Harga" isOpen={openSections.harga} onToggle={() => toggleSection("harga")}>
             <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-1.5 rounded-sm border border-border bg-surface px-2 py-2 transition-colors hover:border-primary hover:bg-border/40 focus-within:border-primary focus-within:bg-surface">
+              <div className="flex items-center gap-1.5 rounded-sm border border-border bg-surface py-1 pl-2 pr-1 transition-colors hover:border-primary hover:bg-border/40 focus-within:border-primary focus-within:bg-surface">
                 <span className="font-body text-sm font-medium text-text-secondary">Rp</span>
                 <input
-                  type="number"
-                  min={0}
+                  type="text"
+                  inputMode="numeric"
                   placeholder="Minimum"
-                  value={priceDraft.min}
-                  onChange={(e) => setPriceDraft((d) => ({ ...d, min: e.target.value }))}
-                  onBlur={applyPrice}
-                  onKeyDown={(e) => e.key === "Enter" && applyPrice()}
+                  value={formatPriceDigits(priceDraft.min)}
+                  onChange={(e) => handlePriceInput("min", e.target.value)}
+                  onBlur={() => applyPrice(priceDraft)}
+                  onKeyDown={(e) => e.key === "Enter" && applyPrice(priceDraft)}
                   className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
                 />
+                <div className="flex shrink-0 flex-col">
+                  <button
+                    type="button"
+                    aria-label="Naikkan harga minimum"
+                    onClick={() => stepPrice("min", 1)}
+                    className="rounded-t-sm px-0.5 text-text-secondary transition-colors hover:bg-border/60 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+                  >
+                    <ChevronUp className="size-3" />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Turunkan harga minimum"
+                    onClick={() => stepPrice("min", -1)}
+                    className="rounded-b-sm px-0.5 text-text-secondary transition-colors hover:bg-border/60 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+                  >
+                    <ChevronDown className="size-3" />
+                  </button>
+                </div>
               </div>
-              <div className="flex items-center gap-1.5 rounded-sm border border-border bg-surface px-2 py-2 transition-colors hover:border-primary hover:bg-border/40 focus-within:border-primary focus-within:bg-surface">
+              <div className="flex items-center gap-1.5 rounded-sm border border-border bg-surface py-1 pl-2 pr-1 transition-colors hover:border-primary hover:bg-border/40 focus-within:border-primary focus-within:bg-surface">
                 <span className="font-body text-sm font-medium text-text-secondary">Rp</span>
                 <input
-                  type="number"
-                  min={0}
+                  type="text"
+                  inputMode="numeric"
                   placeholder="Maksimum"
-                  value={priceDraft.max}
-                  onChange={(e) => setPriceDraft((d) => ({ ...d, max: e.target.value }))}
-                  onBlur={applyPrice}
-                  onKeyDown={(e) => e.key === "Enter" && applyPrice()}
+                  value={formatPriceDigits(priceDraft.max)}
+                  onChange={(e) => handlePriceInput("max", e.target.value)}
+                  onBlur={() => applyPrice(priceDraft)}
+                  onKeyDown={(e) => e.key === "Enter" && applyPrice(priceDraft)}
                   className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
                 />
+                <div className="flex shrink-0 flex-col">
+                  <button
+                    type="button"
+                    aria-label="Naikkan harga maksimum"
+                    onClick={() => stepPrice("max", 1)}
+                    className="rounded-t-sm px-0.5 text-text-secondary transition-colors hover:bg-border/60 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+                  >
+                    <ChevronUp className="size-3" />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Turunkan harga maksimum"
+                    onClick={() => stepPrice("max", -1)}
+                    className="rounded-b-sm px-0.5 text-text-secondary transition-colors hover:bg-border/60 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+                  >
+                    <ChevronDown className="size-3" />
+                  </button>
+                </div>
               </div>
             </div>
           </Section>

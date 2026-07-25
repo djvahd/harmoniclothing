@@ -114,6 +114,19 @@ class CatalogTest extends TestCase
         $response->assertOk()->assertJsonCount(1, 'data');
     }
 
+    public function test_products_can_be_filtered_by_price_max_alone(): void
+    {
+        Product::factory()->create(['base_price' => 50000]);
+        Product::factory()->create(['base_price' => 150000]);
+        Product::factory()->create(['base_price' => 300000]);
+
+        $this->getJson('/api/catalog/products?price_max=200000')
+            ->assertOk()->assertJsonCount(2, 'data');
+
+        $this->getJson('/api/catalog/products?price_min=100000')
+            ->assertOk()->assertJsonCount(2, 'data');
+    }
+
     public function test_products_can_be_filtered_by_size_and_color(): void
     {
         $matching = Product::factory()->create();

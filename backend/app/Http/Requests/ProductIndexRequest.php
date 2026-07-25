@@ -20,7 +20,16 @@ class ProductIndexRequest extends FormRequest
             'genders' => ['sometimes', 'array'],
             'genders.*' => ['string', 'in:pria,wanita,unisex,anak'],
             'price_min' => ['sometimes', 'numeric', 'min:0'],
-            'price_max' => ['sometimes', 'numeric', 'min:0', 'gte:price_min'],
+            // gte:price_min only makes sense when both bounds are present -
+            // applied unconditionally it fails validation whenever only
+            // price_max is sent (Laravel treats the absent price_min as not
+            // comparable), turning a plain max-only filter into a 422.
+            'price_max' => array_filter([
+                'sometimes',
+                'numeric',
+                'min:0',
+                $this->filled('price_min') ? 'gte:price_min' : null,
+            ]),
             'sizes' => ['sometimes', 'array'],
             'sizes.*' => ['string'],
             'colors' => ['sometimes', 'array'],
