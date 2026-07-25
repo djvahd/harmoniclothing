@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import useSWR from "swr";
-import { ArrowUpDown, LayoutGrid, PackageSearch, Search, UserSearch, X } from "lucide-react";
+import { ArrowUpDown, LayoutGrid, PackageSearch, Search, UserSearch, WifiOff, X } from "lucide-react";
 import clsx from "clsx";
 import DesignCard, { DesignCardSkeleton } from "@/components/ui/DesignCard";
 import CreatorCard, { CreatorCardSkeleton } from "@/components/ui/CreatorCard";
@@ -158,7 +158,7 @@ function DesainTab({
   const { data: totalData } = useSWR("/marketplace/designs/total", () => getDesigns({ per_page: 1 }));
   const grandTotal = totalData?.meta.total;
 
-  const { data, error, isLoading } = useSWR(["/marketplace/designs", sort, filters, page], () =>
+  const { data, error, isLoading, mutate } = useSWR(["/marketplace/designs", sort, filters, page], () =>
     getDesigns({
       page,
       per_page: PER_PAGE,
@@ -262,7 +262,20 @@ function DesainTab({
         )}
 
         <div className="flex flex-wrap gap-6">
-          {(isLoadingInitial || error || (!hasActiveQuery && filtered.length === 0)) &&
+          {isLoadingInitial &&
+            Array.from({ length: 8 }).map((_, i) => <DesignCardSkeleton key={i} />)}
+          {!isLoadingInitial && error && (
+            <div className="flex w-full flex-col items-center gap-3 py-16 text-center">
+              <WifiOff className="size-10 text-text-secondary" />
+              <p className="font-body text-sm text-text-secondary">
+                Gagal memuat desain. Periksa koneksi Anda dan coba lagi.
+              </p>
+              <button onClick={() => mutate()} className="font-body text-sm font-medium text-primary underline">
+                Coba Lagi
+              </button>
+            </div>
+          )}
+          {!isLoadingInitial && !error && !hasActiveQuery && filtered.length === 0 &&
             Array.from({ length: 8 }).map((_, i) => <DesignCardSkeleton key={i} />)}
           {!isLoadingInitial && !error && hasActiveQuery && filtered.length === 0 && (
             <div className="flex w-full flex-col items-center gap-3 py-16 text-center">
@@ -333,7 +346,7 @@ function CreatorTab() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showSort]);
 
-  const { data, error, isLoading } = useSWR(["/marketplace/creators", sort, search, category, page], () =>
+  const { data, error, isLoading, mutate } = useSWR(["/marketplace/creators", sort, search, category, page], () =>
     getCreators({
       page,
       per_page: PER_PAGE,
@@ -427,7 +440,20 @@ function CreatorTab() {
         )}
 
         <div className="flex flex-wrap gap-6">
-          {(isLoadingInitial || error || (!hasActiveQuery && accumulated.length === 0)) &&
+          {isLoadingInitial &&
+            Array.from({ length: 8 }).map((_, i) => <CreatorCardSkeleton key={i} />)}
+          {!isLoadingInitial && error && (
+            <div className="flex w-full flex-col items-center gap-3 py-16 text-center">
+              <WifiOff className="size-10 text-text-secondary" />
+              <p className="font-body text-sm text-text-secondary">
+                Gagal memuat kreator. Periksa koneksi Anda dan coba lagi.
+              </p>
+              <button onClick={() => mutate()} className="font-body text-sm font-medium text-primary underline">
+                Coba Lagi
+              </button>
+            </div>
+          )}
+          {!isLoadingInitial && !error && !hasActiveQuery && accumulated.length === 0 &&
             Array.from({ length: 8 }).map((_, i) => <CreatorCardSkeleton key={i} />)}
           {!isLoadingInitial && !error && hasActiveQuery && accumulated.length === 0 && (
             <div className="flex w-full flex-col items-center gap-3 py-16 text-center">
