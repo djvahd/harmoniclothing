@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, ChevronUp, LayoutGrid, Shirt, Tag as TagIcon } from "lucide-react";
+import { ChevronDown, ChevronUp, LayoutGrid, Tag as TagIcon } from "lucide-react";
 import clsx from "clsx";
 import type { GenderSegment } from "@/types/product";
 
@@ -11,8 +11,7 @@ export interface FilterSidebarOptions {
   sizes: string[];
   colors: string[];
   materials: string[];
-  /** Design-only facets — omitted (or empty) on Katalog Produk, so these sections simply don't render there. */
-  product_categories?: { slug: string; name: string }[];
+  /** Design-only facet — omitted (or empty) on Katalog Produk, so this section simply doesn't render there. */
   popular_tags?: { slug: string; name: string }[];
   price_min: number;
   price_max: number;
@@ -20,7 +19,6 @@ export interface FilterSidebarOptions {
 
 export interface FilterSidebarValue {
   categories: string[];
-  productCategories: string[];
   genders: GenderSegment[];
   sizes: string[];
   colors: string[];
@@ -84,7 +82,6 @@ function formatPriceDigits(digits: string): string {
 
 export const EMPTY_FILTER_VALUE: FilterSidebarValue = {
   categories: [],
-  productCategories: [],
   genders: [],
   sizes: [],
   colors: [],
@@ -129,7 +126,7 @@ function Section({
   );
 }
 
-/** Single-select "Semua | A | B | ..." list, shared by Kategori (design/product's own theme), Kategori Produk (compatible apparel type), and the Creator tab's category filter. */
+/** Single-select "Semua | A | B | ..." list, shared by Kategori (design/product's own theme) and the Creator tab's category filter. */
 export function CategoryList({
   label,
   icon: Icon,
@@ -148,6 +145,7 @@ export function CategoryList({
       <p className="mb-2 font-heading text-sm font-semibold text-text-primary">{label}</p>
       <div className="flex flex-col gap-0.5">
         <button
+          type="button"
           onClick={() => onSelect([])}
           className={clsx(
             "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-left font-body text-sm transition-all duration-150 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
@@ -162,6 +160,7 @@ export function CategoryList({
         {items.map((c) => (
           <button
             key={c.slug}
+            type="button"
             onClick={() => onSelect([c.slug])}
             className={clsx(
               "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-left font-body text-sm transition-all duration-150 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
@@ -183,13 +182,10 @@ export default function FilterSidebar({
   options,
   value,
   onChange,
-  categoryLabel = "Kategori",
 }: {
   options?: FilterSidebarOptions;
   value: FilterSidebarValue;
   onChange: (value: FilterSidebarValue) => void;
-  /** "Kategori" on Katalog Produk, "Kategori Desain" on Marketplace Desain (to disambiguate from the sibling "Kategori Produk" section there). */
-  categoryLabel?: string;
 }) {
   const [openSections, setOpenSections] = useState({
     segmen: true,
@@ -283,21 +279,11 @@ export default function FilterSidebar({
     <aside className="flex w-[220px] shrink-0 flex-col gap-6">
       {!!options?.categories.length && (
         <CategoryList
-          label={categoryLabel}
+          label="Kategori"
           icon={LayoutGrid}
           items={options.categories}
           selected={value.categories}
           onSelect={(categories) => onChange({ ...value, categories })}
-        />
-      )}
-
-      {!!options?.product_categories?.length && (
-        <CategoryList
-          label="Kategori Produk"
-          icon={Shirt}
-          items={options.product_categories}
-          selected={value.productCategories}
-          onSelect={(productCategories) => onChange({ ...value, productCategories })}
         />
       )}
 
@@ -312,7 +298,6 @@ export default function FilterSidebar({
                 onChange({
                   ...EMPTY_FILTER_VALUE,
                   categories: value.categories,
-                  productCategories: value.productCategories,
                 })
               }
               className="rounded-sm font-body text-sm text-text-secondary underline transition-colors hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"

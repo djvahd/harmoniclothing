@@ -8,15 +8,14 @@ import WishlistButton from "./WishlistButton";
 
 export function DesignCardSkeleton() {
   return (
-    <div className="flex w-[196px] animate-pulse flex-col gap-[5px] rounded-md border border-border bg-surface p-[11px]">
+    <div className="flex w-[196px] animate-pulse flex-col gap-[5px] rounded-md border border-border bg-surface p-[14px]">
       <div className="h-[155px] w-full shrink-0 rounded-sm bg-border" />
-      <div className="flex flex-col gap-1.5">
-        <div className="h-3.5 w-4/5 rounded-sm bg-border" />
-        <div className="flex items-center gap-1.5">
-          <span className="size-[14px] shrink-0 rounded-full bg-border" />
-          <div className="h-2.5 w-16 rounded-sm bg-border" />
-        </div>
+      <div className="flex min-h-[58px] flex-col justify-start gap-1.5">
+        <div className="h-3 w-4/5 rounded-sm bg-border" />
+        <div className="h-3 w-3/5 rounded-sm bg-border" />
+        <div className="h-2.5 w-2/5 rounded-sm bg-border" />
       </div>
+      <div className="h-4 w-2/3 rounded-sm bg-border" />
       <div className="h-3 w-1/2 rounded-sm bg-border" />
     </div>
   );
@@ -42,7 +41,7 @@ export default function DesignCard({ design, startingPrice }: DesignCardProps) {
   return (
     <Link
       href={`/marketplace-desain/${design.slug}`}
-      className="group flex w-[196px] flex-col gap-[5px] rounded-md border border-border bg-surface p-[11px] transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
+      className="group flex w-[196px] flex-col gap-[5px] rounded-md border border-border bg-surface p-[14px] transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
     >
       <div className="relative h-[155px] w-full shrink-0 overflow-hidden rounded-sm bg-border">
         {thumbnail && (
@@ -56,16 +55,20 @@ export default function DesignCard({ design, startingPrice }: DesignCardProps) {
         )}
         <WishlistButton designId={design.id} className="absolute right-2 top-2" />
       </div>
-      <div className="flex flex-col gap-0">
-        <p className="line-clamp-1 min-h-[21px] font-body text-body-sm text-text-primary">{design.title}</p>
-        <div className="flex items-center gap-1.5">
-          <span className="size-[14px] shrink-0 rounded-full bg-border" />
-          <p className="font-body text-[11px] text-text-secondary">by {design.creator.name}</p>
-        </div>
+
+      {/* Title and creator sit in one reserved-height block, close together —
+          the rating/sold row further below is a separate element. */}
+      <div className="flex min-h-[58px] flex-col justify-start gap-0.5">
+        <p className="line-clamp-2 font-heading text-body-sm font-medium text-text-primary">
+          {design.title}
+        </p>
+        <p className="line-clamp-1 font-body text-[11px] text-text-secondary">by {design.creator.name}</p>
       </div>
-      <p className="font-body text-[12px] text-text-primary">
+
+      <p className="font-body text-[12px] font-semibold text-text-primary">
         {price !== undefined ? `Mulai dari ${formatCurrency(price)}` : " "}
       </p>
+
       <div className="flex items-center gap-1 font-body text-[11px] text-text-secondary">
         {hasRating || hasSold ? (
           <>

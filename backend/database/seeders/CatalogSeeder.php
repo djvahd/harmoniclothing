@@ -88,23 +88,25 @@ class CatalogSeeder extends Seeder
                 $design->tags()->attach($tags->random(random_int(0, 3))->pluck('id'));
             });
 
-        // Completed orders against a majority of designs give them a real
+        // Completed orders against every design give them a real
         // sold_count/rating_average too, same reasoning as the products
-        // block above — otherwise every design card shows a blank row.
-        foreach ($designs->random(min(10, $designs->count())) as $design) {
+        // block above — otherwise design cards show a blank row. The first
+        // order's item always gets a review so rating_average is never
+        // null for any design, not just sold_count.
+        foreach ($designs as $design) {
             $variant = $design->products()->inRandomOrder()->first()?->variants()->inRandomOrder()->first();
             if (! $variant) {
                 continue;
             }
 
-            foreach (range(1, random_int(1, 3)) as $ignored) {
+            foreach (range(1, random_int(1, 3)) as $i) {
                 $order = Order::factory()->state(['status' => 'selesai'])->create();
                 $item = OrderItem::factory()
                     ->for($order, 'order')
                     ->for($variant, 'productVariant')
                     ->create(['design_id' => $design->id]);
 
-                if (fake()->boolean(70)) {
+                if ($i === 1 || fake()->boolean(70)) {
                     Review::factory()->for($item, 'orderItem')->create();
                 }
             }

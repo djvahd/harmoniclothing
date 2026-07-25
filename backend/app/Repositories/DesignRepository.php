@@ -24,12 +24,10 @@ class DesignRepository
      * design's own dimensions: category comes from designs.category_id,
      * price is the "mulai dari" starting_price derived from the apparel
      * (design_product -> products) the Creator attached, since a design has
-     * no base_price of its own. product_categories and tags are two
-     * additional dimensions layered on top per the 2026-07-25 filter
-     * expansion: product_categories filters by the compatible apparel's own
-     * category (e.g. "hoodie"), tags filters by Creator-assigned keywords.
+     * no base_price of its own. tags is an additional dimension layered on
+     * top per the 2026-07-25 filter expansion (Creator-assigned keywords).
      *
-     * @param  array{categories?: array<int,string>, product_categories?: array<int,string>, tags?: array<int,string>, search?: string, price_min?: float, price_max?: float, sort?: string}  $filters
+     * @param  array{categories?: array<int,string>, tags?: array<int,string>, search?: string, price_min?: float, price_max?: float, sort?: string}  $filters
      */
     public function paginate(array $filters, int $perPage): LengthAwarePaginator
     {
@@ -43,10 +41,6 @@ class DesignRepository
             ->when(! empty($filters['categories']), fn ($query) => $query->whereHas(
                 'category',
                 fn ($q) => $q->whereIn('slug', $filters['categories'])
-            ))
-            ->when(! empty($filters['product_categories']), fn ($query) => $query->whereHas(
-                'products.category',
-                fn ($q) => $q->whereIn('slug', $filters['product_categories'])
             ))
             ->when(! empty($filters['tags']), fn ($query) => $query->whereHas(
                 'tags',
@@ -80,12 +74,11 @@ class DesignRepository
     }
 
     /**
-     * Sidebar filter facets for Marketplace Desain — design's own category,
-     * a price range, the compatible apparel's own category
-     * (product_categories), and the most-used Creator tags (popular_tags,
-     * capped rather than exhaustive since tags are freeform/unbounded).
+     * Sidebar filter facets for Marketplace Desain — design's own category, a
+     * price range, and the most-used Creator tags (popular_tags, capped
+     * rather than exhaustive since tags are freeform/unbounded).
      *
-     * @return array{categories: array<int, array{slug: string, name: string}>, product_categories: array<int, array{slug: string, name: string}>, popular_tags: array<int, array{slug: string, name: string}>, price_min: float, price_max: float}
+     * @return array{categories: array<int, array{slug: string, name: string}>, popular_tags: array<int, array{slug: string, name: string}>, price_min: float, price_max: float}
      */
     public function filterOptions(string $lang = 'id'): array
     {
@@ -102,18 +95,6 @@ class DesignRepository
             ->orderBy("categories.name_{$lang}")
             ->get(['categories.slug as slug', "categories.name_{$lang} as name"]);
 
-        $productCategories = Category::query()
-            ->where('categories.type', 'product')
-            ->whereIn('categories.id', function ($query) {
-                $query->select('products.category_id')
-                    ->from('products')
-                    ->join('design_product', 'design_product.product_id', '=', 'products.id')
-                    ->join('designs', 'designs.id', '=', 'design_product.design_id')
-                    ->where('designs.status', 'aktif');
-            })
-            ->orderBy("categories.name_{$lang}")
-            ->get(['categories.slug as slug', "categories.name_{$lang} as name"]);
-
         $popularTags = Tag::query()
             ->join('design_tag', 'design_tag.tag_id', '=', 'tags.id')
             ->join('designs', 'designs.id', '=', 'design_tag.design_id')
@@ -125,7 +106,6 @@ class DesignRepository
 
         return [
             'categories' => $categories->map(fn ($c) => ['slug' => $c->slug, 'name' => $c->name])->all(),
-            'product_categories' => $productCategories->map(fn ($c) => ['slug' => $c->slug, 'name' => $c->name])->all(),
             'popular_tags' => $popularTags->map(fn ($t) => ['slug' => $t->slug, 'name' => $t->name])->all(),
             'price_min' => (float) ($priceRange->min ?? 0),
             'price_max' => (float) ($priceRange->max ?? 0),

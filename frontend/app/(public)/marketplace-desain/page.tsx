@@ -55,7 +55,7 @@ export default function MarketplaceDesainPage() {
 
   const tabs: { key: Tab; label: string }[] = [
     { key: "desain", label: "Desain" },
-    { key: "creator", label: "Creator" },
+    { key: "creator", label: "Kreator" },
   ];
 
   return (
@@ -161,7 +161,6 @@ function DesainTab({
       per_page: PER_PAGE,
       sort,
       categories: filters.categories.length ? filters.categories : undefined,
-      product_categories: filters.productCategories.length ? filters.productCategories : undefined,
       tags: filters.tags.length ? filters.tags : undefined,
       price_min: filters.priceMin ? Number(filters.priceMin) : undefined,
       price_max: filters.priceMax ? Number(filters.priceMax) : undefined,
@@ -188,7 +187,6 @@ function DesainTab({
   const hasActiveQuery =
     !!search ||
     filters.categories.length > 0 ||
-    filters.productCategories.length > 0 ||
     filters.tags.length > 0 ||
     !!filters.priceMin ||
     !!filters.priceMax;
@@ -199,7 +197,6 @@ function DesainTab({
         options={filterOptions}
         value={filters}
         onChange={setFilters}
-        categoryLabel="Kategori Desain"
       />
 
       <div className="flex flex-1 flex-col gap-6">
@@ -312,6 +309,12 @@ function CreatorTab() {
   const { data: filtersData } = useSWR("/marketplace/designs/filters", getDesignFilters);
   const categories = filtersData?.data.categories ?? [];
 
+  // Unfiltered grand total for the "Menampilkan X dari Y kreator" count — Y
+  // is every active creator, not the filtered result set, so this is
+  // fetched independently of `sort`/`search`/`category`.
+  const { data: totalData } = useSWR("/marketplace/creators/total", () => getCreators({ per_page: 1 }));
+  const grandTotal = totalData?.meta.total;
+
   useEffect(() => {
     setPage(1);
   }, [sort, search, category]);
@@ -416,7 +419,7 @@ function CreatorTab() {
 
         {!isLoadingInitial && !error && (
           <p className="font-body text-sm text-text-secondary">
-            Menampilkan {accumulated.length} dari {data?.meta.total ?? accumulated.length} kreator
+            Menampilkan {accumulated.length} dari {grandTotal ?? accumulated.length} kreator
           </p>
         )}
 

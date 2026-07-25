@@ -17,8 +17,6 @@ class DesignIndexRequest extends FormRequest
         return [
             'categories' => ['sometimes', 'array'],
             'categories.*' => ['string'],
-            'product_categories' => ['sometimes', 'array'],
-            'product_categories.*' => ['string'],
             'tags' => ['sometimes', 'array'],
             'tags.*' => ['string'],
             'search' => ['sometimes', 'string', 'max:150'],

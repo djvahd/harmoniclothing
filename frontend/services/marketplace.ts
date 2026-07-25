@@ -10,7 +10,6 @@ export type DesignSort = "terbaru" | "harga_asc" | "harga_desc" | "terlaris" | "
 
 export interface GetDesignsParams {
   categories?: string[];
-  product_categories?: string[];
   tags?: string[];
   search?: string;
   price_min?: number;
@@ -27,7 +26,6 @@ function appendArrayParam(qs: URLSearchParams, key: string, values?: string[]) {
 export function getDesigns(params?: GetDesignsParams) {
   const qs = new URLSearchParams();
   appendArrayParam(qs, "categories", params?.categories);
-  appendArrayParam(qs, "product_categories", params?.product_categories);
   appendArrayParam(qs, "tags", params?.tags);
   if (params?.search) qs.set("search", params.search);
   if (params?.price_min != null) qs.set("price_min", String(params.price_min));
@@ -41,7 +39,6 @@ export function getDesigns(params?: GetDesignsParams) {
 
 export interface DesignFilterOptions {
   categories: { slug: string; name: string }[];
-  product_categories: { slug: string; name: string }[];
   popular_tags: { slug: string; name: string }[];
   price_min: number;
   price_max: number;
