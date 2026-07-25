@@ -10,7 +10,7 @@ export function ProductCardSkeleton() {
   return (
     <div className="flex w-[196px] animate-pulse flex-col gap-[5px] rounded-md border border-border bg-surface p-[14px]">
       <div className="h-[155px] w-full shrink-0 rounded-sm bg-border" />
-      <div className="flex min-h-[42px] flex-col justify-center gap-1.5">
+      <div className="flex min-h-[42px] flex-col justify-start gap-1.5">
         <div className="h-3 w-4/5 rounded-sm bg-border" />
         <div className="h-3 w-3/5 rounded-sm bg-border" />
       </div>
@@ -23,7 +23,6 @@ export function ProductCardSkeleton() {
 export default function ProductCard({ product }: { product: Product }) {
   const thumbnail = storageUrl(product.variants?.[0]?.mockup_asset_path);
 
-  const hasDiscount = product.discount_percent != null && product.discount_percent > 0;
   const hasRating = !!product.review_count && product.review_count > 0 && product.rating_average != null;
   const hasSold = !!product.sold_count && product.sold_count > 0;
 
@@ -42,28 +41,18 @@ export default function ProductCard({ product }: { product: Product }) {
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
         )}
-        {hasDiscount && (
-          <span className="absolute left-2 top-2 rounded-sm bg-red-500 px-1.5 py-0.5 font-body text-[11px] font-semibold text-white">
-            -{product.discount_percent}%
-          </span>
-        )}
         <WishlistButton productId={product.id} className="absolute right-2 top-2" />
       </div>
 
-      <p className="line-clamp-2 min-h-[42px] font-heading text-body-sm font-medium text-text-primary transition-colors group-hover:text-primary">
-        {product.name}
-      </p>
-
-      <div className="flex items-baseline gap-1.5">
-        <p className="font-body text-[12px] font-semibold text-text-primary">
-          Mulai dari {formatCurrency(product.base_price)}
+      <div className="flex min-h-[42px] flex-col justify-start">
+        <p className="line-clamp-2 font-heading text-body-sm font-medium text-text-primary transition-colors group-hover:text-primary">
+          {product.name}
         </p>
-        {hasDiscount && product.compare_price != null && (
-          <p className="font-body text-[11px] text-text-secondary line-through">
-            {formatCurrency(product.compare_price)}
-          </p>
-        )}
       </div>
+
+      <p className="font-body text-[12px] font-semibold text-text-primary">
+        Mulai dari {formatCurrency(product.base_price)}
+      </p>
 
       <div className="flex items-center gap-1 font-body text-[11px] text-text-secondary">
         {hasRating || hasSold ? (

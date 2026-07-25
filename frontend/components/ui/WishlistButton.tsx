@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Heart } from "lucide-react";
 import useSWR, { mutate } from "swr";
 import clsx from "clsx";
@@ -15,6 +16,7 @@ interface WishlistButtonProps {
 
 export default function WishlistButton({ productId, designId, className }: WishlistButtonProps) {
   const user = useAuthStore((state) => state.user);
+  const router = useRouter();
   const { data } = useSWR(user ? "/wishlist" : null, getWishlist);
   const [pending, setPending] = useState(false);
 
@@ -23,11 +25,13 @@ export default function WishlistButton({ productId, designId, className }: Wishl
     productId ? item.product?.id === productId : item.design?.id === designId,
   );
 
-  if (!user) return null;
-
   async function handleClick(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+    if (!user) {
+      router.push("/login");
+      return;
+    }
     if (pending) return;
     setPending(true);
     try {
@@ -49,14 +53,14 @@ export default function WishlistButton({ productId, designId, className }: Wishl
       onClick={handleClick}
       disabled={pending}
       className={clsx(
-        "flex size-8 items-center justify-center rounded-full bg-white shadow-[0px_2px_8px_0px_rgba(0,0,0,0.15)] transition-transform duration-150 hover:scale-110 active:scale-95 disabled:opacity-60 disabled:hover:scale-100",
+        "flex size-8 items-center justify-center rounded-full bg-black/40 backdrop-blur-[2px] transition-transform duration-150 hover:scale-110 hover:bg-black/55 active:scale-95 disabled:opacity-60 disabled:hover:scale-100",
         className,
       )}
     >
       <Heart
         className={clsx(
           "size-4 transition-colors",
-          existing ? "fill-accent text-accent" : "text-text-secondary hover:text-accent",
+          existing ? "fill-accent text-accent" : "text-white",
         )}
       />
     </button>

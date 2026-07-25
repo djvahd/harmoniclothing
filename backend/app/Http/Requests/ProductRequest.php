@@ -27,7 +27,6 @@ class ProductRequest extends FormRequest
             'description_id' => ['nullable', 'string'],
             'description_en' => ['nullable', 'string'],
             'base_price' => ['required', 'numeric', 'min:0'],
-            'compare_price' => ['nullable', 'numeric', 'gt:base_price'],
             'is_active' => ['sometimes', 'boolean'],
         ];
     }

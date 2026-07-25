@@ -238,20 +238,6 @@ class CatalogTest extends TestCase
             ->assertJsonPath('data.0.review_count', 0);
     }
 
-    public function test_compare_price_yields_discount_percent(): void
-    {
-        $discounted = Product::factory()->create(['base_price' => 80000, 'compare_price' => 100000]);
-        $fullPrice = Product::factory()->create(['base_price' => 50000, 'compare_price' => null]);
-
-        $this->getJson("/api/catalog/products/{$discounted->slug}")
-            ->assertJsonPath('data.compare_price', '100000.00')
-            ->assertJsonPath('data.discount_percent', 20);
-
-        $this->getJson("/api/catalog/products/{$fullPrice->slug}")
-            ->assertJsonPath('data.compare_price', null)
-            ->assertJsonPath('data.discount_percent', null);
-    }
-
     public function test_filter_facets_return_distinct_sizes_colors_and_price_range(): void
     {
         $category = Category::factory()->product()->create(['name_id' => 'Kaos', 'name_en' => 'T-Shirt']);

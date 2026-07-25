@@ -34,15 +34,6 @@ class CatalogSeeder extends Seeder
                     ->create();
             });
 
-        // Every other product carries a "was" price so the katalog card's
-        // discount badge has something to show in local dev.
-        $products->each(function (Product $product, int $index) {
-            if ($index % 2 === 0) {
-                $factor = fake()->randomFloat(2, 1.15, 1.6);
-                $product->update(['compare_price' => (int) round(($product->base_price * $factor) / 1000) * 1000]);
-            }
-        });
-
         // Completed orders against random variants give products a real
         // sold_count/rating_average — without this every card would show
         // "0 terjual" and no rating.

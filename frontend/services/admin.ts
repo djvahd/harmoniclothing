@@ -141,7 +141,6 @@ export function createProduct(payload: {
   description_id?: string;
   description_en?: string;
   base_price: number;
-  compare_price?: number | null;
   is_active?: boolean;
 }) {
   return apiFetch<{ data: Product }>("/admin/catalog/products", {
