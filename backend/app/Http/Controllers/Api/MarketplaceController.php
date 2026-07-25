@@ -60,6 +60,7 @@ class MarketplaceController extends Controller
         $creators = $this->marketplace->listCreators(
             $request->validated('search'),
             $request->validated('categories', []),
+            $request->validated('tags', []),
             $request->validated('sort', 'terbaru'),
             (int) $request->validated('per_page', 20)
         );

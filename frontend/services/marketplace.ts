@@ -75,6 +75,7 @@ export interface CreatorSummary {
 export function getCreators(params?: {
   search?: string;
   categories?: string[];
+  tags?: string[];
   sort?: CreatorSort;
   page?: number;
   per_page?: number;
@@ -82,6 +83,7 @@ export function getCreators(params?: {
   const qs = new URLSearchParams();
   if (params?.search) qs.set("search", params.search);
   appendArrayParam(qs, "categories", params?.categories);
+  appendArrayParam(qs, "tags", params?.tags);
   if (params?.sort) qs.set("sort", params.sort);
   if (params?.page) qs.set("page", String(params.page));
   if (params?.per_page) qs.set("per_page", String(params.per_page));

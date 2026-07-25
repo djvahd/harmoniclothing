@@ -206,6 +206,21 @@ class MarketplaceTest extends TestCase
             ->assertJsonPath('data.0.slug', $matching->slug);
     }
 
+    public function test_creators_can_be_filtered_by_tag(): void
+    {
+        $matching = CreatorProfile::factory()->aktif()->create();
+        $matchingDesign = Design::factory()->create(['creator_id' => $matching->user_id]);
+        $matchingDesign->tags()->attach(Tag::factory()->create(['name' => 'Anime', 'slug' => 'anime']));
+
+        $nonMatching = CreatorProfile::factory()->aktif()->create();
+        Design::factory()->create(['creator_id' => $nonMatching->user_id]); // untagged
+
+        $response = $this->getJson('/api/marketplace/creators?tags[]=anime');
+
+        $response->assertOk()->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.slug', $matching->slug);
+    }
+
     public function test_guest_can_view_design_detail(): void
     {
         $design = Design::factory()->create();

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import useSWR from "swr";
-import { ArrowUpDown, LayoutGrid, PackageSearch, Search, UserSearch, X } from "lucide-react";
+import { ArrowUpDown, LayoutGrid, PackageSearch, Search, Tag as TagIcon, UserSearch, X } from "lucide-react";
 import clsx from "clsx";
 import DesignCard, { DesignCardSkeleton } from "@/components/ui/DesignCard";
 import CreatorCard, { CreatorCardSkeleton } from "@/components/ui/CreatorCard";
@@ -301,26 +301,28 @@ function DesainTab({
 function CreatorTab() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<string | null>(null);
+  const [tags, setTags] = useState<string[]>([]);
   const [sort, setSort] = useState<CreatorSort>("terbaru");
   const [showSort, setShowSort] = useState(false);
   const [page, setPage] = useState(1);
   const [accumulated, setAccumulated] = useState<CreatorSummary[]>([]);
   const sortRef = useRef<HTMLDivElement>(null);
 
-  // Reuses the Desain tab's category list (same taxonomy, same SWR cache
-  // key) — no dedicated filters endpoint needed for the Creator tab.
+  // Reuses the Desain tab's category+tag facets (same taxonomy, same SWR
+  // cache key) — no dedicated filters endpoint needed for the Creator tab.
   const { data: filtersData } = useSWR("/marketplace/designs/filters", getDesignFilters);
   const categories = filtersData?.data.categories ?? [];
+  const popularTags = filtersData?.data.popular_tags ?? [];
 
   // Unfiltered grand total for the "Menampilkan X dari Y kreator" count — Y
   // is every active creator, not the filtered result set, so this is
-  // fetched independently of `sort`/`search`/`category`.
+  // fetched independently of `sort`/`search`/`category`/`tags`.
   const { data: totalData } = useSWR("/marketplace/creators/total", () => getCreators({ per_page: 1 }));
   const grandTotal = totalData?.meta.total;
 
   useEffect(() => {
     setPage(1);
-  }, [sort, search, category]);
+  }, [sort, search, category, tags]);
 
   useEffect(() => {
     if (!showSort) return;
@@ -333,13 +335,14 @@ function CreatorTab() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showSort]);
 
-  const { data, error, isLoading } = useSWR(["/marketplace/creators", sort, search, category, page], () =>
+  const { data, error, isLoading } = useSWR(["/marketplace/creators", sort, search, category, tags, page], () =>
     getCreators({
       page,
       per_page: PER_PAGE,
       sort,
       search: search || undefined,
       categories: category ? [category] : undefined,
+      tags: tags.length ? tags : undefined,
     }),
   );
 
@@ -351,20 +354,60 @@ function CreatorTab() {
   const hasMore = !!data && accumulated.length < data.meta.total;
   const isLoadingInitial = isLoading && accumulated.length === 0;
   const isLoadingMore = isLoading && page > 1;
-  const hasActiveQuery = !!search || !!category;
+  const hasActiveQuery = !!search || !!category || tags.length > 0;
 
   return (
     <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-8 md:flex-row md:px-20">
-      {!!categories.length && (
-        <aside className="flex w-[220px] shrink-0 flex-col">
-          <CategoryList
-            label="Kategori"
-            icon={LayoutGrid}
-            items={categories}
-            selected={category ? [category] : []}
-            onSelect={(slugs) => setCategory(slugs[0] ?? null)}
-          />
+      {!filtersData ? (
+        <aside className="flex w-[220px] shrink-0 animate-pulse flex-col gap-2">
+          <div className="h-3 w-16 rounded-sm bg-border" />
+          <div className="flex flex-col gap-1.5">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="h-8 w-full rounded-md bg-border" />
+            ))}
+          </div>
         </aside>
+      ) : (
+        (!!categories.length || !!popularTags.length) && (
+        <aside className="flex w-[220px] shrink-0 flex-col gap-6">
+          {!!categories.length && (
+            <CategoryList
+              label="Kategori"
+              icon={LayoutGrid}
+              items={categories}
+              selected={category ? [category] : []}
+              onSelect={(slugs) => setCategory(slugs[0] ?? null)}
+            />
+          )}
+          {!!popularTags.length && (
+            <div className="flex flex-col">
+              <p className="mb-2 font-heading text-sm font-semibold text-text-primary">Tag</p>
+              <div className="flex flex-wrap gap-2">
+                {popularTags.map((t) => (
+                  <button
+                    key={t.slug}
+                    type="button"
+                    onClick={() =>
+                      setTags((prev) =>
+                        prev.includes(t.slug) ? prev.filter((s) => s !== t.slug) : [...prev, t.slug],
+                      )
+                    }
+                    className={clsx(
+                      "flex items-center gap-1 rounded-full border px-3 py-1.5 text-center font-body text-sm transition-colors active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
+                      tags.includes(t.slug)
+                        ? "border-accent bg-accent text-text-on-accent"
+                        : "border-border text-text-secondary hover:border-primary hover:bg-border/40 hover:text-text-primary",
+                    )}
+                  >
+                    <TagIcon className="size-3" />
+                    {t.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </aside>
+        )
       )}
 
       <div className="flex flex-1 flex-col gap-6">
@@ -437,6 +480,7 @@ function CreatorTab() {
                 onClick={() => {
                   setSearch("");
                   setCategory(null);
+                  setTags([]);
                 }}
                 className="font-body text-sm font-medium text-primary underline"
               >
