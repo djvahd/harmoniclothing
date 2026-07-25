@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Star } from "lucide-react";
 import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
 import type { Design } from "@/types/product";
@@ -30,9 +31,13 @@ export default function DesignCard({ design, startingPrice }: DesignCardProps) {
   const thumbnail = storageUrl(design.thumbnail_path);
   const price =
     startingPrice ??
+    design.starting_price ??
     (design.products?.length
       ? Math.min(...design.products.map((p) => p.base_price))
       : undefined);
+
+  const hasRating = !!design.review_count && design.review_count > 0 && design.rating_average != null;
+  const hasSold = !!design.sold_count && design.sold_count > 0;
 
   return (
     <Link
@@ -52,15 +57,31 @@ export default function DesignCard({ design, startingPrice }: DesignCardProps) {
         <WishlistButton designId={design.id} className="absolute right-2 top-2" />
       </div>
       <div className="flex flex-col gap-0">
-        <p className="line-clamp-1 min-h-[21px] font-body text-body-sm text-text-primary transition-colors group-hover:text-primary">{design.title}</p>
+        <p className="line-clamp-1 min-h-[21px] font-body text-body-sm text-text-primary">{design.title}</p>
         <div className="flex items-center gap-1.5">
           <span className="size-[14px] shrink-0 rounded-full bg-border" />
           <p className="font-body text-[11px] text-text-secondary">by {design.creator.name}</p>
         </div>
       </div>
       <p className="font-body text-[12px] text-text-primary">
-        {price !== undefined ? `Mulai dari ${formatCurrency(price)}` : " "}
+        {price !== undefined ? `Mulai dari ${formatCurrency(price)}` : " "}
       </p>
+      <div className="flex items-center gap-1 font-body text-[11px] text-text-secondary">
+        {hasRating || hasSold ? (
+          <>
+            {hasRating && (
+              <span className="flex items-center gap-0.5">
+                <Star className="size-3 fill-yellow-400 text-yellow-400" />
+                {design.rating_average}
+              </span>
+            )}
+            {hasRating && hasSold && <span>·</span>}
+            {hasSold && <span>{design.sold_count} terjual</span>}
+          </>
+        ) : (
+          <>&nbsp;</>
+        )}
+      </div>
     </Link>
   );
 }

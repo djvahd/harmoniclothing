@@ -19,6 +19,10 @@ class DesignResource extends JsonResource
             'thumbnail_path' => $this->thumbnail_path,
             'status' => $this->status,
             'rejection_reason' => $this->rejection_reason,
+            'starting_price' => $this->starting_price !== null ? (float) $this->starting_price : null,
+            'sold_count' => (int) ($this->sold_count ?? 0),
+            'rating_average' => $this->avg_rating !== null ? round((float) $this->avg_rating, 1) : null,
+            'review_count' => (int) ($this->review_count ?? 0),
             'category' => new CategoryResource($this->whenLoaded('category')),
             'creator' => [
                 'id' => $this->creator->id,

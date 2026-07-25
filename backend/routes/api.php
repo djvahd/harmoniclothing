@@ -119,7 +119,9 @@ Route::get('/catalog/products', [CatalogController::class, 'index']);
 Route::get('/catalog/products/filters', [CatalogController::class, 'filters']);
 Route::get('/catalog/products/{slug}', [CatalogController::class, 'show']);
 Route::get('/marketplace/designs', [MarketplaceController::class, 'index']);
+Route::get('/marketplace/designs/filters', [MarketplaceController::class, 'designFilters']);
 Route::get('/marketplace/designs/{slug}', [MarketplaceController::class, 'show']);
+Route::get('/marketplace/creators', [MarketplaceController::class, 'indexCreators']);
 Route::get('/marketplace/creators/{slug}', [MarketplaceController::class, 'showCreator']); // FE-011
 
 // 5.2_API_List.md §4 — GET /bulk-pricing-tiers, public (BR-012)

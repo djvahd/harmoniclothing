@@ -49,6 +49,10 @@ export interface Design {
   thumbnail_path: string | null;
   status: DesignStatus;
   rejection_reason: string | null;
+  starting_price?: number | null;
+  sold_count?: number;
+  rating_average?: number | null;
+  review_count?: number;
   category?: Category;
   creator: { id: number; name: string; slug: string | null };
   products?: Product[];
