@@ -9,14 +9,10 @@ import clsx from "clsx";
 import {
   Award,
   ChevronRight,
-  ClipboardCheck,
-  Palette,
   PackageSearch,
   Ruler,
   ShieldCheck,
-  ShoppingBag,
   Star,
-  Truck,
   Upload,
   Zap,
 } from "lucide-react";
@@ -24,7 +20,6 @@ import Tag from "@/components/ui/Tag";
 import Button from "@/components/ui/Button";
 import QuantityStepper from "@/components/ui/QuantityStepper";
 import WishlistButton from "@/components/ui/WishlistButton";
-import StepItem from "@/components/ui/StepItem";
 import ProductCard, { ProductCardSkeleton } from "@/components/ui/ProductCard";
 import { getProductBySlug, getProducts } from "@/services/catalog";
 import { uploadDesignFile } from "@/services/customization";
@@ -489,43 +484,6 @@ export default function DetailProdukPage() {
             ) : (
               <p>Belum ada ulasan untuk produk ini.</p>
             ))}
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-6 rounded-lg bg-surface px-6 py-10 md:px-10">
-        <div className="flex flex-col gap-1 text-center">
-          <h2 className="font-heading text-h3 font-semibold text-text-primary md:text-h2">
-            Mudah dalam 4 Langkah
-          </h2>
-          <p className="font-body text-sm text-text-secondary">
-            Dari pilih produk sampai diterima di alamatmu.
-          </p>
-        </div>
-        <div className="flex flex-wrap justify-center gap-10">
-          <StepItem
-            number={1}
-            icon={ShoppingBag}
-            title="Pilih Produk"
-            description="Pilih produk favorit sesuai kebutuhanmu"
-          />
-          <StepItem
-            number={2}
-            icon={Palette}
-            title="Buat Desain"
-            description="Custom desain sendiri atau pilih dari Lapak Desain"
-          />
-          <StepItem
-            number={3}
-            icon={ClipboardCheck}
-            title="Konfirmasi Pesanan"
-            description="Cek detail dan lakukan pembayaran"
-          />
-          <StepItem
-            number={4}
-            icon={Truck}
-            title="Terima Produk"
-            description="Produk diproduksi dan dikirim ke alamatmu"
-          />
         </div>
       </div>
 
