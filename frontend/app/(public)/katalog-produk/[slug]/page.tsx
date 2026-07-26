@@ -487,41 +487,27 @@ export default function DetailProdukPage() {
         </div>
       </div>
 
-      {product.category && (
-        <RelatedProducts
-          categorySlug={product.category.slug}
-          categoryName={product.category.name}
-          excludeId={product.id}
-        />
-      )}
+      <YouMightLike categorySlug={product.category?.slug} excludeId={product.id} />
     </div>
   );
 }
 
-function RelatedProducts({
-  categorySlug,
-  categoryName,
-  excludeId,
-}: {
-  categorySlug: string;
-  categoryName: string;
-  excludeId: number;
-}) {
-  const { data, isLoading } = useSWR(["/catalog/products", "related", categorySlug], () =>
-    getProducts({ categories: [categorySlug], per_page: 6 }),
+function YouMightLike({ categorySlug, excludeId }: { categorySlug?: string; excludeId: number }) {
+  const { data, isLoading } = useSWR(["/catalog/products", "you-might-like", categorySlug], () =>
+    getProducts(categorySlug ? { categories: [categorySlug], per_page: 8 } : { sort: "terlaris", per_page: 8 }),
   );
-  const related = (data?.data ?? []).filter((p: Product) => p.id !== excludeId).slice(0, 5);
+  const items = (data?.data ?? []).filter((p: Product) => p.id !== excludeId).slice(0, 6);
 
-  if (!isLoading && related.length === 0) return null;
+  if (!isLoading && items.length === 0) return null;
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h2 className="font-heading text-h3 font-semibold text-text-primary md:text-h2">
-          Produk Lainnya di {categoryName}
+          Kamu Mungkin Suka
         </h2>
         <Link
-          href={`/katalog-produk?kategori=${categorySlug}`}
+          href={categorySlug ? `/katalog-produk?kategori=${categorySlug}` : "/katalog-produk"}
           className="shrink-0 font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4"
         >
           Lihat Semua →
@@ -529,8 +515,8 @@ function RelatedProducts({
       </div>
       <div className="flex flex-wrap gap-6">
         {isLoading
-          ? Array.from({ length: 5 }).map((_, i) => <ProductCardSkeleton key={i} />)
-          : related.map((p: Product) => <ProductCard key={p.id} product={p} />)}
+          ? Array.from({ length: 6 }).map((_, i) => <ProductCardSkeleton key={i} />)
+          : items.map((p: Product) => <ProductCard key={p.id} product={p} />)}
       </div>
     </div>
   );
