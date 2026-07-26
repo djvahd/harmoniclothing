@@ -5,7 +5,7 @@ import StepItem from "@/components/ui/StepItem";
 import Button from "@/components/ui/Button";
 
 const REASONS = [
-  { icon: Sparkles, title: "Custom Tanpa Batas", description: "Desain sendiri atau pilih dari Marketplace, produk tetap terasa milikmu." },
+  { icon: Sparkles, title: "Custom Tanpa Batas", description: "Desain sendiri atau pilih dari Lapak Desain, produk tetap terasa milikmu." },
   { icon: Award, title: "Kualitas Terjamin", description: "Bahan premium dan proses produksi terstandar di setiap pesanan." },
   { icon: Palette, title: "Wadah Kreator Lokal", description: "Kreator bisa upload desain dan dapat komisi dari tiap penjualan." },
   { icon: ShieldCheck, title: "Transaksi Aman", description: "Pembayaran terverifikasi dan status pesanan transparan." },
@@ -22,7 +22,7 @@ const STATS = [
 
 const TIMELINE = [
   { year: "2023", title: "Harmoni Dimulai", description: "Berawal dari kebutuhan konveksi custom yang cepat dan terpercaya." },
-  { year: "2024", title: "Marketplace Desain Diluncurkan", description: "Membuka ruang bagi kreator lokal untuk memasarkan karyanya." },
+  { year: "2024", title: "Lapak Desain Diluncurkan", description: "Membuka ruang bagi kreator lokal untuk memasarkan karyanya." },
   { year: "2026", title: "Platform Digital Penuh", description: "Seluruh proses, dari desain hingga pengiriman, kini bisa dilakukan online." },
 ];
 
@@ -91,7 +91,7 @@ export default function TentangKamiPage() {
           Proses Kami
         </h2>
         <div className="flex flex-wrap justify-center gap-10">
-          <StepItem number={1} icon={Palette} title="Desain" description="Custom sendiri atau pilih dari Marketplace" />
+          <StepItem number={1} icon={Palette} title="Desain" description="Custom sendiri atau pilih dari Lapak Desain" />
           <StepItem number={2} icon={Award} title="Produksi" description="Diproduksi dengan bahan dan sablon premium" />
           <StepItem number={3} icon={ShieldCheck} title="Quality Check" description="Setiap produk dicek sebelum dikirim" />
           <StepItem number={4} icon={Heart} title="Sampai ke Kamu" description="Dikirim ke seluruh Indonesia" />

@@ -66,7 +66,7 @@ export default function MarketplaceDesainPage() {
       >
         <div className="flex max-w-xl flex-col gap-4">
           <h1 className="font-heading text-h3 font-semibold text-text-primary md:text-h1">
-            Marketplace Desain
+            Lapak Desain
           </h1>
           <p className="font-body text-sm text-text-secondary md:text-base">
             Jelajahi ratusan desain siap pakai dari kreator lokal Indonesia, atau temukan kreator

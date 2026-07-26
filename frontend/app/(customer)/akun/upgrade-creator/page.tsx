@@ -51,7 +51,7 @@ export default function AjukanUpgradeCreatorPage() {
 
         <div className="flex flex-wrap gap-4">
           <FeatureCard icon={Palette} title="Upload Desain Bebas" description="Unggah karya orisinalmu kapan saja." />
-          <FeatureCard icon={Award} title="Terpajang di Marketplace" description="Desainmu bisa ditemukan pembeli di seluruh Indonesia." />
+          <FeatureCard icon={Award} title="Terpajang di Lapak Desain" description="Desainmu bisa ditemukan pembeli di seluruh Indonesia." />
           <FeatureCard icon={Wallet} title="Komisi Otomatis" description="Dapatkan komisi setiap desainmu terjual." />
         </div>
 

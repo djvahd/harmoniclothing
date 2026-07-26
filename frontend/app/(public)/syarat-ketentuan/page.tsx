@@ -33,7 +33,7 @@ export default function SyaratKetentuanPage() {
           body: (
             <p>
               Pesanan dianggap sah setelah pembayaran terverifikasi melalui payment gateway kami.
-              Harga yang tertera sudah termasuk kontribusi desainer untuk produk dari Marketplace
+              Harga yang tertera sudah termasuk kontribusi desainer untuk produk dari Lapak
               Desain, belum termasuk ongkos kirim.
             </p>
           ),

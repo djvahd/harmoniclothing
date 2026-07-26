@@ -23,7 +23,7 @@ const TRUST_ITEMS = [
 
 const STEPS = [
   { icon: ShoppingBag, title: "Pilih Produk", description: "Pilih produk favorit sesuai kebutuhanmu" },
-  { icon: Palette, title: "Buat Desain", description: "Custom desain sendiri atau pilih dari Marketplace" },
+  { icon: Palette, title: "Buat Desain", description: "Custom desain sendiri atau pilih dari Lapak Desain" },
   { icon: ClipboardCheck, title: "Konfirmasi Pesanan", description: "Cek detail dan lakukan pembayaran" },
   { icon: Truck, title: "Terima Produk", description: "Produk diproduksi dan dikirim ke alamatmu" },
 ];
@@ -48,7 +48,7 @@ const TESTIMONIALS = [
     rating: 4,
   },
   {
-    quote: "Beli desain dari Marketplace terus tinggal cetak ke produk, praktis banget.",
+    quote: "Beli desain dari Lapak Desain terus tinggal cetak ke produk, praktis banget.",
     name: "Nadia Kirana",
     role: "Content Creator",
     rating: 5,

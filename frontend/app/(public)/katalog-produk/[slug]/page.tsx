@@ -77,7 +77,7 @@ export default function DetailProdukPage() {
           </Link>
           <Link href="/marketplace-desain">
             <Button variant="secondary" fullWidth>
-              Pakai Desain dari Marketplace
+              Pakai Desain dari Lapak Desain
             </Button>
           </Link>
         </div>
