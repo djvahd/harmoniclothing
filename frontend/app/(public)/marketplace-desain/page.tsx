@@ -381,7 +381,21 @@ function CreatorTab() {
           )}
           {!!popularTags.length && (
             <div className="flex flex-col">
-              <p className="mb-2 font-heading text-sm font-semibold text-text-primary">Tag</p>
+              <div className="flex items-center justify-between border-b border-border pb-3">
+                <h2 className="font-heading text-sm font-semibold text-text-primary">
+                  Filter{tags.length > 0 ? ` (${tags.length})` : ""}
+                </h2>
+                {tags.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setTags([])}
+                    className="rounded-sm font-body text-sm text-text-secondary underline transition-colors hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+                  >
+                    Reset
+                  </button>
+                )}
+              </div>
+              <p className="mb-2 mt-3 font-heading text-sm font-semibold text-text-primary">Tag</p>
               <div className="flex flex-wrap gap-2">
                 {popularTags.map((t) => (
                   <button
