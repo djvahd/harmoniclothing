@@ -23,7 +23,6 @@ import Button from "@/components/ui/Button";
 import QuantityStepper from "@/components/ui/QuantityStepper";
 import WishlistButton from "@/components/ui/WishlistButton";
 import DesignCard, { DesignCardSkeleton } from "@/components/ui/DesignCard";
-import StepItem from "@/components/ui/StepItem";
 import { getDesignBySlug, getCreatorBySlug, getDesigns } from "@/services/marketplace";
 import { addToCart } from "@/services/cart";
 import { storageUrl } from "@/lib/storage";
@@ -541,43 +540,6 @@ export default function DetailDesainPage() {
             ) : (
               <p>Belum ada ulasan untuk desain ini.</p>
             ))}
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-6 rounded-lg bg-surface px-6 py-10 md:px-10">
-        <div className="flex flex-col gap-1 text-center">
-          <h2 className="font-heading text-h3 font-semibold text-text-primary md:text-h2">
-            Cara Kerja Marketplace
-          </h2>
-          <p className="font-body text-sm text-text-secondary">
-            Empat langkah mudah untuk memiliki produk favorit dari kreator.
-          </p>
-        </div>
-        <div className="flex flex-wrap justify-center gap-10">
-          <StepItem
-            number={1}
-            icon={LayoutGrid}
-            title="Pilih Desain"
-            description="Temukan desain yang kamu sukai dari kreator"
-          />
-          <StepItem
-            number={2}
-            icon={Package}
-            title="Pilih Produk"
-            description="Pilih jenis produk, warna, dan ukuran yang tersedia"
-          />
-          <StepItem
-            number={3}
-            icon={ShieldCheck}
-            title="Checkout"
-            description="Lakukan pembayaran dengan aman"
-          />
-          <StepItem
-            number={4}
-            icon={Zap}
-            title="Produksi & Kirim"
-            description="Kami produksi dan kirim langsung ke alamatmu"
-          />
         </div>
       </div>
 

@@ -54,6 +54,8 @@ export function getDesignBySlug(slug: string) {
 
 export interface CreatorProfile {
   name: string;
+  bio: string | null;
+  portfolio_url: string | null;
   slug: string;
   since: string | null;
   designs: Design[];
