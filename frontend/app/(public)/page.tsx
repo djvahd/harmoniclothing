@@ -189,7 +189,10 @@ export default function BerandaPage() {
     <div className="flex flex-col">
       <section
         className="relative overflow-hidden"
-        style={{ background: "linear-gradient(28deg, #f8fafc 25%, #eef6f3 64%, #e0f1ea 96%)" }}
+        style={{
+          background:
+            "linear-gradient(to bottom, transparent 85%, #f8fafc 100%), linear-gradient(28deg, #f8fafc 25%, #eef6f3 64%, #e0f1ea 96%)",
+        }}
       >
         <div className="mx-auto grid w-full max-w-[1440px] grid-cols-1 items-start gap-6 px-4 py-16 md:px-20 lg:grid-cols-[1fr_475px] xl:grid-cols-[1fr_623px] xl:pr-10 min-[1440px]:grid-cols-[1fr_648px] min-[1440px]:pr-10">
           <div className="flex flex-col items-start gap-7">

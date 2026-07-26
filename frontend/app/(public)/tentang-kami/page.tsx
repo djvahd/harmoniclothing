@@ -32,7 +32,10 @@ export default function TentangKamiPage() {
     <div className="flex flex-col">
       <section
         className="relative overflow-hidden px-4 py-16 md:px-20"
-        style={{ background: "linear-gradient(28deg, #f8fafc 25%, #eef6f3 64%, #e0f1ea 96%)" }}
+        style={{
+          background:
+            "linear-gradient(to bottom, transparent 85%, #f8fafc 100%), linear-gradient(28deg, #f8fafc 25%, #eef6f3 64%, #e0f1ea 96%)",
+        }}
       >
         <div className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-8 text-center lg:flex-row lg:items-center lg:justify-between lg:text-left">
           <div className="flex max-w-2xl flex-col items-center gap-4 lg:items-start">

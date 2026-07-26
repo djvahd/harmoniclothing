@@ -11,6 +11,7 @@ import CreatorCard, { CreatorCardSkeleton } from "@/components/ui/CreatorCard";
 import Button from "@/components/ui/Button";
 import FilterSidebar, {
   CategoryList,
+  Section,
   EMPTY_FILTER_VALUE,
   type FilterSidebarValue,
 } from "@/components/ui/FilterSidebar";
@@ -62,7 +63,10 @@ export default function MarketplaceDesainPage() {
     <div className="flex flex-col">
       <section
         className="flex flex-col gap-6 px-4 py-10 md:flex-row md:items-center md:justify-between md:px-20"
-        style={{ background: "linear-gradient(28deg, #f8fafc 25%, #eef6f3 64%, #e0f1ea 96%)" }}
+        style={{
+          background:
+            "linear-gradient(to bottom, transparent 85%, #f8fafc 100%), linear-gradient(28deg, #f8fafc 25%, #eef6f3 64%, #e0f1ea 96%)",
+        }}
       >
         <div className="flex max-w-xl flex-col gap-4">
           <h1 className="font-heading text-h3 font-semibold text-text-primary md:text-h1">
@@ -305,6 +309,7 @@ function CreatorTab() {
   const [tags, setTags] = useState<string[]>([]);
   const [sort, setSort] = useState<CreatorSort>("terbaru");
   const [showSort, setShowSort] = useState(false);
+  const [tagOpen, setTagOpen] = useState(true);
   const [page, setPage] = useState(1);
   const [accumulated, setAccumulated] = useState<CreatorSummary[]>([]);
   const sortRef = useRef<HTMLDivElement>(null);
@@ -406,28 +411,31 @@ function CreatorTab() {
                   </button>
                 )}
               </div>
-              <p className="mb-2 mt-3 font-heading text-sm font-semibold text-text-primary">Tag</p>
-              <div className="flex flex-wrap gap-2">
-                {popularTags.map((t) => (
-                  <button
-                    key={t.slug}
-                    type="button"
-                    onClick={() =>
-                      setTags((prev) =>
-                        prev.includes(t.slug) ? prev.filter((s) => s !== t.slug) : [...prev, t.slug],
-                      )
-                    }
-                    className={clsx(
-                      "flex items-center gap-1 rounded-full border px-3 py-1.5 text-center font-body text-sm transition-colors active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
-                      tags.includes(t.slug)
-                        ? "border-accent bg-accent text-text-on-accent"
-                        : "border-border text-text-secondary hover:border-primary hover:bg-border/40 hover:text-text-primary",
-                    )}
-                  >
-                    <TagIcon className="size-3" />
-                    {t.name}
-                  </button>
-                ))}
+              <div className="flex flex-col">
+                <Section title="Tag" isOpen={tagOpen} onToggle={() => setTagOpen((v) => !v)}>
+                  <div className="flex flex-wrap gap-2">
+                    {popularTags.map((t) => (
+                      <button
+                        key={t.slug}
+                        type="button"
+                        onClick={() =>
+                          setTags((prev) =>
+                            prev.includes(t.slug) ? prev.filter((s) => s !== t.slug) : [...prev, t.slug],
+                          )
+                        }
+                        className={clsx(
+                          "flex items-center gap-1 rounded-full border px-3 py-1.5 text-center font-body text-sm transition-colors active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
+                          tags.includes(t.slug)
+                            ? "border-accent bg-accent text-text-on-accent"
+                            : "border-border text-text-secondary hover:border-primary hover:bg-border/40 hover:text-text-primary",
+                        )}
+                      >
+                        <TagIcon className="size-3" />
+                        {t.name}
+                      </button>
+                    ))}
+                  </div>
+                </Section>
               </div>
             </div>
           )}
