@@ -54,7 +54,14 @@ class MarketplaceService
         return CreatorProfile::query()
             ->where('status', 'aktif')
             ->where('slug', $slug)
-            ->with(['user' => fn ($query) => $query->with(['designs' => fn ($q) => $q->active()])])
+            ->with(['user' => fn ($query) => $query->with([
+                // Same per-design sold_count/avg_rating/review_count subqueries
+                // findBySlug() uses — without them every design here reports 0/null.
+                'designs' => fn ($q) => $q->active()
+                    ->addSelect(['sold_count' => $this->designs->soldCountSubquery()])
+                    ->addSelect(['avg_rating' => $this->designs->avgRatingSubquery()])
+                    ->addSelect(['review_count' => $this->designs->reviewCountSubquery()]),
+            ])])
             ->first();
     }
 }

@@ -123,8 +123,13 @@ class DesignRepository
         };
     }
 
-    /** Sums order_items.quantity for this design directly, excluding cancelled/rejected orders. */
-    private function soldCountSubquery(): Builder
+    /**
+     * Sums order_items.quantity for this design directly, excluding
+     * cancelled/rejected orders. Public — also reused by
+     * MarketplaceService::findCreator() to compute per-design stats on a
+     * creator's design list, which otherwise has no sold_count of its own.
+     */
+    public function soldCountSubquery(): Builder
     {
         return OrderItem::query()
             ->selectRaw('coalesce(sum(order_items.quantity), 0)')
@@ -133,8 +138,8 @@ class DesignRepository
             ->whereNotIn('orders.status', ['dibatalkan', 'ditolak']);
     }
 
-    /** Averages reviews left on order items that used this design. */
-    private function avgRatingSubquery(): Builder
+    /** Averages reviews left on order items that used this design. Public — see soldCountSubquery(). */
+    public function avgRatingSubquery(): Builder
     {
         return Review::query()
             ->selectRaw('avg(reviews.rating)')
@@ -142,8 +147,8 @@ class DesignRepository
             ->whereColumn('order_items.design_id', 'designs.id');
     }
 
-    /** Counts reviews left on order items that used this design. */
-    private function reviewCountSubquery(): Builder
+    /** Counts reviews left on order items that used this design. Public — see soldCountSubquery(). */
+    public function reviewCountSubquery(): Builder
     {
         return Review::query()
             ->selectRaw('count(*)')
