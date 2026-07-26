@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Award, Heart, Palette, ShieldCheck, Sparkles } from "lucide-react";
+import Image from "next/image";
+import { Award, Heart, MapPin, Package, Palette, ShieldCheck, Sparkles, Star, Users } from "lucide-react";
 import FeatureCard from "@/components/ui/FeatureCard";
 import StepItem from "@/components/ui/StepItem";
 import Button from "@/components/ui/Button";
@@ -13,11 +14,11 @@ const REASONS = [
 ];
 
 const STATS = [
-  { value: "10.000+", label: "Produk Terkirim" },
-  { value: "500+", label: "Kreator Aktif" },
-  { value: "5.000+", label: "Desain Tersedia" },
-  { value: "4.9/5", label: "Rating Kepuasan" },
-  { value: "34", label: "Provinsi Terjangkau" },
+  { icon: Package, value: "10.000+", label: "Produk Terkirim" },
+  { icon: Users, value: "500+", label: "Kreator Aktif" },
+  { icon: Palette, value: "5.000+", label: "Desain Tersedia" },
+  { icon: Star, value: "4.9/5", label: "Rating Kepuasan" },
+  { icon: MapPin, value: "34", label: "Provinsi Terjangkau" },
 ];
 
 const TIMELINE = [
@@ -30,16 +31,44 @@ export default function TentangKamiPage() {
   return (
     <div className="flex flex-col">
       <section
-        className="flex flex-col items-center gap-4 px-4 py-16 text-center md:px-20"
+        className="relative overflow-hidden px-4 py-16 md:px-20"
         style={{ background: "linear-gradient(28deg, #f8fafc 25%, #eef6f3 64%, #e0f1ea 96%)" }}
       >
-        <h1 className="font-heading text-h3 font-semibold text-text-primary md:text-h1">
-          Tentang Harmoni Clothing
-        </h1>
-        <p className="max-w-2xl font-body text-base text-text-secondary">
-          Platform konveksi modern yang menghubungkan brand, individu, dan kreator lokal untuk
-          menciptakan apparel yang benar-benar sesuai gaya masing-masing.
-        </p>
+        <div className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-8 text-center lg:flex-row lg:items-center lg:justify-between lg:text-left">
+          <div className="flex max-w-2xl flex-col items-center gap-4 lg:items-start">
+            <h1 className="font-heading text-h3 font-semibold text-text-primary md:text-h1">
+              Tentang Harmoni Clothing
+            </h1>
+            <p className="font-body text-base text-text-secondary">
+              Platform konveksi modern yang menghubungkan brand, individu, dan kreator lokal untuk
+              menciptakan apparel yang benar-benar sesuai gaya masing-masing.
+            </p>
+          </div>
+          <div className="relative hidden h-[260px] w-[300px] shrink-0 lg:block">
+            <div className="absolute left-1/2 top-0 h-[220px] w-[196px] -translate-x-1/2 rotate-[-6deg]">
+              <Image
+                src="/hero/kaos.png"
+                alt="Kaos custom Harmoni Clothing"
+                fill
+                sizes="196px"
+                className="object-contain drop-shadow-xl"
+                priority
+              />
+            </div>
+            <div className="absolute bottom-2 left-0 h-[110px] w-[130px] rotate-[10deg]">
+              <Image
+                src="/hero/topi.png"
+                alt="Topi custom Harmoni Clothing"
+                fill
+                sizes="130px"
+                className="object-contain drop-shadow-lg"
+              />
+            </div>
+            <div className="absolute right-0 top-6 h-[60px] w-[52px] rotate-[-12deg]">
+              <Image src="/hero/daun.png" alt="" fill sizes="52px" className="object-contain drop-shadow-lg" />
+            </div>
+          </div>
+        </div>
       </section>
 
       <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-16 md:px-20">
@@ -58,7 +87,7 @@ export default function TentangKamiPage() {
           {STATS.map((stat) => (
             <div key={stat.label} className="flex flex-col items-center gap-1 text-center">
               <span className="flex size-12 items-center justify-center rounded-full bg-accent/10">
-                <Award className="size-5 text-accent" />
+                <stat.icon className="size-5 text-accent" />
               </span>
               <p className="font-heading text-2xl font-semibold text-text-primary">{stat.value}</p>
               <p className="font-body text-xs text-text-secondary">{stat.label}</p>
@@ -104,9 +133,7 @@ export default function TentangKamiPage() {
             Mari Wujudkan Desainmu Bersama Kami
           </h2>
           <Link href="/register">
-            <Button variant="primary" className="bg-accent">
-              Daftar Gratis
-            </Button>
+            <Button variant="primary">Daftar Gratis</Button>
           </Link>
         </div>
       </section>
