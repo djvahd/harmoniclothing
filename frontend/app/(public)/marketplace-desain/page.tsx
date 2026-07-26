@@ -359,12 +359,22 @@ function CreatorTab() {
   return (
     <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-8 md:flex-row md:px-20">
       {!filtersData ? (
-        <aside className="flex w-[220px] shrink-0 animate-pulse flex-col gap-2">
-          <div className="h-3 w-16 rounded-sm bg-border" />
-          <div className="flex flex-col gap-1.5">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-8 w-full rounded-md bg-border" />
-            ))}
+        <aside className="flex w-[220px] shrink-0 animate-pulse flex-col gap-6">
+          <div className="flex flex-col gap-2">
+            <div className="h-3 w-16 rounded-sm bg-border" />
+            <div className="flex flex-col gap-1.5">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="h-8 w-full rounded-md bg-border" />
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-col gap-2 border-t border-border pt-4">
+            <div className="h-3.5 w-14 rounded-sm bg-border" />
+            <div className="flex flex-wrap gap-2">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="h-7 w-16 rounded-full bg-border" />
+              ))}
+            </div>
           </div>
         </aside>
       ) : (
