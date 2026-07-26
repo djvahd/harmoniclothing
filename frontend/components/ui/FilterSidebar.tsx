@@ -182,10 +182,13 @@ export default function FilterSidebar({
   options,
   value,
   onChange,
+  skeletonFacetCount = 3,
 }: {
   options?: FilterSidebarOptions;
   value: FilterSidebarValue;
   onChange: (value: FilterSidebarValue) => void;
+  /** Number of facet-group placeholders in the loading skeleton — pass the real count for the page using this sidebar (Katalog Produk: 5 — Segmen/Warna/Ukuran/Material/Harga; Marketplace Desain: 2 — Tag/Harga). */
+  skeletonFacetCount?: number;
 }) {
   const [openSections, setOpenSections] = useState({
     segmen: true,
@@ -260,7 +263,7 @@ export default function FilterSidebar({
           </div>
         </div>
         <div className="flex flex-col gap-4 border-t border-border pt-4">
-          {Array.from({ length: 3 }).map((_, i) => (
+          {Array.from({ length: skeletonFacetCount }).map((_, i) => (
             <div key={i} className="flex flex-col gap-2">
               <div className="h-3.5 w-14 rounded-sm bg-border" />
               <div className="flex flex-wrap gap-2">

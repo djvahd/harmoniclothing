@@ -200,6 +200,7 @@ function DesainTab({
         options={filterOptions}
         value={filters}
         onChange={setFilters}
+        skeletonFacetCount={2}
       />
 
       <div className="flex flex-1 flex-col gap-6">

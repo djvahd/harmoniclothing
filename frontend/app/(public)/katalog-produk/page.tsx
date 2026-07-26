@@ -139,7 +139,7 @@ export default function KatalogPage() {
       </section>
 
       <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-8 md:flex-row md:px-20">
-        <FilterSidebar options={filterOptions} value={filters} onChange={setFilters} />
+        <FilterSidebar options={filterOptions} value={filters} onChange={setFilters} skeletonFacetCount={5} />
 
         <div className="flex flex-1 flex-col gap-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
