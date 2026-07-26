@@ -1,19 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Mail } from "lucide-react";
-import AuthCard from "@/components/layout/AuthCard";
+import { CheckCircle2, Mail } from "lucide-react";
 import Input from "@/components/ui/Input";
 import PasswordInput from "@/components/ui/PasswordInput";
 import Button from "@/components/ui/Button";
 import { useAuthStore } from "@/store/auth-store";
+import { useAuthModalStore } from "@/store/auth-modal-store";
 import { ApiError } from "@/lib/api";
 
-export default function LoginPage() {
-  const router = useRouter();
+const linkClass =
+  "font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4";
+
+export default function LoginForm({ message }: { message: string | null }) {
   const login = useAuthStore((state) => state.login);
+  const closeModal = useAuthModalStore((state) => state.close);
+  const openModal = useAuthModalStore((state) => state.open);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +27,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(email, password);
-      router.push("/");
+      closeModal();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Terjadi kesalahan, coba lagi.");
     } finally {
@@ -34,14 +36,20 @@ export default function LoginPage() {
   }
 
   return (
-    <AuthCard title="Masuk ke Akun">
+    <>
+      {message && (
+        <p className="flex items-center gap-2 rounded-sm bg-accent/10 px-3 py-2.5 font-body text-xs font-medium text-accent">
+          <CheckCircle2 className="size-4 shrink-0" />
+          {message}
+        </p>
+      )}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <Input
           id="email"
           type="email"
           label="Email"
           icon={Mail}
-          placeholder="nama@email.com"
+          autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -49,25 +57,25 @@ export default function LoginPage() {
         <PasswordInput
           id="password"
           label="Password"
-          placeholder="••••••••"
+          autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <Link href="/lupa-password" className="font-body text-body-sm font-medium text-primary">
+        <button type="button" onClick={() => openModal("lupa-password")} className={`w-fit font-body text-body-sm ${linkClass}`}>
           Lupa password?
-        </Link>
+        </button>
         {error && <p className="font-body text-xs text-red-500">{error}</p>}
         <Button type="submit" fullWidth loading={loading}>
           Masuk
         </Button>
         <p className="font-body text-body-sm text-text-secondary">
           Belum punya akun?{" "}
-          <Link href="/register" className="font-medium text-primary">
+          <button type="button" onClick={() => openModal("register")} className={linkClass}>
             Daftar
-          </Link>
+          </button>
         </p>
       </form>
-    </AuthCard>
+    </>
   );
 }

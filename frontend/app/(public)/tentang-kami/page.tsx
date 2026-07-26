@@ -1,9 +1,11 @@
-import Link from "next/link";
+"use client";
+
 import Image from "next/image";
 import { Award, Heart, MapPin, Package, Palette, ShieldCheck, Sparkles, Star, Users } from "lucide-react";
 import FeatureCard from "@/components/ui/FeatureCard";
 import StepItem from "@/components/ui/StepItem";
 import Button from "@/components/ui/Button";
+import { useAuthModalStore } from "@/store/auth-modal-store";
 
 const REASONS = [
   { icon: Sparkles, title: "Custom Tanpa Batas", description: "Desain sendiri atau pilih dari Lapak Desain, produk tetap terasa milikmu." },
@@ -28,6 +30,7 @@ const TIMELINE = [
 ];
 
 export default function TentangKamiPage() {
+  const openAuthModal = useAuthModalStore((state) => state.open);
   return (
     <div className="flex flex-col">
       <section
@@ -135,9 +138,9 @@ export default function TentangKamiPage() {
           <h2 className="font-heading text-h3 font-semibold text-text-on-accent md:text-h2">
             Mari Wujudkan Desainmu Bersama Kami
           </h2>
-          <Link href="/register">
-            <Button variant="primary">Daftar Gratis</Button>
-          </Link>
+          <Button variant="primary" onClick={() => openAuthModal("register")}>
+            Daftar Gratis
+          </Button>
         </div>
       </section>
     </div>

@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Heart } from "lucide-react";
 import useSWR, { mutate } from "swr";
 import clsx from "clsx";
 import { useAuthStore } from "@/store/auth-store";
+import { useAuthModalStore } from "@/store/auth-modal-store";
 import { getWishlist, addToWishlist, removeFromWishlist } from "@/services/wishlist";
 
 interface WishlistButtonProps {
@@ -16,7 +16,7 @@ interface WishlistButtonProps {
 
 export default function WishlistButton({ productId, designId, className }: WishlistButtonProps) {
   const user = useAuthStore((state) => state.user);
-  const router = useRouter();
+  const openAuthModal = useAuthModalStore((state) => state.open);
   const { data } = useSWR(user ? "/wishlist" : null, getWishlist);
   const [pending, setPending] = useState(false);
 
@@ -29,7 +29,7 @@ export default function WishlistButton({ productId, designId, className }: Wishl
     e.preventDefault();
     e.stopPropagation();
     if (!user) {
-      router.push("/login");
+      openAuthModal("login");
       return;
     }
     if (pending) return;

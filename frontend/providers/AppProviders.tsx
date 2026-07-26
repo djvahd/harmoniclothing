@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useAuthStore } from "@/store/auth-store";
+import AuthModal from "@/components/auth/AuthModal";
 
 export default function AppProviders({
   children,
@@ -14,5 +15,10 @@ export default function AppProviders({
     fetchMe();
   }, [fetchMe]);
 
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+      <AuthModal />
+    </>
+  );
 }

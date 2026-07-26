@@ -1,15 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { Mail } from "lucide-react";
-import AuthCard from "@/components/layout/AuthCard";
+import { CheckCircle2, Mail } from "lucide-react";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { forgotPassword } from "@/services/auth";
+import { useAuthModalStore } from "@/store/auth-modal-store";
 import { ApiError } from "@/lib/api";
 
-export default function LupaPasswordPage() {
+const linkClass =
+  "font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4";
+
+export default function LupaPasswordForm() {
+  const openModal = useAuthModalStore((state) => state.open);
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,10 +33,12 @@ export default function LupaPasswordPage() {
   }
 
   return (
-    <AuthCard title="Lupa Password">
+    <div className="flex flex-col gap-4">
       {sent ? (
-        <p className="font-body text-sm text-text-secondary">
-          Jika email terdaftar, tautan reset password telah dikirim ke {email}.
+        <p className="flex items-start gap-2 rounded-sm bg-accent/10 px-3 py-2.5 font-body text-sm text-text-secondary">
+          <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-accent" />
+          Jika email terdaftar, tautan reset password telah dikirim ke{" "}
+          <span className="font-medium text-text-primary">{email}</span>.
         </p>
       ) : (
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -45,7 +50,7 @@ export default function LupaPasswordPage() {
             type="email"
             label="Email"
             icon={Mail}
-            placeholder="nama@email.com"
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -58,10 +63,10 @@ export default function LupaPasswordPage() {
       )}
       <p className="font-body text-body-sm text-text-secondary">
         Kembali ke{" "}
-        <Link href="/login" className="font-medium text-primary">
+        <button type="button" onClick={() => openModal("login")} className={linkClass}>
           Masuk
-        </Link>
+        </button>
       </p>
-    </AuthCard>
+    </div>
   );
 }

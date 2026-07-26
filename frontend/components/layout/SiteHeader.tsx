@@ -11,6 +11,7 @@ import MobileDrawer from "./MobileDrawer";
 import Button from "@/components/ui/Button";
 import ProductThumbnail from "@/components/ui/ProductThumbnail";
 import { useAuthStore } from "@/store/auth-store";
+import { useAuthModalStore } from "@/store/auth-modal-store";
 import { getCart } from "@/services/cart";
 import { getNotifications, markNotificationRead } from "@/services/notifications";
 import { storageUrl } from "@/lib/storage";
@@ -26,6 +27,7 @@ const NAV_LINKS = [
 export default function SiteHeader() {
   const pathname = usePathname();
   const { user, logout } = useAuthStore();
+  const openAuthModal = useAuthModalStore((state) => state.open);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
@@ -140,12 +142,12 @@ export default function SiteHeader() {
           </>
         ) : (
           <>
-            <Link href="/login">
-              <Button variant="secondary">Masuk</Button>
-            </Link>
-            <Link href="/register">
-              <Button variant="primary">Daftar Gratis</Button>
-            </Link>
+            <Button variant="secondary" onClick={() => openAuthModal("login")}>
+              Masuk
+            </Button>
+            <Button variant="primary" onClick={() => openAuthModal("register")}>
+              Daftar Gratis
+            </Button>
           </>
         )}
       </div>
@@ -184,16 +186,26 @@ export default function SiteHeader() {
             </div>
           ) : (
             <div className="flex flex-col gap-3">
-              <Link href="/login" onClick={() => setDrawerOpen(false)}>
-                <Button variant="secondary" fullWidth>
-                  Masuk
-                </Button>
-              </Link>
-              <Link href="/register" onClick={() => setDrawerOpen(false)}>
-                <Button variant="primary" fullWidth>
-                  Daftar Gratis
-                </Button>
-              </Link>
+              <Button
+                variant="secondary"
+                fullWidth
+                onClick={() => {
+                  setDrawerOpen(false);
+                  openAuthModal("login");
+                }}
+              >
+                Masuk
+              </Button>
+              <Button
+                variant="primary"
+                fullWidth
+                onClick={() => {
+                  setDrawerOpen(false);
+                  openAuthModal("register");
+                }}
+              >
+                Daftar Gratis
+              </Button>
             </div>
           )}
         </div>

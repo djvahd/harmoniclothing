@@ -6,11 +6,13 @@ import AuthCard from "@/components/layout/AuthCard";
 import PasswordInput from "@/components/ui/PasswordInput";
 import Button from "@/components/ui/Button";
 import { resetPassword } from "@/services/auth";
+import { useAuthModalStore } from "@/store/auth-modal-store";
 import { ApiError } from "@/lib/api";
 
 function ResetPasswordForm() {
   const router = useRouter();
   const params = useSearchParams();
+  const openAuthModal = useAuthModalStore((state) => state.open);
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +29,8 @@ function ResetPasswordForm() {
         password,
         password_confirmation: passwordConfirmation,
       });
-      router.push("/login?reset=1");
+      openAuthModal("login", "Password berhasil diperbarui. Silakan masuk.");
+      router.push("/");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Terjadi kesalahan, coba lagi.");
     } finally {

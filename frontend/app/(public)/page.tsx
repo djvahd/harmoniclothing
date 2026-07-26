@@ -13,6 +13,7 @@ import Reveal from "@/components/ui/Reveal";
 import Button from "@/components/ui/Button";
 import { getProducts } from "@/services/catalog";
 import { getDesigns } from "@/services/marketplace";
+import { useAuthModalStore } from "@/store/auth-modal-store";
 
 const TRUST_ITEMS = [
   { icon: "/hero/trust-icon-1.svg", title: "Tanpa Minimum Order", subtitle: "Pesan 1 pcs pun bisa" },
@@ -130,6 +131,7 @@ function getHeroEntranceStyle(index: number, entered: boolean): CSSProperties {
 }
 
 export default function BerandaPage() {
+  const openAuthModal = useAuthModalStore((state) => state.open);
   const { data: productsData, isLoading: productsLoading } = useSWR("/catalog/products?home", () =>
     getProducts({ per_page: 8 }),
   );
@@ -518,14 +520,13 @@ export default function BerandaPage() {
                 Mulai Custom Design →
               </Button>
             </Link>
-            <Link href="/register">
-              <Button
-                variant="secondary"
-                className="!border-white !bg-transparent !text-text-on-accent hover:!bg-white/10"
-              >
-                Daftar Gratis →
-              </Button>
-            </Link>
+            <Button
+              variant="secondary"
+              className="!border-white !bg-transparent !text-text-on-accent hover:!bg-white/10"
+              onClick={() => openAuthModal("register")}
+            >
+              Daftar Gratis →
+            </Button>
           </div>
         </Reveal>
       </section>

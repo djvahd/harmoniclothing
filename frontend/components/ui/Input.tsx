@@ -22,8 +22,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
         <div
           className={clsx(
-            "flex items-center gap-2 rounded-sm border bg-surface px-3 py-2.5",
-            error ? "border-red-500" : "border-border",
+            "flex items-center gap-2 rounded-sm border bg-surface px-3 py-2.5 transition-colors",
+            error ? "border-red-500" : "border-border hover:border-primary focus-within:border-primary",
           )}
         >
           {Icon && <Icon className="size-4 shrink-0 text-text-secondary" />}
