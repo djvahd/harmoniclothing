@@ -75,7 +75,7 @@ export default function DetailProdukPage() {
           <Link href={`/customize/${product.slug}`}>
             <Button fullWidth>Custom Desain Sendiri</Button>
           </Link>
-          <Link href="/marketplace-desain">
+          <Link href="/lapak-desain">
             <Button variant="secondary" fullWidth>
               Pakai Desain dari Lapak Desain
             </Button>
