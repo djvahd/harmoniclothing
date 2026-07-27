@@ -39,10 +39,12 @@ export default function SiteHeader() {
   const unreadCount = notifications?.data.filter((n) => !n.is_read).length ?? 0;
 
   return (
-    <header className="flex w-full items-center justify-between border-b border-border bg-surface px-4 py-4 md:px-20">
-      <Logo />
+    <header className="flex w-full items-center justify-between border-b border-border bg-surface px-4 py-4 md:grid md:h-[76px] md:grid-cols-[1fr_auto_1fr] md:px-20 md:py-0">
+      <div className="md:justify-self-start">
+        <Logo />
+      </div>
 
-      <nav className="hidden items-center gap-6 font-body text-sm md:flex">
+      <nav className="hidden items-center gap-6 font-body text-sm md:flex md:justify-self-center">
         {NAV_LINKS.map((link) => {
           const isActive = pathname === link.href;
           return (
@@ -62,20 +64,19 @@ export default function SiteHeader() {
         })}
       </nav>
 
-      <div className="hidden items-center gap-4 md:flex">
+      <div className="hidden items-center gap-4 md:flex md:justify-self-end">
         {user ? (
           <>
-            <div className="relative">
-              <button
-                type="button"
-                aria-label="Keranjang"
-                onClick={() => {
-                  setCartOpen((v) => !v);
-                  setNotifOpen(false);
-                  setAccountOpen(false);
-                }}
-                className="relative text-text-primary"
-              >
+            <div
+              className="relative"
+              onMouseEnter={() => {
+                setCartOpen(true);
+                setNotifOpen(false);
+                setAccountOpen(false);
+              }}
+              onMouseLeave={() => setCartOpen(false)}
+            >
+              <button type="button" aria-label="Keranjang" className="relative text-text-primary">
                 <ShoppingCart className="size-5" />
                 {cartCount > 0 && (
                   <span className="absolute -right-2 -top-1.5 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
@@ -85,17 +86,16 @@ export default function SiteHeader() {
               </button>
               {cartOpen && <CartDropdown onClose={() => setCartOpen(false)} />}
             </div>
-            <div className="relative">
-              <button
-                type="button"
-                aria-label="Notifikasi"
-                onClick={() => {
-                  setNotifOpen((v) => !v);
-                  setCartOpen(false);
-                  setAccountOpen(false);
-                }}
-                className="relative text-text-primary"
-              >
+            <div
+              className="relative"
+              onMouseEnter={() => {
+                setNotifOpen(true);
+                setCartOpen(false);
+                setAccountOpen(false);
+              }}
+              onMouseLeave={() => setNotifOpen(false)}
+            >
+              <button type="button" aria-label="Notifikasi" className="relative text-text-primary">
                 <Bell className="size-5" />
                 {unreadCount > 0 && (
                   <span className="absolute -right-2 -top-1.5 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
@@ -106,16 +106,28 @@ export default function SiteHeader() {
               {notifOpen && <NotificationsDropdown onClose={() => setNotifOpen(false)} />}
             </div>
             <span className="h-6 w-px bg-border" />
-            <Link href="/creator/dashboard" className="flex items-center gap-1.5 text-text-primary">
+            <Link
+              href="/creator/dashboard"
+              className={clsx(
+                "relative flex items-center gap-1.5 py-1 transition-colors after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:bg-primary after:transition-all after:content-['']",
+                pathname.startsWith("/creator")
+                  ? "font-semibold text-primary after:w-full"
+                  : "text-text-primary after:w-0 hover:text-primary hover:after:w-full",
+              )}
+            >
               <Palette className="size-4" />
               <span className="font-body text-sm font-medium">Kreator</span>
             </Link>
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setAccountOpen((v) => !v)}
-                className="flex items-center gap-2"
-              >
+            <div
+              className="relative"
+              onMouseEnter={() => {
+                setAccountOpen(true);
+                setCartOpen(false);
+                setNotifOpen(false);
+              }}
+              onMouseLeave={() => setAccountOpen(false)}
+            >
+              <button type="button" className="flex items-center gap-2">
                 <span className="size-8 rounded-full bg-border" />
                 <span className="font-body text-sm font-medium text-text-primary">
                   {user.name}

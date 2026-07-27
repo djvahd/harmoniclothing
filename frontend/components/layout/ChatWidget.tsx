@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import useSWR from "swr";
-import { MessageCircle, Send, X } from "lucide-react";
+import { ChevronDown, MessageCircle, Send } from "lucide-react";
 import { getMessages, getThreads, sendMessage } from "@/services/chat";
 import { useAuthStore } from "@/store/auth-store";
 
@@ -31,15 +31,18 @@ export default function ChatWidget() {
   return (
     <div className="fixed bottom-6 right-6 z-40">
       {open && (
-        <div className="mb-3 flex h-[380px] w-[340px] flex-col overflow-hidden rounded-md border border-border bg-surface shadow-lg">
-          <div className="flex items-center justify-between bg-primary px-4 py-3">
+        <div className="flex h-[380px] w-[340px] flex-col overflow-hidden rounded-md border border-border bg-surface shadow-lg">
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            aria-label="Ciutkan chat"
+            className="flex w-full items-center justify-between bg-primary px-4 py-3"
+          >
             <p className="font-body text-sm font-semibold text-text-on-accent">
               Chat dengan Admin
             </p>
-            <button onClick={() => setOpen(false)} aria-label="Tutup chat">
-              <X className="size-4 text-text-on-accent" />
-            </button>
-          </div>
+            <ChevronDown className="size-4 text-text-on-accent" />
+          </button>
           <div className="flex flex-1 flex-col gap-2 overflow-y-auto p-3">
             {messages.map((m) => (
               <div
@@ -74,15 +77,15 @@ export default function ChatWidget() {
         </div>
       )}
 
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-2 rounded-full bg-surface px-5 py-3 shadow-lg"
-      >
-        <span className="flex size-9 items-center justify-center rounded-md bg-accent">
-          <MessageCircle className="size-5 text-text-on-accent" />
-        </span>
-        <span className="font-body text-base font-bold text-accent">Chat</span>
-      </button>
+      {!open && (
+        <button
+          onClick={() => setOpen(true)}
+          aria-label="Buka chat"
+          className="flex size-14 items-center justify-center rounded-full bg-accent shadow-lg"
+        >
+          <MessageCircle className="size-6 text-text-on-accent" />
+        </button>
+      )}
     </div>
   );
 }
