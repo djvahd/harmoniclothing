@@ -77,6 +77,9 @@ export default function MarketplaceDesainPage() {
             favoritmu.
           </p>
           <div className="flex gap-3">
+            <Link href="/akun/upgrade-creator">
+              <Button variant="primary">Jadi Kreator</Button>
+            </Link>
             <Link href="/katalog-produk">
               <Button variant="secondary">Lihat Produk</Button>
             </Link>
