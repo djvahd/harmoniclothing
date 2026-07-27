@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import useSWR, { mutate } from "swr";
 import clsx from "clsx";
-import { Bell, ChevronDown, Menu, Palette, ShoppingCart } from "lucide-react";
+import { Bell, Menu, Palette, ShoppingCart } from "lucide-react";
 import Logo from "./Logo";
 import MobileDrawer from "./MobileDrawer";
 import Button from "@/components/ui/Button";
@@ -32,11 +32,42 @@ export default function SiteHeader() {
   const [accountOpen, setAccountOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { data: cart } = useSWR(user ? "/cart" : null, getCart);
   const { data: notifications } = useSWR(user ? "/notifications" : null, getNotifications);
   const cartCount = cart?.data.length ?? 0;
   const unreadCount = notifications?.data.filter((n) => !n.is_read).length ?? 0;
+
+  // Cart/notif/account panels render with a visual gap below their trigger
+  // icon, so a plain onMouseLeave closes them before the cursor can travel
+  // down into the panel. Delay the close and cancel it if the cursor
+  // re-enters (either the trigger or the panel itself) within the window.
+  function cancelPendingClose() {
+    if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+  }
+  function openCart() {
+    cancelPendingClose();
+    setCartOpen(true);
+    setNotifOpen(false);
+    setAccountOpen(false);
+  }
+  function openNotif() {
+    cancelPendingClose();
+    setNotifOpen(true);
+    setCartOpen(false);
+    setAccountOpen(false);
+  }
+  function openAccount() {
+    cancelPendingClose();
+    setAccountOpen(true);
+    setCartOpen(false);
+    setNotifOpen(false);
+  }
+  function scheduleClose(setOpen: (v: boolean) => void) {
+    cancelPendingClose();
+    closeTimeoutRef.current = setTimeout(() => setOpen(false), 250);
+  }
 
   return (
     <header className="flex w-full items-center justify-between border-b border-border bg-surface px-4 py-4 md:grid md:h-[76px] md:grid-cols-[1fr_auto_1fr] md:px-20 md:py-0">
@@ -69,12 +100,8 @@ export default function SiteHeader() {
           <>
             <div
               className="relative"
-              onMouseEnter={() => {
-                setCartOpen(true);
-                setNotifOpen(false);
-                setAccountOpen(false);
-              }}
-              onMouseLeave={() => setCartOpen(false)}
+              onMouseEnter={openCart}
+              onMouseLeave={() => scheduleClose(setCartOpen)}
             >
               <button type="button" aria-label="Keranjang" className="relative text-text-primary">
                 <ShoppingCart className="size-5" />
@@ -88,12 +115,8 @@ export default function SiteHeader() {
             </div>
             <div
               className="relative"
-              onMouseEnter={() => {
-                setNotifOpen(true);
-                setCartOpen(false);
-                setAccountOpen(false);
-              }}
-              onMouseLeave={() => setNotifOpen(false)}
+              onMouseEnter={openNotif}
+              onMouseLeave={() => scheduleClose(setNotifOpen)}
             >
               <button type="button" aria-label="Notifikasi" className="relative text-text-primary">
                 <Bell className="size-5" />
@@ -120,19 +143,14 @@ export default function SiteHeader() {
             </Link>
             <div
               className="relative"
-              onMouseEnter={() => {
-                setAccountOpen(true);
-                setCartOpen(false);
-                setNotifOpen(false);
-              }}
-              onMouseLeave={() => setAccountOpen(false)}
+              onMouseEnter={openAccount}
+              onMouseLeave={() => scheduleClose(setAccountOpen)}
             >
               <button type="button" className="flex items-center gap-2">
                 <span className="size-8 rounded-full bg-border" />
                 <span className="font-body text-sm font-medium text-text-primary">
                   {user.name}
                 </span>
-                <ChevronDown className="size-3.5 text-text-secondary" />
               </button>
               {accountOpen && (
                 <div className="absolute right-0 top-full z-40 mt-2 w-64 rounded-md border border-border bg-surface py-2 shadow-lg">
@@ -227,7 +245,11 @@ export default function SiteHeader() {
 }
 
 function AccountMenuLinks({ onNavigate }: { onNavigate: () => void }) {
+  const user = useAuthStore((state) => state.user);
   const links = [
+    ...(user?.role === "admin"
+      ? [{ href: "/admin/dashboard", label: "Admin Dashboard" }]
+      : []),
     { href: "/akun/profil", label: "Kelola Profil" },
     { href: "/akun/alamat", label: "Address Book" },
     { href: "/akun/wishlist", label: "Wishlist" },
@@ -253,7 +275,7 @@ function AccountMenuLinks({ onNavigate }: { onNavigate: () => void }) {
 }
 
 function CartDropdown({ onClose }: { onClose: () => void }) {
-  const { data } = useSWR("/cart", getCart);
+  const { data, isLoading } = useSWR("/cart", getCart);
   const items = (data?.data ?? []).slice(0, 3);
   const total = data?.data.length ?? 0;
   const subtotal = (data?.data ?? []).reduce((sum, item) => sum + Number(item.subtotal), 0);
@@ -261,13 +283,28 @@ function CartDropdown({ onClose }: { onClose: () => void }) {
   return (
     <div className="absolute right-0 top-full z-40 mt-2 w-[340px] rounded-md border border-border bg-surface shadow-lg">
       <div className="flex items-center justify-between px-5 py-3">
-        <p className="font-body text-sm font-semibold text-text-primary">Keranjang ({total})</p>
+        <p className="font-body text-sm font-semibold text-text-primary">
+          Keranjang {!isLoading && `(${total})`}
+        </p>
         <Link href="/keranjang" onClick={onClose} className="font-body text-sm font-medium text-primary">
           Lihat Semua
         </Link>
       </div>
       <div className="border-t border-border" />
-      {items.length === 0 ? (
+      {isLoading ? (
+        <div className="flex animate-pulse flex-col gap-3.5 px-5 py-3.5">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="flex items-center gap-3">
+              <div className="size-10 shrink-0 rounded-sm bg-border" />
+              <div className="flex flex-1 flex-col gap-1.5">
+                <div className="h-3 w-3/5 rounded-sm bg-border" />
+                <div className="h-3 w-2/5 rounded-sm bg-border" />
+              </div>
+              <div className="h-3 w-12 rounded-sm bg-border" />
+            </div>
+          ))}
+        </div>
+      ) : items.length === 0 ? (
         <p className="px-5 py-6 text-center font-body text-sm text-text-secondary">
           Keranjangmu masih kosong.
         </p>
@@ -318,7 +355,7 @@ function CartDropdown({ onClose }: { onClose: () => void }) {
 }
 
 function NotificationsDropdown({ onClose }: { onClose: () => void }) {
-  const { data } = useSWR("/notifications", getNotifications);
+  const { data, isLoading } = useSWR("/notifications", getNotifications);
   const items = (data?.data ?? []).slice(0, 3);
 
   async function handleMarkAllRead() {
@@ -333,7 +370,18 @@ function NotificationsDropdown({ onClose }: { onClose: () => void }) {
         <p className="font-body text-sm font-semibold text-text-primary">Notifikasi</p>
       </div>
       <div className="border-t border-border" />
-      {items.length === 0 ? (
+      {isLoading ? (
+        <div className="flex animate-pulse flex-col">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="flex items-start gap-2.5 px-5 py-3">
+              <div className="flex-1 flex flex-col gap-1.5">
+                <div className="h-3 w-4/5 rounded-sm bg-border" />
+                <div className="h-2.5 w-1/3 rounded-sm bg-border" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : items.length === 0 ? (
         <p className="px-5 py-6 text-center font-body text-sm text-text-secondary">
           Belum ada notifikasi.
         </p>
