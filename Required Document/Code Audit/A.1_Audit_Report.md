@@ -214,9 +214,11 @@ Data tidak bocor (backend tetap menolak), tapi ini bertentangan dengan `2.5_Perm
 
 `components/layout/AdminHeader.tsx:20` menautkan ikon lonceng ke `/admin/notifikasi` — route ini **tidak ada** (yang ada `/admin/notifikasi-config`, halaman konfigurasi, bukan inbox). Klik = 404.
 
-### 4.4 🟠 Admin hanya bisa memajukan status ke "Diproses"
+### 4.4 ✅ Klaim ditarik (koreksi 2026-07-29) — Admin memang sengaja hanya bisa memajukan status ke "Diproses"
 
-`services/admin.ts:196–201` — `updateOrderStatus(id)` mengunci body ke `{ status: "diproses_produksi" }`. Backend `PATCH /admin/orders/{id}/status` menerima transisi lain, tapi UI tidak menyediakannya. Status `dikirim` dan `selesai` tidak bisa di-set dari UI → FR-021 baru separuh jalan.
+~~`services/admin.ts:196–201` — `updateOrderStatus(id)` mengunci body ke `{ status: "diproses_produksi" }`. Backend `PATCH /admin/orders/{id}/status` menerima transisi lain, tapi UI tidak menyediakannya. Status `dikirim` dan `selesai` tidak bisa di-set dari UI → FR-021 baru separuh jalan.`~~
+
+**Koreksi:** klaim "backend menerima transisi lain" di atas keliru. `OrderStatusRequest::rules()` membatasi `status` hanya ke `Rule::in(['diproses_produksi'])`, dan `OrderService::updateStatus()` bahkan tidak membaca `$request->status` — transisi di-hardcode server-side. Ini **sesuai desain**, bukan gap: diagram State Transition di `2.3_User_Flow.md` §9 dan **BR-014** (`5.1_Business_Rules.md`) secara eksplisit mendefinisikan `dikirim` sebagai webhook-driven (Biteship, FR-022) dan `selesai` sebagai customer-confirmation/auto-complete 3-hari-driven — tidak ada jalur Admin untuk keduanya di dokumen manapun. Kode dan dokumen sudah sinkron; laporan audit sebelumnya salah baca kode. Checklist item 2.4 di `A.2_Fix_Checklist.md` ditandai tidak berlaku.
 
 ### 4.5 🟠 `GET /admin/orders` sudah ada tapi tidak dipakai — dan pesannya salah
 

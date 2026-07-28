@@ -196,6 +196,13 @@ export function getProductionQueue() {
   return apiFetch<{ data: Order[] }>("/admin/production-queue");
 }
 
+export function getOrders(params?: { status?: string }) {
+  const qs = new URLSearchParams();
+  if (params?.status) qs.set("status", params.status);
+  const query = qs.toString();
+  return apiFetch<Paginated<Order>>(`/admin/orders${query ? `?${query}` : ""}`);
+}
+
 export function updateOrderStatus(id: number) {
   return apiFetch<{ data: Order }>(`/admin/orders/${id}/status`, {
     method: "PATCH",

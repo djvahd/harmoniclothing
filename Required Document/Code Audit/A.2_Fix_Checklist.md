@@ -32,15 +32,15 @@ Checklist ini diurutkan berdasarkan **hasil dibagi usaha**, bukan tingkat kepara
 
 ## Batch 2 — Perbaikan cepat yang berdampak (🔴/🟠, semuanya kecil)
 
-- [ ] **2.1** 🔴 ⏱S — Buat `AuthGuard` (mengikuti pola `components/auth/AdminGuard.tsx`) dan pasang di `app/(customer)/layout.tsx`; buat `CreatorGuard` yang memeriksa role creator untuk `app/(creator)/layout.tsx`. Sekalian ini menghapus duplikasi tiga layout identik. (§4.2, §6.10)
-- [ ] **2.2** 🟠 ⏱XS — Perbaiki link rusak `AdminHeader.tsx:20`: arahkan ke `/admin/notifikasi-config`, atau hapus ikon lonceng sampai halaman inbox admin ada. (§4.3)
-- [ ] **2.3** 🟠 ⏱S — Ganti `/admin/pesanan` agar memakai `GET /admin/orders` (sudah ada di `routes/api.php:150`) dan **hapus paragraf keterangan yang sudah tidak benar** di `page.tsx:38–41`. Tambahkan `getOrders()` di `services/admin.ts`. (§4.5, §7.5)
-- [ ] **2.4** 🟠 ⏱S — Ubah `updateOrderStatus(id)` di `services/admin.ts:196` agar menerima parameter `status`, dan sediakan pilihan `dikirim`/`selesai` di UI `/admin/produksi`. (§4.4)
-- [ ] **2.5** 🟡 ⏱XS — Hapus direktori kosong `app/(auth)/login/`, `app/(auth)/register/`, `app/(auth)/lupa-password/`. (§7.6)
-- [ ] **2.6** 🟡 ⏱XS — Hapus `backend/tests/Feature/ExampleTest.php` dan `backend/tests/Unit/ExampleTest.php`. (§7.6)
+- [x] **2.1** 🔴 ⏱S — Buat `AuthGuard` (mengikuti pola `components/auth/AdminGuard.tsx`) dan pasang di `app/(customer)/layout.tsx`; buat `CreatorGuard` yang memeriksa role creator untuk `app/(creator)/layout.tsx`. Sekalian ini menghapus duplikasi tiga layout identik. (§4.2, §6.10) — *selesai 2026-07-29; dibuat `components/layout/AppShell.tsx` bersama untuk hapus duplikasi. `CreatorGuard` memakai probe SWR ke `/creator/dashboard` (creator.active bersifat existence-based via `creator_profiles.status`, bukan nilai `role`), dengan `/creator/verifikasi` dikecualikan karena itu justru halaman untuk *menjadi* creator.*
+- [x] **2.2** 🟠 ⏱XS — Perbaiki link rusak `AdminHeader.tsx:20`: arahkan ke `/admin/notifikasi-config`, atau hapus ikon lonceng sampai halaman inbox admin ada. (§4.3) — *selesai 2026-07-29.*
+- [x] **2.3** 🟠 ⏱S — Ganti `/admin/pesanan` agar memakai `GET /admin/orders` (sudah ada di `routes/api.php:150`) dan **hapus paragraf keterangan yang sudah tidak benar** di `page.tsx:38–41`. Tambahkan `getOrders()` di `services/admin.ts`. (§4.5, §7.5) — *selesai 2026-07-29.*
+- [x] **2.4** ⚪ ~~Ubah `updateOrderStatus(id)`... sediakan pilihan `dikirim`/`selesai` di UI~~ — **tidak berlaku, koreksi 2026-07-29.** Klaim di laporan §4.4 keliru; lihat koreksi di `A.1_Audit_Report.md` §4.4. Backend sengaja membatasi transisi ini ke `diproses_produksi` saja — `dikirim` webhook-driven (Biteship), `selesai` customer-confirmation/auto-complete (BR-014). Tidak ada kode yang diubah; keputusan user.
+- [x] **2.5** 🟡 ⏱XS — Hapus direktori kosong `app/(auth)/login/`, `app/(auth)/register/`, `app/(auth)/lupa-password/`. (§7.6) — *selesai 2026-07-29.*
+- [x] **2.6** 🟡 ⏱XS — Hapus `backend/tests/Feature/ExampleTest.php` dan `backend/tests/Unit/ExampleTest.php`. (§7.6) — *selesai 2026-07-29.*
 
-> **✅ CP-2 — "Perbaikan cepat"**
-> **Verifikasi:** buka `/checkout` sebagai guest (harus muncul overlay login), `/creator/dashboard` sebagai customer biasa (harus ditolak dengan jelas), klik lonceng admin (tidak 404), `php artisan test` tetap hijau.
+> **✅ CP-2 — "Perbaikan cepat"** — **selesai & terverifikasi 2026-07-29**
+> **Verifikasi (browser, live):** guest buka `/checkout` → redirect ke `/` + overlay login muncul ✅. Login `test@example.com` → `/checkout` menampilkan alamat & keranjang miliknya sendiri ✅. Klik "Jadi Kreator" (`/creator/dashboard`) sebagai customer biasa → redirect bersih ke `/akun/upgrade-creator`, bukan halaman rusak ✅. `/creator/verifikasi` tetap bisa diakses meski belum jadi creator aktif ✅. Login admin → klik lonceng notifikasi → mendarat di "Konfigurasi Notifikasi", bukan 404 ✅. `/admin/pesanan` menampilkan data order asli dari `GET /admin/orders`, paragraf basi hilang ✅. Tidak ada console/server error. `php artisan test` — **212/212 lulus** (214 dikurangi 2 ExampleTest yang dihapus).
 > **Commit:** `fix(frontend): guard customer/creator routes, repair admin links and order status control`
 > **Konteks untuk sesi baru:** `frontend/app/*/layout.tsx`, `frontend/components/auth/AdminGuard.tsx`, `frontend/services/admin.ts`, laporan §4.
 

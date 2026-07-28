@@ -7,12 +7,12 @@ import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import PromptModal from "@/components/ui/PromptModal";
-import { getProductionQueue, rejectOrder } from "@/services/admin";
+import { getOrders, rejectOrder } from "@/services/admin";
 import { formatCurrency } from "@/lib/format";
 import { ORDER_STATUS_LABEL, ORDER_STATUS_VARIANT } from "@/lib/order-status";
 
 export default function KelolaPesananPage() {
-  const { data, isLoading } = useSWR("/admin/production-queue", getProductionQueue);
+  const { data, isLoading } = useSWR("/admin/orders", () => getOrders());
   const orders = data?.data ?? [];
   const [loadingId, setLoadingId] = useState<number | null>(null);
   const [rejectingId, setRejectingId] = useState<number | null>(null);
@@ -24,7 +24,7 @@ export default function KelolaPesananPage() {
     setLoadingId(id);
     try {
       await rejectOrder(id, reason);
-      mutate("/admin/production-queue");
+      mutate("/admin/orders");
     } finally {
       setLoadingId(null);
     }
@@ -34,10 +34,6 @@ export default function KelolaPesananPage() {
     <SidebarPageShell sidebar={<AdminSidebar />}>
       <div className="flex flex-col gap-6">
         <h1 className="font-heading text-h3 font-semibold text-text-primary">Kelola Pesanan</h1>
-        <p className="font-body text-xs text-text-secondary">
-          Menampilkan pesanan aktif (menunggu approval/diproses) - tidak ada endpoint admin untuk
-          daftar semua pesanan termasuk yang selesai/dibatalkan.
-        </p>
         <div className="overflow-x-auto rounded-md border border-border bg-surface">
           <table className="w-full text-left font-body text-sm">
             <thead className="border-b border-border text-text-secondary">

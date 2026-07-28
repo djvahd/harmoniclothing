@@ -17,7 +17,7 @@ export default function AdminHeader() {
       <Logo />
 
       <div className="hidden items-center gap-4 md:flex">
-        <Link href="/admin/notifikasi" className="relative text-text-primary">
+        <Link href="/admin/notifikasi-config" className="relative text-text-primary">
           <Bell className="size-5" />
         </Link>
         <span className="h-6 w-px bg-border" />
