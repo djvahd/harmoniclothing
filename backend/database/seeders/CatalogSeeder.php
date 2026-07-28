@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Address;
 use App\Models\Category;
 use App\Models\CreatorProfile;
 use App\Models\Design;
@@ -11,12 +12,19 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\Review;
 use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 /** Local dev demo data for Product Catalog & Marketplace (no admin/creator upload UI yet). */
 class CatalogSeeder extends Seeder
 {
-    public function run(): void
+    /**
+     * $testCustomer and $fixedCreator are the fixed test accounts from
+     * DatabaseSeeder. Recycling orders/designs onto them (plus a small
+     * sample pool) keeps demo data attached to real logins instead of
+     * spawning a brand-new throwaway user per order (audit report §3.2/§3.3).
+     */
+    public function run(User $testCustomer, User $fixedCreator): void
     {
         $productCategories = Category::factory()->product()->count(3)->create();
         $designCategories = Category::factory()->design()->count(3)->create();
@@ -36,11 +44,19 @@ class CatalogSeeder extends Seeder
                     ->create();
             });
 
+        // Sample customer pool (fixed test account + a handful of extras) so
+        // the ~75 "sold" orders below attach to a small, recognizable set of
+        // users instead of a brand-new random user per order (§3.3).
+        $customers = User::factory()->count(6)->create()->push($testCustomer);
+        $addresses = Address::factory()->count(6)->recycle($customers)->create();
+
         // Completed orders against random variants give products a real
         // sold_count/rating_average — without this every card would show
         // "0 terjual" and no rating.
         Order::factory()
             ->count(30)
+            ->recycle($customers)
+            ->recycle($addresses)
             ->state(['status' => 'selesai'])
             ->create()
             ->each(function (Order $order) use ($products) {
@@ -49,7 +65,10 @@ class CatalogSeeder extends Seeder
                     $item = OrderItem::factory()->for($order, 'order')->for($variant, 'productVariant')->create();
 
                     if (fake()->boolean(60)) {
-                        Review::factory()->for($item, 'orderItem')->create();
+                        // The reviewer is whoever bought the item — also
+                        // sidesteps ReviewFactory's own unrecycled
+                        // User::factory() spawning another throwaway user.
+                        Review::factory()->for($item, 'orderItem')->create(['user_id' => $order->user_id]);
                     }
                 }
             });
@@ -60,7 +79,7 @@ class CatalogSeeder extends Seeder
         // to a plain fake user name instead of a brand.
         $creators = CreatorProfile::factory()
             ->aktif()
-            ->count(8)
+            ->count(7)
             ->state(fn () => [
                 'brand_name' => fake()->unique()->company(),
                 'bio' => fake()->sentence(12),
@@ -73,20 +92,35 @@ class CatalogSeeder extends Seeder
             ->state(fn () => ['name' => ucfirst(fake()->unique()->word())])
             ->create();
 
+        // Every design gets at least one apparel attached so starting_price
+        // ("Mulai dari Rp ...") is never null, plus a few tags for filters.
+        $attachDesignExtras = function (Design $design) use ($products, $tags) {
+            $design->products()->attach(
+                $products->random(random_int(1, 3))->pluck('id'),
+                ['preview_confirmed_at' => now()]
+            );
+            $design->tags()->attach($tags->random(random_int(0, 3))->pluck('id'));
+        };
+
         $designs = Design::factory()
-            ->count(15)
+            ->count(12)
             ->recycle($designCategories)
             ->recycle($creatorUsers)
             ->create()
-            ->each(function (Design $design) use ($products, $tags) {
-                // Every design gets at least one apparel attached so
-                // starting_price ("Mulai dari Rp ...") is never null.
-                $design->products()->attach(
-                    $products->random(random_int(1, 3))->pluck('id'),
-                    ['preview_confirmed_at' => now()]
-                );
-                $design->tags()->attach($tags->random(random_int(0, 3))->pluck('id'));
-            });
+            ->each($attachDesignExtras);
+
+        // Deterministically give the fixed creator@harmoni.test account a
+        // few designs of its own — leaving this to chance via recycle() risks
+        // it landing with zero designs and Kelola Desain/Statistik staying
+        // empty (audit report §3.2).
+        $fixedCreatorDesigns = Design::factory()
+            ->count(3)
+            ->for($fixedCreator, 'creator')
+            ->recycle($designCategories)
+            ->create()
+            ->each($attachDesignExtras);
+
+        $designs = $designs->concat($fixedCreatorDesigns);
 
         // Completed orders against every design give them a real
         // sold_count/rating_average too, same reasoning as the products
@@ -100,14 +134,14 @@ class CatalogSeeder extends Seeder
             }
 
             foreach (range(1, random_int(1, 3)) as $i) {
-                $order = Order::factory()->state(['status' => 'selesai'])->create();
+                $order = Order::factory()->recycle($customers)->recycle($addresses)->state(['status' => 'selesai'])->create();
                 $item = OrderItem::factory()
                     ->for($order, 'order')
                     ->for($variant, 'productVariant')
                     ->create(['design_id' => $design->id]);
 
                 if ($i === 1 || fake()->boolean(70)) {
-                    Review::factory()->for($item, 'orderItem')->create();
+                    Review::factory()->for($item, 'orderItem')->create(['user_id' => $order->user_id]);
                 }
             }
         }

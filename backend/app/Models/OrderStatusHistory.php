@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Database\Factories\OrderStatusHistoryFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -10,6 +12,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable(['order_id', 'from_status', 'to_status', 'changed_by', 'actor_id', 'reason'])]
 class OrderStatusHistory extends Model
 {
+    /** @use HasFactory<OrderStatusHistoryFactory> */
+    use HasFactory;
+
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);

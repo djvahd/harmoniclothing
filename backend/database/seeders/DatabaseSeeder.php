@@ -16,17 +16,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
+        // Fixed test accounts (stable credentials, password: "password") so
+        // every seed run gives the same login for each role instead of
+        // random fake emails. CatalogSeeder and DemoDataSeeder attach real
+        // demo data to these three instead of only creating random users.
+        $customer = User::factory()->create([
+            'name' => 'Customer Harmoni',
             'email' => 'test@example.com',
         ]);
 
-        // Fixed test accounts (stable credentials, password: "password") so
-        // every seed run gives the same login for each role instead of
-        // random fake emails.
-        User::factory()->admin()->create([
+        $admin = User::factory()->admin()->create([
             'name' => 'Admin Harmoni',
             'email' => 'admin@harmoni.test',
         ]);
@@ -40,8 +39,16 @@ class DatabaseSeeder extends Seeder
             'bio' => 'Akun creator tetap untuk keperluan testing.',
         ]);
 
-        $this->call(CatalogSeeder::class);
+        $this->call(CatalogSeeder::class, parameters: [
+            'testCustomer' => $customer,
+            'fixedCreator' => $creatorUser,
+        ]);
         $this->call(BulkPricingTierSeeder::class);
         $this->call(NotificationSettingSeeder::class);
+        $this->call(DemoDataSeeder::class, parameters: [
+            'customer' => $customer,
+            'admin' => $admin,
+            'creatorUser' => $creatorUser,
+        ]);
     }
 }
