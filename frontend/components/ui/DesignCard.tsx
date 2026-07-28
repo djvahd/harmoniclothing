@@ -40,7 +40,7 @@ export default function DesignCard({ design, startingPrice }: DesignCardProps) {
 
   return (
     <Link
-      href={`/lapak-desain/${design.slug}`}
+      href={`/marketplace/design/${design.slug}`}
       className="group flex w-[196px] flex-col gap-[5px] rounded-md border border-border bg-surface p-[14px] transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
     >
       <div className="relative h-[155px] w-full shrink-0 overflow-hidden rounded-sm bg-border">

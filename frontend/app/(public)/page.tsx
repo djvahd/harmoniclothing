@@ -215,10 +215,10 @@ export default function BerandaPage() {
             </Reveal>
             <Reveal delay={240}>
               <div className="flex flex-wrap gap-3">
-                <Link href="/katalog-produk">
+                <Link href="/catalog">
                   <Button variant="primary">Mulai Custom Design →</Button>
                 </Link>
-                <Link href="/katalog-produk">
+                <Link href="/catalog">
                   <Button variant="secondary">Jelajahi Produk</Button>
                 </Link>
               </div>
@@ -399,7 +399,7 @@ export default function BerandaPage() {
                 Beragam Produk, Bebas Berkreasi
               </h2>
             </div>
-            <Link href="/katalog-produk" className="shrink-0 font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4">
+            <Link href="/catalog" className="shrink-0 font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4">
               Lihat Semua Produk →
             </Link>
           </div>
@@ -423,7 +423,7 @@ export default function BerandaPage() {
                   </div>
                 ))}
                 <Link
-                  href="/katalog-produk?sort=populer"
+                  href="/catalog?sort=populer"
                   aria-label="Lihat semua produk terpopuler"
                   className="flex size-11 shrink-0 snap-start items-center justify-center rounded-full border border-border bg-surface text-text-primary transition-all duration-150 hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-text-on-accent hover:shadow-md active:translate-y-0 active:scale-95"
                 >
@@ -447,7 +447,7 @@ export default function BerandaPage() {
                 Karya Kreator Pilihan
               </h2>
             </div>
-            <Link href="/lapak-desain" className="shrink-0 font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4">
+            <Link href="/marketplace" className="shrink-0 font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4">
               Lihat Semua Desain →
             </Link>
           </div>
@@ -471,7 +471,7 @@ export default function BerandaPage() {
                   </div>
                 ))}
                 <Link
-                  href="/lapak-desain?sort=populer"
+                  href="/marketplace?sort=populer"
                   aria-label="Lihat semua desain terpopuler"
                   className="flex size-11 shrink-0 snap-start items-center justify-center rounded-full border border-border bg-surface text-text-primary transition-all duration-150 hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-text-on-accent hover:shadow-md active:translate-y-0 active:scale-95"
                 >
@@ -515,7 +515,7 @@ export default function BerandaPage() {
             </p>
           </div>
           <div className="flex shrink-0 gap-3">
-            <Link href="/katalog-produk">
+            <Link href="/catalog">
               <Button variant="primary" className="!bg-white !text-primary hover:!bg-white/90">
                 Mulai Custom Design →
               </Button>

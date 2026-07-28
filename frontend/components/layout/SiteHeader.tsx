@@ -19,9 +19,9 @@ import { formatCurrency } from "@/lib/format";
 
 const NAV_LINKS = [
   { href: "/", label: "Beranda" },
-  { href: "/katalog-produk", label: "Produk" },
-  { href: "/lapak-desain", label: "Desain" },
-  { href: "/tentang-kami", label: "Tentang Kami" },
+  { href: "/catalog", label: "Produk" },
+  { href: "/marketplace", label: "Desain" },
+  { href: "/about", label: "Tentang Kami" },
 ];
 
 export default function SiteHeader() {
@@ -250,12 +250,12 @@ function AccountMenuLinks({ onNavigate }: { onNavigate: () => void }) {
     ...(user?.role === "admin"
       ? [{ href: "/admin/dashboard", label: "Admin Dashboard" }]
       : []),
-    { href: "/akun/profil", label: "Kelola Profil" },
-    { href: "/akun/alamat", label: "Address Book" },
-    { href: "/akun/wishlist", label: "Wishlist" },
-    { href: "/akun/pesanan", label: "Riwayat Pesanan" },
-    { href: "/akun/upgrade-creator", label: "Ajukan Upgrade Creator" },
-    { href: "/notifikasi", label: "Notifikasi" },
+    { href: "/account/profile", label: "Kelola Profil" },
+    { href: "/account/addresses", label: "Address Book" },
+    { href: "/account/wishlist", label: "Wishlist" },
+    { href: "/account/orders", label: "Riwayat Pesanan" },
+    { href: "/account/become-creator", label: "Ajukan Upgrade Creator" },
+    { href: "/notifications", label: "Notifikasi" },
   ];
 
   return (
@@ -286,7 +286,7 @@ function CartDropdown({ onClose }: { onClose: () => void }) {
         <p className="font-body text-sm font-semibold text-text-primary">
           Keranjang {!isLoading && `(${total})`}
         </p>
-        <Link href="/keranjang" onClick={onClose} className="font-body text-sm font-medium text-primary">
+        <Link href="/cart" onClick={onClose} className="font-body text-sm font-medium text-primary">
           Lihat Semua
         </Link>
       </div>
@@ -409,7 +409,7 @@ function NotificationsDropdown({ onClose }: { onClose: () => void }) {
         >
           Tandai semua dibaca
         </button>
-        <Link href="/notifikasi" onClick={onClose} className="font-body text-xs font-medium text-primary">
+        <Link href="/notifications" onClick={onClose} className="font-body text-xs font-medium text-primary">
           Lihat Semua
         </Link>
       </div>

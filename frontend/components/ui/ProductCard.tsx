@@ -28,7 +28,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
   return (
     <Link
-      href={`/katalog-produk/${product.slug}`}
+      href={`/catalog/${product.slug}`}
       className="group flex w-[196px] flex-col gap-[5px] rounded-md border border-border bg-surface p-[14px] transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
     >
       <div className="relative h-[155px] w-full shrink-0 overflow-hidden rounded-sm bg-border">

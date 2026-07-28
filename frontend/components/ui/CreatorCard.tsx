@@ -19,7 +19,7 @@ export default function CreatorCard({ creator }: { creator: CreatorSummary }) {
 
   return (
     <Link
-      href={`/kreator/${creator.slug}`}
+      href={`/marketplace/${creator.slug}`}
       className="group flex w-[196px] flex-col items-center gap-2 rounded-md border border-border bg-surface p-4 text-center transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
     >
       <span className="flex size-16 shrink-0 items-center justify-center rounded-full bg-border text-text-secondary">

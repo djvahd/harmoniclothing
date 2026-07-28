@@ -3,12 +3,12 @@ import SidebarNav from "./SidebarNav";
 const groups = [
   {
     items: [
-      { href: "/akun/profil", label: "Profil" },
-      { href: "/akun/alamat", label: "Address Book" },
-      { href: "/akun/pesanan", label: "Riwayat Pesanan" },
-      { href: "/akun/wishlist", label: "Wishlist" },
-      { href: "/akun/upgrade-creator", label: "Ajukan Upgrade Creator" },
-      { href: "/notifikasi", label: "Notifikasi" },
+      { href: "/account/profile", label: "Profil" },
+      { href: "/account/addresses", label: "Address Book" },
+      { href: "/account/orders", label: "Riwayat Pesanan" },
+      { href: "/account/wishlist", label: "Wishlist" },
+      { href: "/account/become-creator", label: "Ajukan Upgrade Creator" },
+      { href: "/notifications", label: "Notifikasi" },
     ],
   },
 ];

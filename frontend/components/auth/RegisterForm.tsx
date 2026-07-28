@@ -106,11 +106,11 @@ export default function RegisterForm() {
         />
         <span>
           Saya menyetujui{" "}
-          <Link href="/syarat-ketentuan" className={linkClass} target="_blank">
+          <Link href="/legal/terms" className={linkClass} target="_blank">
             Syarat & Ketentuan
           </Link>{" "}
           dan{" "}
-          <Link href="/kebijakan-privasi" className={linkClass} target="_blank">
+          <Link href="/legal/privacy-policy" className={linkClass} target="_blank">
             Kebijakan Privasi
           </Link>{" "}
           Harmoni Clothing.

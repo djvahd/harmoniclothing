@@ -32,7 +32,7 @@ export default function CreatorDashboardPage() {
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <p className="font-heading text-lg font-semibold text-text-primary">Desain Terbaru</p>
-            <Link href="/creator/desain" className="font-body text-sm font-medium text-primary">
+            <Link href="/creator/designs" className="font-body text-sm font-medium text-primary">
               Lihat Semua
             </Link>
           </div>

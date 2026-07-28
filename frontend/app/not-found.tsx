@@ -37,7 +37,7 @@ export default function NotFound() {
                     Kembali ke Beranda
                   </Button>
                 </Link>
-                <Link href="/katalog-produk">
+                <Link href="/catalog">
                   <Button variant="secondary" className="gap-2">
                     <Search className="size-4" />
                     Lihat Katalog Produk

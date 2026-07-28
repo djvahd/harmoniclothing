@@ -4,10 +4,10 @@ const groups = [
   {
     items: [
       { href: "/creator/dashboard", label: "Dashboard" },
-      { href: "/creator/verifikasi", label: "Verifikasi Data Diri" },
-      { href: "/creator/desain", label: "Kelola Desain" },
-      { href: "/creator/desain/upload", label: "Upload Desain" },
-      { href: "/creator/statistik", label: "Statistik & Komisi" },
+      { href: "/creator/verification", label: "Verifikasi Data Diri" },
+      { href: "/creator/designs", label: "Kelola Desain" },
+      { href: "/creator/designs/upload", label: "Upload Desain" },
+      { href: "/creator/earnings", label: "Statistik & Komisi" },
     ],
   },
 ];

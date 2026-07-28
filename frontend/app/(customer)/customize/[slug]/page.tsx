@@ -97,7 +97,7 @@ function ProductEditorForm() {
         custom_design_file_path: uploadedPath ?? undefined,
       });
       await mutate("/cart");
-      router.push("/keranjang");
+      router.push("/cart");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Terjadi kesalahan, coba lagi.");
     } finally {

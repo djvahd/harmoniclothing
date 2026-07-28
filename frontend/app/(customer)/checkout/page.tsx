@@ -47,7 +47,7 @@ export default function CheckoutPage() {
       if (order.midtrans_redirect_url) {
         window.location.href = order.midtrans_redirect_url;
       } else {
-        router.push(`/akun/pesanan/${order.id}`);
+        router.push(`/account/orders/${order.id}`);
       }
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Terjadi kesalahan, coba lagi.");

@@ -9,11 +9,11 @@ import { useAuthModalStore } from "@/store/auth-modal-store";
 import { getCreatorDashboard } from "@/services/creator";
 
 /**
- * /creator/verifikasi submits the KYC that *makes* a creator active — it
+ * /creator/verification submits the KYC that *makes* a creator active — it
  * must stay reachable before that's true, or nobody could ever finish
  * onboarding, so it's exempt from the creator.active probe below.
  */
-const EXEMPT_PATHS = ["/creator/verifikasi"];
+const EXEMPT_PATHS = ["/creator/verification"];
 
 export default function CreatorGuard({ children }: { children: React.ReactNode }) {
   const user = useAuthStore((state) => state.user);
@@ -43,7 +43,7 @@ export default function CreatorGuard({ children }: { children: React.ReactNode }
     }
 
     if (!exempt && isForbidden) {
-      router.replace("/akun/upgrade-creator");
+      router.replace("/account/become-creator");
     }
   }, [authStatus, user, exempt, isForbidden, router, openAuthModal]);
 

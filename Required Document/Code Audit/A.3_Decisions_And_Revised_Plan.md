@@ -78,14 +78,14 @@ Tiga batch baru: **2b**, **2c**, dan **6b**. Isi batch lain tidak berubah dari A
 
 ## 5. Batch 2b — Rename route ke Bahasa Inggris (baru)
 
-- [ ] **2b.1** ⏱M — Rename 39 direktori route sesuai peta di [A.1 §2.1](A.1_Audit_Report.md), dengan penyesuaian struktural §2 di atas (`/account/profile`, `/account/orders`, `/account/wishlist`, `/customize/{slug}`, `/creator/designs/{id}`).
-- [ ] **2b.2** ⏱S — Perbarui seluruh `href` internal (13 href unik terdeteksi saat audit) dan `router.push` di `katalog-produk/[slug]`, `lapak-desain/[slug]`, `checkout`, `AdminGuard`.
-- [ ] **2b.3** ⏱S — Perbarui konfigurasi `AccountSidebar`, `CreatorSidebar`, `AdminSidebar`, dan menu di `SiteHeader` / `MobileDrawer`.
-- [ ] **2b.4** ⏱XS — Perbaiki link rusak `/admin/notifikasi` sekalian di sini kalau butir 2.2 belum menyelesaikannya.
-- [ ] **2b.5** ⏱S — Telusuri ulang seluruh `href` setelah rename; pastikan tidak ada yang menunjuk ke route lama.
+- [x] **2b.1** ⏱M — Rename 39 direktori route sesuai peta di [A.1 §2.1](A.1_Audit_Report.md), dengan penyesuaian struktural §2 di atas (`/account/profile`, `/account/orders`, `/account/wishlist`, `/customize/{slug}`, `/creator/designs/{id}`). — *selesai 2026-07-29 via 27 `git mv` (mempertahankan histori), termasuk restrukturisasi 3 arah `lapak-desain`+`kreator` → `marketplace` root/`design/[slug]`/`[slug]`.*
+- [x] **2b.2** ⏱S — Perbarui seluruh `href` internal dan `router.push` — *selesai; 85 penggantian string literal di 30 file (bukan 13 — cakupan lebih luas dari perkiraan awal audit), termasuk `katalog-produk/[slug]`, `lapak-desain/[slug]`, `checkout`.*
+- [x] **2b.3** ⏱S — Perbarui konfigurasi `AccountSidebar`, `CreatorSidebar`, `AdminSidebar`, dan menu di `SiteHeader` / `MobileDrawer`. — *selesai; `MobileDrawer` ternyata cuma shell tanpa route sendiri (menu datang dari `AdminSidebar`/`SiteHeader` yang sudah diperbarui).*
+- [x] **2b.4** ⏱XS — Perbaiki link rusak `/admin/notifikasi` — *sudah selesai di 2.2 sebelumnya, tidak perlu diulang.*
+- [x] **2b.5** ⏱S — Telusuri ulang seluruh `href` setelah rename. — *selesai; grep menyeluruh dua putaran + tes fetch semua route lama (404) dan baru (200) mengonfirmasi cutover bersih.*
 
-> **✅ CP-2b — "URL Inggris"**
-> **Verifikasi:** `pnpm build` hijau; klik setiap item di ketiga sidebar dan seluruh menu header — tidak boleh ada 404. Bandingkan daftar `href` hasil grep dengan daftar direktori route.
+> **✅ CP-2b — "URL Inggris"** — **selesai & terverifikasi 2026-07-29**
+> **Verifikasi:** `npm run build` hijau (36 route baru terdaftar). Klik langsung setiap item di ketiga sidebar (Admin, Creator, Account) + menu header sebagai ketiga akun test — tidak ada 404, tidak ada console/server error. Fetch semua route lama → 404 (cutover bersih, bukan dual-serving). **Temuan tambahan:** build sempat gagal di `/catalog` dan `/marketplace` karena `useSearchParams()` tanpa `Suspense` boundary (bug pra-eksisting, tidak terkait rename — baru ketahuan karena `next build` kemungkinan belum pernah dijalankan sebelumnya, hanya `next dev`); diperbaiki sekalian dengan pola wrapper `Suspense` standar Next.js.
 > **Commit:** `refactor(routes): rename all routes to English per Sitemap 2.1 §8`
 
 ---
