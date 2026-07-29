@@ -1,5 +1,12 @@
 import type { Design, ProductVariant } from "./product";
 
+/** BR-012 tiered pricing for Bulk Order — total quantity across all variants of one product picks a single tier. */
+export interface BulkPricingTier {
+  min_qty: number;
+  max_qty: number | null;
+  price_per_unit: number;
+}
+
 export type OrderStatus =
   | "belum_dibayar"
   | "menunggu_approval"

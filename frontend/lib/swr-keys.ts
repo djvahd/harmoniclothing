@@ -37,4 +37,6 @@ export const swrKeys = {
 
   creators: (tag: string, params?: GetCreatorsParams) => ["/marketplace/creators", tag, params] as const,
   creatorBySlug: (slug: string) => `/marketplace/creators/${slug}` as const,
+
+  bulkPricingTiers: () => "/bulk-pricing-tiers" as const,
 };

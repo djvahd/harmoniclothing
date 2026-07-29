@@ -285,6 +285,13 @@ export default function DetailProdukPage() {
             </Button>
           </div>
 
+          <Link
+            href={`/bulk-order/${product.slug}`}
+            className="font-body text-sm font-medium text-primary transition-colors hover:underline"
+          >
+            Butuh dalam jumlah besar? Pesan lewat Bulk Order →
+          </Link>
+
           <TrustBadges />
         </div>
       </div>
