@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import clsx from "clsx";
+import { useTranslations } from "next-intl";
 
 export const NAV_LINKS = [
-  { href: "/", label: "Beranda" },
-  { href: "/catalog", label: "Produk" },
-  { href: "/marketplace", label: "Desain" },
-  { href: "/about", label: "Tentang Kami" },
-];
+  { href: "/", key: "home" },
+  { href: "/catalog", key: "products" },
+  { href: "/marketplace", key: "designs" },
+  { href: "/about", key: "about" },
+] as const;
 
 /** Primary nav links, shared by the desktop header bar and the mobile drawer. */
 export default function HeaderNav({
@@ -20,12 +21,14 @@ export default function HeaderNav({
   pathname: string;
   onNavigate?: () => void;
 }) {
+  const t = useTranslations("layout.nav");
+
   if (variant === "mobile") {
     return (
       <nav className="flex flex-col gap-4 font-body text-sm text-text-primary">
         {NAV_LINKS.map((link) => (
           <Link key={link.href} href={link.href} onClick={onNavigate}>
-            {link.label}
+            {t(link.key)}
           </Link>
         ))}
       </nav>
@@ -47,7 +50,7 @@ export default function HeaderNav({
                 : "text-text-primary after:w-0 hover:text-primary hover:after:w-full",
             )}
           >
-            {link.label}
+            {t(link.key)}
           </Link>
         );
       })}

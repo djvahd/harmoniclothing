@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Menu, Palette } from "lucide-react";
 import Link from "next/link";
 import clsx from "clsx";
+import { useTranslations } from "next-intl";
 import Logo from "./Logo";
 import MobileDrawer from "./MobileDrawer";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -19,6 +20,7 @@ import { useAuthModalStore } from "@/store/auth-modal-store";
 type Panel = "cart" | "notif" | "account" | null;
 
 export default function SiteHeader() {
+  const t = useTranslations("layout.header");
   const pathname = usePathname();
   const { user, logout } = useAuthStore();
   const openAuthModal = useAuthModalStore((state) => state.open);
@@ -82,7 +84,7 @@ export default function SiteHeader() {
               )}
             >
               <Palette className="size-4" />
-              <span className="font-body text-sm font-medium">Kreator</span>
+              <span className="font-body text-sm font-medium">{t("creator")}</span>
             </Link>
             <AccountMenu
               user={user}
@@ -100,10 +102,10 @@ export default function SiteHeader() {
         ) : (
           <>
             <Button variant="secondary" onClick={() => openAuthModal("login")}>
-              Masuk
+              {t("login")}
             </Button>
             <Button variant="primary" onClick={() => openAuthModal("register")}>
-              Daftar Gratis
+              {t("registerFree")}
             </Button>
           </>
         )}
@@ -111,7 +113,7 @@ export default function SiteHeader() {
 
       <button
         type="button"
-        aria-label="Buka menu"
+        aria-label={t("openMenu")}
         className="text-text-primary md:hidden"
         onClick={() => setDrawerOpen(true)}
       >
@@ -132,7 +134,7 @@ export default function SiteHeader() {
                 }}
                 className="text-left font-body text-sm text-text-primary"
               >
-                Keluar
+                {t("logout")}
               </button>
             </div>
           ) : (
@@ -145,7 +147,7 @@ export default function SiteHeader() {
                   openAuthModal("login");
                 }}
               >
-                Masuk
+                {t("login")}
               </Button>
               <Button
                 variant="primary"
@@ -155,7 +157,7 @@ export default function SiteHeader() {
                   openAuthModal("register");
                 }}
               >
-                Daftar Gratis
+                {t("registerFree")}
               </Button>
             </div>
           )}

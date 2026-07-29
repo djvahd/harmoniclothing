@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Button from "@/components/ui/Button";
 import ProductThumbnail from "@/components/ui/ProductThumbnail";
 import { useCart } from "@/hooks/useCart";
@@ -22,6 +23,8 @@ export default function CartPopover({
   onCancelClose: () => void;
   onNavigate: () => void;
 }) {
+  const t = useTranslations("layout.cart");
+  const tCommon = useTranslations("common");
   const { items, isLoading } = useCart();
   const preview = items.slice(0, 3);
   const total = items.length;
@@ -29,7 +32,7 @@ export default function CartPopover({
 
   return (
     <div className="relative" onMouseEnter={onOpen} onMouseLeave={onScheduleClose}>
-      <button type="button" aria-label="Keranjang" className="relative text-text-primary">
+      <button type="button" aria-label={t("aria")} className="relative text-text-primary">
         <ShoppingCart className="size-5" />
         {total > 0 && (
           <span className="absolute -right-2 -top-1.5 flex size-4 items-center justify-center rounded-full bg-danger text-[10px] font-bold text-danger-fg">
@@ -44,10 +47,10 @@ export default function CartPopover({
         >
           <div className="flex items-center justify-between px-5 py-3">
             <p className="font-body text-sm font-semibold text-text-primary">
-              Keranjang {!isLoading && `(${total})`}
+              {t("title")} {!isLoading && `(${total})`}
             </p>
             <Link href="/cart" onClick={onNavigate} className="font-body text-sm font-medium text-primary">
-              Lihat Semua
+              {tCommon("viewAll")}
             </Link>
           </div>
           <div className="border-t border-border" />
@@ -66,7 +69,7 @@ export default function CartPopover({
             </div>
           ) : preview.length === 0 ? (
             <p className="px-5 py-6 text-center font-body text-sm text-text-secondary">
-              Keranjangmu masih kosong.
+              {t("empty")}
             </p>
           ) : (
             <div className="flex flex-col gap-3.5 px-5 py-3.5">
@@ -76,12 +79,12 @@ export default function CartPopover({
                     src={storageUrl(
                       item.design?.thumbnail_path ?? item.product_variant.mockup_asset_path,
                     )}
-                    alt={item.product_variant.product?.name ?? "Produk"}
+                    alt={item.product_variant.product?.name ?? t("productFallback")}
                     size={40}
                   />
                   <div className="flex flex-1 flex-col gap-0.5">
                     <p className="font-body text-sm font-medium text-text-primary">
-                      {item.product_variant.product?.name ?? "Produk"}
+                      {item.product_variant.product?.name ?? t("productFallback")}
                     </p>
                     <p className="font-body text-xs text-text-secondary">
                       {item.product_variant.size} · {item.product_variant.color}
@@ -99,13 +102,13 @@ export default function CartPopover({
               <div className="border-t border-border" />
               <div className="flex flex-col gap-3 px-5 py-3.5">
                 <div className="flex items-center justify-between">
-                  <p className="font-body text-sm text-text-secondary">Subtotal</p>
+                  <p className="font-body text-sm text-text-secondary">{t("subtotal")}</p>
                   <p className="font-body text-sm font-semibold text-text-primary">
                     {formatCurrency(subtotal)}
                   </p>
                 </div>
                 <Link href="/checkout" onClick={onNavigate}>
-                  <Button fullWidth>Lanjut ke Checkout</Button>
+                  <Button fullWidth>{t("checkout")}</Button>
                 </Link>
               </div>
             </>

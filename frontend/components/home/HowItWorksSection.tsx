@@ -1,24 +1,26 @@
 import { ClipboardCheck, Palette, ShoppingBag, Truck } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Reveal from "@/components/ui/Reveal";
 import StepItem from "@/components/ui/StepItem";
 
 const STEPS = [
-  { icon: ShoppingBag, title: "Pilih Produk", description: "Pilih produk favorit sesuai kebutuhanmu" },
-  { icon: Palette, title: "Buat Desain", description: "Custom desain sendiri atau pilih dari Lapak Desain" },
-  { icon: ClipboardCheck, title: "Konfirmasi Pesanan", description: "Cek detail dan lakukan pembayaran" },
-  { icon: Truck, title: "Terima Produk", description: "Produk diproduksi dan dikirim ke alamatmu" },
-];
+  { icon: ShoppingBag, key: "chooseProduct" },
+  { icon: Palette, key: "createDesign" },
+  { icon: ClipboardCheck, key: "confirmOrder" },
+  { icon: Truck, key: "receiveProduct" },
+] as const;
 
 /** The "Mudah dalam 4 Langkah" step-by-step explainer. */
 export default function HowItWorksSection() {
+  const t = useTranslations("home.howItWorks");
   return (
     <section className="px-4 py-16 md:px-20">
       <Reveal className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-2">
         <p className="font-body text-caption font-bold uppercase tracking-[0.6px] text-primary">
-          Cara Kerja
+          {t("eyebrow")}
         </p>
         <h2 className="text-center font-heading text-h3 font-semibold text-text-primary md:text-h2">
-          Mudah dalam 4 Langkah
+          {t("title")}
         </h2>
         <div className="mt-6 flex w-full flex-wrap justify-center">
           <div className="relative inline-flex flex-wrap gap-10">
@@ -33,7 +35,13 @@ export default function HowItWorksSection() {
               />
             ))}
             {STEPS.map((step, i) => (
-              <StepItem key={step.title} number={i + 1} {...step} />
+              <StepItem
+                key={step.key}
+                number={i + 1}
+                icon={step.icon}
+                title={t(`steps.${step.key}.title`)}
+                description={t(`steps.${step.key}.description`)}
+              />
             ))}
           </div>
         </div>

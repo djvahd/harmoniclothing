@@ -15,5 +15,119 @@
     "viewAll": "View All",
     "emptyGeneric": "No data yet.",
     "errorGeneric": "Something went wrong, please try again."
+  },
+  "layout": {
+    "nav": {
+      "home": "Home",
+      "products": "Products",
+      "designs": "Designs",
+      "about": "About Us"
+    },
+    "header": {
+      "creator": "Creator",
+      "login": "Log In",
+      "registerFree": "Sign Up Free",
+      "logout": "Log Out",
+      "openMenu": "Open menu",
+      "closeMenu": "Close menu"
+    },
+    "cart": {
+      "aria": "Cart",
+      "title": "Cart",
+      "empty": "Your cart is empty.",
+      "subtotal": "Subtotal",
+      "checkout": "Continue to Checkout",
+      "productFallback": "Product"
+    },
+    "notifications": {
+      "aria": "Notifications",
+      "title": "Notifications",
+      "empty": "No notifications yet.",
+      "markAllRead": "Mark all as read"
+    },
+    "account": {
+      "adminDashboard": "Admin Dashboard",
+      "profile": "Manage Profile",
+      "addresses": "Address Book",
+      "wishlist": "Wishlist",
+      "orders": "Order History",
+      "becomeCreator": "Apply to Become a Creator",
+      "notifications": "Notifications"
+    },
+    "footer": {
+      "tagline": "A modern print-on-demand platform for creators and brands.",
+      "productsTitle": "PRODUCTS",
+      "tshirt": "T-Shirt",
+      "hoodie": "Hoodie",
+      "jacket": "Jacket",
+      "helpTitle": "HELP",
+      "faq": "FAQ",
+      "helpCenter": "Help Center",
+      "contact": "Contact",
+      "copyright": "© 2026 Harmoni Clothing. All rights reserved."
+    }
+  },
+  "home": {
+    "hero": {
+      "headline1": "Bring Ideas to Life.",
+      "headline2": "Create Products.",
+      "headline3": "Move Forward Together.",
+      "subtitle": "A modern print-on-demand platform for creators, brands, and communities — custom design, no minimum order.",
+      "ctaCustomDesign": "Start Custom Design →",
+      "ctaExploreProducts": "Explore Products",
+      "altHoodie": "Hoodie",
+      "altTshirt": "T-Shirt",
+      "cardTitle": "Custom by You",
+      "cardSubtitle": "Made with Harmoni",
+      "trust": {
+        "noMinOrder": { "title": "No Minimum Order", "subtitle": "Order even just 1 piece" },
+        "premiumQuality": { "title": "Premium Quality", "subtitle": "Best materials, top results" },
+        "fastProduction": { "title": "Fast Production", "subtitle": "Efficient, on-time process" },
+        "satisfactionGuarantee": { "title": "Satisfaction Guarantee", "subtitle": "100% quality guaranteed" }
+      }
+    },
+    "howItWorks": {
+      "eyebrow": "How It Works",
+      "title": "Easy in 4 Steps",
+      "steps": {
+        "chooseProduct": { "title": "Choose a Product", "description": "Pick your favorite product to fit your needs" },
+        "createDesign": { "title": "Create a Design", "description": "Custom your own design or pick one from the Design Marketplace" },
+        "confirmOrder": { "title": "Confirm Your Order", "description": "Review the details and complete payment" },
+        "receiveProduct": { "title": "Receive Your Product", "description": "Your product is made and shipped to your address" }
+      }
+    },
+    "cta": {
+      "headline1": "Ready to Bring Your",
+      "headline2": "Ideas to Life?",
+      "subtitle": "Join thousands of creators and brands who trust Harmoni.",
+      "ctaCustomDesign": "Start Custom Design →",
+      "ctaRegister": "Sign Up Free →"
+    },
+    "testimonials": {
+      "eyebrow": "What They Say",
+      "title": "Trusted by Many Creators & Brands",
+      "items": {
+        "dimas": { "quote": "The product quality is great, the print is neat and the fabric is comfortable to wear.", "role": "Local Brand Founder" },
+        "sarah": { "quote": "The custom design process is super easy, the result matched my expectations.", "role": "Student" },
+        "rizky": { "quote": "Fast delivery and the support team is responsive whenever there's an issue.", "role": "Online Shop Owner" },
+        "nadia": { "quote": "Bought a design from the marketplace and just printed it onto a product, so practical.", "role": "Content Creator" },
+        "fajar": { "quote": "Bulk order for a community event went smoothly, the price per piece is much cheaper.", "role": "Motorcycle Community Leader" },
+        "bella": { "quote": "As a creator, my royalties from sold designs are clearly visible on the dashboard.", "role": "Design Creator" },
+        "yoga": { "quote": "The hoodie fabric is thick and the print holds up well, still great after many washes.", "role": "Clothing Line Owner" },
+        "putri": { "quote": "Revising a design is easy through the editor, no need to go back and forth with admin chat.", "role": "Event Organizer" }
+      }
+    },
+    "popularProducts": {
+      "eyebrow": "Popular Products",
+      "title": "A Wide Range of Products, Free to Create",
+      "viewAll": "View All Products →",
+      "viewAllAria": "View all trending products"
+    },
+    "popularDesigns": {
+      "eyebrow": "Popular Designs",
+      "title": "Curated Creator Works",
+      "viewAll": "View All Designs →",
+      "viewAllAria": "View all trending designs"
+    }
   }
 }

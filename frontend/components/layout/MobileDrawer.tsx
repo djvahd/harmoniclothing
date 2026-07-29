@@ -1,6 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface MobileDrawerProps {
   open: boolean;
@@ -9,6 +10,7 @@ interface MobileDrawerProps {
 }
 
 export default function MobileDrawer({ open, onClose, children }: MobileDrawerProps) {
+  const t = useTranslations("layout.header");
   if (!open) return null;
 
   return (
@@ -17,7 +19,7 @@ export default function MobileDrawer({ open, onClose, children }: MobileDrawerPr
       <div className="absolute inset-y-0 right-0 flex w-72 flex-col gap-6 bg-surface p-6 shadow-lg">
         <button
           type="button"
-          aria-label="Tutup menu"
+          aria-label={t("closeMenu")}
           onClick={onClose}
           className="self-end text-text-secondary"
         >

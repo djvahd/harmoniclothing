@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 import ProductCard, { ProductCardSkeleton } from "@/components/ui/ProductCard";
 import Reveal from "@/components/ui/Reveal";
 import { useProducts } from "@/hooks/useProducts";
 
 /** The horizontally-scrolling "Produk Populer" teaser row, linking out to the full catalog. */
 export default function PopularProductsSection() {
+  const t = useTranslations("home.popularProducts");
   const { data, isLoading } = useProducts("home", { per_page: 8 });
   const products = data?.data ?? [];
 
@@ -15,14 +17,14 @@ export default function PopularProductsSection() {
         <div className="flex items-end justify-between">
           <div className="flex flex-col gap-1">
             <p className="font-body text-caption font-bold uppercase tracking-[0.6px] text-primary">
-              Produk Populer
+              {t("eyebrow")}
             </p>
             <h2 className="font-heading text-h3 font-semibold text-text-primary md:text-h2">
-              Beragam Produk, Bebas Berkreasi
+              {t("title")}
             </h2>
           </div>
           <Link href="/catalog" className="shrink-0 font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4">
-            Lihat Semua Produk →
+            {t("viewAll")}
           </Link>
         </div>
         {(isLoading || products.length === 0) && (
@@ -46,7 +48,7 @@ export default function PopularProductsSection() {
               ))}
               <Link
                 href="/catalog?sort=populer"
-                aria-label="Lihat semua produk terpopuler"
+                aria-label={t("viewAllAria")}
                 className="flex size-11 shrink-0 snap-start items-center justify-center rounded-full border border-border bg-surface text-text-primary transition-all duration-150 hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-text-on-accent hover:shadow-md active:translate-y-0 active:scale-95"
               >
                 <ArrowRight className="size-5" />

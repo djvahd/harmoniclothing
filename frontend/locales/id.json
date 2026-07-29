@@ -15,5 +15,119 @@
     "viewAll": "Lihat Semua",
     "emptyGeneric": "Belum ada data.",
     "errorGeneric": "Terjadi kesalahan, coba lagi."
+  },
+  "layout": {
+    "nav": {
+      "home": "Beranda",
+      "products": "Produk",
+      "designs": "Desain",
+      "about": "Tentang Kami"
+    },
+    "header": {
+      "creator": "Kreator",
+      "login": "Masuk",
+      "registerFree": "Daftar Gratis",
+      "logout": "Keluar",
+      "openMenu": "Buka menu",
+      "closeMenu": "Tutup menu"
+    },
+    "cart": {
+      "aria": "Keranjang",
+      "title": "Keranjang",
+      "empty": "Keranjangmu masih kosong.",
+      "subtotal": "Subtotal",
+      "checkout": "Lanjut ke Checkout",
+      "productFallback": "Produk"
+    },
+    "notifications": {
+      "aria": "Notifikasi",
+      "title": "Notifikasi",
+      "empty": "Belum ada notifikasi.",
+      "markAllRead": "Tandai semua dibaca"
+    },
+    "account": {
+      "adminDashboard": "Admin Dashboard",
+      "profile": "Kelola Profil",
+      "addresses": "Address Book",
+      "wishlist": "Wishlist",
+      "orders": "Riwayat Pesanan",
+      "becomeCreator": "Ajukan Upgrade Creator",
+      "notifications": "Notifikasi"
+    },
+    "footer": {
+      "tagline": "Platform konveksi modern untuk kreator dan brand.",
+      "productsTitle": "PRODUK",
+      "tshirt": "T-Shirt",
+      "hoodie": "Hoodie",
+      "jacket": "Jacket",
+      "helpTitle": "BANTUAN",
+      "faq": "FAQ",
+      "helpCenter": "Pusat Bantuan",
+      "contact": "Kontak",
+      "copyright": "© 2026 Harmoni Clothing. All rights reserved."
+    }
+  },
+  "home": {
+    "hero": {
+      "headline1": "Wujudkan Ide.",
+      "headline2": "Ciptakan Produk.",
+      "headline3": "Bergerak Bersama.",
+      "subtitle": "Platform konveksi modern untuk kreator, brand, dan komunitas — custom design, tanpa minimum order.",
+      "ctaCustomDesign": "Mulai Custom Design →",
+      "ctaExploreProducts": "Jelajahi Produk",
+      "altHoodie": "Hoodie",
+      "altTshirt": "Kaos",
+      "cardTitle": "Custom by You",
+      "cardSubtitle": "Made with Harmoni",
+      "trust": {
+        "noMinOrder": { "title": "Tanpa Minimum Order", "subtitle": "Pesan 1 pcs pun bisa" },
+        "premiumQuality": { "title": "Kualitas Premium", "subtitle": "Bahan terbaik, hasil maksimal" },
+        "fastProduction": { "title": "Produksi Cepat", "subtitle": "Proses efisien & on-time" },
+        "satisfactionGuarantee": { "title": "Garansi Kepuasan", "subtitle": "100% garansi kualitas" }
+      }
+    },
+    "howItWorks": {
+      "eyebrow": "Cara Kerja",
+      "title": "Mudah dalam 4 Langkah",
+      "steps": {
+        "chooseProduct": { "title": "Pilih Produk", "description": "Pilih produk favorit sesuai kebutuhanmu" },
+        "createDesign": { "title": "Buat Desain", "description": "Custom desain sendiri atau pilih dari Lapak Desain" },
+        "confirmOrder": { "title": "Konfirmasi Pesanan", "description": "Cek detail dan lakukan pembayaran" },
+        "receiveProduct": { "title": "Terima Produk", "description": "Produk diproduksi dan dikirim ke alamatmu" }
+      }
+    },
+    "cta": {
+      "headline1": "Siap Mewujudkan",
+      "headline2": "Ide Menjadi Produk Nyata?",
+      "subtitle": "Gabung bersama ribuan kreator dan brand yang percaya pada Harmoni.",
+      "ctaCustomDesign": "Mulai Custom Design →",
+      "ctaRegister": "Daftar Gratis →"
+    },
+    "testimonials": {
+      "eyebrow": "Apa Kata Mereka",
+      "title": "Dipercaya Banyak Kreator & Brand",
+      "items": {
+        "dimas": { "quote": "Kualitas produknya keren, sablonnya rapi dan bahannya nyaman dipakai.", "role": "Founder Local Brand" },
+        "sarah": { "quote": "Proses custom desainnya gampang banget, hasilnya sesuai ekspektasi.", "role": "Mahasiswa" },
+        "rizky": { "quote": "Pengiriman cepat dan tim CS-nya responsif kalau ada kendala.", "role": "Pemilik Toko Online" },
+        "nadia": { "quote": "Beli desain dari Lapak Desain terus tinggal cetak ke produk, praktis banget.", "role": "Content Creator" },
+        "fajar": { "quote": "Order bulk buat acara komunitas lancar, harga per pcs jadi jauh lebih murah.", "role": "Ketua Komunitas Motor" },
+        "bella": { "quote": "Sebagai kreator, royalti dari desain yang kejual kelihatan jelas di dashboard.", "role": "Kreator Desain" },
+        "yoga": { "quote": "Bahan hoodie-nya tebal dan sablonnya awet, udah dicuci berkali-kali masih bagus.", "role": "Pemilik Clothing Line" },
+        "putri": { "quote": "Revisi desain gampang lewat editor, nggak perlu bolak-balik chat admin.", "role": "Event Organizer" }
+      }
+    },
+    "popularProducts": {
+      "eyebrow": "Produk Populer",
+      "title": "Beragam Produk, Bebas Berkreasi",
+      "viewAll": "Lihat Semua Produk →",
+      "viewAllAria": "Lihat semua produk terpopuler"
+    },
+    "popularDesigns": {
+      "eyebrow": "Desain Populer",
+      "title": "Karya Kreator Pilihan",
+      "viewAll": "Lihat Semua Desain →",
+      "viewAllAria": "Lihat semua desain terpopuler"
+    }
   }
 }

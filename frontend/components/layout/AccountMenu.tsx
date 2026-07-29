@@ -1,20 +1,22 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import type { User } from "@/types/user";
 
 const ACCOUNT_LINKS = (isAdmin: boolean) => [
-  ...(isAdmin ? [{ href: "/admin/dashboard", label: "Admin Dashboard" }] : []),
-  { href: "/account/profile", label: "Kelola Profil" },
-  { href: "/account/addresses", label: "Address Book" },
-  { href: "/account/wishlist", label: "Wishlist" },
-  { href: "/account/orders", label: "Riwayat Pesanan" },
-  { href: "/account/become-creator", label: "Ajukan Upgrade Creator" },
-  { href: "/notifications", label: "Notifikasi" },
-];
+  ...(isAdmin ? [{ href: "/admin/dashboard", key: "adminDashboard" }] : []),
+  { href: "/account/profile", key: "profile" },
+  { href: "/account/addresses", key: "addresses" },
+  { href: "/account/wishlist", key: "wishlist" },
+  { href: "/account/orders", key: "orders" },
+  { href: "/account/become-creator", key: "becomeCreator" },
+  { href: "/notifications", key: "notifications" },
+] as const;
 
 /** The account links reused by both the desktop dropdown and the mobile drawer. */
 export function AccountMenuLinks({ user, onNavigate }: { user: User | null; onNavigate: () => void }) {
+  const t = useTranslations("layout.account");
   return (
     <div className="flex flex-col">
       {ACCOUNT_LINKS(user?.role === "admin").map((link) => (
@@ -24,7 +26,7 @@ export function AccountMenuLinks({ user, onNavigate }: { user: User | null; onNa
           onClick={onNavigate}
           className="px-5 py-2 font-body text-sm text-text-primary hover:bg-background md:px-5"
         >
-          {link.label}
+          {t(link.key)}
         </Link>
       ))}
     </div>
@@ -49,6 +51,7 @@ export default function AccountMenu({
   onNavigate: () => void;
   onLogout: () => void;
 }) {
+  const t = useTranslations("layout.header");
   return (
     <div className="relative" onMouseEnter={onOpen} onMouseLeave={onScheduleClose}>
       <button type="button" className="flex items-center gap-2">
@@ -67,7 +70,7 @@ export default function AccountMenu({
             onClick={onLogout}
             className="w-full px-5 py-2 text-left font-body text-sm text-text-primary hover:bg-background"
           >
-            Keluar
+            {t("logout")}
           </button>
         </div>
       )}

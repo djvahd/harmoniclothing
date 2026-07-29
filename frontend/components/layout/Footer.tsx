@@ -1,41 +1,41 @@
+import { getTranslations } from "next-intl/server";
 import Logo from "./Logo";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 const FOOTER_COLUMNS = [
   {
-    title: "PRODUK",
+    titleKey: "productsTitle",
     links: [
-      { href: "/catalog?kategori=t-shirt", label: "T-Shirt" },
-      { href: "/catalog?kategori=hoodie", label: "Hoodie" },
-      { href: "/catalog?kategori=jacket", label: "Jacket" },
+      { href: "/catalog?kategori=t-shirt", key: "tshirt" },
+      { href: "/catalog?kategori=hoodie", key: "hoodie" },
+      { href: "/catalog?kategori=jacket", key: "jacket" },
     ],
   },
   {
-    title: "BANTUAN",
+    titleKey: "helpTitle",
     links: [
-      { href: "/faq", label: "FAQ" },
-      { href: "/pusat-bantuan", label: "Pusat Bantuan" },
-      { href: "/kontak", label: "Kontak" },
+      { href: "/faq", key: "faq" },
+      { href: "/pusat-bantuan", key: "helpCenter" },
+      { href: "/kontak", key: "contact" },
     ],
   },
-];
+] as const;
 
-export default function Footer() {
+export default async function Footer() {
+  const t = await getTranslations("layout.footer");
   return (
     <footer className="flex w-full flex-col gap-6 bg-primary px-4 py-6 md:px-20">
       <div className="flex flex-col gap-10 md:flex-row md:gap-16">
         <div className="flex flex-col gap-1.5">
           <Logo variant="white" />
-          <p className="w-[200px] font-body text-xs text-text-on-accent">
-            Platform konveksi modern untuk kreator dan brand.
-          </p>
+          <p className="w-[200px] font-body text-xs text-text-on-accent">{t("tagline")}</p>
         </div>
         {FOOTER_COLUMNS.map((column) => (
-          <div key={column.title} className="flex flex-col gap-2">
-            <p className="font-body text-xs font-bold text-text-on-accent">{column.title}</p>
+          <div key={column.titleKey} className="flex flex-col gap-2">
+            <p className="font-body text-xs font-bold text-text-on-accent">{t(column.titleKey)}</p>
             {column.links.map((link) => (
               <a key={link.href} href={link.href} className="font-body text-xs text-text-on-accent">
-                {link.label}
+                {t(link.key)}
               </a>
             ))}
           </div>
@@ -43,9 +43,7 @@ export default function Footer() {
       </div>
       <div className="h-px w-full bg-text-on-accent/40" />
       <div className="flex flex-col items-start justify-between gap-3 md:flex-row md:items-center">
-        <p className="font-body text-caption text-text-on-accent">
-          © 2026 Harmoni Clothing. All rights reserved.
-        </p>
+        <p className="font-body text-caption text-text-on-accent">{t("copyright")}</p>
         <LanguageSwitcher />
       </div>
     </footer>

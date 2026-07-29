@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Bell } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useNotifications, invalidateNotifications } from "@/hooks/useNotifications";
 import { markNotificationRead } from "@/services/notifications";
 import { formatDate } from "@/lib/format";
@@ -20,6 +21,8 @@ export default function NotificationPopover({
   onCancelClose: () => void;
   onNavigate: () => void;
 }) {
+  const t = useTranslations("layout.notifications");
+  const tCommon = useTranslations("common");
   const { notifications, isLoading } = useNotifications();
   const preview = notifications.slice(0, 3);
   const unreadCount = notifications.filter((n) => !n.is_read).length;
@@ -32,7 +35,7 @@ export default function NotificationPopover({
 
   return (
     <div className="relative" onMouseEnter={onOpen} onMouseLeave={onScheduleClose}>
-      <button type="button" aria-label="Notifikasi" className="relative text-text-primary">
+      <button type="button" aria-label={t("aria")} className="relative text-text-primary">
         <Bell className="size-5" />
         {unreadCount > 0 && (
           <span className="absolute -right-2 -top-1.5 flex size-4 items-center justify-center rounded-full bg-danger text-[10px] font-bold text-danger-fg">
@@ -46,7 +49,7 @@ export default function NotificationPopover({
           className="absolute right-0 top-full z-40 mt-2 w-[360px] rounded-md border border-border bg-surface shadow-lg"
         >
           <div className="px-5 py-3">
-            <p className="font-body text-sm font-semibold text-text-primary">Notifikasi</p>
+            <p className="font-body text-sm font-semibold text-text-primary">{t("title")}</p>
           </div>
           <div className="border-t border-border" />
           {isLoading ? (
@@ -62,7 +65,7 @@ export default function NotificationPopover({
             </div>
           ) : preview.length === 0 ? (
             <p className="px-5 py-6 text-center font-body text-sm text-text-secondary">
-              Belum ada notifikasi.
+              {t("empty")}
             </p>
           ) : (
             <div className="flex flex-col">
@@ -84,10 +87,10 @@ export default function NotificationPopover({
               onClick={handleMarkAllRead}
               className="font-body text-xs font-medium text-text-secondary"
             >
-              Tandai semua dibaca
+              {t("markAllRead")}
             </button>
             <Link href="/notifications" onClick={onNavigate} className="font-body text-xs font-medium text-primary">
-              Lihat Semua
+              {tCommon("viewAll")}
             </Link>
           </div>
         </div>

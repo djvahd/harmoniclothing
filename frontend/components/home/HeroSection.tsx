@@ -3,15 +3,16 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import Button from "@/components/ui/Button";
 import Reveal from "@/components/ui/Reveal";
 
 const TRUST_ITEMS = [
-  { icon: "/hero/trust-icon-1.svg", title: "Tanpa Minimum Order", subtitle: "Pesan 1 pcs pun bisa" },
-  { icon: "/hero/trust-icon-2.svg", title: "Kualitas Premium", subtitle: "Bahan terbaik, hasil maksimal" },
-  { icon: "/hero/trust-icon-3.svg", title: "Produksi Cepat", subtitle: "Proses efisien & on-time" },
-  { icon: "/hero/trust-icon-4.svg", title: "Garansi Kepuasan", subtitle: "100% garansi kualitas" },
-];
+  { icon: "/hero/trust-icon-1.svg", key: "noMinOrder" },
+  { icon: "/hero/trust-icon-2.svg", key: "premiumQuality" },
+  { icon: "/hero/trust-icon-3.svg", key: "fastProduction" },
+  { icon: "/hero/trust-icon-4.svg", key: "satisfactionGuarantee" },
+] as const;
 
 // depth: signed scroll factor — negative recedes upward (background), positive advances downward (foreground)
 // scaleDelta: extra scale applied at max scroll (negative shrinks, positive grows)
@@ -65,6 +66,7 @@ function getHeroEntranceStyle(index: number, entered: boolean): CSSProperties {
 
 /** The landing hero: headline, CTAs, trust badges, and the parallax product collage. */
 export default function HeroSection() {
+  const t = useTranslations("home.hero");
   const heroCollageRef = useRef<HTMLDivElement>(null);
   const [heroEntered, setHeroEntered] = useState(false);
 
@@ -126,33 +128,30 @@ export default function HeroSection() {
         <div className="flex flex-col items-start gap-7">
           <Reveal delay={0}>
             <h1 className="font-heading text-h3 font-semibold leading-tight text-text-primary md:text-h1 md:leading-[1.1]">
-              Wujudkan Ide.
+              {t("headline1")}
               <br />
-              Ciptakan Produk.
+              {t("headline2")}
               <br />
-              <span className="text-accent">Bergerak Bersama.</span>
+              <span className="text-accent">{t("headline3")}</span>
             </h1>
           </Reveal>
           <Reveal delay={120}>
-            <p className="max-w-md font-body text-base text-text-secondary">
-              Platform konveksi modern untuk kreator, brand, dan komunitas — custom design, tanpa
-              minimum order.
-            </p>
+            <p className="max-w-md font-body text-base text-text-secondary">{t("subtitle")}</p>
           </Reveal>
           <Reveal delay={240}>
             <div className="flex flex-wrap gap-3">
               <Link href="/catalog">
-                <Button variant="primary">Mulai Custom Design →</Button>
+                <Button variant="primary">{t("ctaCustomDesign")}</Button>
               </Link>
               <Link href="/catalog">
-                <Button variant="secondary">Jelajahi Produk</Button>
+                <Button variant="secondary">{t("ctaExploreProducts")}</Button>
               </Link>
             </div>
           </Reveal>
           <Reveal delay={360}>
             <div className="flex flex-wrap gap-7">
               {TRUST_ITEMS.map((item) => (
-                <div key={item.title} className="flex items-center gap-2.5">
+                <div key={item.key} className="flex items-center gap-2.5">
                   <div className="relative size-8 shrink-0">
                     <Image src="/hero/trust-bg.svg" alt="" fill sizes="32px" priority />
                     <Image
@@ -165,8 +164,12 @@ export default function HeroSection() {
                     />
                   </div>
                   <div className="flex flex-col">
-                    <p className="font-body text-sm font-semibold text-text-primary">{item.title}</p>
-                    <p className="font-body text-body-sm text-text-secondary">{item.subtitle}</p>
+                    <p className="font-body text-sm font-semibold text-text-primary">
+                      {t(`trust.${item.key}.title`)}
+                    </p>
+                    <p className="font-body text-body-sm text-text-secondary">
+                      {t(`trust.${item.key}.subtitle`)}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -208,7 +211,7 @@ export default function HeroSection() {
           >
             <div className="flex h-full w-full items-center justify-center" style={getHeroEntranceStyle(3, heroEntered)}>
               <div className="relative h-[293px] w-[268px] rotate-[-7.2deg] drop-shadow-xl">
-                <Image src="/hero/hoodie.png" alt="Hoodie" fill sizes="268px" className="object-cover" priority />
+                <Image src="/hero/hoodie.png" alt={t("altHoodie")} fill sizes="268px" className="object-cover" priority />
               </div>
             </div>
           </div>
@@ -219,7 +222,7 @@ export default function HeroSection() {
           >
             <div className="flex h-full w-full items-center justify-center" style={getHeroEntranceStyle(4, heroEntered)}>
               <div className="relative h-[374px] w-[420px] rotate-[11.37deg] drop-shadow-xl">
-                <Image src="/hero/kaos.png" alt="Kaos" fill sizes="420px" className="object-cover" priority />
+                <Image src="/hero/kaos.png" alt={t("altTshirt")} fill sizes="420px" className="object-cover" priority />
               </div>
             </div>
           </div>
@@ -267,8 +270,8 @@ export default function HeroSection() {
               className="flex w-[180px] flex-col gap-1.5 rounded-md bg-white px-4 py-3 shadow-[0px_8px_24px_0px_rgba(0,0,0,0.18)]"
               style={getHeroEntranceStyle(9, heroEntered)}
             >
-              <p className="font-body text-body-sm font-semibold text-text-primary">Custom by You</p>
-              <p className="font-body text-xs text-text-secondary">Made with Harmoni</p>
+              <p className="font-body text-body-sm font-semibold text-text-primary">{t("cardTitle")}</p>
+              <p className="font-body text-xs text-text-secondary">{t("cardSubtitle")}</p>
               <div className="flex items-center gap-2">
                 <div className="flex -space-x-1.5">
                   {["avatar1", "avatar2", "avatar3", "avatar4"].map((a) => (
