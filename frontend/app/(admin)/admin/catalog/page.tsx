@@ -10,7 +10,7 @@ import Button from "@/components/ui/Button";
 import { getProducts } from "@/services/catalog";
 import { createProduct, createVariant, updateVariant } from "@/services/admin";
 import { formatCurrency } from "@/lib/format";
-import { ApiError } from "@/lib/api";
+import { getErrorMessage } from "@/lib/api";
 import type { PrintArea, ProductVariant } from "@/types/product";
 
 const PRINT_AREA_OPTIONS: PrintArea[] = ["depan", "belakang", "lengan"];
@@ -79,7 +79,7 @@ function VariantRow({ variant }: { variant: ProductVariant }) {
       await mutate("/catalog/products?admin");
       setEditing(false);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Terjadi kesalahan, coba lagi.");
+      setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
     } finally {
       setSaving(false);
     }
@@ -170,7 +170,7 @@ export default function KelolaKatalogPage() {
       setForm({ name_id: "", name_en: "", base_price: "", gender_segment: "" });
       setShowForm(false);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Terjadi kesalahan, coba lagi.");
+      setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
     } finally {
       setSaving(false);
     }
@@ -199,7 +199,7 @@ export default function KelolaKatalogPage() {
       await mutate("/catalog/products?admin");
       setVariantForm(EMPTY_VARIANT_FORM);
     } catch (err) {
-      setVariantError(err instanceof ApiError ? err.message : "Terjadi kesalahan, coba lagi.");
+      setVariantError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
     } finally {
       setVariantSaving(false);
     }

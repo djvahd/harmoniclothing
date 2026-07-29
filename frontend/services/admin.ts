@@ -1,7 +1,9 @@
-import { apiFetch } from "@/lib/api";
+import { API_URL, apiFetch } from "@/lib/api";
+import { buildQuery } from "@/lib/query";
 import type { User } from "@/types/user";
 import type { Design, PrintArea, Product, ProductVariant } from "@/types/product";
 import type { Order } from "@/types/order";
+import type { Paginated } from "@/types/api";
 
 export interface AdminDashboardSummary {
   users: { customers_total: number; creators_active: number; creators_pending: number };
@@ -71,21 +73,12 @@ export interface AuditLog {
   created_at: string;
 }
 
-interface Paginated<T> {
-  data: T[];
-  meta: { current_page: number; per_page: number; total: number };
-}
-
 export function getDashboardSummary() {
   return apiFetch<{ data: AdminDashboardSummary }>("/admin/dashboard");
 }
 
 export function getUsers(params?: { role?: string; status?: string }) {
-  const qs = new URLSearchParams();
-  if (params?.role) qs.set("role", params.role);
-  if (params?.status) qs.set("status", params.status);
-  const query = qs.toString();
-  return apiFetch<Paginated<User>>(`/admin/users${query ? `?${query}` : ""}`);
+  return apiFetch<Paginated<User>>(`/admin/users${buildQuery(params)}`);
 }
 
 export function getPendingCreators() {
@@ -94,7 +87,6 @@ export function getPendingCreators() {
 
 /** Sanctum session cookie auth means an <img> tag sends it automatically — no separate fetch/blob needed. */
 export function kycDocumentUrl(creatorProfileId: number): string {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
   return `${API_URL}/api/admin/creators/${creatorProfileId}/kyc-document`;
 }
 
@@ -197,10 +189,7 @@ export function getProductionQueue() {
 }
 
 export function getOrders(params?: { status?: string }) {
-  const qs = new URLSearchParams();
-  if (params?.status) qs.set("status", params.status);
-  const query = qs.toString();
-  return apiFetch<Paginated<Order>>(`/admin/orders${query ? `?${query}` : ""}`);
+  return apiFetch<Paginated<Order>>(`/admin/orders${buildQuery(params)}`);
 }
 
 export function updateOrderStatus(id: number) {
@@ -225,10 +214,7 @@ export function bookShipment(id: number, courier: string) {
 }
 
 export function getPayments(params?: { status?: string }) {
-  const qs = new URLSearchParams();
-  if (params?.status) qs.set("status", params.status);
-  const query = qs.toString();
-  return apiFetch<Paginated<Payment>>(`/admin/payments${query ? `?${query}` : ""}`);
+  return apiFetch<Paginated<Payment>>(`/admin/payments${buildQuery(params)}`);
 }
 
 export function getAdminChatThreads() {
@@ -262,11 +248,7 @@ export function updateNotificationSetting(type: string, isEnabled: boolean) {
 }
 
 export function getSalesReport(params?: { from?: string; to?: string }) {
-  const qs = new URLSearchParams();
-  if (params?.from) qs.set("from", params.from);
-  if (params?.to) qs.set("to", params.to);
-  const query = qs.toString();
-  return apiFetch<{ data: SalesReport }>(`/admin/reports/sales${query ? `?${query}` : ""}`);
+  return apiFetch<{ data: SalesReport }>(`/admin/reports/sales${buildQuery(params)}`);
 }
 
 export function getAuditLogs() {

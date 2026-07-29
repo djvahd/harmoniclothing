@@ -16,7 +16,7 @@ import { useAuthModalStore } from "@/store/auth-modal-store";
 import { getCart } from "@/services/cart";
 import { getNotifications, markNotificationRead } from "@/services/notifications";
 import { storageUrl } from "@/lib/storage";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatDate } from "@/lib/format";
 
 const NAV_LINKS = [
   { href: "/", label: "Beranda" },
@@ -395,7 +395,7 @@ function NotificationsDropdown({ onClose }: { onClose: () => void }) {
               <div className={n.is_read ? "ml-4 flex-1" : "flex-1"}>
                 <p className="font-body text-sm text-text-primary">{n.title}</p>
                 <p className="font-body text-xs text-text-secondary">
-                  {new Date(n.created_at).toLocaleDateString("id-ID")}
+                  {formatDate(n.created_at)}
                 </p>
               </div>
             </div>

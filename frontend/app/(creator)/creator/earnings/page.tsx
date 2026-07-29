@@ -7,7 +7,7 @@ import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import StatCard from "@/components/ui/StatCard";
 import Badge from "@/components/ui/Badge";
 import { getEarnings } from "@/services/creator";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatDate } from "@/lib/format";
 
 const STATUS_VARIANT = {
   terhutang: "warning",
@@ -48,7 +48,7 @@ export default function StatistikKomisiPage() {
                   {formatCurrency(Number(c.amount))}
                 </p>
                 <p className="font-body text-xs text-text-secondary">
-                  {new Date(c.created_at).toLocaleDateString("id-ID")}
+                  {formatDate(c.created_at)}
                 </p>
               </div>
               <Badge variant={STATUS_VARIANT[c.status]}>{c.status}</Badge>

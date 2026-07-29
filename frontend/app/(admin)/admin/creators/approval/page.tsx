@@ -6,6 +6,7 @@ import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Button from "@/components/ui/Button";
 import PromptModal from "@/components/ui/PromptModal";
+import { formatDate } from "@/lib/format";
 import { approveCreator, getPendingCreators, kycDocumentUrl, rejectCreator } from "@/services/admin";
 
 export default function ApprovalCreatorPage() {
@@ -64,7 +65,7 @@ export default function ApprovalCreatorPage() {
                   </p>
                   <p className="font-body text-xs text-text-secondary">
                     {creator.user.email} · {creator.kyc_full_name} · KTP: {creator.kyc_id_number}
-                    {creator.birth_date && ` · Lahir: ${new Date(creator.birth_date).toLocaleDateString("id-ID")}`}
+                    {creator.birth_date && ` · Lahir: ${formatDate(creator.birth_date)}`}
                   </p>
                   {creator.address && (
                     <p className="font-body text-xs text-text-secondary">Alamat: {creator.address}</p>

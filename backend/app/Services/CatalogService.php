@@ -7,8 +7,8 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\User;
 use App\Repositories\ProductRepository;
+use App\Support\SlugGenerator;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class CatalogService
@@ -51,7 +51,7 @@ class CatalogService
     {
         $product = Product::create([
             ...$data,
-            'slug' => $this->generateProductSlug($data['name_id']),
+            'slug' => SlugGenerator::unique($data['name_id'], Product::class),
             'is_active' => $data['is_active'] ?? true,
         ]);
         $this->auditLog->record($admin, 'product.create', $product);
@@ -123,18 +123,5 @@ class CatalogService
                 'color' => ['Kombinasi warna/ukuran/potongan ini sudah ada untuk produk ini.'],
             ]);
         }
-    }
-
-    private function generateProductSlug(string $name): string
-    {
-        $base = Str::slug($name);
-        $slug = $base;
-        $suffix = 1;
-
-        while (Product::query()->where('slug', $slug)->exists()) {
-            $slug = "{$base}-".$suffix++;
-        }
-
-        return $slug;
     }
 }

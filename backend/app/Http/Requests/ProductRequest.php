@@ -7,8 +7,8 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * POST/PATCH /admin/catalog/products — FR-031. Shared by store & update,
  * same "PATCH replaces the full resource" convention as AddressRequest.
- * `slug` is not accepted here — auto-generated from name_id, same pattern
- * as CreatorService/CreatorDesignService's generateSlug().
+ * `slug` is not accepted here — auto-generated from name_id via
+ * App\Support\SlugGenerator, same helper CreatorService/CreatorDesignService use.
  */
 class ProductRequest extends FormRequest
 {

@@ -14,7 +14,7 @@ import { getDesignBySlug } from "@/services/marketplace";
 import { uploadDesignFile } from "@/services/customization";
 import { addToCart } from "@/services/cart";
 import { storageUrl } from "@/lib/storage";
-import { ApiError } from "@/lib/api";
+import { getErrorMessage } from "@/lib/api";
 
 function ProductEditorForm() {
   const params = useParams<{ slug: string }>();
@@ -75,7 +75,7 @@ function ProductEditorForm() {
       const { data } = await uploadDesignFile(file);
       setUploadedPath(data.path);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Gagal mengunggah file.");
+      setError(getErrorMessage(err, "Gagal mengunggah file."));
     } finally {
       setUploading(false);
     }
@@ -99,7 +99,7 @@ function ProductEditorForm() {
       await mutate("/cart");
       router.push("/cart");
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Terjadi kesalahan, coba lagi.");
+      setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
     } finally {
       setSubmitting(false);
     }

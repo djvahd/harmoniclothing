@@ -1,10 +1,7 @@
 import { apiFetch } from "@/lib/api";
+import { buildQuery } from "@/lib/query";
 import type { Design } from "@/types/product";
-
-interface Paginated<T> {
-  data: T[];
-  meta: { current_page: number; per_page: number; total: number };
-}
+import type { Paginated } from "@/types/api";
 
 export type DesignSort = "terbaru" | "harga_asc" | "harga_desc" | "terlaris" | "rating";
 
@@ -19,22 +16,8 @@ export interface GetDesignsParams {
   per_page?: number;
 }
 
-function appendArrayParam(qs: URLSearchParams, key: string, values?: string[]) {
-  values?.forEach((value) => qs.append(`${key}[]`, value));
-}
-
 export function getDesigns(params?: GetDesignsParams) {
-  const qs = new URLSearchParams();
-  appendArrayParam(qs, "categories", params?.categories);
-  appendArrayParam(qs, "tags", params?.tags);
-  if (params?.search) qs.set("search", params.search);
-  if (params?.price_min != null) qs.set("price_min", String(params.price_min));
-  if (params?.price_max != null) qs.set("price_max", String(params.price_max));
-  if (params?.sort) qs.set("sort", params.sort);
-  if (params?.page) qs.set("page", String(params.page));
-  if (params?.per_page) qs.set("per_page", String(params.per_page));
-  const query = qs.toString();
-  return apiFetch<Paginated<Design>>(`/marketplace/designs${query ? `?${query}` : ""}`);
+  return apiFetch<Paginated<Design>>(`/marketplace/designs${buildQuery(params)}`);
 }
 
 export interface DesignFilterOptions {
@@ -82,15 +65,7 @@ export function getCreators(params?: {
   page?: number;
   per_page?: number;
 }) {
-  const qs = new URLSearchParams();
-  if (params?.search) qs.set("search", params.search);
-  appendArrayParam(qs, "categories", params?.categories);
-  appendArrayParam(qs, "tags", params?.tags);
-  if (params?.sort) qs.set("sort", params.sort);
-  if (params?.page) qs.set("page", String(params.page));
-  if (params?.per_page) qs.set("per_page", String(params.per_page));
-  const query = qs.toString();
-  return apiFetch<Paginated<CreatorSummary>>(`/marketplace/creators${query ? `?${query}` : ""}`);
+  return apiFetch<Paginated<CreatorSummary>>(`/marketplace/creators${buildQuery(params)}`);
 }
 
 export function getCreatorBySlug(slug: string) {

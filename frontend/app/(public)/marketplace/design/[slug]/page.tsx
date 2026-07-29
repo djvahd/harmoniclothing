@@ -6,28 +6,28 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import useSWR, { mutate } from "swr";
 import clsx from "clsx";
-import {
-  Award,
-  ChevronRight,
-  LayoutGrid,
-  Package,
-  PackageSearch,
-  Ruler,
-  ShieldCheck,
-  Star,
-  UserRound,
-  Zap,
-} from "lucide-react";
+import { ChevronRight, LayoutGrid, Package, Star, UserRound } from "lucide-react";
 import Tag from "@/components/ui/Tag";
 import Button from "@/components/ui/Button";
 import QuantityStepper from "@/components/ui/QuantityStepper";
 import WishlistButton from "@/components/ui/WishlistButton";
 import DesignCard, { DesignCardSkeleton } from "@/components/ui/DesignCard";
+import ProductGallery from "@/components/product/ProductGallery";
+import VariantPicker from "@/components/product/VariantPicker";
+import TrustBadges from "@/components/product/TrustBadges";
+import RelatedGrid from "@/components/product/RelatedGrid";
+import DetailPageSkeleton from "@/components/product/DetailPageSkeleton";
+import DetailNotFound from "@/components/product/DetailNotFound";
+import ProductTabs, {
+  CARE_TAB_CONTENT,
+  SHIPPING_TAB_CONTENT,
+  ReviewsTabContent,
+} from "@/components/product/ProductTabs";
 import { getDesignBySlug, getCreatorBySlug, getDesigns } from "@/services/marketplace";
 import { addToCart } from "@/services/cart";
 import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
-import { ApiError } from "@/lib/api";
+import { getErrorMessage } from "@/lib/api";
 import type { Design, Product, PrintArea } from "@/types/product";
 
 // Display-only estimate mirroring backend's config('creator.commission_rate')
@@ -138,43 +138,23 @@ export default function DetailDesainPage() {
       await mutate("/cart");
       router.push(destination === "cart" ? "/cart" : "/checkout");
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Terjadi kesalahan, coba lagi.");
+      setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
     } finally {
       setPendingAction(null);
     }
   }
 
   if (isLoading) {
-    return (
-      <div className="mx-auto flex w-full max-w-[1440px] animate-pulse flex-col gap-8 px-4 py-10 md:px-20">
-        <div className="h-4 w-64 rounded-sm bg-border" />
-        <div className="flex flex-col gap-8 md:flex-row">
-          <div className="h-[460px] w-full shrink-0 rounded-md bg-border md:w-[480px]" />
-          <div className="flex flex-1 flex-col gap-4">
-            <div className="h-5 w-24 rounded-full bg-border" />
-            <div className="h-8 w-3/4 rounded-sm bg-border" />
-            <div className="h-4 w-40 rounded-sm bg-border" />
-            <div className="h-9 w-full rounded-sm bg-border" />
-            <div className="h-11 w-full rounded-sm bg-border" />
-            <div className="h-11 w-full rounded-sm bg-border" />
-          </div>
-        </div>
-      </div>
-    );
+    return <DetailPageSkeleton />;
   }
 
   if (!design) {
     return (
-      <div className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-3 px-4 py-24 text-center md:px-20">
-        <PackageSearch className="size-10 text-text-secondary" />
-        <p className="font-body text-sm text-text-secondary">Desain tidak ditemukan.</p>
-        <Link
-          href="/marketplace"
-          className="font-body text-sm font-medium text-primary underline underline-offset-4"
-        >
-          Kembali ke Lapak Desain
-        </Link>
-      </div>
+      <DetailNotFound
+        message="Desain tidak ditemukan."
+        backHref="/marketplace"
+        backLabel="Kembali ke Lapak Desain"
+      />
     );
   }
 
@@ -204,48 +184,15 @@ export default function DetailDesainPage() {
       </nav>
 
       <div className="flex flex-col gap-8 md:flex-row">
-        <div className="flex w-full shrink-0 flex-col gap-3 md:w-[480px]">
-          <div className="relative h-[420px] w-full overflow-hidden rounded-md bg-border">
-            {previewImage && (
-              <Image
-                src={previewImage}
-                alt={design.title}
-                fill
-                sizes="(min-width: 768px) 480px, 100vw"
-                className="object-cover"
-                priority
-              />
-            )}
-            {isLaris && (
-              <span className="absolute left-3 top-3 rounded-full bg-primary px-3 py-1 font-body text-xs font-semibold text-text-on-accent">
-                Terlaris
-              </span>
-            )}
-            <WishlistButton designId={design.id} className="absolute right-3 top-3" />
-          </div>
-          {galleryItems.length > 1 && (
-            <div className="flex gap-2 overflow-x-auto">
-              {galleryItems.map((item) => {
-                const thumb = storageUrl(item.path);
-                return (
-                  <button
-                    key={item.key}
-                    type="button"
-                    onClick={() => setGalleryKey(item.key)}
-                    className={clsx(
-                      "relative size-16 shrink-0 overflow-hidden rounded-sm border-2 bg-border transition-colors",
-                      (activeGalleryItem?.key ?? galleryItems[0].key) === item.key
-                        ? "border-accent"
-                        : "border-transparent hover:border-primary/40",
-                    )}
-                  >
-                    {thumb && <Image src={thumb} alt="" fill sizes="64px" className="object-cover" />}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
+        <ProductGallery
+          previewImage={previewImage}
+          alt={design.title}
+          isLaris={isLaris}
+          wishlist={<WishlistButton designId={design.id} className="absolute right-3 top-3" />}
+          items={galleryItems}
+          activeKey={activeGalleryItem?.key}
+          onSelectItem={(key) => setGalleryKey(key)}
+        />
 
         <div className="flex flex-1 flex-col gap-4">
           <div>
@@ -310,88 +257,19 @@ export default function DetailDesainPage() {
                 </div>
               )}
 
-              {colors.length > 0 && (
-                <div className="flex flex-col gap-2">
-                  <p className="font-body text-sm font-medium text-text-primary">
-                    Pilih Warna Produk{activeColor ? `: ${activeColor}` : ""}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {colors.map((c) => (
-                      <button
-                        key={c}
-                        type="button"
-                        onClick={() => {
-                          setColor(c);
-                          setGalleryKey(c);
-                        }}
-                        aria-label={c}
-                        aria-pressed={activeColor === c}
-                        className={clsx(
-                          "size-8 rounded-full border-2 transition-colors",
-                          activeColor === c ? "border-accent" : "border-border hover:border-primary/50",
-                        )}
-                        style={{ backgroundColor: c }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {sizesForColor.length > 0 && (
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center justify-between">
-                    <p className="font-body text-sm font-medium text-text-primary">Pilih Ukuran</p>
-                    <button
-                      type="button"
-                      onClick={() => setShowSizeChart((v) => !v)}
-                      className="flex items-center gap-1 font-body text-xs text-text-secondary transition-colors hover:text-primary"
-                    >
-                      <Ruler className="size-3.5" />
-                      Size Chart
-                    </button>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {sizesForColor.map((s) => (
-                      <button key={s} type="button" onClick={() => setSize(s)}>
-                        <Tag active={activeSize === s} size="sm">
-                          {s}
-                        </Tag>
-                      </button>
-                    ))}
-                  </div>
-                  {showSizeChart && (
-                    <div className="overflow-x-auto rounded-sm border border-border">
-                      <table className="w-full font-body text-sm">
-                        <thead>
-                          <tr className="border-b border-border bg-surface text-left text-text-secondary">
-                            <th className="px-3 py-2 font-medium">Ukuran</th>
-                            <th className="px-3 py-2 font-medium">Lebar Dada (cm)</th>
-                            <th className="px-3 py-2 font-medium">Panjang (cm)</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {[
-                            ["S", "46", "66"],
-                            ["M", "49", "69"],
-                            ["L", "52", "72"],
-                            ["XL", "55", "75"],
-                            ["XXL", "58", "78"],
-                          ].map(([s, chest, length]) => (
-                            <tr key={s} className="border-b border-border last:border-0">
-                              <td className="px-3 py-2 text-text-primary">{s}</td>
-                              <td className="px-3 py-2 text-text-secondary">{chest}</td>
-                              <td className="px-3 py-2 text-text-secondary">{length}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                      <p className="border-t border-border bg-surface px-3 py-2 font-body text-xs text-text-secondary">
-                        Ukuran umum, dapat berbeda tipis tergantung jenis produk.
-                      </p>
-                    </div>
-                  )}
-                </div>
-              )}
+              <VariantPicker
+                colors={colors}
+                activeColor={activeColor}
+                onSelectColor={(c) => {
+                  setColor(c);
+                  setGalleryKey(c);
+                }}
+                sizes={sizesForColor}
+                activeSize={activeSize}
+                onSelectSize={setSize}
+                showSizeChart={showSizeChart}
+                onToggleSizeChart={() => setShowSizeChart((v) => !v)}
+              />
 
               <div className="flex items-center justify-between pt-1">
                 <p className="font-body text-sm font-medium text-text-primary">Jumlah</p>
@@ -445,44 +323,21 @@ export default function DetailDesainPage() {
                 </Button>
               </div>
 
-              <div className="flex flex-wrap gap-5 border-t border-border pt-4">
-                <div className="flex items-center gap-2 font-body text-xs text-text-secondary">
-                  <Zap className="size-4 text-primary" />
-                  Produksi Cepat
-                </div>
-                <div className="flex items-center gap-2 font-body text-xs text-text-secondary">
-                  <Award className="size-4 text-primary" />
-                  Kualitas Premium
-                </div>
-                <div className="flex items-center gap-2 font-body text-xs text-text-secondary">
-                  <ShieldCheck className="size-4 text-primary" />
-                  Garansi Kepuasan
-                </div>
-              </div>
+              <TrustBadges />
             </>
           )}
         </div>
       </div>
 
       <div className="flex flex-col gap-6">
-        <div className="flex flex-wrap gap-2 border-b border-border">
-          {TABS.map((t) => (
-            <button
-              key={t.key}
-              type="button"
-              onClick={() => setTab(t.key)}
-              className={clsx(
-                "relative px-4 py-3 font-heading text-sm font-semibold transition-colors",
-                tab === t.key ? "text-primary" : "text-text-secondary hover:text-text-primary",
-              )}
-            >
-              {t.key === "ulasan" && design.review_count ? `${t.label} (${design.review_count})` : t.label}
-              {tab === t.key && (
-                <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-primary" />
-              )}
-            </button>
-          ))}
-        </div>
+        <ProductTabs
+          tabs={TABS.map((t) => ({
+            ...t,
+            badge: t.key === "ulasan" ? design.review_count ?? undefined : undefined,
+          }))}
+          active={tab}
+          onChange={(key) => setTab(key as TabKey)}
+        />
 
         <div className="font-body text-sm text-text-secondary">
           {tab === "deskripsi" && (
@@ -518,28 +373,16 @@ export default function DetailDesainPage() {
             ) : (
               <p>Belum ada produk untuk desain ini.</p>
             ))}
-          {tab === "perawatan" && (
-            <p>
-              Gunakan air dingin dan deterjen lembut, jangan gunakan pemutih, jemur di tempat teduh,
-              dan setrika suhu rendah pada bagian dalam untuk menjaga hasil sablon tetap awet.
-            </p>
+          {tab === "perawatan" && CARE_TAB_CONTENT}
+          {tab === "pengiriman" && SHIPPING_TAB_CONTENT}
+          {tab === "ulasan" && (
+            <ReviewsTabContent
+              hasRating={hasRating}
+              ratingAverage={design.rating_average}
+              reviewCount={design.review_count}
+              emptyMessage="Belum ada ulasan untuk desain ini."
+            />
           )}
-          {tab === "pengiriman" && (
-            <p>
-              Produk umumnya diproduksi 1–3 hari kerja setelah pesanan dikonfirmasi, lalu dikirim ke
-              seluruh Indonesia menggunakan kurir pilihanmu saat checkout. Estimasi tiba mengikuti
-              layanan kurir yang dipilih.
-            </p>
-          )}
-          {tab === "ulasan" &&
-            (hasRating ? (
-              <p>
-                Rating {design.rating_average} dari {design.review_count} ulasan pembeli. Daftar
-                ulasan lengkap akan tampil di sini setelah fitur listing ulasan tersedia.
-              </p>
-            ) : (
-              <p>Belum ada ulasan untuk desain ini.</p>
-            ))}
         </div>
       </div>
 
@@ -562,27 +405,14 @@ function YouMightLike({ categorySlug, excludeId }: { categorySlug?: string; excl
   );
   const items = (data?.data ?? []).filter((d: Design) => d.id !== excludeId).slice(0, 6);
 
-  if (!isLoading && items.length === 0) return null;
-
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h2 className="font-heading text-h3 font-semibold text-text-primary md:text-h2">
-          Kamu Mungkin Suka
-        </h2>
-        <Link
-          href={categorySlug ? `/marketplace?kategori=${categorySlug}` : "/marketplace"}
-          className="shrink-0 font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4"
-        >
-          Lihat Semua →
-        </Link>
-      </div>
-      <div className="flex flex-wrap gap-6">
-        {isLoading
-          ? Array.from({ length: 6 }).map((_, i) => <DesignCardSkeleton key={i} />)
-          : items.map((d: Design) => <DesignCard key={d.id} design={d} />)}
-      </div>
-    </div>
+    <RelatedGrid
+      seeAllHref={categorySlug ? `/marketplace?kategori=${categorySlug}` : "/marketplace"}
+      isLoading={isLoading}
+      items={items}
+      renderItem={(d: Design) => <DesignCard key={d.id} design={d} />}
+      renderSkeleton={(i) => <DesignCardSkeleton key={i} />}
+    />
   );
 }
 

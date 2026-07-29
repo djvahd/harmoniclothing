@@ -1,10 +1,7 @@
 import { apiFetch } from "@/lib/api";
+import { buildQuery } from "@/lib/query";
 import type { GenderSegment, PrintArea, Product } from "@/types/product";
-
-interface Paginated<T> {
-  data: T[];
-  meta: { current_page: number; per_page: number; total: number };
-}
+import type { Paginated } from "@/types/api";
 
 export type ProductSort = "terbaru" | "harga_asc" | "harga_desc" | "terlaris" | "rating";
 
@@ -22,25 +19,8 @@ export interface GetProductsParams {
   sort?: ProductSort;
 }
 
-function appendArrayParam(qs: URLSearchParams, key: string, values?: string[]) {
-  values?.forEach((value) => qs.append(`${key}[]`, value));
-}
-
 export function getProducts(params?: GetProductsParams) {
-  const qs = new URLSearchParams();
-  appendArrayParam(qs, "categories", params?.categories);
-  appendArrayParam(qs, "genders", params?.genders);
-  appendArrayParam(qs, "sizes", params?.sizes);
-  appendArrayParam(qs, "colors", params?.colors);
-  appendArrayParam(qs, "materials", params?.materials);
-  appendArrayParam(qs, "print_areas", params?.print_areas);
-  if (params?.page) qs.set("page", String(params.page));
-  if (params?.per_page) qs.set("per_page", String(params.per_page));
-  if (params?.price_min != null) qs.set("price_min", String(params.price_min));
-  if (params?.price_max != null) qs.set("price_max", String(params.price_max));
-  if (params?.sort) qs.set("sort", params.sort);
-  const query = qs.toString();
-  return apiFetch<Paginated<Product>>(`/catalog/products${query ? `?${query}` : ""}`);
+  return apiFetch<Paginated<Product>>(`/catalog/products${buildQuery(params)}`);
 }
 
 export interface CatalogFilterOptions {

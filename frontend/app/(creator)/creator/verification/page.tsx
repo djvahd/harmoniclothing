@@ -8,7 +8,7 @@ import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import { submitVerification } from "@/services/creator";
-import { ApiError } from "@/lib/api";
+import { getErrorMessage } from "@/lib/api";
 
 const PAYOUT_METHODS = [
   { value: "bank_transfer", label: "Transfer Bank" },
@@ -71,7 +71,7 @@ export default function VerifikasiDataDiriPage() {
       });
       setStatus(data.status);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Terjadi kesalahan, coba lagi.");
+      setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
     } finally {
       setLoading(false);
     }

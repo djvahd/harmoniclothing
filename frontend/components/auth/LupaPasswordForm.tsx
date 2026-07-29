@@ -6,7 +6,7 @@ import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { forgotPassword } from "@/services/auth";
 import { useAuthModalStore } from "@/store/auth-modal-store";
-import { ApiError } from "@/lib/api";
+import { getErrorMessage } from "@/lib/api";
 
 const linkClass =
   "font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4";
@@ -26,7 +26,7 @@ export default function LupaPasswordForm() {
       await forgotPassword(email);
       setSent(true);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Terjadi kesalahan, coba lagi.");
+      setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
     } finally {
       setLoading(false);
     }

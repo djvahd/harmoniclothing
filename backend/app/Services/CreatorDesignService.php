@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Design;
 use App\Models\Tag;
 use App\Models\User;
+use App\Support\SlugGenerator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -38,7 +39,7 @@ class CreatorDesignService
             'creator_id' => $user->id,
             'category_id' => $data['category_id'] ?? null,
             'title' => $data['title'],
-            'slug' => $this->generateSlug($data['title']),
+            'slug' => SlugGenerator::unique($data['title'], Design::class),
             'description' => $data['description'] ?? null,
             'file_path' => $path,
             'thumbnail_path' => $path,
@@ -180,18 +181,5 @@ class CreatorDesignService
         $this->auditLog->record($admin, 'design.reject', $design, $reason);
 
         return $design;
-    }
-
-    private function generateSlug(string $title): string
-    {
-        $base = Str::slug($title);
-        $slug = $base;
-        $suffix = 1;
-
-        while (Design::query()->where('slug', $slug)->exists()) {
-            $slug = "{$base}-".$suffix++;
-        }
-
-        return $slug;
     }
 }

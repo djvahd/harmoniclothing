@@ -8,12 +8,15 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Review;
 use App\Models\Tag;
+use App\Repositories\Concerns\SortsListings;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class DesignRepository
 {
+    use SortsListings;
+
     private const STARTING_PRICE_SQL = '(select min(products.base_price) from design_product '
         .'join products on products.id = design_product.product_id '
         .'where design_product.design_id = designs.id)';
@@ -70,7 +73,7 @@ class DesignRepository
             ->when(isset($filters['price_min']), fn ($query) => $query->whereRaw(self::STARTING_PRICE_SQL.' >= CAST(? AS DECIMAL(12,2))', [$filters['price_min']]))
             ->when(isset($filters['price_max']), fn ($query) => $query->whereRaw(self::STARTING_PRICE_SQL.' <= CAST(? AS DECIMAL(12,2))', [$filters['price_max']]));
 
-        return $this->applySort($query, $filters['sort'] ?? 'terbaru')->paginate($perPage);
+        return $this->applySort($query, $filters['sort'] ?? 'terbaru', 'starting_price')->paginate($perPage);
     }
 
     /**
@@ -110,17 +113,6 @@ class DesignRepository
             'price_min' => (float) ($priceRange->min ?? 0),
             'price_max' => (float) ($priceRange->max ?? 0),
         ];
-    }
-
-    private function applySort(Builder $query, string $sort): Builder
-    {
-        return match ($sort) {
-            'harga_asc' => $query->orderBy('starting_price'),
-            'harga_desc' => $query->orderByDesc('starting_price'),
-            'terlaris' => $query->orderByDesc('sold_count'),
-            'rating' => $query->orderByDesc('avg_rating'),
-            default => $query->latest(),
-        };
     }
 
     /**

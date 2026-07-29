@@ -6,6 +6,7 @@ import { ArrowLeft, Printer } from "lucide-react";
 import Logo from "@/components/layout/Logo";
 import PriceSummaryRow from "@/components/ui/PriceSummaryRow";
 import Badge from "@/components/ui/Badge";
+import { formatDate } from "@/lib/format";
 import { getInvoice } from "@/services/orders";
 
 export default function InvoicePage() {
@@ -58,7 +59,7 @@ export default function InvoicePage() {
               Invoice #{invoice.invoice_number}
             </p>
             <p className="font-body text-xs text-text-secondary">
-              Diterbitkan {new Date(invoice.issued_at).toLocaleDateString("id-ID")}
+              Diterbitkan {formatDate(invoice.issued_at)}
             </p>
             <Badge variant="success">Lunas</Badge>
           </div>

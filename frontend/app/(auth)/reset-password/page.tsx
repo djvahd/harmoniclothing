@@ -7,7 +7,7 @@ import PasswordInput from "@/components/ui/PasswordInput";
 import Button from "@/components/ui/Button";
 import { resetPassword } from "@/services/auth";
 import { useAuthModalStore } from "@/store/auth-modal-store";
-import { ApiError } from "@/lib/api";
+import { getErrorMessage } from "@/lib/api";
 
 function ResetPasswordForm() {
   const router = useRouter();
@@ -32,7 +32,7 @@ function ResetPasswordForm() {
       openAuthModal("login", "Password berhasil diperbarui. Silakan masuk.");
       router.push("/");
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Terjadi kesalahan, coba lagi.");
+      setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
     } finally {
       setLoading(false);
     }

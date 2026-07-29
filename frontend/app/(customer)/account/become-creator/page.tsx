@@ -9,7 +9,7 @@ import FeatureCard from "@/components/ui/FeatureCard";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { becomeCreator } from "@/services/creator";
-import { ApiError } from "@/lib/api";
+import { getErrorMessage } from "@/lib/api";
 
 export default function AjukanUpgradeCreatorPage() {
   const router = useRouter();
@@ -33,7 +33,7 @@ export default function AjukanUpgradeCreatorPage() {
       });
       router.push("/creator/verification");
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Terjadi kesalahan, coba lagi.");
+      setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
     } finally {
       setLoading(false);
     }

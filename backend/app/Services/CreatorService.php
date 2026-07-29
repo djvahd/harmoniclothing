@@ -5,9 +5,9 @@ namespace App\Services;
 use App\Enums\UserStatus;
 use App\Models\CreatorProfile;
 use App\Models\User;
+use App\Support\SlugGenerator;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 /**
@@ -39,7 +39,7 @@ class CreatorService
 
         return CreatorProfile::create([
             'user_id' => $user->id,
-            'slug' => $this->generateSlug($data['brand_name'] ?? $user->name),
+            'slug' => SlugGenerator::unique($data['brand_name'] ?? $user->name, CreatorProfile::class),
             'brand_name' => $data['brand_name'] ?? null,
             'bio' => $data['bio'] ?? null,
             'portfolio_url' => $data['portfolio_url'] ?? null,
@@ -189,18 +189,5 @@ class CreatorService
         $this->auditLog->record($admin, 'creator.ban', $profile, $reason);
 
         return $profile;
-    }
-
-    private function generateSlug(string $name): string
-    {
-        $base = Str::slug($name);
-        $slug = $base;
-        $suffix = 1;
-
-        while (CreatorProfile::query()->where('slug', $slug)->exists()) {
-            $slug = "{$base}-".$suffix++;
-        }
-
-        return $slug;
     }
 }

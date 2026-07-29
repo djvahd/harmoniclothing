@@ -10,7 +10,7 @@ import Button from "@/components/ui/Button";
 import { getCart } from "@/services/cart";
 import { getAddresses } from "@/services/account";
 import { checkout } from "@/services/checkout";
-import { ApiError } from "@/lib/api";
+import { getErrorMessage } from "@/lib/api";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -50,7 +50,7 @@ export default function CheckoutPage() {
         router.push(`/account/orders/${order.id}`);
       }
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Terjadi kesalahan, coba lagi.");
+      setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
     } finally {
       setLoading(false);
     }

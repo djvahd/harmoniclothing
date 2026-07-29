@@ -12,3 +12,11 @@ export function formatCurrency(amount: number | string): string {
     maximumFractionDigits: 0,
   }).format(Number(amount));
 }
+
+export function formatDate(date: string | number | Date): string {
+  return new Date(date).toLocaleDateString("id-ID");
+}
+
+export function formatDateTime(date: string | number | Date): string {
+  return new Date(date).toLocaleString("id-ID");
+}

@@ -11,7 +11,7 @@ import Button from "@/components/ui/Button";
 import TagInput from "@/components/ui/TagInput";
 import { getProducts } from "@/services/catalog";
 import { createDesign } from "@/services/creator";
-import { ApiError } from "@/lib/api";
+import { getErrorMessage } from "@/lib/api";
 
 export default function UploadDesainPage() {
   const router = useRouter();
@@ -54,7 +54,7 @@ export default function UploadDesainPage() {
       });
       router.push(`/creator/designs/${design.id}`);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Terjadi kesalahan, coba lagi.");
+      setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
     } finally {
       setLoading(false);
     }

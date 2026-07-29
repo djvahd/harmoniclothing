@@ -7,7 +7,7 @@ import PasswordInput from "@/components/ui/PasswordInput";
 import Button from "@/components/ui/Button";
 import { useAuthStore } from "@/store/auth-store";
 import { useAuthModalStore } from "@/store/auth-modal-store";
-import { ApiError } from "@/lib/api";
+import { getErrorMessage } from "@/lib/api";
 
 const linkClass =
   "font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4";
@@ -29,7 +29,7 @@ export default function LoginForm({ message }: { message: string | null }) {
       await login(email, password);
       closeModal();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Terjadi kesalahan, coba lagi.");
+      setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
     } finally {
       setLoading(false);
     }

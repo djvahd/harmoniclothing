@@ -7,11 +7,14 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\Review;
+use App\Repositories\Concerns\SortsListings;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 
 class ProductRepository
 {
+    use SortsListings;
+
     /**
      * Sidebar filter panel — all list dimensions (categories, genders,
      * sizes, colors, print_areas) are multi-select (OR within a dimension,
@@ -55,7 +58,7 @@ class ProductRepository
                 })
             ));
 
-        return $this->applySort($query, $filters['sort'] ?? 'terbaru')->paginate($perPage);
+        return $this->applySort($query, $filters['sort'] ?? 'terbaru', 'base_price')->paginate($perPage);
     }
 
     /**
@@ -96,22 +99,6 @@ class ProductRepository
             'price_min' => (float) ($priceRange->min ?? 0),
             'price_max' => (float) ($priceRange->max ?? 0),
         ];
-    }
-
-    /**
-     * sold_count/avg_rating/review_count are always selected by paginate()
-     * (see subquery helpers below), so sorting by 'terlaris'/'rating' just
-     * orders by the alias — no need to re-add the subquery here.
-     */
-    private function applySort(Builder $query, string $sort): Builder
-    {
-        return match ($sort) {
-            'harga_asc' => $query->orderBy('base_price'),
-            'harga_desc' => $query->orderByDesc('base_price'),
-            'terlaris' => $query->orderByDesc('sold_count'),
-            'rating' => $query->orderByDesc('avg_rating'),
-            default => $query->latest(),
-        };
     }
 
     /**

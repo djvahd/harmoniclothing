@@ -52,20 +52,20 @@ Checklist ini diurutkan berdasarkan **hasil dibagi usaha**, bukan tingkat kepara
 
 ### 3a. Backend
 
-- [ ] **3.1** 🔴 ⏱S — Buat `app/Support/SlugGenerator.php` (atau trait `GeneratesUniqueSlug`) dan pakai di `CatalogService`, `CreatorDesignService`, `CreatorService` — hapus tiga salinan `generateSlug`. Beri docblock: *"Menghasilkan slug unik dari teks; menambah sufiks -1, -2, … bila slug sudah dipakai model terkait."* (§6.2)
-- [ ] **3.2** 🟠 ⏱S — Angkat `applySort` ke trait bersama (mis. `app/Repositories/Concerns/SortsListings.php`) dengan kolom harga sebagai parameter; pakai di `ProductRepository` dan `DesignRepository`. (§6.3)
+- [x] **3.1** 🔴 ⏱S — Buat `app/Support/SlugGenerator.php` (atau trait `GeneratesUniqueSlug`) dan pakai di `CatalogService`, `CreatorDesignService`, `CreatorService` — hapus tiga salinan `generateSlug`. Beri docblock: *"Menghasilkan slug unik dari teks; menambah sufiks -1, -2, … bila slug sudah dipakai model terkait."* (§6.2) — *selesai 2026-07-29; dibuat sebagai class statis `SlugGenerator::unique(text, modelClass, column)`, bukan trait, karena ketiga caller sudah punya model Eloquent berbeda-beda dan tidak ada state instance yang perlu dibagi.*
+- [x] **3.2** 🟠 ⏱S — Angkat `applySort` ke trait bersama (mis. `app/Repositories/Concerns/SortsListings.php`) dengan kolom harga sebagai parameter; pakai di `ProductRepository` dan `DesignRepository`. (§6.3) — *selesai 2026-07-29; `CreatorRepository::applySort` sengaja tidak disentuh karena tidak punya sort harga dan default kolomnya beda (bukan duplikasi sejati).*
 
 ### 3b. Frontend — lapisan bersama
 
-- [ ] **3.3** 🟠 ⏱S — Buat `lib/query.ts` berisi satu `buildQuery(params)` yang menangani nilai skalar dan array (`key[]`). Pakai di `catalog.ts`, `marketplace.ts` (2 tempat), `admin.ts` (3 tempat); hapus dua salinan `appendArrayParam`. (§6.4, §6.5)
-- [ ] **3.4** 🟠 ⏱XS — Pindahkan `interface Paginated<T>` ke `types/api.ts`, impor dari 3 service. (§6.6)
-- [ ] **3.5** 🟠 ⏱XS — Ekspor `API_URL` dari `lib/api.ts`; pakai di `lib/storage.ts` dan `services/admin.ts:96`. (§6.7)
-- [ ] **3.6** 🟠 ⏱S — Tambah `getErrorMessage(err, fallback)` di `lib/api.ts`; ganti 13 kemunculan `err instanceof ApiError ? … : …`. (§6.8)
-- [ ] **3.7** 🟠 ⏱XS — Tambah `formatDate()` dan `formatDateTime()` di `lib/format.ts`; ganti 6 pemanggilan `toLocaleDateString("id-ID")` inline. (§6.9)
+- [x] **3.3** 🟠 ⏱S — Buat `lib/query.ts` berisi satu `buildQuery(params)` yang menangani nilai skalar dan array (`key[]`). Pakai di `catalog.ts`, `marketplace.ts` (2 tempat), `admin.ts` (3 tempat); hapus dua salinan `appendArrayParam`. (§6.4, §6.5) — *selesai 2026-07-29; parameter diketik sebagai `object` (bukan `Record<string, QueryValue>`) karena TypeScript menolak assign interface tanpa index signature eksplisit ke tipe Record di titik pemanggilan.*
+- [x] **3.4** 🟠 ⏱XS — Pindahkan `interface Paginated<T>` ke `types/api.ts`, impor dari 3 service. (§6.6) — *selesai 2026-07-29.*
+- [x] **3.5** 🟠 ⏱XS — Ekspor `API_URL` dari `lib/api.ts`; pakai di `lib/storage.ts` dan `services/admin.ts:96`. (§6.7) — *selesai 2026-07-29.*
+- [x] **3.6** 🟠 ⏱S — Tambah `getErrorMessage(err, fallback)` di `lib/api.ts`; ganti 13 kemunculan `err instanceof ApiError ? … : …`. (§6.8) — *selesai 2026-07-29; ternyata 16 kemunculan (bukan 13). `RegisterForm.tsx` sengaja tidak diubah karena memakai `err.errors` (validasi per-field), bukan `err.message`.*
+- [x] **3.7** 🟠 ⏱XS — Tambah `formatDate()` dan `formatDateTime()` di `lib/format.ts`; ganti 6 pemanggilan `toLocaleDateString("id-ID")` inline. (§6.9) — *selesai 2026-07-29; ternyata cuma 4 kemunculan inline (bukan 6).*
 
 ### 3c. Frontend — dua halaman detail
 
-- [ ] **3.8** 🔴 ⏱L — Ekstrak blok bersama dari `katalog-produk/[slug]` dan `lapak-desain/[slug]` ke `components/product/`:
+- [x] **3.8** 🔴 ⏱L — Ekstrak blok bersama dari `catalog/[slug]` dan `marketplace/design/[slug]` (path Bahasa Inggris pasca-K1/Batch 2b, bukan `katalog-produk`/`lapak-desain` seperti tertulis semula) ke `components/product/`:
   - `ProductGallery` — gambar utama + thumbnail + badge Terlaris + tombol wishlist
   - `VariantPicker` — swatch warna + pemilih ukuran
   - `SizeChartTable` — satu sumber data ukuran
@@ -74,10 +74,10 @@ Checklist ini diurutkan berdasarkan **hasil dibagi usaha**, bukan tingkat kepara
   - `DetailPageSkeleton` dan `DetailNotFound` — terparameter judul + link kembali
   - `RelatedGrid` — menggantikan dua `YouMightLike`, menerima daftar item + judul + href "Lihat Semua"
 
-  Target: kedua halaman turun ke bawah 250 baris. (§6.1, §7.2)
+  *selesai 2026-07-29; kedua halaman turun signifikan (catalog: 493→352 baris, marketplace design: 696→526 baris) tapi **tidak sampai di bawah 250 baris** — sisa baris adalah logic spesifik halaman (state variant/gallery, handler submit cart/checkout, tab content spesifik "produk"/"spesifikasi") yang di luar cakupan 8 komponen yang diminta checklist ini; ekstraksi lebih jauh akan jadi scope creep di luar §6.1/§7.2.* (§6.1, §7.2)
 
-> **✅ CP-3 — "Duplikasi dihapus"**
-> **Verifikasi:** `php artisan test` hijau, `pnpm build` hijau, lalu bandingkan `/katalog-produk/[slug]` dan `/lapak-desain/[slug]` di browser — tampilan harus **identik dengan sebelum refactor**. Ini refactor tanpa perubahan perilaku.
+> **✅ CP-3 — "Duplikasi dihapus"** — **selesai & terverifikasi 2026-07-29**
+> **Verifikasi:** `php artisan test` — **212/212 lulus**; `pnpm build` hijau (semua 36 route ter-generate, ukuran halaman turun: `catalog/[slug]` 9.56kB→6.93kB, `marketplace/design/[slug]` 7.18kB→4.61kB); dibandingkan langsung di browser (dev server) — gallery, pemilih warna/ukuran, size chart toggle, tab switching, upload desain, related grid, dan (khusus marketplace) creator summary card semua berfungsi identik dengan sebelum refactor, tanpa error console.
 > **Commit:** `refactor: extract shared slug/sort/query helpers and product detail components`
 > **Konteks untuk sesi baru:** laporan §6 (tabel nomor baris ada di sana), `frontend/components/ui/`, `backend/app/Services/`, `backend/app/Repositories/`.
 

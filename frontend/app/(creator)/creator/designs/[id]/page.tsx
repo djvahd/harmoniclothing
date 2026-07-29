@@ -9,7 +9,7 @@ import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import { getMyDesigns, confirmApparel, submitDesign } from "@/services/creator";
 import { storageUrl } from "@/lib/storage";
-import { ApiError } from "@/lib/api";
+import { getErrorMessage } from "@/lib/api";
 
 export default function EditorPreviewMultiApparelPage() {
   const params = useParams<{ id: string }>();
@@ -39,7 +39,7 @@ export default function EditorPreviewMultiApparelPage() {
       router.push("/creator/designs");
     } catch (err) {
       setError(
-        err instanceof ApiError ? err.message : "Terjadi kesalahan, coba lagi.",
+        getErrorMessage(err, "Terjadi kesalahan, coba lagi."),
       );
     } finally {
       setLoading(false);
