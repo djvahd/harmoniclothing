@@ -126,18 +126,18 @@ Checklist ini diurutkan berdasarkan **hasil dibagi usaha**, bukan tingkat kepara
 
 ## Batch 6 — Modularitas & keterbacaan (🟠)
 
-- [ ] **6.1** 🟠 ⏱M — Isi `frontend/hooks/`: `useProducts`, `useDesigns`, `useCart`, `useOrders`, `useNotifications`, `useWishlist`. Pusatkan key SWR di `lib/swr-keys.ts` supaya `mutate()` tidak lagi bergantung pada string yang diketik manual. (§7.3)
-- [ ] **6.2** 🟠 ⏱M — Pecah `components/layout/SiteHeader.tsx` (418 baris) menjadi `HeaderNav`, `CartPopover`, `NotificationPopover`, `HeaderSearch`. (§7.2)
-- [ ] **6.3** 🟠 ⏱M — Pecah `app/(public)/page.tsx` (535 baris) menjadi komponen per section di `components/home/`. (§7.2)
-- [ ] **6.4** 🟠 ⏱M — Pecah `app/(public)/lapak-desain/page.tsx`: pindahkan `DesainTab` dan `CreatorTab` ke file masing-masing. (§7.2)
-- [ ] **6.5** 🟠 ⏱M — Pecah `app/(admin)/admin/katalog/page.tsx`: pisahkan `ProductForm` dan `VariantForm` dari daftar. (§7.2)
-- [ ] **6.6** 🟠 ⏱M — Tambah docblock satu-dua kalimat di setiap komponen `components/ui/` dan setiap fungsi `services/`, meniru gaya backend: jelaskan *tujuan* dan *aturan yang berlaku*, bukan mengulang isi kode. Contoh yang sudah bagus: `lib/format.ts`. (§7.4)
-- [ ] **6.7** 🟡 ⏱S — Hubungkan size chart ke data produk, atau beri label eksplisit sebagai panduan umum agar tidak menyesatkan. (§5.7)
+- [x] **6.1** 🟠 ⏱M — Isi `frontend/hooks/`: `useProducts`, `useDesigns`, `useCart`, `useOrders`, `useNotifications`, `useWishlist`. Pusatkan key SWR di `lib/swr-keys.ts` supaya `mutate()` tidak lagi bergantung pada string yang diketik manual. (§7.3) — *selesai 2026-07-29; `swrKeys` mencakup keenam domain + `creators` (dipakai bareng `useDesigns` di halaman marketplace); ~17 file konsumen dimigrasi dari `useSWR`+string literal ke hook/`swrKeys`.*
+- [x] **6.2** 🟠 ⏱M — Pecah `components/layout/SiteHeader.tsx` (418 baris) menjadi `HeaderNav`, `CartPopover`, `NotificationPopover`, `HeaderSearch`. (§7.2) — *selesai 2026-07-29; tidak ada fitur search di header (diverifikasi, bukan diasumsikan), jadi `HeaderSearch` tidak dibuat — sebagai gantinya `AccountMenu` diekstrak (bagian nyata dari file yang justru butuh dipecah).*
+- [x] **6.3** 🟠 ⏱M — Pecah `app/(public)/page.tsx` (535 baris) menjadi komponen per section di `components/home/`. (§7.2) — *selesai 2026-07-29; 6 komponen: `HeroSection`, `HowItWorksSection`, `PopularProductsSection`, `PopularDesignsSection`, `TestimonialsSection`, `CtaSection`.*
+- [x] **6.4** 🟠 ⏱M — Pecah `app/(public)/lapak-desain/page.tsx`: pindahkan `DesainTab` dan `CreatorTab` ke file masing-masing. (§7.2) — *selesai 2026-07-29; path sudah `marketplace/page.tsx` pasca-Batch 2b, komponen dipindah ke `components/marketplace/`.*
+- [x] **6.5** 🟠 ⏱M — Pecah `app/(admin)/admin/katalog/page.tsx`: pisahkan `ProductForm` dan `VariantForm` dari daftar. (§7.2) — *selesai 2026-07-29; path sudah `admin/catalog/page.tsx` pasca-Batch 2b. Sekalian diekstrak `VariantRow` (baris edit-inline) dan `PrintAreaCheckboxes` (dipakai bareng keduanya) ke `components/admin/catalog/`.*
+- [x] **6.6** 🟠 ⏱M — Tambah docblock satu-dua kalimat di setiap komponen `components/ui/` dan setiap fungsi `services/`, meniru gaya backend: jelaskan *tujuan* dan *aturan yang berlaku*, bukan mengulang isi kode. Contoh yang sudah bagus: `lib/format.ts`. (§7.4) — *selesai 2026-07-29; ke-30 komponen `components/ui/` dapat docblock per-komponen. `services/` (13 file, ~72 fungsi CRUD) sengaja didekati beda: satu docblock per file menjelaskan domain resource, bukan 72 komentar per-fungsi yang cuma akan mengulang nama fungsi — CLAUDE.md proyek ini eksplisit melarang komentar yang tidak menjelaskan sesuatu yang non-obvious.*
+- [x] **6.7** 🟡 ⏱S — Hubungkan size chart ke data produk, atau beri label eksplisit sebagai panduan umum agar tidak menyesatkan. (§5.7) — *tidak berlaku, diverifikasi 2026-07-29 — `SizeChartTable.tsx` sudah punya disclaimer eksplisit ("Ukuran umum, dapat berbeda tipis tergantung jenis produk") sejak sebelum batch ini. Tidak ada kolom ukuran/measurement apa pun di skema backend untuk dihubungkan — menyambungkannya ke data nyata butuh migration baru, di luar cakupan batch modularitas frontend-only ini.*
 
-> **✅ CP-6 — "Kode modular"**
-> **Verifikasi:** `pnpm build` hijau; tidak ada file di `app/` atau `components/` yang melebihi ±300 baris.
-> **Commit:** `refactor(frontend): domain hooks, component decomposition, and component docblocks`
-> **Konteks untuk sesi baru:** laporan §7.
+> **✅ CP-6 — "Kode modular"** — **selesai & terverifikasi 2026-07-29**
+> **Verifikasi:** `pnpm build` hijau (36 route); `php artisan test` 212/212 (batch frontend-only, tidak menyentuh backend); ditelusuri langsung di browser sebagai admin — beranda (hero+parallax+kedua carousel data-driven), marketplace (tab Desain & Kreator), `/admin/catalog` (expand baris → `VariantRow`+`VariantForm` render & simpan), alur tambah-ke-keranjang penuh (`POST /cart` 201 → `invalidateCart()` refetch `GET /cart` 200 → halaman `/cart` menampilkan item) — semua tanpa console/server error.
+> **Commit:** `e16c097` `refactor(frontend): domain hooks, component decomposition, and component docblocks`
+> **Konteks untuk sesi baru:** laporan §7, `frontend/hooks/`, `frontend/lib/swr-keys.ts`, `frontend/components/{home,marketplace,admin/catalog}/`.
 
 ---
 
