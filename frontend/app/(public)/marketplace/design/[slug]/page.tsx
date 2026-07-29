@@ -26,7 +26,7 @@ import ProductTabs, {
 import { getCreatorBySlug } from "@/services/marketplace";
 import { addToCart } from "@/services/cart";
 import { invalidateCart } from "@/hooks/useCart";
-import { useDesign, useDesigns } from "@/hooks/useDesigns";
+import { useDesign, useDesignReviews, useDesigns } from "@/hooks/useDesigns";
 import { swrKeys } from "@/lib/swr-keys";
 import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
@@ -60,6 +60,8 @@ export default function DetailDesainPage() {
   const params = useParams<{ slug: string }>();
   const router = useRouter();
   const { design, isLoading } = useDesign(params.slug);
+  const [reviewPage, setReviewPage] = useState(1);
+  const { reviews, meta: reviewsMeta, isLoading: reviewsLoading } = useDesignReviews(params.slug, reviewPage);
   const products = useMemo(() => design?.products ?? [], [design]);
 
   const [productId, setProductId] = useState<number | null>(null);
@@ -383,6 +385,10 @@ export default function DetailDesainPage() {
               ratingAverage={design.rating_average}
               reviewCount={design.review_count}
               emptyMessage="Belum ada ulasan untuk desain ini."
+              reviews={reviews}
+              reviewsLoading={reviewsLoading}
+              meta={reviewsMeta}
+              onPageChange={setReviewPage}
             />
           )}
         </div>

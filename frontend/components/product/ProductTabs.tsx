@@ -1,4 +1,8 @@
 import clsx from "clsx";
+import { Star, UserRound } from "lucide-react";
+import Pagination, { type PaginationMeta } from "@/components/ui/Pagination";
+import { formatDate } from "@/lib/format";
+import type { Review } from "@/types/product";
 
 export interface TabDef {
   key: string;
@@ -57,17 +61,52 @@ export function ReviewsTabContent({
   ratingAverage,
   reviewCount,
   emptyMessage,
+  reviews,
+  reviewsLoading,
+  meta,
+  onPageChange,
 }: {
   hasRating: boolean;
   ratingAverage: number | null | undefined;
   reviewCount: number | null | undefined;
   emptyMessage: string;
+  reviews: Review[];
+  reviewsLoading: boolean;
+  meta?: PaginationMeta;
+  onPageChange: (page: number) => void;
 }) {
   if (!hasRating) return <p>{emptyMessage}</p>;
   return (
-    <p>
-      Rating {ratingAverage} dari {reviewCount} ulasan pembeli. Daftar ulasan lengkap akan tampil
-      di sini setelah fitur listing ulasan tersedia.
-    </p>
+    <div className="flex flex-col gap-4">
+      <p>
+        Rating {ratingAverage} dari {reviewCount} ulasan pembeli.
+      </p>
+      {reviewsLoading && <p className="text-xs text-text-secondary">Memuat ulasan...</p>}
+      <div className="flex flex-col divide-y divide-border">
+        {reviews.map((review) => (
+          <div key={review.id} className="flex flex-col gap-1.5 py-3">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-border text-text-secondary">
+                  <UserRound className="size-3.5" />
+                </span>
+                <span className="font-medium text-text-primary">{review.user?.name ?? "Pembeli"}</span>
+              </div>
+              <span className="text-xs text-text-secondary">{formatDate(review.created_at)}</span>
+            </div>
+            <div className="flex items-center gap-0.5">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star
+                  key={i}
+                  className={clsx("size-3.5", i < review.rating ? "fill-warning text-warning" : "text-border")}
+                />
+              ))}
+            </div>
+            {review.comment && <p>{review.comment}</p>}
+          </div>
+        ))}
+      </div>
+      {meta && <Pagination meta={meta} onPageChange={onPageChange} />}
+    </div>
   );
 }

@@ -1,7 +1,7 @@
 /** Public design marketplace: filtered/sorted design and creator listings, filter facets, and detail-by-slug. */
 import { apiFetch } from "@/lib/api";
 import { buildQuery } from "@/lib/query";
-import type { Design } from "@/types/product";
+import type { Design, Review } from "@/types/product";
 import type { Paginated } from "@/types/api";
 
 export type DesignSort = "terbaru" | "harga_asc" | "harga_desc" | "terlaris" | "rating";
@@ -34,6 +34,10 @@ export function getDesignFilters() {
 
 export function getDesignBySlug(slug: string) {
   return apiFetch<{ data: Design }>(`/marketplace/designs/${slug}`);
+}
+
+export function getDesignReviews(slug: string, params?: { page?: number; per_page?: number }) {
+  return apiFetch<Paginated<Review>>(`/marketplace/designs/${slug}/reviews${buildQuery(params)}`);
 }
 
 export interface CreatorProfile {

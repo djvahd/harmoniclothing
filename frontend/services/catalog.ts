@@ -1,7 +1,7 @@
 /** Public product catalog: filtered/sorted listing, filter facets, and detail-by-slug. */
 import { apiFetch } from "@/lib/api";
 import { buildQuery } from "@/lib/query";
-import type { GenderSegment, PrintArea, Product } from "@/types/product";
+import type { GenderSegment, PrintArea, Product, Review } from "@/types/product";
 import type { Paginated } from "@/types/api";
 
 export type ProductSort = "terbaru" | "harga_asc" | "harga_desc" | "terlaris" | "rating";
@@ -41,4 +41,8 @@ export function getCatalogFilters() {
 
 export function getProductBySlug(slug: string) {
   return apiFetch<{ data: Product }>(`/catalog/products/${slug}`);
+}
+
+export function getProductReviews(slug: string, params?: { page?: number; per_page?: number }) {
+  return apiFetch<Paginated<Review>>(`/catalog/products/${slug}/reviews${buildQuery(params)}`);
 }

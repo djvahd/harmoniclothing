@@ -22,7 +22,7 @@ import ProductTabs, {
 import { uploadDesignFile } from "@/services/customization";
 import { addToCart } from "@/services/cart";
 import { invalidateCart } from "@/hooks/useCart";
-import { useProduct, useProducts } from "@/hooks/useProducts";
+import { useProduct, useProductReviews, useProducts } from "@/hooks/useProducts";
 import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
 import { getErrorMessage } from "@/lib/api";
@@ -49,6 +49,8 @@ export default function DetailProdukPage() {
   const params = useParams<{ slug: string }>();
   const router = useRouter();
   const { product, isLoading } = useProduct(params.slug);
+  const [reviewPage, setReviewPage] = useState(1);
+  const { reviews, meta: reviewsMeta, isLoading: reviewsLoading } = useProductReviews(params.slug, reviewPage);
 
   const colors = useMemo(
     () => Array.from(new Set(product?.variants?.map((v) => v.color) ?? [])),
@@ -330,6 +332,10 @@ export default function DetailProdukPage() {
               ratingAverage={product.rating_average}
               reviewCount={product.review_count}
               emptyMessage="Belum ada ulasan untuk produk ini."
+              reviews={reviews}
+              reviewsLoading={reviewsLoading}
+              meta={reviewsMeta}
+              onPageChange={setReviewPage}
             />
           )}
         </div>

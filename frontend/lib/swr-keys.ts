@@ -30,10 +30,12 @@ export const swrKeys = {
   products: (tag: string, params?: GetProductsParams) => ["/catalog/products", tag, params] as const,
   productBySlug: (slug: string) => `/catalog/products/${slug}` as const,
   productFilters: () => "/catalog/products/filters" as const,
+  productReviews: (slug: string, page: number) => ["/catalog/products", slug, "reviews", page] as const,
 
   designs: (tag: string, params?: GetDesignsParams) => ["/marketplace/designs", tag, params] as const,
   designBySlug: (slug: string) => `/marketplace/designs/${slug}` as const,
   designFilters: () => "/marketplace/designs/filters" as const,
+  designReviews: (slug: string, page: number) => ["/marketplace/designs", slug, "reviews", page] as const,
 
   creators: (tag: string, params?: GetCreatorsParams) => ["/marketplace/creators", tag, params] as const,
   creatorBySlug: (slug: string) => `/marketplace/creators/${slug}` as const,

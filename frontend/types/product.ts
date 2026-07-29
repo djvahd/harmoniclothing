@@ -60,6 +60,15 @@ export interface Design {
   apparel?: DesignApparel[];
 }
 
+export interface Review {
+  id: number;
+  order_item_id: number;
+  rating: number;
+  comment: string | null;
+  created_at: string;
+  user?: { id: number; name: string };
+}
+
 export interface CartItem {
   id: number;
   quantity: number;

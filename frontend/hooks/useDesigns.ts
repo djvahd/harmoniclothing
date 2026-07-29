@@ -2,6 +2,7 @@ import useSWR from "swr";
 import {
   getDesignBySlug,
   getDesignFilters,
+  getDesignReviews,
   getDesigns,
   type GetDesignsParams,
 } from "@/services/marketplace";
@@ -25,4 +26,12 @@ export function useDesign(slug: string | null) {
 export function useDesignFilters() {
   const { data } = useSWR(swrKeys.designFilters(), getDesignFilters);
   return data?.data;
+}
+
+/** Paginated reviews for a design (marketplace/design/[slug] "Ulasan" tab, 5.4). */
+export function useDesignReviews(slug: string | null, page: number) {
+  const { data, isLoading } = useSWR(slug ? swrKeys.designReviews(slug, page) : null, () =>
+    getDesignReviews(slug as string, { page }),
+  );
+  return { reviews: data?.data ?? [], meta: data?.meta, isLoading };
 }

@@ -228,8 +228,11 @@ function BulkOrderForm() {
           ))}
         </div>
 
-        <div className="border-t border-border pt-3">
-          <PriceSummaryRow label="Total Kuantitas" amount={totalQuantity} />
+        <div className="flex flex-col gap-1 border-t border-border pt-3">
+          <div className="flex items-center justify-between font-body text-sm">
+            <p className="text-text-secondary">Total Kuantitas</p>
+            <p className="font-semibold text-text-primary">{totalQuantity} pcs</p>
+          </div>
           <PriceSummaryRow label="Total Harga" amount={subtotal} emphasis />
         </div>
 

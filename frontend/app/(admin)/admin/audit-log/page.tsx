@@ -41,7 +41,9 @@ export default function AuditLogPage() {
               <td className="p-4 font-medium text-text-primary">{log.actor.name}</td>
               <td className="p-4 text-text-secondary">{log.action}</td>
               <td className="p-4 text-text-secondary">
-                {log.entity_type ? `${log.entity_type}${log.entity_id ? ` #${log.entity_id}` : ""}` : "—"}
+                {log.entity_type
+                  ? `${log.entity_type.split("\\").pop()}${log.entity_id ? ` #${log.entity_id}` : ""}`
+                  : "—"}
               </td>
               <td className="p-4 text-text-secondary">{log.description ?? "—"}</td>
             </tr>
