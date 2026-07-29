@@ -68,9 +68,9 @@ export interface AuditLog {
   id: number;
   action: string;
   actor: { id: number; name: string };
-  subject_type: string | null;
-  subject_id: number | null;
-  metadata: Record<string, unknown> | null;
+  entity_type: string | null;
+  entity_id: number | null;
+  description: string | null;
   created_at: string;
 }
 
@@ -252,6 +252,6 @@ export function getSalesReport(params?: { from?: string; to?: string }) {
   return apiFetch<{ data: SalesReport }>(`/admin/reports/sales${buildQuery(params)}`);
 }
 
-export function getAuditLogs() {
-  return apiFetch<Paginated<AuditLog>>("/admin/audit-logs");
+export function getAuditLogs(params?: { action?: string; page?: number; per_page?: number }) {
+  return apiFetch<Paginated<AuditLog>>(`/admin/audit-logs${buildQuery(params)}`);
 }

@@ -29,7 +29,10 @@ const groups = [
   },
   {
     label: "LAPORAN",
-    items: [{ href: "/admin/reports", label: "Sales Report" }],
+    items: [
+      { href: "/admin/reports", label: "Sales Report" },
+      { href: "/admin/audit-log", label: "Audit Log" },
+    ],
   },
 ];
 
