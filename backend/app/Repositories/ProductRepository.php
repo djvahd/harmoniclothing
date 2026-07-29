@@ -163,4 +163,18 @@ class ProductRepository
             ->where('slug', $slug)
             ->first();
     }
+
+    /** GET /catalog/products/{slug}/reviews — 5.4, joins back through order_items/product_variants to this product's slug. */
+    public function paginateReviews(string $slug, int $perPage): LengthAwarePaginator
+    {
+        return Review::query()
+            ->with('user')
+            ->join('order_items', 'order_items.id', '=', 'reviews.order_item_id')
+            ->join('product_variants', 'product_variants.id', '=', 'order_items.product_variant_id')
+            ->join('products', 'products.id', '=', 'product_variants.product_id')
+            ->where('products.slug', $slug)
+            ->select('reviews.*')
+            ->latest('reviews.created_at')
+            ->paginate($perPage);
+    }
 }

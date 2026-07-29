@@ -40,6 +40,12 @@ class CatalogService
         return $this->products->findBySlug($slug);
     }
 
+    /** GET /catalog/products/{slug}/reviews — 5.4. */
+    public function listProductReviews(string $slug, int $perPage): LengthAwarePaginator
+    {
+        return $this->products->paginateReviews($slug, $perPage);
+    }
+
     /** GET /admin/catalog/products — admin management list (gap-filled), includes inactive products. */
     public function listProductsForAdmin(?string $categorySlug, int $perPage): LengthAwarePaginator
     {

@@ -169,4 +169,17 @@ class DesignRepository
             ->where('slug', $slug)
             ->first();
     }
+
+    /** GET /marketplace/designs/{slug}/reviews — 5.4, joins back through order_items to this design's slug. */
+    public function paginateReviews(string $slug, int $perPage): LengthAwarePaginator
+    {
+        return Review::query()
+            ->with('user')
+            ->join('order_items', 'order_items.id', '=', 'reviews.order_item_id')
+            ->join('designs', 'designs.id', '=', 'order_items.design_id')
+            ->where('designs.slug', $slug)
+            ->select('reviews.*')
+            ->latest('reviews.created_at')
+            ->paginate($perPage);
+    }
 }

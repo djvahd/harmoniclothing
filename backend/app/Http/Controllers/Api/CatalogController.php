@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductIndexRequest;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ResolvesLocale;
+use App\Http\Resources\ReviewResource;
 use App\Services\CatalogService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -49,5 +50,20 @@ class CatalogController extends Controller
         abort_if(! $product, 404);
 
         return response()->json(['data' => new ProductResource($product)]);
+    }
+
+    /** GET /catalog/products/{slug}/reviews — 5.4, list of reviews left on this product. */
+    public function reviews(Request $request, string $slug): JsonResponse
+    {
+        $reviews = $this->catalog->listProductReviews($slug, (int) $request->query('per_page', 20));
+
+        return response()->json([
+            'data' => ReviewResource::collection($reviews),
+            'meta' => [
+                'current_page' => $reviews->currentPage(),
+                'per_page' => $reviews->perPage(),
+                'total' => $reviews->total(),
+            ],
+        ]);
     }
 }

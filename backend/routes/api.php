@@ -119,9 +119,11 @@ Route::post('/webhooks/biteship', [BiteshipWebhookController::class, 'handle']);
 Route::get('/catalog/products', [CatalogController::class, 'index']);
 Route::get('/catalog/products/filters', [CatalogController::class, 'filters']);
 Route::get('/catalog/products/{slug}', [CatalogController::class, 'show']);
+Route::get('/catalog/products/{slug}/reviews', [CatalogController::class, 'reviews']); // 5.4
 Route::get('/marketplace/designs', [MarketplaceController::class, 'index']);
 Route::get('/marketplace/designs/filters', [MarketplaceController::class, 'designFilters']);
 Route::get('/marketplace/designs/{slug}', [MarketplaceController::class, 'show']);
+Route::get('/marketplace/designs/{slug}/reviews', [MarketplaceController::class, 'designReviews']); // 5.4
 Route::get('/marketplace/creators', [MarketplaceController::class, 'indexCreators']);
 Route::get('/marketplace/creators/{slug}', [MarketplaceController::class, 'showCreator']); // FE-011
 

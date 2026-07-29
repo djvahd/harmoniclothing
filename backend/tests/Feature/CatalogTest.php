@@ -273,4 +273,24 @@ class CatalogTest extends TestCase
         $categories = collect($response->json('data.categories'));
         $this->assertTrue($categories->contains(fn ($c) => $c['slug'] === $category->slug && $c['name'] === 'Kaos'));
     }
+
+    public function test_guest_can_list_reviews_for_a_product(): void
+    {
+        $product = Product::factory()->create();
+        $variant = ProductVariant::factory()->for($product)->create();
+        $item = OrderItem::factory()->for($variant, 'productVariant')->create();
+        $review = Review::factory()->for($item, 'orderItem')->create(['rating' => 5, 'comment' => 'Mantap!']);
+
+        $other = Product::factory()->create();
+        $otherVariant = ProductVariant::factory()->for($other)->create();
+        $otherItem = OrderItem::factory()->for($otherVariant, 'productVariant')->create();
+        Review::factory()->for($otherItem, 'orderItem')->create();
+
+        $response = $this->getJson("/api/catalog/products/{$product->slug}/reviews")->assertOk();
+
+        $response->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $review->id)
+            ->assertJsonPath('data.0.rating', 5)
+            ->assertJsonPath('data.0.user.name', $review->user->name);
+    }
 }

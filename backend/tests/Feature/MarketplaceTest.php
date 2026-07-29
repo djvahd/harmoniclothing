@@ -325,4 +325,22 @@ class MarketplaceTest extends TestCase
 
         $response->assertJsonPath('data.0.slug', $highRated->slug);
     }
+
+    public function test_guest_can_list_reviews_for_a_design(): void
+    {
+        $design = Design::factory()->create();
+        $item = OrderItem::factory()->create(['design_id' => $design->id]);
+        $review = Review::factory()->for($item, 'orderItem')->create(['rating' => 5, 'comment' => 'Desain keren!']);
+
+        $otherDesign = Design::factory()->create();
+        $otherItem = OrderItem::factory()->create(['design_id' => $otherDesign->id]);
+        Review::factory()->for($otherItem, 'orderItem')->create();
+
+        $response = $this->getJson("/api/marketplace/designs/{$design->slug}/reviews")->assertOk();
+
+        $response->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $review->id)
+            ->assertJsonPath('data.0.rating', 5)
+            ->assertJsonPath('data.0.user.name', $review->user->name);
+    }
 }

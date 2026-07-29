@@ -37,6 +37,12 @@ class MarketplaceService
         return $this->designs->findBySlug($slug);
     }
 
+    /** GET /marketplace/designs/{slug}/reviews — 5.4. */
+    public function listDesignReviews(string $slug, int $perPage): LengthAwarePaginator
+    {
+        return $this->designs->paginateReviews($slug, $perPage);
+    }
+
     /**
      * GET /marketplace/creators — Creator tab of Marketplace Desain.
      *

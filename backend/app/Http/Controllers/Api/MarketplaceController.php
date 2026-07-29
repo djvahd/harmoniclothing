@@ -9,6 +9,7 @@ use App\Http\Resources\CreatorProfileResource;
 use App\Http\Resources\CreatorSummaryResource;
 use App\Http\Resources\DesignResource;
 use App\Http\Resources\ResolvesLocale;
+use App\Http\Resources\ReviewResource;
 use App\Services\MarketplaceService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -52,6 +53,21 @@ class MarketplaceController extends Controller
         abort_if(! $design, 404);
 
         return response()->json(['data' => new DesignResource($design)]);
+    }
+
+    /** GET /marketplace/designs/{slug}/reviews — 5.4, list of reviews left on this design. */
+    public function designReviews(Request $request, string $slug): JsonResponse
+    {
+        $reviews = $this->marketplace->listDesignReviews($slug, (int) $request->query('per_page', 20));
+
+        return response()->json([
+            'data' => ReviewResource::collection($reviews),
+            'meta' => [
+                'current_page' => $reviews->currentPage(),
+                'per_page' => $reviews->perPage(),
+                'total' => $reviews->total(),
+            ],
+        ]);
     }
 
     /** GET /marketplace/creators — Creator tab of Marketplace Desain. */
