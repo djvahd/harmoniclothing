@@ -1,0 +1,19 @@
+{
+  "common": {
+    "language": "Bahasa",
+    "loading": "Memuat...",
+    "save": "Simpan",
+    "saving": "Menyimpan...",
+    "cancel": "Batal",
+    "close": "Tutup",
+    "confirm": "Konfirmasi",
+    "delete": "Hapus",
+    "edit": "Edit",
+    "back": "Kembali",
+    "next": "Selanjutnya",
+    "search": "Cari",
+    "viewAll": "Lihat Semua",
+    "emptyGeneric": "Belum ada data.",
+    "errorGeneric": "Terjadi kesalahan, coba lagi."
+  }
+}

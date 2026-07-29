@@ -92,15 +92,15 @@ Tiga batch baru: **2b**, **2c**, dan **6b**. Isi batch lain tidak berubah dari A
 
 ## 6. Batch 2c — i18n Tahap A: infrastruktur (baru)
 
-- [ ] **2c.1** ⏱S — Pasang library i18n untuk App Router (`next-intl` direkomendasikan — dukungan Server Component matang). Catat pilihannya di `3.1_Technology_Stack.md`.
-- [ ] **2c.2** ⏱S — Buat `providers/I18nProvider.tsx` dan pasang di `app/layout.tsx`; `frontend/providers/` selama ini hanya berisi `AppProviders.tsx`.
-- [ ] **2c.3** ⏱S — Buat `locales/id.json` dan `locales/en.json` dengan struktur namespace per modul (`common`, `catalog`, `marketplace`, `cart`, `checkout`, `order`, `creator`, `admin`, `auth`). Isi awal: namespace `common` saja (tombol, label loading, empty state, pesan error) — sisanya menyusul di Tahap B.
-- [ ] **2c.4** ⏱S — Buat komponen `LanguageSwitcher` dan pasang di `SiteHeader` + `Footer`; simpan pilihan bahasa di cookie agar bertahan lintas sesi.
-- [ ] **2c.5** ⏱S — Sambungkan bahasa aktif ke parameter `?lang=` yang **sudah didukung backend** (`ResolvesLocale`, kolom `name_id` / `name_en`) — teruskan dari `lib/api.ts` supaya nama & deskripsi produk ikut berganti bahasa. Ini bagian yang selama ini terbangun di backend tapi tidak pernah dipakai frontend.
-- [ ] **2c.6** ⏱XS — Perbarui `app/layout.tsx`: atribut `<html lang>` mengikuti bahasa aktif, bukan `"id"` mati.
+- [x] **2c.1** ⏱S — Pasang library i18n untuk App Router (`next-intl` direkomendasikan — dukungan Server Component matang). Catat pilihannya di `3.1_Technology_Stack.md`. — *selesai 2026-07-29; mode tanpa URL locale routing (cookie `NEXT_LOCALE`) supaya rename Batch 2b tidak perlu diprefiks ulang. Sempat gagal `npm install` karena proyek pakai `pnpm` (ketahuan dari `pnpm-lock.yaml`) — diinstal ulang dengan `pnpm add`.*
+- [x] **2c.2** ⏱S — Buat `providers/I18nProvider.tsx` dan pasang di `app/layout.tsx`. — *selesai.*
+- [x] **2c.3** ⏱S — Buat `locales/id.json` dan `locales/en.json`. Isi awal: namespace `common` saja. — *selesai.*
+- [x] **2c.4** ⏱S — Buat komponen `LanguageSwitcher` dan pasang di `SiteHeader` + `Footer`; simpan pilihan bahasa di cookie. — *selesai; pakai Server Action (`lib/locale-actions.ts`) + `window.location.reload()` setelah cookie di-set, karena data yang di-fetch lewat SWR tidak otomatis refresh hanya dari `revalidatePath` di sisi server (ketahuan saat verifikasi browser — deskripsi produk tidak berubah sampai ditambahkan reload paksa).*
+- [x] **2c.5** ⏱S — Sambungkan bahasa aktif ke `?lang=`/`Accept-Language` — *selesai via header `Accept-Language` di `lib/api.ts` (bukan `?lang=` per-request, lebih simpel — `ResolvesLocale` backend menerima keduanya).*
+- [x] **2c.6** ⏱XS — Perbarui `app/layout.tsx`: atribut `<html lang>` mengikuti bahasa aktif. — *selesai via `getLocale()`.*
 
-> **✅ CP-2c — "i18n siap"**
-> **Verifikasi:** ganti bahasa lewat switcher → label `common` berubah, nama produk dari API ikut berubah (bukti `?lang=` tersambung), pilihan bertahan setelah reload.
+> **✅ CP-2c — "i18n siap"** — **selesai & terverifikasi 2026-07-29**
+> **Verifikasi:** `pnpm build` hijau (36 route, semua jadi `ƒ Dynamic` karena bergantung pada `cookies()` — trade-off wajar dari mode tanpa URL routing). Di browser: klik switcher → label "Bahasa"/"Language" berubah langsung, `<html lang>` & cookie `NEXT_LOCALE` berubah. Bukti `?lang=`/`Accept-Language` tersambung dibuktikan dua arah: `curl` langsung ke backend dengan header berbeda menghasilkan `description` berbeda (nama produk sengaja sama di data seed — `ProductFactory` pakai teks Faker yang sama untuk `name_id`/`name_en`, tapi `description_id`/`description_en` independen), dan browser menampilkan teks yang sama setelah switch. Cookie bertahan lintas navigasi baru. Tidak ada console/server error di halaman publik, customer, creator, maupun admin.
 > **Commit:** `feat(i18n): add next-intl infrastructure, locale files, and language switcher`
 
 ---

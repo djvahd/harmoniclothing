@@ -1,0 +1,19 @@
+{
+  "common": {
+    "language": "Language",
+    "loading": "Loading...",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "close": "Close",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "search": "Search",
+    "viewAll": "View All",
+    "emptyGeneric": "No data yet.",
+    "errorGeneric": "Something went wrong, please try again."
+  }
+}

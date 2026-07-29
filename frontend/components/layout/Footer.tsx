@@ -1,4 +1,5 @@
 import Logo from "./Logo";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const FOOTER_COLUMNS = [
   {
@@ -41,9 +42,12 @@ export default function Footer() {
         ))}
       </div>
       <div className="h-px w-full bg-text-on-accent/40" />
-      <p className="font-body text-caption text-text-on-accent">
-        © 2026 Harmoni Clothing. All rights reserved.
-      </p>
+      <div className="flex flex-col items-start justify-between gap-3 md:flex-row md:items-center">
+        <p className="font-body text-caption text-text-on-accent">
+          © 2026 Harmoni Clothing. All rights reserved.
+        </p>
+        <LanguageSwitcher />
+      </div>
     </footer>
   );
 }

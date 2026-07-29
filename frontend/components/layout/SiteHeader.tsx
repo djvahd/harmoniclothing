@@ -8,6 +8,7 @@ import clsx from "clsx";
 import { Bell, Menu, Palette, ShoppingCart } from "lucide-react";
 import Logo from "./Logo";
 import MobileDrawer from "./MobileDrawer";
+import LanguageSwitcher from "./LanguageSwitcher";
 import Button from "@/components/ui/Button";
 import ProductThumbnail from "@/components/ui/ProductThumbnail";
 import { useAuthStore } from "@/store/auth-store";
@@ -96,6 +97,7 @@ export default function SiteHeader() {
       </nav>
 
       <div className="hidden items-center gap-4 md:flex md:justify-self-end">
+        <LanguageSwitcher />
         {user ? (
           <>
             <div

@@ -37,7 +37,12 @@ export async function apiFetch<T>(
     await ensureCsrfCookie();
   }
 
-  const headers: Record<string, string> = { Accept: "application/json" };
+  const headers: Record<string, string> = {
+    Accept: "application/json",
+    // Backend's ResolvesLocale trait picks name_id/name_en etc. from this
+    // when no `?lang=` query param is given (5.3_API_Specification.md §8).
+    "Accept-Language": readCookie("NEXT_LOCALE") === "en" ? "en" : "id",
+  };
   if (!isFormData) headers["Content-Type"] = "application/json";
   const xsrfToken = readCookie("XSRF-TOKEN");
   if (xsrfToken) headers["X-XSRF-TOKEN"] = xsrfToken;

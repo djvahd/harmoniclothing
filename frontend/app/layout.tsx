@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, Montserrat } from "next/font/google";
+import { getLocale } from "next-intl/server";
 import "./globals.css";
 import AppProviders from "@/providers/AppProviders";
+import I18nProvider from "@/providers/I18nProvider";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -20,17 +22,21 @@ export const metadata: Metadata = {
     "Platform print-on-demand, custom apparel, dan marketplace desain Indonesia.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+
   return (
-    <html lang="id">
+    <html lang={locale}>
       <body
         className={`${montserrat.variable} ${inter.variable} font-body antialiased`}
       >
-        <AppProviders>{children}</AppProviders>
+        <I18nProvider>
+          <AppProviders>{children}</AppProviders>
+        </I18nProvider>
       </body>
     </html>
   );
