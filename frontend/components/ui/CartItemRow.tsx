@@ -37,7 +37,7 @@ export default function CartItemRow({ item, onQuantityChange, onRemove }: CartIt
         type="button"
         aria-label="Hapus dari keranjang"
         onClick={() => onRemove(item.id)}
-        className="text-text-secondary hover:text-red-500"
+        className="text-text-secondary hover:text-danger"
       >
         <X className="size-4" />
       </button>

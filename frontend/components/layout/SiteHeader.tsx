@@ -108,7 +108,7 @@ export default function SiteHeader() {
               <button type="button" aria-label="Keranjang" className="relative text-text-primary">
                 <ShoppingCart className="size-5" />
                 {cartCount > 0 && (
-                  <span className="absolute -right-2 -top-1.5 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                  <span className="absolute -right-2 -top-1.5 flex size-4 items-center justify-center rounded-full bg-danger text-[10px] font-bold text-danger-fg">
                     {cartCount}
                   </span>
                 )}
@@ -123,7 +123,7 @@ export default function SiteHeader() {
               <button type="button" aria-label="Notifikasi" className="relative text-text-primary">
                 <Bell className="size-5" />
                 {unreadCount > 0 && (
-                  <span className="absolute -right-2 -top-1.5 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                  <span className="absolute -right-2 -top-1.5 flex size-4 items-center justify-center rounded-full bg-danger text-[10px] font-bold text-danger-fg">
                     {unreadCount}
                   </span>
                 )}

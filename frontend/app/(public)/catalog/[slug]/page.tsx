@@ -26,6 +26,7 @@ import { addToCart } from "@/services/cart";
 import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
 import { getErrorMessage } from "@/lib/api";
+import { toast } from "@/store/toast-store";
 import type { Product, PrintArea } from "@/types/product";
 
 const PRINT_AREA_LABELS: Record<PrintArea, string> = {
@@ -129,6 +130,7 @@ export default function DetailProdukPage() {
         custom_design_file_path: uploadedPath ?? undefined,
       });
       await mutate("/cart");
+      if (destination === "cart") toast("Ditambahkan ke keranjang.", "success");
       router.push(destination === "cart" ? "/cart" : "/checkout");
     } catch (err) {
       setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
@@ -199,7 +201,7 @@ export default function DetailProdukPage() {
               <div className="mt-1 flex flex-wrap items-center gap-1.5 font-body text-sm text-text-secondary">
                 {hasRating && (
                   <span className="flex items-center gap-1">
-                    <Star className="size-3.5 fill-yellow-400 text-yellow-400" />
+                    <Star className="size-3.5 fill-warning text-warning" />
                     {product.rating_average} ({product.review_count} ulasan)
                   </span>
                 )}
@@ -264,7 +266,7 @@ export default function DetailProdukPage() {
             />
           </div>
 
-          {error && <p className="font-body text-xs text-red-500">{error}</p>}
+          {error && <p className="font-body text-xs text-danger">{error}</p>}
 
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button

@@ -40,7 +40,7 @@ export default function CreatorCard({ creator }: { creator: CreatorSummary }) {
           <>
             {hasRating && (
               <span className="flex items-center gap-0.5">
-                <Star className="size-3 fill-yellow-400 text-yellow-400" />
+                <Star className="size-3 fill-warning text-warning" />
                 {creator.rating_average}
               </span>
             )}

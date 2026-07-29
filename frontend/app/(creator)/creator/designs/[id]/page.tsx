@@ -7,6 +7,7 @@ import { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
+import LoadingState from "@/components/ui/LoadingState";
 import { getMyDesigns, confirmApparel, submitDesign } from "@/services/creator";
 import { storageUrl } from "@/lib/storage";
 import { getErrorMessage } from "@/lib/api";
@@ -46,7 +47,7 @@ export default function EditorPreviewMultiApparelPage() {
     }
   }
 
-  if (isLoading) return <p className="p-8 font-body text-sm text-text-secondary">Memuat desain...</p>;
+  if (isLoading) return <LoadingState variant="detail" />;
   if (!design) return <p className="p-8 font-body text-sm text-text-secondary">Desain tidak ditemukan.</p>;
 
   const thumbnail = storageUrl(design.thumbnail_path);
@@ -89,7 +90,7 @@ export default function EditorPreviewMultiApparelPage() {
         ))}
       </div>
 
-      {error && <p className="font-body text-xs text-red-500">{error}</p>}
+      {error && <p className="font-body text-xs text-danger">{error}</p>}
       {design.status === "draft" && (
         <Button loading={loading} onClick={handleSubmit} className="self-start">
           Submit untuk Approval

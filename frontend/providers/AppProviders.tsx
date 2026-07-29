@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useAuthStore } from "@/store/auth-store";
 import AuthModal from "@/components/auth/AuthModal";
+import Toaster from "@/components/ui/Toaster";
 
 export default function AppProviders({
   children,
@@ -19,6 +20,7 @@ export default function AppProviders({
     <>
       {children}
       <AuthModal />
+      <Toaster />
     </>
   );
 }

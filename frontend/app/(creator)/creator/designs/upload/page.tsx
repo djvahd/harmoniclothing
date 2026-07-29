@@ -111,7 +111,7 @@ export default function UploadDesainPage() {
 
           <TagInput value={tags} onChange={setTags} />
 
-          {error && <p className="font-body text-xs text-red-500">{error}</p>}
+          {error && <p className="font-body text-xs text-danger">{error}</p>}
           <Button type="submit" loading={loading}>
             Upload Desain
           </Button>

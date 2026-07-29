@@ -6,6 +6,7 @@ import { ArrowLeft, Printer } from "lucide-react";
 import Logo from "@/components/layout/Logo";
 import PriceSummaryRow from "@/components/ui/PriceSummaryRow";
 import Badge from "@/components/ui/Badge";
+import LoadingState from "@/components/ui/LoadingState";
 import { formatDate } from "@/lib/format";
 import { getInvoice } from "@/services/orders";
 
@@ -17,7 +18,7 @@ export default function InvoicePage() {
   );
   const invoice = data?.data;
 
-  if (isLoading) return <p className="p-8 font-body text-sm text-text-secondary">Memuat invoice...</p>;
+  if (isLoading) return <LoadingState variant="detail" />;
   if (!invoice) {
     return (
       <p className="p-8 font-body text-sm text-text-secondary">

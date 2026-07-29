@@ -59,7 +59,7 @@ export default function ProductCard({ product }: { product: Product }) {
           <>
             {hasRating && (
               <span className="flex items-center gap-0.5">
-                <Star className="size-3 fill-yellow-400 text-yellow-400" />
+                <Star className="size-3 fill-warning text-warning" />
                 {product.rating_average}
               </span>
             )}

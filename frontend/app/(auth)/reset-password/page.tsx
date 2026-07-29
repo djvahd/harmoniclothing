@@ -55,7 +55,7 @@ function ResetPasswordForm() {
           onChange={(e) => setPasswordConfirmation(e.target.value)}
           required
         />
-        {error && <p className="font-body text-xs text-red-500">{error}</p>}
+        {error && <p className="font-body text-xs text-danger">{error}</p>}
         <Button type="submit" fullWidth loading={loading}>
           Simpan Password Baru
         </Button>

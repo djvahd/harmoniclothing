@@ -19,6 +19,22 @@ const config: Config = {
           secondary: "rgb(var(--color-text-secondary) / <alpha-value>)",
           "on-accent": "rgb(var(--color-text-on-accent) / <alpha-value>)",
         },
+        danger: {
+          DEFAULT: "rgb(var(--color-danger) / <alpha-value>)",
+          fg: "rgb(var(--color-danger-fg) / <alpha-value>)",
+        },
+        success: {
+          DEFAULT: "rgb(var(--color-success) / <alpha-value>)",
+          fg: "rgb(var(--color-success-fg) / <alpha-value>)",
+        },
+        warning: {
+          DEFAULT: "rgb(var(--color-warning) / <alpha-value>)",
+          fg: "rgb(var(--color-warning-fg) / <alpha-value>)",
+        },
+        info: {
+          DEFAULT: "rgb(var(--color-info) / <alpha-value>)",
+          fg: "rgb(var(--color-info-fg) / <alpha-value>)",
+        },
       },
       fontFamily: {
         heading: ["var(--font-montserrat)", "sans-serif"],

@@ -6,6 +6,8 @@ import CreatorSidebar from "@/components/layout/CreatorSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import StatCard from "@/components/ui/StatCard";
 import Badge from "@/components/ui/Badge";
+import LoadingState from "@/components/ui/LoadingState";
+import EmptyState from "@/components/ui/EmptyState";
 import { getEarnings } from "@/services/creator";
 import { formatCurrency, formatDate } from "@/lib/format";
 
@@ -37,9 +39,9 @@ export default function StatistikKomisiPage() {
           <p className="font-heading text-lg font-semibold text-text-primary">
             Riwayat Pencairan
           </p>
-          {isLoading && <p className="font-body text-sm text-text-secondary">Memuat...</p>}
+          {isLoading && <LoadingState rows={3} />}
           {!isLoading && commissions.length === 0 && (
-            <p className="font-body text-sm text-text-secondary">Belum ada komisi.</p>
+            <EmptyState icon={Wallet} title="Belum ada komisi." />
           )}
           {commissions.map((c) => (
             <div key={c.id} className="flex items-center justify-between rounded-md border border-border bg-surface p-4">

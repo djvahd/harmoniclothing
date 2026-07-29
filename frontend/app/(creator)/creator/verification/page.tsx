@@ -183,7 +183,7 @@ export default function VerifikasiDataDiriPage() {
             </div>
           )}
 
-          {error && <p className="font-body text-xs text-red-500">{error}</p>}
+          {error && <p className="font-body text-xs text-danger">{error}</p>}
           <Button type="submit" loading={loading}>
             Kirim Verifikasi
           </Button>

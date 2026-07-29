@@ -77,7 +77,7 @@ export function getDashboardSummary() {
   return apiFetch<{ data: AdminDashboardSummary }>("/admin/dashboard");
 }
 
-export function getUsers(params?: { role?: string; status?: string }) {
+export function getUsers(params?: { role?: string; status?: string; page?: number }) {
   return apiFetch<Paginated<User>>(`/admin/users${buildQuery(params)}`);
 }
 
@@ -188,7 +188,7 @@ export function getProductionQueue() {
   return apiFetch<{ data: Order[] }>("/admin/production-queue");
 }
 
-export function getOrders(params?: { status?: string }) {
+export function getOrders(params?: { status?: string; page?: number }) {
   return apiFetch<Paginated<Order>>(`/admin/orders${buildQuery(params)}`);
 }
 
@@ -213,7 +213,7 @@ export function bookShipment(id: number, courier: string) {
   });
 }
 
-export function getPayments(params?: { status?: string }) {
+export function getPayments(params?: { status?: string; page?: number }) {
   return apiFetch<Paginated<Payment>>(`/admin/payments${buildQuery(params)}`);
 }
 

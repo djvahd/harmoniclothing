@@ -1,14 +1,20 @@
 "use client";
 
+import { useState } from "react";
 import useSWR from "swr";
+import { Receipt } from "lucide-react";
 import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Badge from "@/components/ui/Badge";
-import { getPayments } from "@/services/admin";
+import DataTable from "@/components/ui/DataTable";
+import EmptyState from "@/components/ui/EmptyState";
+import Pagination from "@/components/ui/Pagination";
+import { getPayments, type Payment } from "@/services/admin";
 import { formatCurrency } from "@/lib/format";
 
 export default function KelolaPembayaranPage() {
-  const { data, isLoading } = useSWR("/admin/payments", () => getPayments());
+  const [page, setPage] = useState(1);
+  const { data, isLoading } = useSWR(["/admin/payments", page], () => getPayments({ page }));
   const payments = data?.data ?? [];
 
   return (
@@ -17,39 +23,33 @@ export default function KelolaPembayaranPage() {
         <h1 className="font-heading text-h3 font-semibold text-text-primary">
           Kelola Pembayaran & Invoice
         </h1>
-        <div className="overflow-x-auto rounded-md border border-border bg-surface">
-          <table className="w-full text-left font-body text-sm">
-            <thead className="border-b border-border text-text-secondary">
-              <tr>
-                <th className="p-4">No. Pesanan</th>
-                <th className="p-4">Customer</th>
-                <th className="p-4">Metode</th>
-                <th className="p-4">Jumlah</th>
-                <th className="p-4">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {isLoading && (
-                <tr>
-                  <td className="p-4 text-text-secondary" colSpan={5}>Memuat...</td>
-                </tr>
-              )}
-              {payments.map((payment) => (
-                <tr key={payment.id} className="border-b border-border last:border-0">
-                  <td className="p-4 font-medium text-text-primary">{payment.order.order_number}</td>
-                  <td className="p-4 text-text-secondary">{payment.order.user.name}</td>
-                  <td className="p-4 text-text-secondary">{payment.method}</td>
-                  <td className="p-4 text-text-secondary">{formatCurrency(payment.amount)}</td>
-                  <td className="p-4">
-                    <Badge variant={payment.status === "berhasil" ? "success" : "warning"}>
-                      {payment.status}
-                    </Badge>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <DataTable<Payment>
+          columns={[
+            { key: "order_number", header: "No. Pesanan" },
+            { key: "customer", header: "Customer" },
+            { key: "method", header: "Metode" },
+            { key: "amount", header: "Jumlah" },
+            { key: "status", header: "Status" },
+          ]}
+          data={payments}
+          isLoading={isLoading}
+          getRowKey={(payment) => payment.id}
+          emptyState={<EmptyState icon={Receipt} title="Belum ada pembayaran." />}
+          renderRow={(payment) => (
+            <tr className="border-b border-border last:border-0">
+              <td className="p-4 font-medium text-text-primary">{payment.order.order_number}</td>
+              <td className="p-4 text-text-secondary">{payment.order.user.name}</td>
+              <td className="p-4 text-text-secondary">{payment.method}</td>
+              <td className="p-4 text-text-secondary">{formatCurrency(payment.amount)}</td>
+              <td className="p-4">
+                <Badge variant={payment.status === "berhasil" ? "success" : "warning"}>
+                  {payment.status}
+                </Badge>
+              </td>
+            </tr>
+          )}
+        />
+        {data?.meta && <Pagination meta={data.meta} onPageChange={setPage} />}
       </div>
     </SidebarPageShell>
   );

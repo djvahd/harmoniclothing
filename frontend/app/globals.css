@@ -11,6 +11,14 @@
   --color-text-primary: 26 26 26;
   --color-text-secondary: 71 85 105;
   --color-text-on-accent: 255 255 255;
+  --color-danger: 220 38 38;
+  --color-danger-fg: 255 255 255;
+  --color-success: 73 187 144;
+  --color-success-fg: 255 255 255;
+  --color-warning: 245 158 11;
+  --color-warning-fg: 26 26 26;
+  --color-info: 6 117 119;
+  --color-info-fg: 255 255 255;
 }
 
 body {

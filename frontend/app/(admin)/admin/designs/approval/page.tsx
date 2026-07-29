@@ -3,10 +3,14 @@
 import { useState } from "react";
 import Image from "next/image";
 import useSWR, { mutate } from "swr";
+import { Palette } from "lucide-react";
 import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Button from "@/components/ui/Button";
 import PromptModal from "@/components/ui/PromptModal";
+import LoadingState from "@/components/ui/LoadingState";
+import EmptyState from "@/components/ui/EmptyState";
+import { toast } from "@/store/toast-store";
 import { approveDesign, getPendingDesigns, rejectDesign } from "@/services/admin";
 import { storageUrl } from "@/lib/storage";
 
@@ -21,6 +25,7 @@ export default function ApprovalDesainPage() {
     try {
       await approveDesign(id);
       mutate("/admin/designs/pending");
+      toast("Desain berhasil disetujui.", "success");
     } finally {
       setLoadingId(null);
     }
@@ -34,6 +39,7 @@ export default function ApprovalDesainPage() {
     try {
       await rejectDesign(id, reason);
       mutate("/admin/designs/pending");
+      toast("Desain ditolak.", "success");
     } finally {
       setLoadingId(null);
     }
@@ -45,11 +51,9 @@ export default function ApprovalDesainPage() {
         <h1 className="font-heading text-h3 font-semibold text-text-primary">
           Approval Desain
         </h1>
-        {isLoading && <p className="font-body text-sm text-text-secondary">Memuat...</p>}
+        {isLoading && <LoadingState rows={3} />}
         {!isLoading && designs.length === 0 && (
-          <p className="font-body text-sm text-text-secondary">
-            Tidak ada desain menunggu review.
-          </p>
+          <EmptyState icon={Palette} title="Belum ada desain menunggu review." />
         )}
         <div className="flex flex-col gap-3">
           {designs.map((design) => {

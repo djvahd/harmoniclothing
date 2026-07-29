@@ -3,6 +3,7 @@
 import useSWR, { mutate } from "swr";
 import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
+import LoadingState from "@/components/ui/LoadingState";
 import { getNotificationSettings, updateNotificationSetting } from "@/services/admin";
 
 export default function KonfigurasiNotifikasiPage() {
@@ -20,7 +21,7 @@ export default function KonfigurasiNotifikasiPage() {
         <h1 className="font-heading text-h3 font-semibold text-text-primary">
           Konfigurasi Notifikasi
         </h1>
-        {isLoading && <p className="font-body text-sm text-text-secondary">Memuat...</p>}
+        {isLoading && <LoadingState rows={4} />}
         <div className="flex flex-col gap-2 rounded-md border border-border bg-surface p-2">
           {settings.map((setting) => (
             <div

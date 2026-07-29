@@ -26,7 +26,7 @@ export default function Button({
           "bg-accent text-text-on-accent shadow-sm hover:bg-primary hover:shadow-md",
         variant === "secondary" &&
           "border border-primary text-primary hover:bg-primary hover:text-text-on-accent hover:shadow-md",
-        variant === "danger" && "bg-red-600 text-white shadow-sm hover:bg-red-700 hover:shadow-md",
+        variant === "danger" && "bg-danger text-danger-fg shadow-sm hover:bg-danger/90 hover:shadow-md",
         fullWidth && "w-full",
         className,
       )}

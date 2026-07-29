@@ -28,6 +28,7 @@ import { addToCart } from "@/services/cart";
 import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
 import { getErrorMessage } from "@/lib/api";
+import { toast } from "@/store/toast-store";
 import type { Design, Product, PrintArea } from "@/types/product";
 
 // Display-only estimate mirroring backend's config('creator.commission_rate')
@@ -136,6 +137,7 @@ export default function DetailDesainPage() {
         notes: notes || undefined,
       });
       await mutate("/cart");
+      if (destination === "cart") toast("Ditambahkan ke keranjang.", "success");
       router.push(destination === "cart" ? "/cart" : "/checkout");
     } catch (err) {
       setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
@@ -216,7 +218,7 @@ export default function DetailDesainPage() {
               {(hasRating || hasSold) && <span>·</span>}
               {hasRating && (
                 <span className="flex items-center gap-1">
-                  <Star className="size-3.5 fill-yellow-400 text-yellow-400" />
+                  <Star className="size-3.5 fill-warning text-warning" />
                   {design.rating_average} ({design.review_count} ulasan)
                 </span>
               )}
@@ -301,7 +303,7 @@ export default function DetailDesainPage() {
                 />
               </div>
 
-              {error && <p className="font-body text-xs text-red-500">{error}</p>}
+              {error && <p className="font-body text-xs text-danger">{error}</p>}
 
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Button

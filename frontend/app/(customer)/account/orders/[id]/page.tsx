@@ -9,6 +9,7 @@ import OrderStatusItem from "@/components/ui/OrderStatusItem";
 import ProductThumbnail from "@/components/ui/ProductThumbnail";
 import PriceSummaryRow from "@/components/ui/PriceSummaryRow";
 import Button from "@/components/ui/Button";
+import LoadingState from "@/components/ui/LoadingState";
 import { cancelOrder, confirmReceived, getOrder, reorder } from "@/services/orders";
 import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
@@ -63,7 +64,7 @@ export default function DetailPesananPage() {
     }
   }
 
-  if (isLoading) return <p className="p-8 font-body text-sm text-text-secondary">Memuat pesanan...</p>;
+  if (isLoading) return <LoadingState variant="detail" />;
   if (!order) return <p className="p-8 font-body text-sm text-text-secondary">Pesanan tidak ditemukan.</p>;
 
   return (
@@ -79,9 +80,9 @@ export default function DetailPesananPage() {
         </div>
 
         {order.status === "ditolak" && order.rejection_reason && (
-          <div className="rounded-md border border-red-200 bg-red-50 p-4">
-            <p className="font-body text-sm font-semibold text-red-700">Pesanan Ditolak</p>
-            <p className="font-body text-sm text-red-600">{order.rejection_reason}</p>
+          <div className="rounded-md border border-danger/20 bg-danger/5 p-4">
+            <p className="font-body text-sm font-semibold text-danger">Pesanan Ditolak</p>
+            <p className="font-body text-sm text-danger">{order.rejection_reason}</p>
           </div>
         )}
 

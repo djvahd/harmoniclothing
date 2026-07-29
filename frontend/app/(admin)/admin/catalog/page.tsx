@@ -2,11 +2,13 @@
 
 import { Fragment, useState } from "react";
 import useSWR, { mutate } from "swr";
-import { ChevronDown, ChevronRight, Pencil, Plus } from "lucide-react";
+import { ChevronDown, ChevronRight, PackageSearch, Pencil, Plus } from "lucide-react";
 import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import EmptyState from "@/components/ui/EmptyState";
+import { TableRowsSkeleton } from "@/components/ui/LoadingState";
 import { getProducts } from "@/services/catalog";
 import { createProduct, createVariant, updateVariant } from "@/services/admin";
 import { formatCurrency } from "@/lib/format";
@@ -133,7 +135,7 @@ function VariantRow({ variant }: { variant: ProductVariant }) {
             <Pencil className="size-4" />
           </button>
         )}
-        {error && <p className="mt-1 font-body text-xs text-red-500">{error}</p>}
+        {error && <p className="mt-1 font-body text-xs text-danger">{error}</p>}
       </td>
     </tr>
   );
@@ -238,7 +240,7 @@ export default function KelolaKatalogPage() {
                 </select>
               </div>
             </div>
-            {error && <p className="font-body text-xs text-red-500">{error}</p>}
+            {error && <p className="font-body text-xs text-danger">{error}</p>}
             <Button type="submit" loading={saving}>
               Simpan Produk
             </Button>
@@ -256,9 +258,12 @@ export default function KelolaKatalogPage() {
               </tr>
             </thead>
             <tbody>
-              {isLoading && (
+              {isLoading && <TableRowsSkeleton columns={4} />}
+              {!isLoading && products.length === 0 && (
                 <tr>
-                  <td className="p-4 text-text-secondary" colSpan={4}>Memuat...</td>
+                  <td colSpan={4} className="p-0">
+                    <EmptyState icon={PackageSearch} title="Belum ada produk." />
+                  </td>
                 </tr>
               )}
               {products.map((product) => (
@@ -357,7 +362,7 @@ export default function KelolaKatalogPage() {
                                 onChange={(print_areas) => setVariantForm((f) => ({ ...f, print_areas }))}
                               />
                             </div>
-                            {variantError && <p className="font-body text-xs text-red-500">{variantError}</p>}
+                            {variantError && <p className="font-body text-xs text-danger">{variantError}</p>}
                             <Button type="submit" loading={variantSaving} className="w-fit">
                               Simpan Varian
                             </Button>

@@ -9,11 +9,11 @@ interface BadgeProps {
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
-  success: "bg-accent text-text-on-accent",
-  warning: "bg-amber-500 text-white",
-  danger: "bg-red-600 text-white",
+  success: "bg-success text-success-fg",
+  warning: "bg-warning text-warning-fg",
+  danger: "bg-danger text-danger-fg",
   neutral: "bg-border text-text-secondary",
-  info: "bg-primary text-text-on-accent",
+  info: "bg-info text-info-fg",
 };
 
 export default function Badge({ variant = "neutral", children, className }: BadgeProps) {

@@ -3,9 +3,12 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useSWR, { mutate } from "swr";
+import { ShoppingCart } from "lucide-react";
 import CartItemRow from "@/components/ui/CartItemRow";
 import PriceSummaryRow from "@/components/ui/PriceSummaryRow";
 import Button from "@/components/ui/Button";
+import LoadingState from "@/components/ui/LoadingState";
+import EmptyState from "@/components/ui/EmptyState";
 import { getCart, removeCartItem, updateCartItem } from "@/services/cart";
 
 export default function KeranjangPage() {
@@ -28,15 +31,18 @@ export default function KeranjangPage() {
     <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-8 md:px-20">
       <h1 className="font-heading text-h3 font-semibold text-text-primary">Keranjang</h1>
 
-      {isLoading && <p className="font-body text-sm text-text-secondary">Memuat keranjang...</p>}
+      {isLoading && <LoadingState rows={3} />}
 
       {!isLoading && items.length === 0 && (
-        <div className="flex flex-col items-center gap-4 rounded-md border border-border bg-surface p-10 text-center">
-          <p className="font-body text-sm text-text-secondary">Keranjangmu masih kosong.</p>
-          <Link href="/catalog">
-            <Button>Mulai Belanja</Button>
-          </Link>
-        </div>
+        <EmptyState
+          icon={ShoppingCart}
+          title="Keranjangmu masih kosong."
+          action={
+            <Link href="/catalog">
+              <Button>Mulai Belanja</Button>
+            </Link>
+          }
+        />
       )}
 
       {items.length > 0 && (
@@ -50,7 +56,7 @@ export default function KeranjangPage() {
                   onRemove={handleRemove}
                 />
                 {!item.is_available && (
-                  <p className="mt-2 font-body text-xs text-red-500">
+                  <p className="mt-2 font-body text-xs text-danger">
                     Produk ini sudah tidak tersedia.
                   </p>
                 )}

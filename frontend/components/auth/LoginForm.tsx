@@ -65,7 +65,7 @@ export default function LoginForm({ message }: { message: string | null }) {
         <button type="button" onClick={() => openModal("lupa-password")} className={`w-fit font-body text-body-sm ${linkClass}`}>
           Lupa password?
         </button>
-        {error && <p className="font-body text-xs text-red-500">{error}</p>}
+        {error && <p className="font-body text-xs text-danger">{error}</p>}
         <Button type="submit" fullWidth loading={loading}>
           Masuk
         </Button>

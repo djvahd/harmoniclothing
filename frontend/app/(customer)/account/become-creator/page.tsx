@@ -92,7 +92,7 @@ export default function AjukanUpgradeCreatorPage() {
             Saya menyetujui Syarat & Ketentuan Creator (komisi dan kebijakan konten desain).
           </label>
 
-          {error && <p className="font-body text-xs text-red-500">{error}</p>}
+          {error && <p className="font-body text-xs text-danger">{error}</p>}
           <Button type="submit" loading={loading}>
             Ajukan Sekarang
           </Button>

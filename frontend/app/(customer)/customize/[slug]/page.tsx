@@ -15,6 +15,8 @@ import { uploadDesignFile } from "@/services/customization";
 import { addToCart } from "@/services/cart";
 import { storageUrl } from "@/lib/storage";
 import { getErrorMessage } from "@/lib/api";
+import LoadingState from "@/components/ui/LoadingState";
+import { toast } from "@/store/toast-store";
 
 function ProductEditorForm() {
   const params = useParams<{ slug: string }>();
@@ -97,6 +99,7 @@ function ProductEditorForm() {
         custom_design_file_path: uploadedPath ?? undefined,
       });
       await mutate("/cart");
+      toast("Ditambahkan ke keranjang.", "success");
       router.push("/cart");
     } catch (err) {
       setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
@@ -106,7 +109,7 @@ function ProductEditorForm() {
   }
 
   if (!product) {
-    return <p className="p-8 font-body text-sm text-text-secondary">Memuat produk...</p>;
+    return <LoadingState variant="detail" />;
   }
 
   return (
@@ -226,7 +229,7 @@ function ProductEditorForm() {
           <PriceSummaryRow label="Total" amount={total} emphasis />
         </div>
 
-        {error && <p className="font-body text-xs text-red-500">{error}</p>}
+        {error && <p className="font-body text-xs text-danger">{error}</p>}
         <Button fullWidth loading={submitting} onClick={handleAddToCart}>
           Tambah ke Keranjang
         </Button>

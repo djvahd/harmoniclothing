@@ -2,8 +2,11 @@
 
 import useSWR, { mutate } from "swr";
 import clsx from "clsx";
+import { Bell } from "lucide-react";
 import AccountSidebar from "@/components/layout/AccountSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
+import LoadingState from "@/components/ui/LoadingState";
+import EmptyState from "@/components/ui/EmptyState";
 import { getNotifications, markNotificationRead } from "@/services/notifications";
 
 export default function NotifikasiPage() {
@@ -21,9 +24,9 @@ export default function NotifikasiPage() {
       <div className="flex flex-col gap-6">
         <h1 className="font-heading text-h3 font-semibold text-text-primary">Notifikasi</h1>
 
-        {isLoading && <p className="font-body text-sm text-text-secondary">Memuat notifikasi...</p>}
+        {isLoading && <LoadingState rows={4} />}
         {!isLoading && notifications.length === 0 && (
-          <p className="font-body text-sm text-text-secondary">Belum ada notifikasi.</p>
+          <EmptyState icon={Bell} title="Belum ada notifikasi." />
         )}
 
         <div className="flex flex-col gap-2">

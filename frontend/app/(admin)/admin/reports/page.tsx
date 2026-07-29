@@ -5,6 +5,7 @@ import { DollarSign, ShoppingBag, TrendingUp } from "lucide-react";
 import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import StatCard from "@/components/ui/StatCard";
+import LoadingState from "@/components/ui/LoadingState";
 import { getSalesReport } from "@/services/admin";
 import { formatCurrency } from "@/lib/format";
 
@@ -21,7 +22,7 @@ export default function SalesReportPage() {
             Periode: {report.period.from} - {report.period.to} (30 hari terakhir)
           </p>
         )}
-        {isLoading && <p className="font-body text-sm text-text-secondary">Memuat laporan...</p>}
+        {isLoading && <LoadingState variant="detail" />}
 
         {report && (
           <>

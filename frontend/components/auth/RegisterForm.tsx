@@ -116,7 +116,7 @@ export default function RegisterForm() {
           Harmoni Clothing.
         </span>
       </label>
-      {errors.general && <p className="font-body text-xs text-red-500">{errors.general[0]}</p>}
+      {errors.general && <p className="font-body text-xs text-danger">{errors.general[0]}</p>}
       <Button type="submit" fullWidth loading={loading}>
         Daftar Gratis
       </Button>

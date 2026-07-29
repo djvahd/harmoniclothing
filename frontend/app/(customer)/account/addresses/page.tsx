@@ -2,12 +2,15 @@
 
 import { useState } from "react";
 import useSWR, { mutate } from "swr";
-import { Plus } from "lucide-react";
+import { MapPin, Plus } from "lucide-react";
 import AccountSidebar from "@/components/layout/AccountSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Badge from "@/components/ui/Badge";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import LoadingState from "@/components/ui/LoadingState";
+import EmptyState from "@/components/ui/EmptyState";
+import { toast } from "@/store/toast-store";
 import { createAddress, deleteAddress, getAddresses } from "@/services/account";
 import type { Address } from "@/types/user";
 
@@ -42,6 +45,7 @@ export default function AddressBookPage() {
       await mutate("/account/addresses");
       setForm(EMPTY_FORM);
       setShowForm(false);
+      toast("Alamat berhasil disimpan.", "success");
     } finally {
       setSaving(false);
     }
@@ -50,6 +54,7 @@ export default function AddressBookPage() {
   async function handleDelete(id: number) {
     await deleteAddress(id);
     mutate("/account/addresses");
+    toast("Alamat berhasil dihapus.", "success");
   }
 
   return (
@@ -91,7 +96,10 @@ export default function AddressBookPage() {
           </form>
         )}
 
-        {isLoading && <p className="font-body text-sm text-text-secondary">Memuat alamat...</p>}
+        {isLoading && <LoadingState rows={2} />}
+        {!isLoading && addresses.length === 0 && (
+          <EmptyState icon={MapPin} title="Belum ada alamat tersimpan." />
+        )}
         <div className="flex flex-col gap-3">
           {addresses.map((address) => (
             <div key={address.id} className="flex items-center justify-between rounded-md border border-border bg-surface p-4">
@@ -110,7 +118,7 @@ export default function AddressBookPage() {
               </div>
               <button
                 onClick={() => handleDelete(address.id)}
-                className="font-body text-sm font-medium text-red-500"
+                className="font-body text-sm font-medium text-danger"
               >
                 Hapus
               </button>

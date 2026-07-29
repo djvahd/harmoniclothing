@@ -108,7 +108,7 @@ export default function CheckoutPage() {
             <PriceSummaryRow label="Subtotal" amount={subtotal} />
           </div>
           <PriceSummaryRow label="Total" amount={subtotal} emphasis />
-          {error && <p className="font-body text-xs text-red-500">{error}</p>}
+          {error && <p className="font-body text-xs text-danger">{error}</p>}
           <Button fullWidth loading={loading} onClick={handleSubmit}>
             Buat Pesanan
           </Button>

@@ -4,10 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import useSWR from "swr";
 import clsx from "clsx";
+import { PackageSearch } from "lucide-react";
 import AccountSidebar from "@/components/layout/AccountSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Badge from "@/components/ui/Badge";
 import ProductThumbnail from "@/components/ui/ProductThumbnail";
+import LoadingState from "@/components/ui/LoadingState";
+import EmptyState from "@/components/ui/EmptyState";
 import { getOrders } from "@/services/orders";
 import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
@@ -56,9 +59,9 @@ export default function RiwayatPesananPage() {
           ))}
         </div>
 
-        {isLoading && <p className="font-body text-sm text-text-secondary">Memuat pesanan...</p>}
+        {isLoading && <LoadingState rows={3} />}
         {!isLoading && orders.length === 0 && (
-          <p className="font-body text-sm text-text-secondary">Belum ada pesanan.</p>
+          <EmptyState icon={PackageSearch} title="Belum ada pesanan." />
         )}
 
         <div className="flex flex-col gap-4">

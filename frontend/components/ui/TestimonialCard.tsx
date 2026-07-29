@@ -23,7 +23,7 @@ export default function TestimonialCard({
             key={i}
             className={
               i < rating
-                ? "size-3.5 fill-amber-400 text-amber-400"
+                ? "size-3.5 fill-warning text-warning"
                 : "size-3.5 text-border"
             }
           />

@@ -3,11 +3,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import useSWR from "swr";
-import { Plus } from "lucide-react";
+import { Palette, Plus } from "lucide-react";
 import CreatorSidebar from "@/components/layout/CreatorSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
+import LoadingState from "@/components/ui/LoadingState";
+import EmptyState from "@/components/ui/EmptyState";
 import { getMyDesigns } from "@/services/creator";
 import { storageUrl } from "@/lib/storage";
 import type { DesignStatus } from "@/types/product";
@@ -42,9 +44,9 @@ export default function KelolaDesainPage() {
           </Link>
         </div>
 
-        {isLoading && <p className="font-body text-sm text-text-secondary">Memuat desain...</p>}
+        {isLoading && <LoadingState rows={3} />}
         {!isLoading && designs.length === 0 && (
-          <p className="font-body text-sm text-text-secondary">Belum ada desain diunggah.</p>
+          <EmptyState icon={Palette} title="Belum ada desain diunggah." />
         )}
 
         <div className="flex flex-col gap-3">
