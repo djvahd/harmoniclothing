@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import LegalPageLayout from "@/components/layout/LegalPageLayout";
+
+export const metadata: Metadata = {
+  title: "Syarat & Ketentuan",
+  description: "Syarat dan ketentuan penggunaan platform Harmoni Clothing.",
+};
 
 export default function SyaratKetentuanPage() {
   return (

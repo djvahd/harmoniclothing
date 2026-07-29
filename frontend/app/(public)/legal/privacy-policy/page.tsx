@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import LegalPageLayout from "@/components/layout/LegalPageLayout";
+
+export const metadata: Metadata = {
+  title: "Kebijakan Privasi",
+  description: "Kebijakan privasi Harmoni Clothing: data yang kami kumpulkan dan cara kami menggunakannya.",
+};
 
 export default function KebijakanPrivasiPage() {
   return (

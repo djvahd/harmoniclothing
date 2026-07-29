@@ -17,7 +17,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Harmoni Clothing",
+  title: {
+    default: "Harmoni Clothing",
+    template: "%s | Harmoni Clothing",
+  },
   description:
     "Platform print-on-demand, custom apparel, dan marketplace desain Indonesia.",
 };
