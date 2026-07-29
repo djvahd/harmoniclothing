@@ -103,23 +103,16 @@ Checklist ini diurutkan berdasarkan **hasil dibagi usaha**, bukan tingkat kepara
 
 ## Batch 5 — Menutup gap fitur (🔴/🟠)
 
-> **5.1 perlu keputusan Anda dulu** — lihat K-2 di bawah.
+- [x] **5.1** 🔴 ⏱XL — **Bulk Order** (FE-052/FE-056, FR-040/FR-044, BR-012/BR-026): *selesai 2026-07-29 (K-2). Backend (`8bf9dd4`, sesi sebelumnya): `POST /checkout/bulk`, `BulkCheckoutRequest`, `CheckoutService::checkoutBulk()` menulis `orders.type='bulk'`; checkout reguler tidak lagi panggil `bulkUnitPriceFor()` sama sekali. Frontend (`0dc545a`): halaman `/bulk-order/{slug}` — pilih desain (upload sendiri/marketplace) + kuantitas per kombinasi warna/ukuran lintas seluruh varian produk (bukan cuma satu warna), pratinjau tabel tingkat harga live dari `GET /bulk-pricing-tiers`; halaman `/checkout/bulk` terpisah — pilih alamat + ringkasan, submit ke endpoint yang sudah ada. Draft dibawa antar dua halaman lewat store Zustand in-memory (`useBulkOrderStore`), bukan lewat keranjang server (`checkoutBulk()` memang bypass keranjang per BR-026). CTA "Pesan Bulk Order" ditambah di halaman detail produk. Ditelusuri end-to-end di browser sungguhan (login → isi kuantitas → lanjut checkout → alamat → submit → order `HC-...` dengan status "Belum Dibayar" tercipta), tanpa console error.*
+- [x] **5.2** 🟠 ⏱M — Halaman notifikasi admin, atau putuskan resmi bahwa admin tidak punya inbox. *Diputuskan 2026-07-29 — tidak dibangun; admin hanya punya `/admin/notification-settings` (konfigurasi), tidak ada inbox. Dicatat sebagai K-5 di `A.3_Decisions_And_Revised_Plan.md` §1 — eksekusi (edit Sitemap) menyusul di Batch 7.*
+- [x] **5.3** 🟠 ⏱M — Halaman `/admin/audit-log` yang memakai `GET /admin/audit-logs`. *selesai 2026-07-29. Endpoint dan `services/admin.ts::getAuditLogs()` memang sudah ada (tinggal ditambah param `page`/`action`); yang baru murni halamannya + link sidebar `LAPORAN`. Sekalian dikoreksi: tipe frontend `AuditLog` sudah drift dari resource asli (field lama `subject_type`/`subject_id`/`metadata` tidak pernah ada di model — yang benar `entity_type`/`entity_id`/`description`), dan kolom Entitas ditampilkan basename class saja (bukan `App\Models\CreatorProfile` penuh).*
+- [x] **5.4** 🟠 ⏱M — Endpoint `GET /catalog/products/{slug}/reviews` + `GET /marketplace/designs/{slug}/reviews` dan render daftarnya. *selesai 2026-07-29 (`f868fa7` backend, `fb81ff3` frontend). `ReviewResource` ditambah field `user` (`whenLoaded`) untuk nama reviewer. Kalimat placeholder "akan tampil di sini setelah fitur listing ulasan tersedia" sudah dihapus dari `ReviewsTabContent`, diganti render asli (nama, bintang, komentar, tanggal, paginasi). Diverifikasi live di kedua halaman detail (produk & desain).*
+- [x] **5.5** 🟠 ⏱S — Tambah `export const metadata` (atau `generateMetadata` untuk route dinamis) di setiap halaman publik demi SEO dasar. *selesai 2026-07-29 (`bfd43e3`). Halaman statis (`about`, `legal/*`) dapat metadata langsung; 4 halaman `"use client"` (katalog/marketplace list+detail, desain detail) dipecah jadi `*Client.tsx` + `page.tsx` wrapper server yang ekspor metadata (dinamis pakai `generateMetadata` + fetch server-side baru `lib/server-fetch.ts`, karena `apiFetch()` biasa baca `document.cookie` yang tak ada di server). Beranda sengaja tidak disentuh — metadata default root layout sudah cukup. Root layout dapat `title.template` ("%s | Harmoni Clothing"). `pnpm build` hijau (38 route) + diverifikasi title tab di 6 halaman termasuk fallback 404 generateMetadata.*
+- [x] **5.6** 🟠 ⏱S — Putuskan nasib halaman `/chat`. *Sudah diputuskan sebelumnya (bagian dari K-1, lihat `A.3_Decisions_And_Revised_Plan.md` §2) — dihapus, `ChatWidget` menggantikannya. Eksekusi (edit Sitemap) menyusul di Batch 7 bersama rename lain.*
 
-- [ ] **5.1** 🔴 ⏱XL — **Bulk Order** (FE-052/FE-056, FR-040/FR-044, BR-012/BR-026):
-  - Backend: `POST /checkout/bulk`, `BulkCheckoutRequest`, `CheckoutService::checkoutBulk()` yang menulis `orders.type = 'bulk'`.
-  - Backend: **hentikan penerapan harga bulk otomatis di checkout reguler** — sekarang keranjang campuran ikut mendapat harga bulk, melanggar BR-026. (§4.1)
-  - Frontend: halaman `/bulk-order/{productSlug}` dengan input kuantitas per ukuran (FE-056) dan pratinjau harga bertingkat langsung.
-  - Frontend: halaman `/checkout/bulk` terpisah dari checkout reguler.
-  - Test: kasus BR-026 (bulk dan reguler tidak boleh tercampur) dan BR-012 (harga dari total kuantitas, bukan per ukuran).
-- [ ] **5.2** 🟠 ⏱M — Halaman notifikasi admin di `/admin/notifikasi` (menyelesaikan butir 2.2 secara benar), atau putuskan resmi bahwa admin tidak punya inbox dan catat di Sitemap. (§4.3)
-- [ ] **5.3** 🟠 ⏱M — Halaman `/admin/audit-log` yang memakai `GET /admin/audit-logs` — endpoint dan tipe frontend sudah ada, halamannya belum. (§3.1)
-- [ ] **5.4** 🟠 ⏱M — Endpoint `GET /catalog/products/{slug}/reviews` + `GET /marketplace/designs/{slug}/reviews` dan render daftarnya, sehingga kalimat "akan tampil di sini setelah fitur listing ulasan tersedia" bisa dihapus dari layar pengguna. (§4.7)
-- [ ] **5.5** 🟠 ⏱S — Tambah `export const metadata` (atau `generateMetadata` untuk route dinamis) di setiap halaman publik demi SEO dasar. (§4.8)
-- [ ] **5.6** 🟠 ⏱S — Putuskan nasib halaman `/chat`: buat halaman penuh, atau catat di Sitemap bahwa `ChatWidget` menggantikannya. (§4.6)
-
-> **✅ CP-5 — "Gap fitur tertutup"**
-> **Verifikasi:** `php artisan test` hijau termasuk test BR-026 yang baru; telusuri alur Bulk Order dari halaman produk sampai order tercipta dengan `type = 'bulk'`.
-> **Commit:** `feat(order): separate bulk order flow per BR-026, add audit log and review listing pages`
+> **✅ CP-5 — "Gap fitur tertutup"** — **selesai & terverifikasi 2026-07-29**
+> **Verifikasi:** `php artisan test` 219/219 hijau (termasuk 2 test baru untuk review listing); `pnpm build` hijau (38 route); alur Bulk Order ditelusuri end-to-end di browser sungguhan dari halaman produk sampai order tercipta dengan `type='bulk'`.
+> **Commit:** `0dc545a` (Bulk Order frontend), `935c9ee` (Audit Log), `f868fa7`+`fb81ff3` (review listing), `bfd43e3` (SEO metadata).
 > **Konteks untuk sesi baru:** laporan §4.1, `backend/app/Services/CheckoutService.php`, `backend/app/Services/PricingService.php`, `1.2_Requirement_Gathering.md` (BR-012, BR-026).
 
 ---

@@ -14,6 +14,7 @@
 | **K-2** | **Bangun alur Bulk Order terpisah** sesuai BR-026. | `POST /checkout/bulk` + halaman `/bulk-order/{slug}` + `/checkout/bulk`. **Dan** hentikan penerapan harga bulk otomatis di checkout reguler — perilaku sekarang membuat item reguler ikut dapat harga bulk pada keranjang campuran. |
 | **K-3** | **Resmikan middleware + scoping** sebagai pola otorisasi; Policies tidak dibuat. | Hanya dokumen yang berubah: `3.4_Folder_Structure.md` dan `2.5_Permission_Matrix.md` §7 menyebut middleware `admin` / `creator.active` + scoping di controller, bukan `app/Policies/`. Kode tidak disentuh. |
 | **K-4** | **i18n dikerjakan sekarang**, bukan ditunda ke Fase 2. | FR-034 / NFR-008 / FE-051 keluar dari daftar gap. Dipecah jadi dua tahap agar tidak menyentuh file yang sama dua kali (lihat §3). |
+| **K-5** | **Admin tidak punya inbox notifikasi** — hanya `/admin/notification-settings` (konfigurasi). Tidak dibangun halaman inbox baru. | Item 5.2 selesai lewat keputusan, bukan kode. Sitemap perlu dicatat di Batch 7 bahwa admin tidak punya entri notifikasi setara Customer/Creator. |
 
 ---
 
