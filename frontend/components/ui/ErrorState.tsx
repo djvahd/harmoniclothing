@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { AlertTriangle } from "lucide-react";
 import Button from "@/components/ui/Button";
 
+/** Shared body for every route group's `error.tsx` boundary; logs the error and offers a retry button. */
 export default function ErrorState({
   error,
   reset,

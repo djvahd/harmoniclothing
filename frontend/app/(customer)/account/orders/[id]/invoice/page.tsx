@@ -9,11 +9,12 @@ import Badge from "@/components/ui/Badge";
 import LoadingState from "@/components/ui/LoadingState";
 import { formatDate } from "@/lib/format";
 import { getInvoice } from "@/services/orders";
+import { swrKeys } from "@/lib/swr-keys";
 
 export default function InvoicePage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
-  const { data, isLoading } = useSWR(`/orders/${params.id}/invoice`, () =>
+  const { data, isLoading } = useSWR(swrKeys.orderInvoice(Number(params.id)), () =>
     getInvoice(Number(params.id)),
   );
   const invoice = data?.data;

@@ -1,3 +1,4 @@
+/** Regular (non-bulk) checkout: turns selected cart items + an address into an order. */
 import { apiFetch } from "@/lib/api";
 import type { Order } from "@/types/order";
 

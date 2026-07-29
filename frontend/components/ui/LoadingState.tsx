@@ -36,6 +36,7 @@ export default function LoadingState({
   );
 }
 
+/** Skeleton `<tr>` rows for admin data tables; render inside an existing `<tbody>`. */
 export function TableRowsSkeleton({ columns, rows = 3 }: { columns: number; rows?: number }) {
   return (
     <>

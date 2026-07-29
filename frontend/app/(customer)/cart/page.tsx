@@ -2,29 +2,28 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import useSWR, { mutate } from "swr";
 import { ShoppingCart } from "lucide-react";
 import CartItemRow from "@/components/ui/CartItemRow";
 import PriceSummaryRow from "@/components/ui/PriceSummaryRow";
 import Button from "@/components/ui/Button";
 import LoadingState from "@/components/ui/LoadingState";
 import EmptyState from "@/components/ui/EmptyState";
-import { getCart, removeCartItem, updateCartItem } from "@/services/cart";
+import { removeCartItem, updateCartItem } from "@/services/cart";
+import { useCart, invalidateCart } from "@/hooks/useCart";
 
 export default function KeranjangPage() {
   const router = useRouter();
-  const { data, isLoading } = useSWR("/cart", getCart);
-  const items = data?.data ?? [];
+  const { items, isLoading } = useCart();
   const subtotal = items.reduce((sum, item) => sum + Number(item.subtotal), 0);
 
   async function handleQuantityChange(id: number, quantity: number) {
     await updateCartItem(id, quantity);
-    mutate("/cart");
+    invalidateCart();
   }
 
   async function handleRemove(id: number) {
     await removeCartItem(id);
-    mutate("/cart");
+    invalidateCart();
   }
 
   return (

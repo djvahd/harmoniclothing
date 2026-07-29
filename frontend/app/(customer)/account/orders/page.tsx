@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import useSWR from "swr";
 import clsx from "clsx";
 import { PackageSearch } from "lucide-react";
 import AccountSidebar from "@/components/layout/AccountSidebar";
@@ -11,7 +10,7 @@ import Badge from "@/components/ui/Badge";
 import ProductThumbnail from "@/components/ui/ProductThumbnail";
 import LoadingState from "@/components/ui/LoadingState";
 import EmptyState from "@/components/ui/EmptyState";
-import { getOrders } from "@/services/orders";
+import { useOrders } from "@/hooks/useOrders";
 import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
 import { ORDER_STATUS_LABEL, ORDER_STATUS_VARIANT } from "@/lib/order-status";
@@ -30,10 +29,10 @@ const TABS: { value: OrderStatus | "semua"; label: string }[] = [
 ];
 
 export default function RiwayatPesananPage() {
-  const { data, isLoading } = useSWR("/orders", getOrders);
+  const { orders: allOrders, isLoading } = useOrders();
   const [tab, setTab] = useState<OrderStatus | "semua">("semua");
 
-  const orders = (data?.data ?? []).filter((order) => tab === "semua" || order.status === tab);
+  const orders = allOrders.filter((order) => tab === "semua" || order.status === tab);
 
   return (
     <SidebarPageShell sidebar={<AccountSidebar />}>

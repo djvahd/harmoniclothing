@@ -1,3 +1,4 @@
+/** Public product catalog: filtered/sorted listing, filter facets, and detail-by-slug. */
 import { apiFetch } from "@/lib/api";
 import { buildQuery } from "@/lib/query";
 import type { GenderSegment, PrintArea, Product } from "@/types/product";

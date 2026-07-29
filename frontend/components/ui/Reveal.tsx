@@ -9,6 +9,7 @@ interface RevealProps {
   delay?: number;
 }
 
+/** Fades/slides children in once they scroll into view (via IntersectionObserver); respects prefers-reduced-motion. */
 export default function Reveal({ children, className, delay = 0 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);

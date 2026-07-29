@@ -7,6 +7,7 @@ interface OrderStatusItemProps {
   isLast?: boolean;
 }
 
+/** One step in an order status timeline; connects to the next step unless `isLast`. */
 export default function OrderStatusItem({
   title,
   timestamp,

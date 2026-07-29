@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import useSWR, { mutate } from "swr";
 import { ChevronRight, Star, Upload } from "lucide-react";
 import Button from "@/components/ui/Button";
 import QuantityStepper from "@/components/ui/QuantityStepper";
@@ -20,9 +19,10 @@ import ProductTabs, {
   SHIPPING_TAB_CONTENT,
   ReviewsTabContent,
 } from "@/components/product/ProductTabs";
-import { getProductBySlug, getProducts } from "@/services/catalog";
 import { uploadDesignFile } from "@/services/customization";
 import { addToCart } from "@/services/cart";
+import { invalidateCart } from "@/hooks/useCart";
+import { useProduct, useProducts } from "@/hooks/useProducts";
 import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
 import { getErrorMessage } from "@/lib/api";
@@ -48,10 +48,7 @@ type TabKey = (typeof TABS)[number]["key"];
 export default function DetailProdukPage() {
   const params = useParams<{ slug: string }>();
   const router = useRouter();
-  const { data, isLoading } = useSWR(`/catalog/products/${params.slug}`, () =>
-    getProductBySlug(params.slug),
-  );
-  const product = data?.data;
+  const { product, isLoading } = useProduct(params.slug);
 
   const colors = useMemo(
     () => Array.from(new Set(product?.variants?.map((v) => v.color) ?? [])),
@@ -129,7 +126,7 @@ export default function DetailProdukPage() {
         notes: notes || undefined,
         custom_design_file_path: uploadedPath ?? undefined,
       });
-      await mutate("/cart");
+      await invalidateCart();
       if (destination === "cart") toast("Ditambahkan ke keranjang.", "success");
       router.push(destination === "cart" ? "/cart" : "/checkout");
     } catch (err) {
@@ -337,8 +334,9 @@ export default function DetailProdukPage() {
 }
 
 function YouMightLike({ categorySlug, excludeId }: { categorySlug?: string; excludeId: number }) {
-  const { data, isLoading } = useSWR(["/catalog/products", "you-might-like", categorySlug], () =>
-    getProducts(categorySlug ? { categories: [categorySlug], per_page: 8 } : { sort: "terlaris", per_page: 8 }),
+  const { data, isLoading } = useProducts(
+    "you-might-like",
+    categorySlug ? { categories: [categorySlug], per_page: 8 } : { sort: "terlaris", per_page: 8 },
   );
   const items = (data?.data ?? []).filter((p: Product) => p.id !== excludeId).slice(0, 6);
 

@@ -2,22 +2,21 @@
 
 import Link from "next/link";
 import { Heart } from "lucide-react";
-import useSWR, { mutate } from "swr";
 import AccountSidebar from "@/components/layout/AccountSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import ProductCard from "@/components/ui/ProductCard";
 import DesignCard from "@/components/ui/DesignCard";
 import LoadingState from "@/components/ui/LoadingState";
 import EmptyState from "@/components/ui/EmptyState";
-import { getWishlist, removeFromWishlist } from "@/services/wishlist";
+import { removeFromWishlist } from "@/services/wishlist";
+import { useWishlist, invalidateWishlist } from "@/hooks/useWishlist";
 
 export default function WishlistPage() {
-  const { data, isLoading } = useSWR("/wishlist", getWishlist);
-  const items = data?.data ?? [];
+  const { items, isLoading } = useWishlist();
 
   async function handleRemove(id: number) {
     await removeFromWishlist(id);
-    mutate("/wishlist");
+    invalidateWishlist();
   }
 
   return (

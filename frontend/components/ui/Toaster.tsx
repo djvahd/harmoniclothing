@@ -18,6 +18,7 @@ const VARIANT_ICON: Record<ToastVariant, typeof CheckCircle2> = {
   info: Info,
 };
 
+/** Fixed bottom-right toast stack, rendered once in AppProviders and driven entirely by `store/toast-store`. */
 export default function Toaster() {
   const toasts = useToastStore((state) => state.toasts);
   const dismiss = useToastStore((state) => state.dismiss);

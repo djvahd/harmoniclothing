@@ -4,6 +4,7 @@ export interface PaginationMeta {
   total: number;
 }
 
+/** Prev/next pager driven by a Laravel-style pagination `meta` object; renders nothing when there's only one page. */
 export default function Pagination({
   meta,
   onPageChange,

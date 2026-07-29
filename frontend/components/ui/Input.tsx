@@ -8,6 +8,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string;
 }
 
+/** Labeled text input with optional leading icon and inline error message. */
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, icon: Icon, error, className, id, ...props }, ref) => {
     return (

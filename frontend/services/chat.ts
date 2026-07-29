@@ -1,3 +1,4 @@
+/** Customer-side chat: thread list and message history/send for the ChatWidget. */
 import { apiFetch } from "@/lib/api";
 import type { ChatMessage, ChatThread } from "@/types/notification";
 

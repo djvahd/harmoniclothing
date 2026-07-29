@@ -1,22 +1,21 @@
 "use client";
 
-import useSWR, { mutate } from "swr";
 import clsx from "clsx";
 import { Bell } from "lucide-react";
 import AccountSidebar from "@/components/layout/AccountSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import LoadingState from "@/components/ui/LoadingState";
 import EmptyState from "@/components/ui/EmptyState";
-import { getNotifications, markNotificationRead } from "@/services/notifications";
+import { markNotificationRead } from "@/services/notifications";
+import { useNotifications, invalidateNotifications } from "@/hooks/useNotifications";
 
 export default function NotifikasiPage() {
-  const { data, isLoading } = useSWR("/notifications", getNotifications);
-  const notifications = data?.data ?? [];
+  const { notifications, isLoading } = useNotifications();
 
   async function handleClick(id: number, isRead: boolean) {
     if (isRead) return;
     await markNotificationRead(id);
-    mutate("/notifications");
+    invalidateNotifications();
   }
 
   return (

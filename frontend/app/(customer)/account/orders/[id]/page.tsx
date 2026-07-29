@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import useSWR, { mutate } from "swr";
 import { useState } from "react";
 import Badge from "@/components/ui/Badge";
 import OrderStatusItem from "@/components/ui/OrderStatusItem";
@@ -10,7 +9,8 @@ import ProductThumbnail from "@/components/ui/ProductThumbnail";
 import PriceSummaryRow from "@/components/ui/PriceSummaryRow";
 import Button from "@/components/ui/Button";
 import LoadingState from "@/components/ui/LoadingState";
-import { cancelOrder, confirmReceived, getOrder, reorder } from "@/services/orders";
+import { cancelOrder, confirmReceived, reorder } from "@/services/orders";
+import { useOrder, invalidateOrder } from "@/hooks/useOrders";
 import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
 import { ORDER_STATUS_LABEL, ORDER_STATUS_VARIANT } from "@/lib/order-status";
@@ -27,9 +27,8 @@ const TIMELINE_STEPS: { status: string; label: string }[] = [
 export default function DetailPesananPage() {
   const params = useParams<{ id: string }>();
   const orderId = Number(params.id);
-  const { data, isLoading } = useSWR(`/orders/${orderId}`, () => getOrder(orderId));
+  const { order, isLoading } = useOrder(orderId);
   const [loading, setLoading] = useState(false);
-  const order = data?.data;
 
   const currentStepIndex = order
     ? TIMELINE_STEPS.findIndex((s) => s.status === order.status)
@@ -39,7 +38,7 @@ export default function DetailPesananPage() {
     setLoading(true);
     try {
       await cancelOrder(orderId);
-      mutate(`/orders/${orderId}`);
+      invalidateOrder(orderId);
     } finally {
       setLoading(false);
     }
@@ -58,7 +57,7 @@ export default function DetailPesananPage() {
     setLoading(true);
     try {
       await confirmReceived(orderId);
-      mutate(`/orders/${orderId}`);
+      invalidateOrder(orderId);
     } finally {
       setLoading(false);
     }

@@ -8,6 +8,7 @@ interface ProductThumbnailProps {
   className?: string;
 }
 
+/** Fixed-size square product/design image, blank placeholder when `src` is missing. */
 export default function ProductThumbnail({
   src,
   alt,

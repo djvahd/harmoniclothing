@@ -1,3 +1,4 @@
+/** Public design marketplace: filtered/sorted design and creator listings, filter facets, and detail-by-slug. */
 import { apiFetch } from "@/lib/api";
 import { buildQuery } from "@/lib/query";
 import type { Design } from "@/types/product";

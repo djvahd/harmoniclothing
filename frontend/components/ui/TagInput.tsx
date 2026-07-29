@@ -6,6 +6,7 @@ import { X } from "lucide-react";
 const MAX_TAGS = 10;
 const MAX_TAG_LENGTH = 30;
 
+/** Free-text tag editor (Enter/comma to add, Backspace to remove last); caps at MAX_TAGS entries of MAX_TAG_LENGTH chars. */
 export default function TagInput({
   value,
   onChange,

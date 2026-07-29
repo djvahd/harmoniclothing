@@ -8,6 +8,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
 }
 
+/** Standard button; `loading` shows a spinner and disables the button, forwards all native button props. */
 export default function Button({
   variant = "primary",
   fullWidth,

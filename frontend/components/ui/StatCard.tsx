@@ -6,6 +6,7 @@ interface StatCardProps {
   value: string;
 }
 
+/** Small icon + label + value tile, used for dashboard/stats summaries. */
 export default function StatCard({ icon: Icon, label, value }: StatCardProps) {
   return (
     <div className="flex w-[180px] flex-col items-center gap-1.5 rounded-md border border-border bg-surface p-4">

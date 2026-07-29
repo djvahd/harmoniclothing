@@ -1,3 +1,4 @@
+/** Creator-side account and workspace: upgrade application, KYC verification, dashboard/earnings, and design upload/submit. */
 import { apiFetch } from "@/lib/api";
 import type { Design } from "@/types/product";
 

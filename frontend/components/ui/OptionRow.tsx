@@ -8,6 +8,7 @@ interface OptionRowProps {
   price?: string;
 }
 
+/** Radio-style selectable row (e.g. shipping address picker) with label, optional sublabel/price. */
 export default function OptionRow({ selected, onSelect, label, sublabel, price }: OptionRowProps) {
   return (
     <button

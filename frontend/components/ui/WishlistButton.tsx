@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { Heart } from "lucide-react";
-import useSWR, { mutate } from "swr";
 import clsx from "clsx";
 import { useAuthStore } from "@/store/auth-store";
 import { useAuthModalStore } from "@/store/auth-modal-store";
-import { getWishlist, addToWishlist, removeFromWishlist } from "@/services/wishlist";
+import { addToWishlist, removeFromWishlist } from "@/services/wishlist";
+import { useWishlist, invalidateWishlist } from "@/hooks/useWishlist";
 
 interface WishlistButtonProps {
   productId?: number;
@@ -17,10 +17,9 @@ interface WishlistButtonProps {
 export default function WishlistButton({ productId, designId, className }: WishlistButtonProps) {
   const user = useAuthStore((state) => state.user);
   const openAuthModal = useAuthModalStore((state) => state.open);
-  const { data } = useSWR(user ? "/wishlist" : null, getWishlist);
+  const { items } = useWishlist(!!user);
   const [pending, setPending] = useState(false);
 
-  const items = data?.data ?? [];
   const existing = items.find((item) =>
     productId ? item.product?.id === productId : item.design?.id === designId,
   );
@@ -40,7 +39,7 @@ export default function WishlistButton({ productId, designId, className }: Wishl
       } else {
         await addToWishlist({ product_id: productId, design_id: designId });
       }
-      await mutate("/wishlist");
+      await invalidateWishlist();
     } finally {
       setPending(false);
     }

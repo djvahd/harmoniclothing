@@ -11,6 +11,7 @@ interface CartItemRowProps {
   onRemove: (id: number) => void;
 }
 
+/** One cart line item: thumbnail, name/variant, quantity stepper, subtotal, and a remove button. */
 export default function CartItemRow({ item, onQuantityChange, onRemove }: CartItemRowProps) {
   const product = item.product_variant.product;
   const thumbnail = storageUrl(

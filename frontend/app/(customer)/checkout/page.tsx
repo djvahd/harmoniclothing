@@ -7,17 +7,16 @@ import { ShieldCheck } from "lucide-react";
 import OptionRow from "@/components/ui/OptionRow";
 import PriceSummaryRow from "@/components/ui/PriceSummaryRow";
 import Button from "@/components/ui/Button";
-import { getCart } from "@/services/cart";
 import { getAddresses } from "@/services/account";
 import { checkout } from "@/services/checkout";
 import { getErrorMessage } from "@/lib/api";
+import { useCart } from "@/hooks/useCart";
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { data: cartData } = useSWR("/cart", getCart);
+  const { items } = useCart();
   const { data: addressData } = useSWR("/account/addresses", getAddresses);
 
-  const items = cartData?.data ?? [];
   const addresses = addressData?.data ?? [];
   const subtotal = items.reduce((sum, item) => sum + Number(item.subtotal), 0);
 

@@ -1,3 +1,4 @@
+/** The signed-in customer's own account: address book CRUD and profile updates. */
 import { apiFetch } from "@/lib/api";
 import type { Address, User } from "@/types/user";
 

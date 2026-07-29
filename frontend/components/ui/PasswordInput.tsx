@@ -7,6 +7,7 @@ interface PasswordInputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string;
 }
 
+/** Password field with a show/hide toggle; otherwise mirrors Input's label/error layout. */
 const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
   ({ label, error, className, id, ...props }, ref) => {
     const [visible, setVisible] = useState(false);

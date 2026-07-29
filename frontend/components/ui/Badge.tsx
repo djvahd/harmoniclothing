@@ -16,6 +16,7 @@ const variantClasses: Record<BadgeVariant, string> = {
   info: "bg-info text-info-fg",
 };
 
+/** Semantic-colored status pill (order status, payment status, etc.); pick `variant` from the design tokens, not raw colors. */
 export default function Badge({ variant = "neutral", children, className }: BadgeProps) {
   return (
     <span

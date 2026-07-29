@@ -1,3 +1,4 @@
+/** Uploads a customer's own design file for the product customizer, returning its stored path/URL. */
 import { apiFetch } from "@/lib/api";
 
 export function uploadDesignFile(file: File) {

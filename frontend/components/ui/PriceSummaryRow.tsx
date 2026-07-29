@@ -7,6 +7,7 @@ interface PriceSummaryRowProps {
   emphasis?: boolean;
 }
 
+/** A label + formatted currency row for order/cart/checkout summaries; `emphasis` renders it as the total line. */
 export default function PriceSummaryRow({ label, amount, emphasis }: PriceSummaryRowProps) {
   return (
     <div className="flex items-center justify-between font-body text-sm">

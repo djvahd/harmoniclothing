@@ -3,16 +3,16 @@
 import { Suspense, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import useSWR, { mutate } from "swr";
 import { Upload } from "lucide-react";
 import Tag from "@/components/ui/Tag";
 import QuantityStepper from "@/components/ui/QuantityStepper";
 import PriceSummaryRow from "@/components/ui/PriceSummaryRow";
 import Button from "@/components/ui/Button";
-import { getProductBySlug } from "@/services/catalog";
-import { getDesignBySlug } from "@/services/marketplace";
 import { uploadDesignFile } from "@/services/customization";
 import { addToCart } from "@/services/cart";
+import { invalidateCart } from "@/hooks/useCart";
+import { useProduct } from "@/hooks/useProducts";
+import { useDesign } from "@/hooks/useDesigns";
 import { storageUrl } from "@/lib/storage";
 import { getErrorMessage } from "@/lib/api";
 import LoadingState from "@/components/ui/LoadingState";
@@ -24,16 +24,8 @@ function ProductEditorForm() {
   const router = useRouter();
   const designSlug = searchParams.get("design");
 
-  const { data: productData } = useSWR(`/catalog/products/${params.slug}`, () =>
-    getProductBySlug(params.slug),
-  );
-  const { data: designData } = useSWR(
-    designSlug ? `/marketplace/designs/${designSlug}` : null,
-    () => getDesignBySlug(designSlug as string),
-  );
-
-  const product = productData?.data;
-  const design = designData?.data;
+  const { product } = useProduct(params.slug);
+  const { design } = useDesign(designSlug);
 
   const colors = useMemo(
     () => Array.from(new Set(product?.variants?.map((v) => v.color) ?? [])),
@@ -98,7 +90,7 @@ function ProductEditorForm() {
         notes: notes || undefined,
         custom_design_file_path: uploadedPath ?? undefined,
       });
-      await mutate("/cart");
+      await invalidateCart();
       toast("Ditambahkan ke keranjang.", "success");
       router.push("/cart");
     } catch (err) {

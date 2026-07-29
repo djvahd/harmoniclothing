@@ -1,3 +1,4 @@
+/** The signed-in customer's in-app notifications: list and mark-as-read. */
 import { apiFetch } from "@/lib/api";
 import type { AppNotification } from "@/types/notification";
 

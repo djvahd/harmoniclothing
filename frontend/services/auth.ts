@@ -1,3 +1,4 @@
+/** Session auth: login/register/logout, current-user lookup, and password reset. */
 import { apiFetch } from "@/lib/api";
 import type { LoginPayload, RegisterPayload, User } from "@/types/user";
 

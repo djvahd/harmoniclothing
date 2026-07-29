@@ -20,6 +20,7 @@ export function ProductCardSkeleton() {
   );
 }
 
+/** Catalog grid card: thumbnail, name, starting price, rating/sold count, wishlist toggle, links to the product detail page. */
 export default function ProductCard({ product }: { product: Product }) {
   const thumbnail = storageUrl(product.variants?.[0]?.mockup_asset_path);
 

@@ -14,6 +14,7 @@ interface PromptModalProps {
   onCancel: () => void;
 }
 
+/** Single-field text-input confirmation modal (e.g. rejection reason); disables confirm until `minLength` is met. */
 export default function PromptModal({
   open,
   title,

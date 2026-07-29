@@ -178,6 +178,7 @@ export function CategoryList({
   );
 }
 
+/** Shared catalog/marketplace filter panel (categories, tags, gender/size/color/material, price range); sections with no data for the current listing simply don't render. */
 export default function FilterSidebar({
   options,
   value,

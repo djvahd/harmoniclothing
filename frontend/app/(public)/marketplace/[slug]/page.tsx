@@ -6,11 +6,12 @@ import useSWR from "swr";
 import { ExternalLink, LayoutGrid, PackageSearch, Star, UserRound } from "lucide-react";
 import DesignCard, { DesignCardSkeleton } from "@/components/ui/DesignCard";
 import { getCreatorBySlug } from "@/services/marketplace";
+import { swrKeys } from "@/lib/swr-keys";
 import type { Design } from "@/types/product";
 
 export default function ProfilPublikCreatorPage() {
   const params = useParams<{ slug: string }>();
-  const { data, isLoading } = useSWR(`/marketplace/creators/${params.slug}`, () =>
+  const { data, isLoading } = useSWR(swrKeys.creatorBySlug(params.slug), () =>
     getCreatorBySlug(params.slug),
   );
   const creator = data?.data;

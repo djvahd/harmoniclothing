@@ -1,3 +1,4 @@
+/** Admin console: dashboard summary, user/creator/design moderation, catalog management, order/shipment ops, payments, chat, notification settings, and reports. Largest service module — one function per admin action, grouped by resource in source order. */
 import { API_URL, apiFetch } from "@/lib/api";
 import { buildQuery } from "@/lib/query";
 import type { User } from "@/types/user";

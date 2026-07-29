@@ -26,6 +26,7 @@ interface DesignCardProps {
   startingPrice?: number;
 }
 
+/** Marketplace grid card: thumbnail, title, creator name, starting price, rating/sold count, wishlist toggle. */
 export default function DesignCard({ design, startingPrice }: DesignCardProps) {
   const thumbnail = storageUrl(design.thumbnail_path);
   const price =

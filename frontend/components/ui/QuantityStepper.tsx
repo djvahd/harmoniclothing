@@ -7,6 +7,7 @@ interface QuantityStepperProps {
   max?: number;
 }
 
+/** Numeric +/- stepper, clamped to [min, max]. */
 export default function QuantityStepper({
   value,
   onChange,

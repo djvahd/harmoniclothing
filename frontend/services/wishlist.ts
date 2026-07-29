@@ -1,3 +1,4 @@
+/** The signed-in customer's wishlist: list, add (product or design), remove. */
 import { apiFetch } from "@/lib/api";
 import type { WishlistItem } from "@/types/wishlist";
 

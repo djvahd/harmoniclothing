@@ -2,20 +2,19 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import useSWR from "swr";
 import { Upload } from "lucide-react";
 import CreatorSidebar from "@/components/layout/CreatorSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import TagInput from "@/components/ui/TagInput";
-import { getProducts } from "@/services/catalog";
 import { createDesign } from "@/services/creator";
 import { getErrorMessage } from "@/lib/api";
+import { useProducts } from "@/hooks/useProducts";
 
 export default function UploadDesainPage() {
   const router = useRouter();
-  const { data: productsData } = useSWR("/catalog/products?all", () => getProducts({ per_page: 100 }));
+  const { data: productsData } = useProducts("all", { per_page: 100 });
   const products = productsData?.data ?? [];
 
   const [title, setTitle] = useState("");

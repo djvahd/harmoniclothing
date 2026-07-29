@@ -13,6 +13,7 @@ export function CreatorCardSkeleton() {
   );
 }
 
+/** Marketplace creator grid card: avatar, name/bio, design count, rating/sold count, links to the public profile. */
 export default function CreatorCard({ creator }: { creator: CreatorSummary }) {
   const hasRating = creator.review_count > 0 && creator.rating_average != null;
   const hasSold = creator.sold_count > 0;

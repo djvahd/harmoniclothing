@@ -7,6 +7,7 @@ interface StepItemProps {
   description: string;
 }
 
+/** One numbered step in the "Cara Kerja" explainer, with a periodically-pulsing icon badge. */
 export default function StepItem({ number, icon: Icon, title, description }: StepItemProps) {
   return (
     <div className="relative z-10 flex w-40 flex-col items-center gap-2 text-center">

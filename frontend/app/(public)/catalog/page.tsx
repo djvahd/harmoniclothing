@@ -3,13 +3,13 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import useSWR from "swr";
 import { ArrowUpDown, PackageSearch, Search, X } from "lucide-react";
 import clsx from "clsx";
 import ProductCard, { ProductCardSkeleton } from "@/components/ui/ProductCard";
 import Button from "@/components/ui/Button";
 import FilterSidebar, { EMPTY_FILTER_VALUE, type FilterSidebarValue } from "@/components/ui/FilterSidebar";
-import { getProducts, getCatalogFilters, type ProductSort } from "@/services/catalog";
+import type { ProductSort } from "@/services/catalog";
+import { useProducts, useProductFilters } from "@/hooks/useProducts";
 import type { Product } from "@/types/product";
 
 const PER_PAGE = 40;
@@ -60,29 +60,26 @@ function KatalogPageContent() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showSort]);
 
-  const { data: filtersData } = useSWR("/catalog/products/filters", getCatalogFilters);
-  const filterOptions = filtersData?.data;
+  const filterOptions = useProductFilters();
 
   // Unfiltered grand total for the "Menampilkan X dari Y produk" count — Y
   // is the whole catalog, not the filtered result set, so this is fetched
   // independently of `filters`/`sort`.
-  const { data: totalData } = useSWR("/catalog/products/total", () => getProducts({ per_page: 1 }));
+  const { data: totalData } = useProducts("total", { per_page: 1 });
   const grandTotal = totalData?.meta.total;
 
-  const { data, error, isLoading } = useSWR(["/catalog/products", sort, filters, page], () =>
-    getProducts({
-      page,
-      per_page: PER_PAGE,
-      sort,
-      categories: filters.categories.length ? filters.categories : undefined,
-      genders: filters.genders.length ? filters.genders : undefined,
-      sizes: filters.sizes.length ? filters.sizes : undefined,
-      colors: filters.colors.length ? filters.colors : undefined,
-      materials: filters.materials.length ? filters.materials : undefined,
-      price_min: filters.priceMin ? Number(filters.priceMin) : undefined,
-      price_max: filters.priceMax ? Number(filters.priceMax) : undefined,
-    }),
-  );
+  const { data, error, isLoading } = useProducts("public", {
+    page,
+    per_page: PER_PAGE,
+    sort,
+    categories: filters.categories.length ? filters.categories : undefined,
+    genders: filters.genders.length ? filters.genders : undefined,
+    sizes: filters.sizes.length ? filters.sizes : undefined,
+    colors: filters.colors.length ? filters.colors : undefined,
+    materials: filters.materials.length ? filters.materials : undefined,
+    price_min: filters.priceMin ? Number(filters.priceMin) : undefined,
+    price_max: filters.priceMax ? Number(filters.priceMax) : undefined,
+  });
 
   // Page 1 of a (possibly new) filter/sort combination replaces the
   // accumulated list; "Muat Lebih Banyak" appends subsequent pages onto it.

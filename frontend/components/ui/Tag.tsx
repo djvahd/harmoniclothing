@@ -1,5 +1,6 @@
 import clsx from "clsx";
 
+/** Small pill label (category/tag/size chip), togglable via `active`. */
 export default function Tag({
   children,
   active,

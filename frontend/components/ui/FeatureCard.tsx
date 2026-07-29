@@ -6,6 +6,7 @@ interface FeatureCardProps {
   description: string;
 }
 
+/** Icon + title + description tile for feature/benefit grids. */
 export default function FeatureCard({ icon: Icon, title, description }: FeatureCardProps) {
   return (
     <div className="flex w-[220px] flex-col gap-2.5 rounded-md border border-border bg-surface p-4">

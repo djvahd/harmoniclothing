@@ -1,3 +1,4 @@
+/** The signed-in customer's cart: list, add, update quantity, remove. */
 import { apiFetch } from "@/lib/api";
 import type { CartItem } from "@/types/product";
 

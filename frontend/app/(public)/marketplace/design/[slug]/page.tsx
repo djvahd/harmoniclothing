@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 import clsx from "clsx";
 import { ChevronRight, LayoutGrid, Package, Star, UserRound } from "lucide-react";
 import Tag from "@/components/ui/Tag";
@@ -23,8 +23,11 @@ import ProductTabs, {
   SHIPPING_TAB_CONTENT,
   ReviewsTabContent,
 } from "@/components/product/ProductTabs";
-import { getDesignBySlug, getCreatorBySlug, getDesigns } from "@/services/marketplace";
+import { getCreatorBySlug } from "@/services/marketplace";
 import { addToCart } from "@/services/cart";
+import { invalidateCart } from "@/hooks/useCart";
+import { useDesign, useDesigns } from "@/hooks/useDesigns";
+import { swrKeys } from "@/lib/swr-keys";
 import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
 import { getErrorMessage } from "@/lib/api";
@@ -56,10 +59,7 @@ type TabKey = (typeof TABS)[number]["key"];
 export default function DetailDesainPage() {
   const params = useParams<{ slug: string }>();
   const router = useRouter();
-  const { data, isLoading } = useSWR(`/marketplace/designs/${params.slug}`, () =>
-    getDesignBySlug(params.slug),
-  );
-  const design = data?.data;
+  const { design, isLoading } = useDesign(params.slug);
   const products = useMemo(() => design?.products ?? [], [design]);
 
   const [productId, setProductId] = useState<number | null>(null);
@@ -136,7 +136,7 @@ export default function DetailDesainPage() {
         quantity,
         notes: notes || undefined,
       });
-      await mutate("/cart");
+      await invalidateCart();
       if (destination === "cart") toast("Ditambahkan ke keranjang.", "success");
       router.push(destination === "cart" ? "/cart" : "/checkout");
     } catch (err) {
@@ -402,8 +402,9 @@ export default function DetailDesainPage() {
 }
 
 function YouMightLike({ categorySlug, excludeId }: { categorySlug?: string; excludeId: number }) {
-  const { data, isLoading } = useSWR(["/marketplace/designs", "you-might-like", categorySlug], () =>
-    getDesigns(categorySlug ? { categories: [categorySlug], per_page: 8 } : { sort: "terlaris", per_page: 8 }),
+  const { data, isLoading } = useDesigns(
+    "you-might-like",
+    categorySlug ? { categories: [categorySlug], per_page: 8 } : { sort: "terlaris", per_page: 8 },
   );
   const items = (data?.data ?? []).filter((d: Design) => d.id !== excludeId).slice(0, 6);
 
@@ -427,7 +428,7 @@ function CreatorSummaryCard({
   creatorName: string;
   excludeId: number;
 }) {
-  const { data, isLoading } = useSWR(["/marketplace/creators", creatorSlug], () =>
+  const { data, isLoading } = useSWR(swrKeys.creatorBySlug(creatorSlug), () =>
     getCreatorBySlug(creatorSlug),
   );
   const profile = data?.data;

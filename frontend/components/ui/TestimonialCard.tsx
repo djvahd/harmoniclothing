@@ -8,6 +8,7 @@ interface TestimonialCardProps {
   rating?: number;
 }
 
+/** Star rating + quote + attribution card for the homepage testimonial marquee. */
 export default function TestimonialCard({
   quote,
   name,

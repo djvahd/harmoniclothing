@@ -8,6 +8,7 @@ export interface DataTableColumn {
   className?: string;
 }
 
+/** Generic admin list table: column defs + row renderer, with built-in loading skeleton and empty state. */
 export default function DataTable<T>({
   columns,
   data,

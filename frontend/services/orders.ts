@@ -1,3 +1,4 @@
+/** The signed-in customer's orders: list/detail, cancel, reorder, confirm-received, invoice, and review submission. */
 import { apiFetch } from "@/lib/api";
 import type { Order } from "@/types/order";
 import type { Invoice } from "@/types/wishlist";
