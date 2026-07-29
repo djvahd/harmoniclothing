@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\DTO\BulkCheckoutDTO;
 use App\DTO\CheckoutDTO;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BulkCheckoutRequest;
 use App\Http\Requests\CheckoutRequest;
 use App\Http\Resources\OrderResource;
 use App\Services\CheckoutService;
@@ -11,7 +13,7 @@ use App\Services\PaymentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-/** 5.2_API_List.md §4 — /checkout (FE-027, FE-052/056: bulk tier pricing applies automatically). */
+/** 5.2_API_List.md §4 — /checkout (FE-027) and /checkout/bulk (FE-052/056, BR-026: never mixed with regular). */
 class CheckoutController extends Controller
 {
     public function __construct(
@@ -29,6 +31,22 @@ class CheckoutController extends Controller
         );
 
         $order = $this->checkout->checkout($request->user(), $dto);
+
+        return $this->respondWithPayment($order, $request);
+    }
+
+    /** POST /checkout/bulk — Flow 7, always creates orders.type = 'bulk'. */
+    public function storeBulk(BulkCheckoutRequest $request): JsonResponse
+    {
+        $dto = new BulkCheckoutDTO(
+            addressId: (int) $request->validated('address_id'),
+            items: $request->validated('items'),
+            designId: $request->validated('design_id') ? (int) $request->validated('design_id') : null,
+            customDesignFilePath: $request->validated('custom_design_file_path'),
+            notes: $request->validated('notes'),
+        );
+
+        $order = $this->checkout->checkoutBulk($request->user(), $dto);
 
         return $this->respondWithPayment($order, $request);
     }

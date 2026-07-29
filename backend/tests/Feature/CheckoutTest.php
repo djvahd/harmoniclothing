@@ -76,7 +76,8 @@ class CheckoutTest extends TestCase
         ])->assertUnprocessable()->assertJsonValidationErrors('cart_item_ids.0');
     }
 
-    public function test_checkout_prices_by_total_quantity_when_a_bulk_tier_qualifies(): void
+    /** BR-026: regular checkout must never apply Bulk Order tiered pricing, even when total quantity would qualify for a tier. */
+    public function test_checkout_does_not_apply_bulk_pricing_to_regular_orders(): void
     {
         BulkPricingTier::factory()->create(['min_qty' => 1, 'max_qty' => 49, 'price_per_unit' => 80000]);
         BulkPricingTier::factory()->create(['min_qty' => 50, 'max_qty' => null, 'price_per_unit' => 60000]);
@@ -86,18 +87,19 @@ class CheckoutTest extends TestCase
         $variantS = ProductVariant::factory()->create();
         $variantM = ProductVariant::factory()->create();
         $itemS = CartItem::factory()->for($user)->for($variantS, 'productVariant')
-            ->create(['quantity' => 30, 'unit_price_snapshot' => 999999]);
+            ->create(['quantity' => 30, 'unit_price_snapshot' => 100000]);
         $itemM = CartItem::factory()->for($user)->for($variantM, 'productVariant')
-            ->create(['quantity' => 25, 'unit_price_snapshot' => 999999]);
+            ->create(['quantity' => 25, 'unit_price_snapshot' => 100000]);
 
         $response = $this->actingAs($user)->postJson('/api/checkout', [
             'address_id' => $address->id,
             'cart_item_ids' => [$itemS->id, $itemM->id],
         ]);
 
-        // total qty = 55 -> tiered price 60000/unit, not the 999999 cart snapshot
+        // total qty = 55 would qualify for the 60000/unit tier, but each item
+        // must keep its own 100000 cart-time snapshot regardless (BR-025/026).
         $response->assertCreated()
             ->assertJsonPath('data.type', 'reguler')
-            ->assertJsonPath('data.total', '3300000.00');
+            ->assertJsonPath('data.total', '5500000.00');
     }
 }
