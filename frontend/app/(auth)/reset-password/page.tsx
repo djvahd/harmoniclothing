@@ -2,6 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import AuthCard from "@/components/layout/AuthCard";
 import PasswordInput from "@/components/ui/PasswordInput";
 import Button from "@/components/ui/Button";
@@ -10,6 +11,8 @@ import { useAuthModalStore } from "@/store/auth-modal-store";
 import { getErrorMessage } from "@/lib/api";
 
 function ResetPasswordForm() {
+  const t = useTranslations("auth.resetPassword");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const params = useSearchParams();
   const openAuthModal = useAuthModalStore((state) => state.open);
@@ -29,35 +32,35 @@ function ResetPasswordForm() {
         password,
         password_confirmation: passwordConfirmation,
       });
-      openAuthModal("login", "Password berhasil diperbarui. Silakan masuk.");
+      openAuthModal("login", t("success"));
       router.push("/");
     } catch (err) {
-      setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
+      setError(getErrorMessage(err, tCommon("errorGeneric")));
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <AuthCard title="Buat Password Baru">
+    <AuthCard title={t("title")}>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <PasswordInput
           id="password"
-          label="Password Baru"
+          label={t("newPassword")}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
         <PasswordInput
           id="password_confirmation"
-          label="Konfirmasi Password Baru"
+          label={t("confirmNewPassword")}
           value={passwordConfirmation}
           onChange={(e) => setPasswordConfirmation(e.target.value)}
           required
         />
         {error && <p className="font-body text-xs text-danger">{error}</p>}
         <Button type="submit" fullWidth loading={loading}>
-          Simpan Password Baru
+          {t("submit")}
         </Button>
       </form>
     </AuthCard>

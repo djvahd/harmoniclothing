@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import useSWR from "swr";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useAuthStore } from "@/store/auth-store";
 import { useAuthModalStore } from "@/store/auth-modal-store";
 import { getCreatorDashboard } from "@/services/creator";
@@ -16,6 +17,7 @@ import { getCreatorDashboard } from "@/services/creator";
 const EXEMPT_PATHS = ["/creator/verification"];
 
 export default function CreatorGuard({ children }: { children: React.ReactNode }) {
+  const t = useTranslations("auth.guards");
   const user = useAuthStore((state) => state.user);
   const authStatus = useAuthStore((state) => state.status);
   const openAuthModal = useAuthModalStore((state) => state.open);
@@ -38,14 +40,14 @@ export default function CreatorGuard({ children }: { children: React.ReactNode }
 
     if (!user) {
       router.replace("/");
-      openAuthModal("login", "Silakan masuk untuk mengakses halaman ini.");
+      openAuthModal("login", t("loginRequired"));
       return;
     }
 
     if (!exempt && isForbidden) {
       router.replace("/account/become-creator");
     }
-  }, [authStatus, user, exempt, isForbidden, router, openAuthModal]);
+  }, [authStatus, user, exempt, isForbidden, router, openAuthModal, t]);
 
   if (!authReady || !checked || (!exempt && isForbidden)) {
     return (

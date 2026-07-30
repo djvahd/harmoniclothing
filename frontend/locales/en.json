@@ -892,6 +892,17 @@
       "submit": "Send Reset Link",
       "backTo": "Back to",
       "loginLink": "Log In"
+    },
+    "resetPassword": {
+      "title": "Create a New Password",
+      "newPassword": "New Password",
+      "confirmNewPassword": "Confirm New Password",
+      "submit": "Save New Password",
+      "success": "Password updated successfully. Please log in."
+    },
+    "guards": {
+      "loginRequired": "Please log in to access this page.",
+      "adminLoginRequired": "Please log in as an admin to access this page."
     }
   },
   "creator": {
