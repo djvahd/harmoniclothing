@@ -490,6 +490,22 @@
       "selectAddressError": "Pilih alamat pengiriman terlebih dahulu.",
       "noDraft": "Belum ada draft Bulk Order. Mulai dari halaman produk terlebih dahulu.",
       "backToCatalog": "Kembali ke Katalog Produk"
+    },
+    "accountSidebar": {
+      "profile": "Profil",
+      "addresses": "Address Book",
+      "orders": "Riwayat Pesanan",
+      "wishlist": "Wishlist",
+      "becomeCreator": "Ajukan Upgrade Creator",
+      "notifications": "Notifikasi"
+    },
+    "profile": {
+      "title": "Kelola Profil",
+      "fullName": "Nama Lengkap",
+      "phoneNumber": "Nomor Telepon",
+      "email": "Email",
+      "saveSuccess": "Perubahan berhasil disimpan.",
+      "saveChanges": "Simpan Perubahan"
     }
   }
 }

@@ -1,18 +1,21 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import SidebarNav from "./SidebarNav";
 
-const groups = [
-  {
-    items: [
-      { href: "/account/profile", label: "Profil" },
-      { href: "/account/addresses", label: "Address Book" },
-      { href: "/account/orders", label: "Riwayat Pesanan" },
-      { href: "/account/wishlist", label: "Wishlist" },
-      { href: "/account/become-creator", label: "Ajukan Upgrade Creator" },
-      { href: "/notifications", label: "Notifikasi" },
-    ],
-  },
-];
-
 export default function AccountSidebar({ className }: { className?: string }) {
+  const t = useTranslations("customer.accountSidebar");
+  const groups = [
+    {
+      items: [
+        { href: "/account/profile", label: t("profile") },
+        { href: "/account/addresses", label: t("addresses") },
+        { href: "/account/orders", label: t("orders") },
+        { href: "/account/wishlist", label: t("wishlist") },
+        { href: "/account/become-creator", label: t("becomeCreator") },
+        { href: "/notifications", label: t("notifications") },
+      ],
+    },
+  ];
   return <SidebarNav groups={groups} className={className} />;
 }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import { useTranslations } from "next-intl";
 import { useAuthStore } from "@/store/auth-store";
 
 export interface SidebarGroup {
@@ -17,6 +18,7 @@ interface SidebarNavProps {
 }
 
 export default function SidebarNav({ groups, className, onNavigate }: SidebarNavProps) {
+  const t = useTranslations("layout.header");
   const pathname = usePathname();
   const logout = useAuthStore((state) => state.logout);
 
@@ -57,7 +59,7 @@ export default function SidebarNav({ groups, className, onNavigate }: SidebarNav
         onClick={() => logout()}
         className="rounded-sm px-3 py-2.5 text-left font-body text-sm font-medium text-text-secondary hover:bg-background"
       >
-        Keluar
+        {t("logout")}
       </button>
     </nav>
   );

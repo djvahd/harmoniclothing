@@ -490,6 +490,22 @@
       "selectAddressError": "Please select a shipping address first.",
       "noDraft": "No Bulk Order draft yet. Start from a product page first.",
       "backToCatalog": "Back to Product Catalog"
+    },
+    "accountSidebar": {
+      "profile": "Profile",
+      "addresses": "Address Book",
+      "orders": "Order History",
+      "wishlist": "Wishlist",
+      "becomeCreator": "Apply to Become a Creator",
+      "notifications": "Notifications"
+    },
+    "profile": {
+      "title": "Manage Profile",
+      "fullName": "Full Name",
+      "phoneNumber": "Phone Number",
+      "email": "Email",
+      "saveSuccess": "Changes saved successfully.",
+      "saveChanges": "Save Changes"
     }
   }
 }
