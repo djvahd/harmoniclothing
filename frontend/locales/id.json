@@ -14,7 +14,18 @@
     "search": "Cari",
     "viewAll": "Lihat Semua",
     "emptyGeneric": "Belum ada data.",
-    "errorGeneric": "Terjadi kesalahan, coba lagi."
+    "errorGeneric": "Terjadi kesalahan, coba lagi.",
+    "productFallback": "Produk",
+    "orderStatus": {
+      "belum_dibayar": "Belum Dibayar",
+      "menunggu_approval": "Menunggu Approval",
+      "diproses_produksi": "Diproses",
+      "dikirim": "Dikirim",
+      "menunggu_konfirmasi": "Menunggu Konfirmasi",
+      "selesai": "Selesai",
+      "dibatalkan": "Dibatalkan",
+      "ditolak": "Ditolak"
+    }
   },
   "layout": {
     "nav": {
@@ -553,6 +564,75 @@
       "termsCheckbox": "Saya menyetujui Syarat & Ketentuan Creator (komisi dan kebijakan konten desain).",
       "submit": "Ajukan Sekarang",
       "footerNote": "Setelah pengajuan, kamu akan diarahkan untuk melengkapi verifikasi identitas sebelum akun Kreator diaktifkan oleh tim kami."
+    },
+    "orders": {
+      "title": "Riwayat Pesanan",
+      "statusAll": "Semua",
+      "empty": "Belum ada pesanan.",
+      "viewDetail": "Lihat Detail"
+    },
+    "orderDetail": {
+      "notFound": "Pesanan tidak ditemukan.",
+      "rejectedTitle": "Pesanan Ditolak",
+      "timeline": {
+        "orderCreated": "Pesanan Dibuat",
+        "awaitingApproval": "Menunggu Approval",
+        "inProduction": "Pesanan Diproduksi",
+        "shipped": "Pesanan Dikirim",
+        "awaitingConfirmation": "Menunggu Konfirmasi",
+        "completed": "Pesanan Selesai"
+      },
+      "timelineDone": "Selesai",
+      "timelinePending": "Menunggu",
+      "summary": "Ringkasan",
+      "subtotal": "Subtotal",
+      "shippingCost": "Ongkos Kirim",
+      "total": "Total",
+      "trackingNumber": "Resi",
+      "cancelOrder": "Batalkan Pesanan",
+      "confirmReceived": "Konfirmasi Diterima",
+      "reorder": "Pesan Lagi",
+      "viewInvoice": "Lihat Invoice"
+    },
+    "invoice": {
+      "notAvailable": "Invoice belum tersedia - pesanan mungkin belum dibayar.",
+      "back": "Kembali",
+      "print": "Print",
+      "companyAddress": "Jl. Konveksi Raya No. 8, Bandung, Indonesia",
+      "invoiceNumber": "Invoice ",
+      "issuedOn": "Diterbitkan",
+      "paidBadge": "Lunas",
+      "subtotal": "Subtotal",
+      "shippingCost": "Ongkos Kirim",
+      "totalPaid": "Total Dibayar"
+    }
+  },
+  "admin": {
+    "orders": {
+      "title": "Kelola Pesanan",
+      "columns": {
+        "orderNumber": "No. Pesanan",
+        "total": "Total",
+        "status": "Status",
+        "actions": "Aksi"
+      },
+      "empty": "Belum ada pesanan.",
+      "reject": "Tolak",
+      "rejectModal": {
+        "title": "Tolak Pesanan",
+        "label": "Alasan penolakan"
+      }
+    },
+    "production": {
+      "title": "Kelola Antrian Produksi",
+      "columns": {
+        "orderNumber": "No. Pesanan",
+        "total": "Total",
+        "status": "Status",
+        "actions": "Aksi"
+      },
+      "empty": "Belum ada antrian produksi.",
+      "startProduction": "Mulai Produksi"
     }
   }
 }

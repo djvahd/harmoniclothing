@@ -1,17 +1,10 @@
 import type { BadgeVariant } from "@/components/ui/Badge";
 import type { OrderStatus } from "@/types/order";
 
-export const ORDER_STATUS_LABEL: Record<OrderStatus, string> = {
-  belum_dibayar: "Belum Dibayar",
-  menunggu_approval: "Menunggu Approval",
-  diproses_produksi: "Diproses",
-  dikirim: "Dikirim",
-  menunggu_konfirmasi: "Menunggu Konfirmasi",
-  selesai: "Selesai",
-  dibatalkan: "Dibatalkan",
-  ditolak: "Ditolak",
-};
-
+// Label text lives in locales/{id,en}.json under "common.orderStatus" (keyed
+// by the same OrderStatus values) -- look it up via
+// tCommon(`orderStatus.${status}`) instead of a static map, so it follows
+// the active locale.
 export const ORDER_STATUS_VARIANT: Record<OrderStatus, BadgeVariant> = {
   belum_dibayar: "warning",
   menunggu_approval: "info",

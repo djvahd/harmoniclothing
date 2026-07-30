@@ -3,6 +3,7 @@
 import { useState } from "react";
 import useSWR, { mutate } from "swr";
 import { PackageSearch } from "lucide-react";
+import { useTranslations } from "next-intl";
 import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Badge from "@/components/ui/Badge";
@@ -13,10 +14,12 @@ import EmptyState from "@/components/ui/EmptyState";
 import Pagination from "@/components/ui/Pagination";
 import { getOrders, rejectOrder } from "@/services/admin";
 import { formatCurrency } from "@/lib/format";
-import { ORDER_STATUS_LABEL, ORDER_STATUS_VARIANT } from "@/lib/order-status";
+import { ORDER_STATUS_VARIANT } from "@/lib/order-status";
 import type { Order } from "@/types/order";
 
 export default function KelolaPesananPage() {
+  const t = useTranslations("admin.orders");
+  const tCommon = useTranslations("common");
   const [page, setPage] = useState(1);
   const { data, isLoading } = useSWR(["/admin/orders", page], () => getOrders({ page }));
   const orders = data?.data ?? [];
@@ -39,25 +42,25 @@ export default function KelolaPesananPage() {
   return (
     <SidebarPageShell sidebar={<AdminSidebar />}>
       <div className="flex flex-col gap-6">
-        <h1 className="font-heading text-h3 font-semibold text-text-primary">Kelola Pesanan</h1>
+        <h1 className="font-heading text-h3 font-semibold text-text-primary">{t("title")}</h1>
         <DataTable<Order>
           columns={[
-            { key: "order_number", header: "No. Pesanan" },
-            { key: "total", header: "Total" },
-            { key: "status", header: "Status" },
-            { key: "actions", header: "Aksi" },
+            { key: "order_number", header: t("columns.orderNumber") },
+            { key: "total", header: t("columns.total") },
+            { key: "status", header: t("columns.status") },
+            { key: "actions", header: t("columns.actions") },
           ]}
           data={orders}
           isLoading={isLoading}
           getRowKey={(order) => order.id}
-          emptyState={<EmptyState icon={PackageSearch} title="Belum ada pesanan." />}
+          emptyState={<EmptyState icon={PackageSearch} title={t("empty")} />}
           renderRow={(order) => (
             <tr className="border-b border-border last:border-0">
               <td className="p-4 font-medium text-text-primary">{order.order_number}</td>
               <td className="p-4 text-text-secondary">{formatCurrency(order.total)}</td>
               <td className="p-4">
                 <Badge variant={ORDER_STATUS_VARIANT[order.status]}>
-                  {ORDER_STATUS_LABEL[order.status]}
+                  {tCommon(`orderStatus.${order.status}`)}
                 </Badge>
               </td>
               <td className="p-4">
@@ -67,7 +70,7 @@ export default function KelolaPesananPage() {
                     loading={loadingId === order.id}
                     onClick={() => setRejectingId(order.id)}
                   >
-                    Tolak
+                    {t("reject")}
                   </Button>
                 )}
               </td>
@@ -78,10 +81,10 @@ export default function KelolaPesananPage() {
       </div>
       <PromptModal
         open={rejectingId !== null}
-        title="Tolak Pesanan"
-        label="Alasan penolakan"
+        title={t("rejectModal.title")}
+        label={t("rejectModal.label")}
         minLength={10}
-        confirmLabel="Tolak"
+        confirmLabel={t("reject")}
         onConfirm={handleReject}
         onCancel={() => setRejectingId(null)}
       />

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import clsx from "clsx";
 import { PackageSearch } from "lucide-react";
+import { useTranslations } from "next-intl";
 import AccountSidebar from "@/components/layout/AccountSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Badge from "@/components/ui/Badge";
@@ -13,22 +14,24 @@ import EmptyState from "@/components/ui/EmptyState";
 import { useOrders } from "@/hooks/useOrders";
 import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
-import { ORDER_STATUS_LABEL, ORDER_STATUS_VARIANT } from "@/lib/order-status";
+import { ORDER_STATUS_VARIANT } from "@/lib/order-status";
 import type { OrderStatus } from "@/types/order";
 
-const TABS: { value: OrderStatus | "semua"; label: string }[] = [
-  { value: "semua", label: "Semua" },
-  { value: "belum_dibayar", label: "Belum Dibayar" },
-  { value: "menunggu_approval", label: "Menunggu Approval" },
-  { value: "diproses_produksi", label: "Diproses" },
-  { value: "dikirim", label: "Dikirim" },
-  { value: "menunggu_konfirmasi", label: "Menunggu Konfirmasi" },
-  { value: "selesai", label: "Selesai" },
-  { value: "dibatalkan", label: "Dibatalkan" },
-  { value: "ditolak", label: "Ditolak" },
+const TABS: (OrderStatus | "semua")[] = [
+  "semua",
+  "belum_dibayar",
+  "menunggu_approval",
+  "diproses_produksi",
+  "dikirim",
+  "menunggu_konfirmasi",
+  "selesai",
+  "dibatalkan",
+  "ditolak",
 ];
 
 export default function RiwayatPesananPage() {
+  const t = useTranslations("customer.orders");
+  const tCommon = useTranslations("common");
   const { orders: allOrders, isLoading } = useOrders();
   const [tab, setTab] = useState<OrderStatus | "semua">("semua");
 
@@ -38,29 +41,29 @@ export default function RiwayatPesananPage() {
     <SidebarPageShell sidebar={<AccountSidebar />}>
       <div className="flex flex-col gap-6">
         <h1 className="font-heading text-h3 font-semibold text-text-primary">
-          Riwayat Pesanan
+          {t("title")}
         </h1>
 
         <div className="flex gap-2 overflow-x-auto">
-          {TABS.map((t) => (
+          {TABS.map((value) => (
             <button
-              key={t.value}
-              onClick={() => setTab(t.value)}
+              key={value}
+              onClick={() => setTab(value)}
               className={clsx(
                 "shrink-0 rounded-full px-4 py-2 font-body text-sm font-medium",
-                tab === t.value
+                tab === value
                   ? "bg-primary text-text-on-accent"
                   : "border border-border text-text-secondary",
               )}
             >
-              {t.label}
+              {value === "semua" ? t("statusAll") : tCommon(`orderStatus.${value}`)}
             </button>
           ))}
         </div>
 
         {isLoading && <LoadingState rows={3} />}
         {!isLoading && orders.length === 0 && (
-          <EmptyState icon={PackageSearch} title="Belum ada pesanan." />
+          <EmptyState icon={PackageSearch} title={t("empty")} />
         )}
 
         <div className="flex flex-col gap-4">
@@ -71,7 +74,7 @@ export default function RiwayatPesananPage() {
                   {order.order_number}
                 </p>
                 <Badge variant={ORDER_STATUS_VARIANT[order.status]}>
-                  {ORDER_STATUS_LABEL[order.status]}
+                  {tCommon(`orderStatus.${order.status}`)}
                 </Badge>
               </div>
               <div className="flex gap-2">
@@ -81,7 +84,7 @@ export default function RiwayatPesananPage() {
                     src={storageUrl(
                       item.design?.thumbnail_path ?? item.product_variant.mockup_asset_path,
                     )}
-                    alt={item.product_variant.product?.name ?? "Produk"}
+                    alt={item.product_variant.product?.name ?? tCommon("productFallback")}
                     size={56}
                   />
                 ))}
@@ -94,7 +97,7 @@ export default function RiwayatPesananPage() {
                   href={`/account/orders/${order.id}`}
                   className="font-body text-sm font-medium text-primary"
                 >
-                  Lihat Detail
+                  {t("viewDetail")}
                 </Link>
               </div>
             </div>

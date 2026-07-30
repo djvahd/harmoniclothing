@@ -3,6 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import useSWR from "swr";
 import { ArrowLeft, Printer } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Logo from "@/components/layout/Logo";
 import PriceSummaryRow from "@/components/ui/PriceSummaryRow";
 import Badge from "@/components/ui/Badge";
@@ -12,6 +13,7 @@ import { getInvoice } from "@/services/orders";
 import { swrKeys } from "@/lib/swr-keys";
 
 export default function InvoicePage() {
+  const t = useTranslations("customer.invoice");
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const { data, isLoading } = useSWR(swrKeys.orderInvoice(Number(params.id)), () =>
@@ -21,11 +23,7 @@ export default function InvoicePage() {
 
   if (isLoading) return <LoadingState variant="detail" />;
   if (!invoice) {
-    return (
-      <p className="p-8 font-body text-sm text-text-secondary">
-        Invoice belum tersedia - pesanan mungkin belum dibayar.
-      </p>
-    );
+    return <p className="p-8 font-body text-sm text-text-secondary">{t("notAvailable")}</p>;
   }
 
   const { order } = invoice;
@@ -37,13 +35,13 @@ export default function InvoicePage() {
           onClick={() => router.back()}
           className="flex items-center gap-1.5 font-body text-sm text-text-secondary"
         >
-          <ArrowLeft className="size-4" /> Kembali
+          <ArrowLeft className="size-4" /> {t("back")}
         </button>
         <button
           onClick={() => window.print()}
           className="flex items-center gap-1.5 font-body text-sm text-text-secondary"
         >
-          <Printer className="size-4" /> Print
+          <Printer className="size-4" /> {t("print")}
         </button>
       </div>
 
@@ -52,18 +50,16 @@ export default function InvoicePage() {
         <div className="flex justify-between">
           <div>
             <Logo />
-            <p className="mt-2 font-body text-xs text-text-secondary">
-              Jl. Konveksi Raya No. 8, Bandung, Indonesia
-            </p>
+            <p className="mt-2 font-body text-xs text-text-secondary">{t("companyAddress")}</p>
           </div>
           <div className="text-right">
             <p className="font-body text-sm font-semibold text-text-primary">
-              Invoice #{invoice.invoice_number}
+              {t("invoiceNumber")}#{invoice.invoice_number}
             </p>
             <p className="font-body text-xs text-text-secondary">
-              Diterbitkan {formatDate(invoice.issued_at)}
+              {t("issuedOn")} {formatDate(invoice.issued_at)}
             </p>
-            <Badge variant="success">Lunas</Badge>
+            <Badge variant="success">{t("paidBadge")}</Badge>
           </div>
         </div>
 
@@ -81,10 +77,10 @@ export default function InvoicePage() {
         </div>
 
         <div className="border-t border-border pt-4">
-          <PriceSummaryRow label="Subtotal" amount={order.subtotal} />
-          <PriceSummaryRow label="Ongkos Kirim" amount={order.shipping_cost} />
+          <PriceSummaryRow label={t("subtotal")} amount={order.subtotal} />
+          <PriceSummaryRow label={t("shippingCost")} amount={order.shipping_cost} />
           <div className="mt-2 border-t border-border pt-2">
-            <PriceSummaryRow label="Total Dibayar" amount={order.total} emphasis />
+            <PriceSummaryRow label={t("totalPaid")} amount={order.total} emphasis />
           </div>
         </div>
       </div>

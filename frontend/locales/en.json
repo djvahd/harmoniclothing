@@ -14,7 +14,18 @@
     "search": "Search",
     "viewAll": "View All",
     "emptyGeneric": "No data yet.",
-    "errorGeneric": "Something went wrong, please try again."
+    "errorGeneric": "Something went wrong, please try again.",
+    "productFallback": "Product",
+    "orderStatus": {
+      "belum_dibayar": "Unpaid",
+      "menunggu_approval": "Awaiting Approval",
+      "diproses_produksi": "In Production",
+      "dikirim": "Shipped",
+      "menunggu_konfirmasi": "Awaiting Confirmation",
+      "selesai": "Completed",
+      "dibatalkan": "Cancelled",
+      "ditolak": "Rejected"
+    }
   },
   "layout": {
     "nav": {
@@ -553,6 +564,75 @@
       "termsCheckbox": "I agree to the Creator Terms & Conditions (commission and design content policy).",
       "submit": "Apply Now",
       "footerNote": "After applying, you'll be guided through identity verification before your Creator account is activated by our team."
+    },
+    "orders": {
+      "title": "Order History",
+      "statusAll": "All",
+      "empty": "No orders yet.",
+      "viewDetail": "View Details"
+    },
+    "orderDetail": {
+      "notFound": "Order not found.",
+      "rejectedTitle": "Order Rejected",
+      "timeline": {
+        "orderCreated": "Order Placed",
+        "awaitingApproval": "Awaiting Approval",
+        "inProduction": "Order in Production",
+        "shipped": "Order Shipped",
+        "awaitingConfirmation": "Awaiting Confirmation",
+        "completed": "Order Completed"
+      },
+      "timelineDone": "Done",
+      "timelinePending": "Pending",
+      "summary": "Summary",
+      "subtotal": "Subtotal",
+      "shippingCost": "Shipping Cost",
+      "total": "Total",
+      "trackingNumber": "Tracking No.",
+      "cancelOrder": "Cancel Order",
+      "confirmReceived": "Confirm Received",
+      "reorder": "Reorder",
+      "viewInvoice": "View Invoice"
+    },
+    "invoice": {
+      "notAvailable": "Invoice not available yet - the order may not be paid.",
+      "back": "Back",
+      "print": "Print",
+      "companyAddress": "Jl. Konveksi Raya No. 8, Bandung, Indonesia",
+      "invoiceNumber": "Invoice ",
+      "issuedOn": "Issued",
+      "paidBadge": "Paid",
+      "subtotal": "Subtotal",
+      "shippingCost": "Shipping Cost",
+      "totalPaid": "Total Paid"
+    }
+  },
+  "admin": {
+    "orders": {
+      "title": "Manage Orders",
+      "columns": {
+        "orderNumber": "Order No.",
+        "total": "Total",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "empty": "No orders yet.",
+      "reject": "Reject",
+      "rejectModal": {
+        "title": "Reject Order",
+        "label": "Rejection reason"
+      }
+    },
+    "production": {
+      "title": "Manage Production Queue",
+      "columns": {
+        "orderNumber": "Order No.",
+        "total": "Total",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "empty": "No production queue yet.",
+      "startProduction": "Start Production"
     }
   }
 }
