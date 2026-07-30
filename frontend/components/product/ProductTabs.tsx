@@ -1,5 +1,8 @@
+"use client";
+
 import clsx from "clsx";
 import { Star, UserRound } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Pagination, { type PaginationMeta } from "@/components/ui/Pagination";
 import { formatDate } from "@/lib/format";
 import type { Review } from "@/types/product";
@@ -21,18 +24,18 @@ export default function ProductTabs({
 }) {
   return (
     <div className="flex flex-wrap gap-2 border-b border-border">
-      {tabs.map((t) => (
+      {tabs.map((tabDef) => (
         <button
-          key={t.key}
+          key={tabDef.key}
           type="button"
-          onClick={() => onChange(t.key)}
+          onClick={() => onChange(tabDef.key)}
           className={clsx(
             "relative px-4 py-3 font-heading text-sm font-semibold transition-colors",
-            active === t.key ? "text-primary" : "text-text-secondary hover:text-text-primary",
+            active === tabDef.key ? "text-primary" : "text-text-secondary hover:text-text-primary",
           )}
         >
-          {t.badge ? `${t.label} (${t.badge})` : t.label}
-          {active === t.key && (
+          {tabDef.badge ? `${tabDef.label} (${tabDef.badge})` : tabDef.label}
+          {active === tabDef.key && (
             <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-primary" />
           )}
         </button>
@@ -41,20 +44,15 @@ export default function ProductTabs({
   );
 }
 
-export const CARE_TAB_CONTENT = (
-  <p>
-    Gunakan air dingin dan deterjen lembut, jangan gunakan pemutih, jemur di tempat teduh, dan
-    setrika suhu rendah pada bagian dalam untuk menjaga hasil sablon tetap awet.
-  </p>
-);
+export function CareTabContent() {
+  const t = useTranslations("product.tabs");
+  return <p>{t("careContent")}</p>;
+}
 
-export const SHIPPING_TAB_CONTENT = (
-  <p>
-    Produk umumnya diproduksi 1–3 hari kerja setelah pesanan dikonfirmasi, lalu dikirim ke seluruh
-    Indonesia menggunakan kurir pilihanmu saat checkout. Estimasi tiba mengikuti layanan kurir yang
-    dipilih.
-  </p>
-);
+export function ShippingTabContent() {
+  const t = useTranslations("product.tabs");
+  return <p>{t("shippingContent")}</p>;
+}
 
 export function ReviewsTabContent({
   hasRating,
@@ -75,13 +73,12 @@ export function ReviewsTabContent({
   meta?: PaginationMeta;
   onPageChange: (page: number) => void;
 }) {
+  const t = useTranslations("product.tabs");
   if (!hasRating) return <p>{emptyMessage}</p>;
   return (
     <div className="flex flex-col gap-4">
-      <p>
-        Rating {ratingAverage} dari {reviewCount} ulasan pembeli.
-      </p>
-      {reviewsLoading && <p className="text-xs text-text-secondary">Memuat ulasan...</p>}
+      <p>{t("ratingSummary", { rating: ratingAverage ?? 0, count: reviewCount ?? 0 })}</p>
+      {reviewsLoading && <p className="text-xs text-text-secondary">{t("loadingReviews")}</p>}
       <div className="flex flex-col divide-y divide-border">
         {reviews.map((review) => (
           <div key={review.id} className="flex flex-col gap-1.5 py-3">
@@ -90,7 +87,7 @@ export function ReviewsTabContent({
                 <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-border text-text-secondary">
                   <UserRound className="size-3.5" />
                 </span>
-                <span className="font-medium text-text-primary">{review.user?.name ?? "Pembeli"}</span>
+                <span className="font-medium text-text-primary">{review.user?.name ?? t("buyerFallback")}</span>
               </div>
               <span className="text-xs text-text-secondary">{formatDate(review.created_at)}</span>
             </div>

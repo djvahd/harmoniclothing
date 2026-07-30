@@ -20,8 +20,8 @@ import RelatedGrid from "@/components/product/RelatedGrid";
 import DetailPageSkeleton from "@/components/product/DetailPageSkeleton";
 import DetailNotFound from "@/components/product/DetailNotFound";
 import ProductTabs, {
-  CARE_TAB_CONTENT,
-  SHIPPING_TAB_CONTENT,
+  CareTabContent,
+  ShippingTabContent,
   ReviewsTabContent,
 } from "@/components/product/ProductTabs";
 import { getCreatorBySlug } from "@/services/marketplace";
@@ -374,8 +374,8 @@ export default function DetailDesainPage() {
             ) : (
               <p>{t("noProductForDesign")}</p>
             ))}
-          {tab === "perawatan" && CARE_TAB_CONTENT}
-          {tab === "pengiriman" && SHIPPING_TAB_CONTENT}
+          {tab === "perawatan" && <CareTabContent />}
+          {tab === "pengiriman" && <ShippingTabContent />}
           {tab === "ulasan" && (
             <ReviewsTabContent
               hasRating={hasRating}

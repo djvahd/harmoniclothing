@@ -905,6 +905,38 @@
       "adminLoginRequired": "Silakan masuk sebagai admin untuk mengakses halaman ini."
     }
   },
+  "product": {
+    "tabs": {
+      "careContent": "Gunakan air dingin dan deterjen lembut, jangan gunakan pemutih, jemur di tempat teduh, dan setrika suhu rendah pada bagian dalam untuk menjaga hasil sablon tetap awet.",
+      "shippingContent": "Produk umumnya diproduksi 1–3 hari kerja setelah pesanan dikonfirmasi, lalu dikirim ke seluruh Indonesia menggunakan kurir pilihanmu saat checkout. Estimasi tiba mengikuti layanan kurir yang dipilih.",
+      "ratingSummary": "Rating {rating} dari {count} ulasan pembeli.",
+      "loadingReviews": "Memuat ulasan...",
+      "buyerFallback": "Pembeli"
+    },
+    "trustBadges": {
+      "fastProduction": "Produksi Cepat",
+      "premiumQuality": "Kualitas Premium",
+      "satisfactionGuarantee": "Garansi Kepuasan"
+    },
+    "variantPicker": {
+      "chooseColor": "Pilih Warna Produk",
+      "chooseSize": "Pilih Ukuran",
+      "sizeChart": "Size Chart"
+    },
+    "gallery": {
+      "bestSeller": "Terlaris"
+    },
+    "sizeChart": {
+      "size": "Ukuran",
+      "chestWidth": "Lebar Dada (cm)",
+      "length": "Panjang (cm)",
+      "note": "Ukuran umum, dapat berbeda tipis tergantung jenis produk."
+    },
+    "relatedGrid": {
+      "defaultTitle": "Kamu Mungkin Suka",
+      "viewAll": "Lihat Semua →"
+    }
+  },
   "creator": {
     "sidebar": {
       "dashboard": "Dashboard",

@@ -1,6 +1,9 @@
+"use client";
+
 import type { ReactNode } from "react";
 import Image from "next/image";
 import clsx from "clsx";
+import { useTranslations } from "next-intl";
 import { storageUrl } from "@/lib/storage";
 
 export interface GalleryItem {
@@ -25,6 +28,7 @@ export default function ProductGallery({
   activeKey?: string;
   onSelectItem: (key: string) => void;
 }) {
+  const t = useTranslations("product.gallery");
   return (
     <div className="flex w-full shrink-0 flex-col gap-3 md:w-[480px]">
       <div className="relative h-[420px] w-full overflow-hidden rounded-md bg-border">
@@ -40,7 +44,7 @@ export default function ProductGallery({
         )}
         {isLaris && (
           <span className="absolute left-3 top-3 rounded-full bg-primary px-3 py-1 font-body text-xs font-semibold text-text-on-accent">
-            Terlaris
+            {t("bestSeller")}
           </span>
         )}
         {wishlist}

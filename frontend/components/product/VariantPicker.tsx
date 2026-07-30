@@ -1,5 +1,8 @@
+"use client";
+
 import clsx from "clsx";
 import { Ruler } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Tag from "@/components/ui/Tag";
 import SizeChartTable from "@/components/product/SizeChartTable";
 
@@ -22,12 +25,13 @@ export default function VariantPicker({
   showSizeChart: boolean;
   onToggleSizeChart: () => void;
 }) {
+  const t = useTranslations("product.variantPicker");
   return (
     <>
       {colors.length > 0 && (
         <div className="flex flex-col gap-2">
           <p className="font-body text-sm font-medium text-text-primary">
-            Pilih Warna Produk{activeColor ? `: ${activeColor}` : ""}
+            {t("chooseColor")}{activeColor ? `: ${activeColor}` : ""}
           </p>
           <div className="flex flex-wrap gap-2">
             {colors.map((c) => (
@@ -51,14 +55,14 @@ export default function VariantPicker({
       {sizes.length > 0 && (
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <p className="font-body text-sm font-medium text-text-primary">Pilih Ukuran</p>
+            <p className="font-body text-sm font-medium text-text-primary">{t("chooseSize")}</p>
             <button
               type="button"
               onClick={onToggleSizeChart}
               className="flex items-center gap-1 font-body text-xs text-text-secondary transition-colors hover:text-primary"
             >
               <Ruler className="size-3.5" />
-              Size Chart
+              {t("sizeChart")}
             </button>
           </div>
           <div className="flex flex-wrap gap-2">
