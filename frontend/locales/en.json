@@ -281,6 +281,50 @@
         "belakang": "Back",
         "lengan": "Sleeve"
       }
+    },
+    "marketplaceList": {
+      "title": "Design Marketplace",
+      "subtitle": "Browse hundreds of ready-made designs from local Indonesian creators, or find your favorite creator.",
+      "ctaBecomeCreator": "Become a Creator",
+      "ctaViewProducts": "Browse Products",
+      "tabs": {
+        "designs": "Designs",
+        "creators": "Creators"
+      },
+      "designTab": {
+        "searchPlaceholder": "Search designs or tags...",
+        "clearSearch": "Clear search",
+        "sortLabel": "Sort",
+        "sortOptions": {
+          "newest": "Newest",
+          "priceAsc": "Price: Low to High",
+          "priceDesc": "Price: High to Low",
+          "bestSelling": "Best Selling",
+          "topRated": "Top Rated"
+        },
+        "resultCount": "Showing {shown} of {total} designs",
+        "noResults": "No designs found for this filter.",
+        "resetFilters": "Reset search & filters",
+        "loadMore": "Load More"
+      },
+      "creatorTab": {
+        "categoryLabel": "Category",
+        "filterLabel": "Filter",
+        "resetLabel": "Reset",
+        "tagLabel": "Tag",
+        "searchPlaceholder": "Search creators...",
+        "clearSearch": "Clear search",
+        "sortLabel": "Sort",
+        "sortOptions": {
+          "newest": "Newest",
+          "bestSelling": "Best Selling",
+          "topRated": "Top Rated"
+        },
+        "resultCount": "Showing {shown} of {total} creators",
+        "noResults": "No creators found.",
+        "resetFilters": "Reset search & category",
+        "loadMore": "Load More"
+      }
     }
   }
 }

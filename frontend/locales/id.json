@@ -281,6 +281,50 @@
         "belakang": "Belakang",
         "lengan": "Lengan"
       }
+    },
+    "marketplaceList": {
+      "title": "Lapak Desain",
+      "subtitle": "Jelajahi ratusan desain siap pakai dari kreator lokal Indonesia, atau temukan kreator favoritmu.",
+      "ctaBecomeCreator": "Jadi Kreator",
+      "ctaViewProducts": "Lihat Produk",
+      "tabs": {
+        "designs": "Desain",
+        "creators": "Kreator"
+      },
+      "designTab": {
+        "searchPlaceholder": "Cari desain atau tag...",
+        "clearSearch": "Hapus pencarian",
+        "sortLabel": "Urutkan",
+        "sortOptions": {
+          "newest": "Terbaru",
+          "priceAsc": "Harga: Rendah ke Tinggi",
+          "priceDesc": "Harga: Tinggi ke Rendah",
+          "bestSelling": "Terlaris",
+          "topRated": "Rating Tertinggi"
+        },
+        "resultCount": "Menampilkan {shown} dari {total} desain",
+        "noResults": "Belum ada desain ditemukan untuk filter ini.",
+        "resetFilters": "Reset pencarian & filter",
+        "loadMore": "Muat Lebih Banyak"
+      },
+      "creatorTab": {
+        "categoryLabel": "Kategori",
+        "filterLabel": "Filter",
+        "resetLabel": "Reset",
+        "tagLabel": "Tag",
+        "searchPlaceholder": "Cari kreator...",
+        "clearSearch": "Hapus pencarian",
+        "sortLabel": "Urutkan",
+        "sortOptions": {
+          "newest": "Terbaru",
+          "bestSelling": "Terlaris",
+          "topRated": "Rating Tertinggi"
+        },
+        "resultCount": "Menampilkan {shown} dari {total} kreator",
+        "noResults": "Belum ada kreator ditemukan.",
+        "resetFilters": "Reset pencarian & kategori",
+        "loadMore": "Muat Lebih Banyak"
+      }
     }
   }
 }

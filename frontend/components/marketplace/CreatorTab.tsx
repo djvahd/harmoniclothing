@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 import { ArrowUpDown, LayoutGrid, Search, Tag as TagIcon, UserSearch, X } from "lucide-react";
 import clsx from "clsx";
+import { useTranslations } from "next-intl";
 import CreatorCard, { CreatorCardSkeleton } from "@/components/ui/CreatorCard";
 import Button from "@/components/ui/Button";
 import { CategoryList, Section } from "@/components/ui/FilterSidebar";
@@ -13,14 +14,15 @@ import { swrKeys } from "@/lib/swr-keys";
 
 const PER_PAGE = 40;
 
-const CREATOR_SORT_OPTIONS: { value: CreatorSort; label: string }[] = [
-  { value: "terbaru", label: "Terbaru" },
-  { value: "terlaris", label: "Terlaris" },
-  { value: "rating", label: "Rating Tertinggi" },
+const CREATOR_SORT_OPTIONS: { value: CreatorSort; key: string }[] = [
+  { value: "terbaru", key: "newest" },
+  { value: "terlaris", key: "bestSelling" },
+  { value: "rating", key: "topRated" },
 ];
 
 /** The "Kreator" tab of the marketplace: filterable/sortable, infinite-load creator grid. */
 export default function CreatorTab() {
+  const t = useTranslations("public.marketplaceList.creatorTab");
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<string | null>(null);
   const [tags, setTags] = useState<string[]>([]);
@@ -108,7 +110,7 @@ export default function CreatorTab() {
         <aside className="flex w-[220px] shrink-0 flex-col gap-6">
           {!!categories.length && (
             <CategoryList
-              label="Kategori"
+              label={t("categoryLabel")}
               icon={LayoutGrid}
               items={categories}
               selected={category ? [category] : []}
@@ -119,7 +121,7 @@ export default function CreatorTab() {
             <div className="flex flex-col">
               <div className="flex items-center justify-between border-b border-border pb-3">
                 <h2 className="font-heading text-sm font-semibold text-text-primary">
-                  Filter{tags.length > 0 ? ` (${tags.length})` : ""}
+                  {tags.length > 0 ? `${t("filterLabel")} (${tags.length})` : t("filterLabel")}
                 </h2>
                 {tags.length > 0 && (
                   <button
@@ -127,12 +129,12 @@ export default function CreatorTab() {
                     onClick={() => setTags([])}
                     className="rounded-sm font-body text-sm text-text-secondary underline transition-colors hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
                   >
-                    Reset
+                    {t("resetLabel")}
                   </button>
                 )}
               </div>
               <div className="flex flex-col">
-                <Section title="Tag" isOpen={tagOpen} onToggle={() => setTagOpen((v) => !v)}>
+                <Section title={t("tagLabel")} isOpen={tagOpen} onToggle={() => setTagOpen((v) => !v)}>
                   <div className="flex flex-wrap gap-2">
                     {popularTags.map((t) => (
                       <button
@@ -170,13 +172,13 @@ export default function CreatorTab() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Cari kreator..."
+              placeholder={t("searchPlaceholder")}
               className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
             />
             {search && (
               <button
                 onClick={() => setSearch("")}
-                aria-label="Hapus pencarian"
+                aria-label={t("clearSearch")}
                 className="shrink-0 rounded-full p-0.5 text-text-secondary transition-colors hover:bg-border/50 hover:text-text-primary"
               >
                 <X className="size-3.5" />
@@ -190,7 +192,7 @@ export default function CreatorTab() {
               className="flex items-center gap-1.5 rounded-full border border-border bg-surface px-4 py-2 font-body text-sm text-text-secondary transition-colors hover:border-primary hover:bg-border/40 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
             >
               <ArrowUpDown className="size-3.5" />
-              Urutkan
+              {t("sortLabel")}
             </button>
             {showSort && (
               <div className="absolute right-0 top-full z-10 mt-2 w-56 rounded-md border border-border bg-surface p-1.5 shadow-md">
@@ -208,7 +210,7 @@ export default function CreatorTab() {
                         : "text-text-secondary hover:bg-border/50",
                     )}
                   >
-                    {opt.label}
+                    {t(`sortOptions.${opt.key}`)}
                   </button>
                 ))}
               </div>
@@ -218,7 +220,7 @@ export default function CreatorTab() {
 
         {!isLoadingInitial && !error && (
           <p className="font-body text-sm text-text-secondary">
-            Menampilkan {accumulated.length} dari {grandTotal ?? accumulated.length} kreator
+            {t("resultCount", { shown: accumulated.length, total: grandTotal ?? accumulated.length })}
           </p>
         )}
 
@@ -228,7 +230,7 @@ export default function CreatorTab() {
           {!isLoadingInitial && !error && hasActiveQuery && accumulated.length === 0 && (
             <div className="flex w-full flex-col items-center gap-3 py-16 text-center">
               <UserSearch className="size-10 text-text-secondary" />
-              <p className="font-body text-sm text-text-secondary">Belum ada kreator ditemukan.</p>
+              <p className="font-body text-sm text-text-secondary">{t("noResults")}</p>
               <button
                 onClick={() => {
                   setSearch("");
@@ -237,7 +239,7 @@ export default function CreatorTab() {
                 }}
                 className="font-body text-sm font-medium text-primary underline"
               >
-                Reset pencarian & kategori
+                {t("resetFilters")}
               </button>
             </div>
           )}
@@ -249,7 +251,7 @@ export default function CreatorTab() {
         {hasMore && (
           <div className="flex justify-center pt-2">
             <Button variant="secondary" loading={isLoadingMore} onClick={() => setPage((p) => p + 1)}>
-              Muat Lebih Banyak
+              {t("loadMore")}
             </Button>
           </div>
         )}

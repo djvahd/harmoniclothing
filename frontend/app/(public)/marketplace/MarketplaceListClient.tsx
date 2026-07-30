@@ -4,6 +4,7 @@ import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import clsx from "clsx";
+import { useTranslations } from "next-intl";
 import Button from "@/components/ui/Button";
 import DesainTab from "@/components/marketplace/DesainTab";
 import CreatorTab from "@/components/marketplace/CreatorTab";
@@ -11,6 +12,7 @@ import CreatorTab from "@/components/marketplace/CreatorTab";
 type Tab = "desain" | "creator";
 
 function MarketplaceDesainPageContent() {
+  const t = useTranslations("public.marketplaceList");
   const searchParams = useSearchParams();
   const kategoriParam = searchParams.get("kategori");
   // Beranda's "Desain Populer" row links here with ?sort=populer — map that
@@ -21,9 +23,9 @@ function MarketplaceDesainPageContent() {
 
   const [tab, setTab] = useState<Tab>(initialTab);
 
-  const tabs: { key: Tab; label: string }[] = [
-    { key: "desain", label: "Desain" },
-    { key: "creator", label: "Kreator" },
+  const tabs: { key: Tab; tKey: string }[] = [
+    { key: "desain", tKey: "designs" },
+    { key: "creator", tKey: "creators" },
   ];
 
   return (
@@ -37,35 +39,32 @@ function MarketplaceDesainPageContent() {
       >
         <div className="flex max-w-xl flex-col gap-4">
           <h1 className="font-heading text-h3 font-semibold text-text-primary md:text-h1">
-            Lapak Desain
+            {t("title")}
           </h1>
-          <p className="font-body text-sm text-text-secondary md:text-base">
-            Jelajahi ratusan desain siap pakai dari kreator lokal Indonesia, atau temukan kreator
-            favoritmu.
-          </p>
+          <p className="font-body text-sm text-text-secondary md:text-base">{t("subtitle")}</p>
           <div className="flex gap-3">
             <Link href="/account/become-creator">
-              <Button variant="primary">Jadi Kreator</Button>
+              <Button variant="primary">{t("ctaBecomeCreator")}</Button>
             </Link>
             <Link href="/catalog">
-              <Button variant="secondary">Lihat Produk</Button>
+              <Button variant="secondary">{t("ctaViewProducts")}</Button>
             </Link>
           </div>
         </div>
       </section>
 
       <div className="mx-auto flex w-full max-w-[1440px] gap-2 border-b border-border px-4 md:px-20">
-        {tabs.map((t) => (
+        {tabs.map((tabDef) => (
           <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
+            key={tabDef.key}
+            onClick={() => setTab(tabDef.key)}
             className={clsx(
               "relative px-4 py-3 font-heading text-sm font-semibold transition-colors",
-              tab === t.key ? "text-primary" : "text-text-secondary hover:text-text-primary",
+              tab === tabDef.key ? "text-primary" : "text-text-secondary hover:text-text-primary",
             )}
           >
-            {t.label}
-            {tab === t.key && (
+            {t(`tabs.${tabDef.tKey}`)}
+            {tab === tabDef.key && (
               <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-primary" />
             )}
           </button>
