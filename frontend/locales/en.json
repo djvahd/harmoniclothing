@@ -451,5 +451,45 @@
         }
       }
     }
+  },
+  "customer": {
+    "cart": {
+      "title": "Cart",
+      "empty": "Your cart is empty.",
+      "startShopping": "Start Shopping",
+      "itemUnavailable": "This product is no longer available.",
+      "orderSummary": "Order Summary",
+      "subtotal": "Subtotal",
+      "total": "Total",
+      "continueToCheckout": "Continue to Checkout"
+    },
+    "checkout": {
+      "title": "Checkout",
+      "shippingAddress": "Shipping Address",
+      "noSavedAddress": "No saved addresses yet. Add one in your Address Book.",
+      "orderSummary": "Order Summary",
+      "notesPrefix": "Notes:",
+      "subtotal": "Subtotal",
+      "total": "Total",
+      "createOrder": "Place Order",
+      "securePayment": "Secure & encrypted payment",
+      "selectAddressError": "Please select a shipping address first."
+    },
+    "checkoutBulk": {
+      "title": "Bulk Order Checkout",
+      "shippingAddress": "Shipping Address",
+      "noSavedAddress": "No saved addresses yet. Add one in your Address Book.",
+      "orderSummary": "Bulk Order Summary",
+      "designPrefix": "Design:",
+      "notesPrefix": "Notes:",
+      "pricePerUnit": "Price per unit ({qty} pcs)",
+      "subtotal": "Subtotal",
+      "total": "Total",
+      "createBulkOrder": "Place Bulk Order",
+      "securePayment": "Secure & encrypted payment",
+      "selectAddressError": "Please select a shipping address first.",
+      "noDraft": "No Bulk Order draft yet. Start from a product page first.",
+      "backToCatalog": "Back to Product Catalog"
+    }
   }
 }

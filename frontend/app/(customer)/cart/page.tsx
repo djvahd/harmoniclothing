@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ShoppingCart } from "lucide-react";
+import { useTranslations } from "next-intl";
 import CartItemRow from "@/components/ui/CartItemRow";
 import PriceSummaryRow from "@/components/ui/PriceSummaryRow";
 import Button from "@/components/ui/Button";
@@ -12,6 +13,7 @@ import { removeCartItem, updateCartItem } from "@/services/cart";
 import { useCart, invalidateCart } from "@/hooks/useCart";
 
 export default function KeranjangPage() {
+  const t = useTranslations("customer.cart");
   const router = useRouter();
   const { items, isLoading } = useCart();
   const subtotal = items.reduce((sum, item) => sum + Number(item.subtotal), 0);
@@ -28,17 +30,17 @@ export default function KeranjangPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-8 md:px-20">
-      <h1 className="font-heading text-h3 font-semibold text-text-primary">Keranjang</h1>
+      <h1 className="font-heading text-h3 font-semibold text-text-primary">{t("title")}</h1>
 
       {isLoading && <LoadingState rows={3} />}
 
       {!isLoading && items.length === 0 && (
         <EmptyState
           icon={ShoppingCart}
-          title="Keranjangmu masih kosong."
+          title={t("empty")}
           action={
             <Link href="/catalog">
-              <Button>Mulai Belanja</Button>
+              <Button>{t("startShopping")}</Button>
             </Link>
           }
         />
@@ -55,9 +57,7 @@ export default function KeranjangPage() {
                   onRemove={handleRemove}
                 />
                 {!item.is_available && (
-                  <p className="mt-2 font-body text-xs text-danger">
-                    Produk ini sudah tidak tersedia.
-                  </p>
+                  <p className="mt-2 font-body text-xs text-danger">{t("itemUnavailable")}</p>
                 )}
               </div>
             ))}
@@ -65,14 +65,14 @@ export default function KeranjangPage() {
 
           <div className="flex w-full flex-col gap-4 rounded-md border border-border bg-surface p-5 md:w-[320px]">
             <p className="font-heading text-lg font-semibold text-text-primary">
-              Ringkasan Pesanan
+              {t("orderSummary")}
             </p>
-            <PriceSummaryRow label="Subtotal" amount={subtotal} />
+            <PriceSummaryRow label={t("subtotal")} amount={subtotal} />
             <div className="border-t border-border pt-3">
-              <PriceSummaryRow label="Total" amount={subtotal} emphasis />
+              <PriceSummaryRow label={t("total")} amount={subtotal} emphasis />
             </div>
             <Button fullWidth onClick={() => router.push("/checkout")}>
-              Lanjut ke Checkout
+              {t("continueToCheckout")}
             </Button>
           </div>
         </div>

@@ -451,5 +451,45 @@
         }
       }
     }
+  },
+  "customer": {
+    "cart": {
+      "title": "Keranjang",
+      "empty": "Keranjangmu masih kosong.",
+      "startShopping": "Mulai Belanja",
+      "itemUnavailable": "Produk ini sudah tidak tersedia.",
+      "orderSummary": "Ringkasan Pesanan",
+      "subtotal": "Subtotal",
+      "total": "Total",
+      "continueToCheckout": "Lanjut ke Checkout"
+    },
+    "checkout": {
+      "title": "Checkout",
+      "shippingAddress": "Alamat Pengiriman",
+      "noSavedAddress": "Belum ada alamat tersimpan. Tambahkan alamat di Address Book.",
+      "orderSummary": "Ringkasan Pesanan",
+      "notesPrefix": "Catatan:",
+      "subtotal": "Subtotal",
+      "total": "Total",
+      "createOrder": "Buat Pesanan",
+      "securePayment": "Pembayaran aman & terenkripsi",
+      "selectAddressError": "Pilih alamat pengiriman terlebih dahulu."
+    },
+    "checkoutBulk": {
+      "title": "Checkout Bulk Order",
+      "shippingAddress": "Alamat Pengiriman",
+      "noSavedAddress": "Belum ada alamat tersimpan. Tambahkan alamat di Address Book.",
+      "orderSummary": "Ringkasan Bulk Order",
+      "designPrefix": "Desain:",
+      "notesPrefix": "Catatan:",
+      "pricePerUnit": "Harga per unit ({qty} pcs)",
+      "subtotal": "Subtotal",
+      "total": "Total",
+      "createBulkOrder": "Buat Pesanan Bulk",
+      "securePayment": "Pembayaran aman & terenkripsi",
+      "selectAddressError": "Pilih alamat pengiriman terlebih dahulu.",
+      "noDraft": "Belum ada draft Bulk Order. Mulai dari halaman produk terlebih dahulu.",
+      "backToCatalog": "Kembali ke Katalog Produk"
+    }
   }
 }

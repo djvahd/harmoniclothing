@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import { ShieldCheck } from "lucide-react";
+import { useTranslations } from "next-intl";
 import OptionRow from "@/components/ui/OptionRow";
 import PriceSummaryRow from "@/components/ui/PriceSummaryRow";
 import Button from "@/components/ui/Button";
@@ -13,6 +14,8 @@ import { getErrorMessage } from "@/lib/api";
 import { useCart } from "@/hooks/useCart";
 
 export default function CheckoutPage() {
+  const t = useTranslations("customer.checkout");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const { items } = useCart();
   const { data: addressData } = useSWR("/account/addresses", getAddresses);
@@ -33,7 +36,7 @@ export default function CheckoutPage() {
 
   async function handleSubmit() {
     if (!addressId) {
-      setError("Pilih alamat pengiriman terlebih dahulu.");
+      setError(t("selectAddressError"));
       return;
     }
     setError(null);
@@ -49,7 +52,7 @@ export default function CheckoutPage() {
         router.push(`/account/orders/${order.id}`);
       }
     } catch (err) {
-      setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
+      setError(getErrorMessage(err, tCommon("errorGeneric")));
     } finally {
       setLoading(false);
     }
@@ -57,18 +60,16 @@ export default function CheckoutPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-8 md:px-20">
-      <h1 className="font-heading text-h3 font-semibold text-text-primary">Checkout</h1>
+      <h1 className="font-heading text-h3 font-semibold text-text-primary">{t("title")}</h1>
 
       <div className="flex flex-col gap-6 md:flex-row">
         <div className="flex flex-1 flex-col gap-6">
           <section className="flex flex-col gap-3 rounded-md border border-border bg-surface p-5">
             <p className="font-heading text-lg font-semibold text-text-primary">
-              Alamat Pengiriman
+              {t("shippingAddress")}
             </p>
             {addresses.length === 0 && (
-              <p className="font-body text-sm text-text-secondary">
-                Belum ada alamat tersimpan. Tambahkan alamat di Address Book.
-              </p>
+              <p className="font-body text-sm text-text-secondary">{t("noSavedAddress")}</p>
             )}
             {addresses.map((address) => (
               <OptionRow
@@ -84,7 +85,7 @@ export default function CheckoutPage() {
 
         <div className="flex w-full flex-col gap-4 rounded-md border border-border bg-surface p-5 md:w-[320px]">
           <p className="font-heading text-lg font-semibold text-text-primary">
-            Ringkasan Pesanan
+            {t("orderSummary")}
           </p>
           {items.map((item) => (
             <div key={item.id} className="flex flex-col gap-1 font-body text-sm">
@@ -98,22 +99,22 @@ export default function CheckoutPage() {
               </div>
               {item.notes && (
                 <p className="font-body text-xs italic text-text-secondary">
-                  Catatan: {item.notes}
+                  {t("notesPrefix")} {item.notes}
                 </p>
               )}
             </div>
           ))}
           <div className="border-t border-border pt-3">
-            <PriceSummaryRow label="Subtotal" amount={subtotal} />
+            <PriceSummaryRow label={t("subtotal")} amount={subtotal} />
           </div>
-          <PriceSummaryRow label="Total" amount={subtotal} emphasis />
+          <PriceSummaryRow label={t("total")} amount={subtotal} emphasis />
           {error && <p className="font-body text-xs text-danger">{error}</p>}
           <Button fullWidth loading={loading} onClick={handleSubmit}>
-            Buat Pesanan
+            {t("createOrder")}
           </Button>
           <p className="flex items-center gap-1.5 font-body text-xs text-text-secondary">
             <ShieldCheck className="size-3.5 text-primary" />
-            Pembayaran aman & terenkripsi
+            {t("securePayment")}
           </p>
         </div>
       </div>
