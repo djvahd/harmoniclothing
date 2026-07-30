@@ -31,6 +31,11 @@
       "menunggu_approval": "Pending Review",
       "published": "Published",
       "ditolak": "Rejected"
+    },
+    "printAreas": {
+      "depan": "Front",
+      "belakang": "Back",
+      "lengan": "Sleeve"
     }
   },
   "layout": {
@@ -859,6 +864,29 @@
         "printArea": "Print Area",
         "priceAddon": "Price Add-on",
         "actions": "Actions"
+      },
+      "productForm": {
+        "nameId": "Name (ID)",
+        "nameEn": "Name (EN)",
+        "basePrice": "Base Price",
+        "segment": "Segment",
+        "segmentUnset": "Unspecified",
+        "segmentMen": "Men's",
+        "segmentWomen": "Women's",
+        "segmentUnisex": "Unisex",
+        "segmentKids": "Kids",
+        "save": "Save Product"
+      },
+      "variantForm": {
+        "title": "Add New Variant",
+        "color": "Color",
+        "size": "Size",
+        "cutType": "Cut Type",
+        "material": "Material",
+        "priceAddon": "Price Add-on",
+        "mockupAssetPath": "Mockup Asset Path",
+        "printArea": "Print Area",
+        "save": "Save Variant"
       }
     }
   },

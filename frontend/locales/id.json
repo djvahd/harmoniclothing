@@ -31,6 +31,11 @@
       "menunggu_approval": "Menunggu Review",
       "published": "Published",
       "ditolak": "Ditolak"
+    },
+    "printAreas": {
+      "depan": "Depan",
+      "belakang": "Belakang",
+      "lengan": "Lengan"
     }
   },
   "layout": {
@@ -859,6 +864,29 @@
         "printArea": "Print Area",
         "priceAddon": "Tambahan Harga",
         "actions": "Aksi"
+      },
+      "productForm": {
+        "nameId": "Nama (ID)",
+        "nameEn": "Nama (EN)",
+        "basePrice": "Harga Dasar",
+        "segment": "Segmen",
+        "segmentUnset": "Tidak ditentukan",
+        "segmentMen": "Men's",
+        "segmentWomen": "Women's",
+        "segmentUnisex": "Unisex",
+        "segmentKids": "Kids",
+        "save": "Simpan Produk"
+      },
+      "variantForm": {
+        "title": "Tambah Varian Baru",
+        "color": "Warna",
+        "size": "Ukuran",
+        "cutType": "Potongan",
+        "material": "Material",
+        "priceAddon": "Tambahan Harga",
+        "mockupAssetPath": "Path Aset Mockup",
+        "printArea": "Print Area",
+        "save": "Simpan Varian"
       }
     }
   },

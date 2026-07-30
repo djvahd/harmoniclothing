@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { Pencil } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Button from "@/components/ui/Button";
-import PrintAreaCheckboxes, { PRINT_AREA_LABELS } from "./PrintAreaCheckboxes";
+import PrintAreaCheckboxes from "./PrintAreaCheckboxes";
 import { updateVariant } from "@/services/admin";
 import { formatCurrency } from "@/lib/format";
 import { getErrorMessage } from "@/lib/api";
@@ -17,6 +18,7 @@ export default function VariantRow({
   variant: ProductVariant;
   onSaved: () => void;
 }) {
+  const tCommon = useTranslations("common");
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState({
     price_modifier: String(variant.price_modifier),
@@ -41,7 +43,7 @@ export default function VariantRow({
       onSaved();
       setEditing(false);
     } catch (err) {
-      setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
+      setError(getErrorMessage(err, tCommon("errorGeneric")));
     } finally {
       setSaving(false);
     }
@@ -61,7 +63,7 @@ export default function VariantRow({
           />
         ) : (
           <span className="text-text-secondary">
-            {variant.print_areas?.map((a) => PRINT_AREA_LABELS[a]).join(", ") || "-"}
+            {variant.print_areas?.map((a) => tCommon(`printAreas.${a}`)).join(", ") || "-"}
           </span>
         )}
       </td>
@@ -81,13 +83,13 @@ export default function VariantRow({
         {editing ? (
           <div className="flex items-center gap-2">
             <Button onClick={handleSave} loading={saving}>
-              Simpan
+              {tCommon("save")}
             </Button>
             <button
               onClick={() => setEditing(false)}
               className="font-body text-xs text-text-secondary underline"
             >
-              Batal
+              {tCommon("cancel")}
             </button>
           </div>
         ) : (
