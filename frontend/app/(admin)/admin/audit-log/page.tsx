@@ -3,6 +3,7 @@
 import { useState } from "react";
 import useSWR from "swr";
 import { ScrollText } from "lucide-react";
+import { useTranslations } from "next-intl";
 import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import DataTable from "@/components/ui/DataTable";
@@ -13,6 +14,7 @@ import { formatDateTime } from "@/lib/format";
 
 /** 2.5_Permission_Matrix.md §10 — read-only trail of Admin actions (approve/reject/status changes). */
 export default function AuditLogPage() {
+  const t = useTranslations("admin.auditLog");
   const [page, setPage] = useState(1);
   const { data, isLoading } = useSWR(["/admin/audit-logs", page], () => getAuditLogs({ page }));
   const logs = data?.data ?? [];
@@ -20,19 +22,19 @@ export default function AuditLogPage() {
   return (
     <SidebarPageShell sidebar={<AdminSidebar />}>
       <div className="flex flex-col gap-6">
-        <h1 className="font-heading text-h3 font-semibold text-text-primary">Audit Log</h1>
+        <h1 className="font-heading text-h3 font-semibold text-text-primary">{t("title")}</h1>
         <DataTable<AuditLog>
           columns={[
-            { key: "created_at", header: "Waktu" },
-            { key: "actor", header: "Admin" },
-            { key: "action", header: "Aksi" },
-            { key: "entity", header: "Entitas" },
-            { key: "description", header: "Deskripsi" },
+            { key: "created_at", header: t("columns.time") },
+            { key: "actor", header: t("columns.admin") },
+            { key: "action", header: t("columns.action") },
+            { key: "entity", header: t("columns.entity") },
+            { key: "description", header: t("columns.description") },
           ]}
           data={logs}
           isLoading={isLoading}
           getRowKey={(log) => log.id}
-          emptyState={<EmptyState icon={ScrollText} title="Belum ada aktivitas tercatat." />}
+          emptyState={<EmptyState icon={ScrollText} title={t("empty")} />}
           renderRow={(log) => (
             <tr className="border-b border-border last:border-0">
               <td className="p-4 whitespace-nowrap text-text-secondary">

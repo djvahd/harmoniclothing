@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import useSWR, { mutate } from "swr";
 import { Palette } from "lucide-react";
+import { useTranslations } from "next-intl";
 import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Button from "@/components/ui/Button";
@@ -15,6 +16,7 @@ import { approveDesign, getPendingDesigns, rejectDesign } from "@/services/admin
 import { storageUrl } from "@/lib/storage";
 
 export default function ApprovalDesainPage() {
+  const t = useTranslations("admin.designApproval");
   const { data, isLoading } = useSWR("/admin/designs/pending", getPendingDesigns);
   const designs = data?.data ?? [];
   const [loadingId, setLoadingId] = useState<number | null>(null);
@@ -25,7 +27,7 @@ export default function ApprovalDesainPage() {
     try {
       await approveDesign(id);
       mutate("/admin/designs/pending");
-      toast("Desain berhasil disetujui.", "success");
+      toast(t("approveSuccess"), "success");
     } finally {
       setLoadingId(null);
     }
@@ -39,7 +41,7 @@ export default function ApprovalDesainPage() {
     try {
       await rejectDesign(id, reason);
       mutate("/admin/designs/pending");
-      toast("Desain ditolak.", "success");
+      toast(t("rejectSuccess"), "success");
     } finally {
       setLoadingId(null);
     }
@@ -49,11 +51,11 @@ export default function ApprovalDesainPage() {
     <SidebarPageShell sidebar={<AdminSidebar />}>
       <div className="flex flex-col gap-6">
         <h1 className="font-heading text-h3 font-semibold text-text-primary">
-          Approval Desain
+          {t("title")}
         </h1>
         {isLoading && <LoadingState rows={3} />}
         {!isLoading && designs.length === 0 && (
-          <EmptyState icon={Palette} title="Belum ada desain menunggu review." />
+          <EmptyState icon={Palette} title={t("empty")} />
         )}
         <div className="flex flex-col gap-3">
           {designs.map((design) => {
@@ -68,15 +70,17 @@ export default function ApprovalDesainPage() {
                   </div>
                   <div className="flex flex-col">
                     <p className="font-body text-sm font-semibold text-text-primary">{design.title}</p>
-                    <p className="font-body text-xs text-text-secondary">by {design.creator.name}</p>
+                    <p className="font-body text-xs text-text-secondary">
+                      {t("byCreator", { name: design.creator.name })}
+                    </p>
                   </div>
                 </div>
                 <div className="flex gap-2">
                   <Button variant="secondary" loading={loadingId === design.id} onClick={() => setRejectingId(design.id)}>
-                    Tolak
+                    {t("reject")}
                   </Button>
                   <Button loading={loadingId === design.id} onClick={() => handleApprove(design.id)}>
-                    Setujui
+                    {t("approve")}
                   </Button>
                 </div>
               </div>
@@ -86,10 +90,10 @@ export default function ApprovalDesainPage() {
       </div>
       <PromptModal
         open={rejectingId !== null}
-        title="Tolak Desain"
-        label="Alasan penolakan"
+        title={t("rejectModal.title")}
+        label={t("rejectModal.label")}
         minLength={10}
-        confirmLabel="Tolak"
+        confirmLabel={t("reject")}
         onConfirm={handleReject}
         onCancel={() => setRejectingId(null)}
       />

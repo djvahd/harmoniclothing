@@ -714,6 +714,64 @@
     },
     "header": {
       "adminLabel": "Admin"
+    },
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "attentionNotice": "{count} items need attention: {pendingOrders} orders awaiting approval, {pendingCreators} creators awaiting approval.",
+      "stats": {
+        "pendingOrders": "Orders Awaiting Approval",
+        "totalRevenue": "Total Revenue",
+        "totalCustomers": "Total Customers",
+        "pendingDesigns": "Designs Awaiting Approval",
+        "inProduction": "In Production",
+        "shipped": "Shipped",
+        "completed": "Completed",
+        "activeCreators": "Active Creators"
+      }
+    },
+    "auditLog": {
+      "title": "Audit Log",
+      "columns": {
+        "time": "Time",
+        "admin": "Admin",
+        "action": "Action",
+        "entity": "Entity",
+        "description": "Description"
+      },
+      "empty": "No activity recorded yet."
+    },
+    "creatorApproval": {
+      "title": "Creator Approval",
+      "empty": "No creator applications awaiting review yet.",
+      "minorBadge": "Under 18",
+      "idCardLabel": "ID Card",
+      "birthDateLabel": "Born",
+      "addressLabel": "Address",
+      "payoutLabel": "Payout",
+      "accountHolderPrefix": "in the name of",
+      "guardianLabel": "Guardian",
+      "viewKtpPhoto": "View ID Card Photo",
+      "reject": "Reject",
+      "approve": "Approve",
+      "approveSuccess": "Creator approved successfully.",
+      "rejectSuccess": "Creator application rejected.",
+      "rejectModal": {
+        "title": "Reject Creator Application",
+        "label": "Rejection reason"
+      }
+    },
+    "designApproval": {
+      "title": "Design Approval",
+      "empty": "No designs awaiting review yet.",
+      "byCreator": "by {name}",
+      "reject": "Reject",
+      "approve": "Approve",
+      "approveSuccess": "Design approved successfully.",
+      "rejectSuccess": "Design rejected.",
+      "rejectModal": {
+        "title": "Reject Design",
+        "label": "Rejection reason"
+      }
     }
   },
   "creator": {

@@ -714,6 +714,64 @@
     },
     "header": {
       "adminLabel": "Admin"
+    },
+    "dashboard": {
+      "title": "Dashboard Admin",
+      "attentionNotice": "{count} item perlu perhatian: {pendingOrders} pesanan menunggu approval, {pendingCreators} creator menunggu approval.",
+      "stats": {
+        "pendingOrders": "Pesanan Menunggu Approval",
+        "totalRevenue": "Total Pendapatan",
+        "totalCustomers": "Total Customer",
+        "pendingDesigns": "Desain Menunggu Approval",
+        "inProduction": "Diproses Produksi",
+        "shipped": "Dikirim",
+        "completed": "Selesai",
+        "activeCreators": "Creator Aktif"
+      }
+    },
+    "auditLog": {
+      "title": "Audit Log",
+      "columns": {
+        "time": "Waktu",
+        "admin": "Admin",
+        "action": "Aksi",
+        "entity": "Entitas",
+        "description": "Deskripsi"
+      },
+      "empty": "Belum ada aktivitas tercatat."
+    },
+    "creatorApproval": {
+      "title": "Approval Creator",
+      "empty": "Belum ada pengajuan creator menunggu review.",
+      "minorBadge": "Di bawah 18 tahun",
+      "idCardLabel": "KTP",
+      "birthDateLabel": "Lahir",
+      "addressLabel": "Alamat",
+      "payoutLabel": "Pencairan",
+      "accountHolderPrefix": "a.n.",
+      "guardianLabel": "Wali",
+      "viewKtpPhoto": "Lihat Foto KTP",
+      "reject": "Tolak",
+      "approve": "Setujui",
+      "approveSuccess": "Creator berhasil disetujui.",
+      "rejectSuccess": "Pengajuan creator ditolak.",
+      "rejectModal": {
+        "title": "Tolak Pengajuan Creator",
+        "label": "Alasan penolakan"
+      }
+    },
+    "designApproval": {
+      "title": "Approval Desain",
+      "empty": "Belum ada desain menunggu review.",
+      "byCreator": "by {name}",
+      "reject": "Tolak",
+      "approve": "Setujui",
+      "approveSuccess": "Desain berhasil disetujui.",
+      "rejectSuccess": "Desain ditolak.",
+      "rejectModal": {
+        "title": "Tolak Desain",
+        "label": "Alasan penolakan"
+      }
     }
   },
   "creator": {
