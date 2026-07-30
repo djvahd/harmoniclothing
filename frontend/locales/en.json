@@ -984,6 +984,19 @@
     "wishlistButton": {
       "removeAria": "Remove from wishlist",
       "addAria": "Add to wishlist"
+    },
+    "passwordInput": {
+      "show": "Show password",
+      "hide": "Hide password"
+    },
+    "tagInput": {
+      "label": "Tags ({count}/{max})",
+      "removeTagAria": "Remove tag {tag}",
+      "placeholderEmpty": "Type a tag then Enter (e.g. anime, cats)",
+      "placeholderMore": "Add tag..."
+    },
+    "toaster": {
+      "closeAria": "Close notification"
     }
   },
   "creator": {

@@ -984,6 +984,19 @@
     "wishlistButton": {
       "removeAria": "Hapus dari wishlist",
       "addAria": "Tambah ke wishlist"
+    },
+    "passwordInput": {
+      "show": "Tampilkan password",
+      "hide": "Sembunyikan password"
+    },
+    "tagInput": {
+      "label": "Tag ({count}/{max})",
+      "removeTagAria": "Hapus tag {tag}",
+      "placeholderEmpty": "Ketik tag lalu Enter (misal: anime, kucing)",
+      "placeholderMore": "Tambah tag..."
+    },
+    "toaster": {
+      "closeAria": "Tutup notifikasi"
     }
   },
   "creator": {

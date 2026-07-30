@@ -1,6 +1,9 @@
+"use client";
+
 import { InputHTMLAttributes, forwardRef, useState } from "react";
 import { Eye, EyeOff, Lock } from "lucide-react";
 import clsx from "clsx";
+import { useTranslations } from "next-intl";
 
 interface PasswordInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -10,6 +13,7 @@ interface PasswordInputProps extends InputHTMLAttributes<HTMLInputElement> {
 /** Password field with a show/hide toggle; otherwise mirrors Input's label/error layout. */
 const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
   ({ label, error, className, id, ...props }, ref) => {
+    const t = useTranslations("ui.passwordInput");
     const [visible, setVisible] = useState(false);
 
     return (
@@ -39,7 +43,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
           <button
             type="button"
             onClick={() => setVisible((v) => !v)}
-            aria-label={visible ? "Sembunyikan password" : "Tampilkan password"}
+            aria-label={visible ? t("hide") : t("show")}
             className="shrink-0 text-text-secondary"
           >
             {visible ? <Eye className="size-4" /> : <EyeOff className="size-4" />}

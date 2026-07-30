@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const MAX_TAGS = 10;
 const MAX_TAG_LENGTH = 30;
@@ -14,6 +15,7 @@ export default function TagInput({
   value: string[];
   onChange: (tags: string[]) => void;
 }) {
+  const t = useTranslations("ui.tagInput");
   const [draft, setDraft] = useState("");
 
   function addTag(raw: string) {
@@ -43,7 +45,7 @@ export default function TagInput({
   return (
     <div className="flex flex-col gap-1.5">
       <label className="font-body text-xs font-medium text-text-secondary">
-        Tag ({value.length}/{MAX_TAGS})
+        {t("label", { count: value.length, max: MAX_TAGS })}
       </label>
       <div className="flex flex-wrap items-center gap-2 rounded-sm border border-border bg-surface px-3 py-2.5">
         {value.map((tag) => (
@@ -54,8 +56,8 @@ export default function TagInput({
             {tag}
             <button
               type="button"
-              aria-label={`Hapus tag ${tag}`}
-              onClick={() => onChange(value.filter((t) => t !== tag))}
+              aria-label={t("removeTagAria", { tag })}
+              onClick={() => onChange(value.filter((existingTag) => existingTag !== tag))}
               className="rounded-full text-accent/70 hover:text-accent"
             >
               <X className="size-3" />
@@ -68,7 +70,7 @@ export default function TagInput({
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
-            placeholder={value.length === 0 ? "Ketik tag lalu Enter (misal: anime, kucing)" : "Tambah tag..."}
+            placeholder={value.length === 0 ? t("placeholderEmpty") : t("placeholderMore")}
             className="min-w-[120px] flex-1 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
           />
         )}
