@@ -379,6 +379,77 @@
         "otherWorks": "More From This Creator",
         "viewAll": "View All →"
       }
+    },
+    "legal": {
+      "layout": {
+        "lastUpdated": "Last updated:",
+        "tableOfContents": "TABLE OF CONTENTS"
+      },
+      "privacyPolicy": {
+        "title": "Privacy Policy",
+        "updatedAt": "July 1, 2026",
+        "sections": {
+          "dataCollected": {
+            "title": "1. Data We Collect",
+            "p1": "We collect data you provide directly when registering for and using Harmoni Clothing's services, including: name, email address, phone number, shipping address, and payment data processed through our payment gateway partner.",
+            "p2": "For Creators, we also collect identity verification data (ID card and selfie) required for the KYC (Know Your Customer) process before a Creator account is activated."
+          },
+          "dataUsage": {
+            "title": "2. Use of Data",
+            "body": "The data we collect is used to process orders, communicate about order status, verify Creator accounts, disburse commissions, and improve our services. We do not sell your personal data to third parties for marketing purposes."
+          },
+          "dataSharing": {
+            "title": "3. Sharing Data with Third Parties",
+            "body": "Shipping data is shared with logistics partners for product delivery purposes. Payment data is processed through a verified payment gateway (Midtrans) according to industry security standards; we do not store your payment card details."
+          },
+          "dataSecurity": {
+            "title": "4. Data Security",
+            "body": "We apply encryption, session-based authentication, and internal access restrictions to protect your personal data from unauthorized access."
+          },
+          "userRights": {
+            "title": "5. Your Rights",
+            "body": "You have the right to access, update, or request deletion of your personal data by contacting our support team through the Help Center."
+          },
+          "policyChanges": {
+            "title": "6. Changes to This Policy",
+            "body": "This policy may be updated from time to time. Significant changes will be communicated via email or in-platform notification."
+          }
+        }
+      },
+      "terms": {
+        "title": "Terms & Conditions",
+        "updatedAt": "July 1, 2026",
+        "sections": {
+          "definitions": {
+            "title": "1. Definitions",
+            "body": "\"Harmoni Clothing\" is a print-on-demand platform and design marketplace operated to connect Customers, Creators, and garment production services."
+          },
+          "userAccount": {
+            "title": "2. User Accounts",
+            "body": "You are responsible for keeping your account credentials confidential. Harmoni reserves the right to suspend accounts showing signs of violations or suspicious activity."
+          },
+          "ordersPayment": {
+            "title": "3. Orders & Payment",
+            "body": "Orders are considered valid once payment is verified through our payment gateway. Displayed prices already include the designer contribution for products from the Design Marketplace, but exclude shipping costs."
+          },
+          "creatorRights": {
+            "title": "4. Creator Rights & Obligations",
+            "body": "Creators warrant that uploaded designs are original work or that they hold full rights to distribute them. Harmoni reserves the right to reject or take down designs that infringe copyright or violate content policy."
+          },
+          "cancellationRefund": {
+            "title": "5. Cancellation & Refunds",
+            "body": "Orders can be cancelled while still pending approval. Once production has begun, cancellation follows the applicable return policy based on the product's condition."
+          },
+          "liability": {
+            "title": "6. Limitation of Liability",
+            "body": "Harmoni is not responsible for delays caused by third parties (logistics partners) outside our control."
+          },
+          "termsChanges": {
+            "title": "7. Changes to These Terms",
+            "body": "These terms may be updated from time to time. Continued use of the service after changes take effect constitutes acceptance of the new terms."
+          }
+        }
+      }
     }
   }
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 export interface LegalSection {
   id: string;
   title: string;
@@ -15,11 +17,14 @@ export default function LegalPageLayout({
   updatedAt: string;
   sections: LegalSection[];
 }) {
+  const t = useTranslations("public.legal.layout");
   return (
     <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-10 md:flex-row md:px-20">
       <div className="flex-1">
         <h1 className="font-heading text-h2 font-semibold text-text-primary">{title}</h1>
-        <p className="mt-2 font-body text-xs text-text-secondary">Terakhir diperbarui: {updatedAt}</p>
+        <p className="mt-2 font-body text-xs text-text-secondary">
+          {t("lastUpdated")} {updatedAt}
+        </p>
 
         <div className="mt-8 flex flex-col gap-8">
           {sections.map((section) => (
@@ -38,7 +43,7 @@ export default function LegalPageLayout({
       <aside className="hidden w-[220px] shrink-0 md:block">
         <div className="sticky top-8 flex flex-col gap-2 rounded-md border border-border bg-surface p-4">
           <p className="font-body text-xs font-bold tracking-[0.6px] text-text-secondary">
-            DAFTAR ISI
+            {t("tableOfContents")}
           </p>
           {sections.map((section) => (
             <a

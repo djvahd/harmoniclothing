@@ -379,6 +379,77 @@
         "otherWorks": "Koleksi Lainnya",
         "viewAll": "Lihat Semua →"
       }
+    },
+    "legal": {
+      "layout": {
+        "lastUpdated": "Terakhir diperbarui:",
+        "tableOfContents": "DAFTAR ISI"
+      },
+      "privacyPolicy": {
+        "title": "Kebijakan Privasi",
+        "updatedAt": "1 Juli 2026",
+        "sections": {
+          "dataCollected": {
+            "title": "1. Data yang Kami Kumpulkan",
+            "p1": "Kami mengumpulkan data yang kamu berikan langsung saat mendaftar dan menggunakan layanan Harmoni Clothing, meliputi: nama, alamat email, nomor telepon, alamat pengiriman, dan data pembayaran yang diproses melalui mitra payment gateway kami.",
+            "p2": "Untuk Kreator, kami juga mengumpulkan data verifikasi identitas (KTP dan swafoto) yang diperlukan untuk proses KYC (Know Your Customer) sebelum akun Kreator diaktifkan."
+          },
+          "dataUsage": {
+            "title": "2. Penggunaan Data",
+            "body": "Data yang kami kumpulkan digunakan untuk memproses pesanan, komunikasi terkait status pesanan, verifikasi akun Kreator, pencairan komisi, serta peningkatan layanan. Kami tidak menjual data pribadimu ke pihak ketiga untuk kepentingan pemasaran."
+          },
+          "dataSharing": {
+            "title": "3. Berbagi Data dengan Pihak Ketiga",
+            "body": "Data pengiriman dibagikan kepada mitra logistik untuk keperluan pengantaran produk. Data pembayaran diproses melalui payment gateway terverifikasi (Midtrans) sesuai standar keamanan industri, kami tidak menyimpan detail kartu pembayaranmu."
+          },
+          "dataSecurity": {
+            "title": "4. Keamanan Data",
+            "body": "Kami menerapkan enkripsi, autentikasi berbasis sesi, dan pembatasan akses internal untuk melindungi data pribadimu dari akses yang tidak sah."
+          },
+          "userRights": {
+            "title": "5. Hak Pengguna",
+            "body": "Kamu berhak mengakses, memperbarui, atau meminta penghapusan data pribadimu dengan menghubungi tim dukungan kami melalui Pusat Bantuan."
+          },
+          "policyChanges": {
+            "title": "6. Perubahan Kebijakan",
+            "body": "Kebijakan ini dapat diperbarui sewaktu-waktu. Perubahan signifikan akan diinformasikan melalui email atau notifikasi di dalam platform."
+          }
+        }
+      },
+      "terms": {
+        "title": "Syarat & Ketentuan",
+        "updatedAt": "1 Juli 2026",
+        "sections": {
+          "definitions": {
+            "title": "1. Definisi",
+            "body": "\"Harmoni Clothing\" adalah platform print-on-demand dan marketplace desain yang dioperasikan untuk menghubungkan Pelanggan, Kreator, dan layanan produksi konveksi."
+          },
+          "userAccount": {
+            "title": "2. Akun Pengguna",
+            "body": "Kamu bertanggung jawab menjaga kerahasiaan kredensial akunmu. Harmoni berhak menangguhkan akun yang terindikasi melakukan pelanggaran atau aktivitas mencurigakan."
+          },
+          "ordersPayment": {
+            "title": "3. Pemesanan & Pembayaran",
+            "body": "Pesanan dianggap sah setelah pembayaran terverifikasi melalui payment gateway kami. Harga yang tertera sudah termasuk kontribusi desainer untuk produk dari Lapak Desain, belum termasuk ongkos kirim."
+          },
+          "creatorRights": {
+            "title": "4. Hak & Kewajiban Kreator",
+            "body": "Kreator menjamin bahwa desain yang diunggah adalah karya asli atau memiliki hak penuh untuk mendistribusikannya. Harmoni berhak menolak atau menurunkan desain yang melanggar hak cipta atau kebijakan konten."
+          },
+          "cancellationRefund": {
+            "title": "5. Pembatalan & Pengembalian",
+            "body": "Pesanan dapat dibatalkan selama masih berstatus menunggu approval. Setelah memasuki tahap produksi, pembatalan mengikuti kebijakan retur yang berlaku sesuai kondisi produk."
+          },
+          "liability": {
+            "title": "6. Batasan Tanggung Jawab",
+            "body": "Harmoni tidak bertanggung jawab atas keterlambatan yang disebabkan oleh pihak ketiga (mitra logistik) di luar kendali kami."
+          },
+          "termsChanges": {
+            "title": "7. Perubahan Ketentuan",
+            "body": "Ketentuan ini dapat diperbarui sewaktu-waktu. Penggunaan layanan setelah perubahan berlaku dianggap sebagai persetujuan atas ketentuan yang baru."
+          }
+        }
+      }
     }
   }
 }

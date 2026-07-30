@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import LegalPageLayout from "@/components/layout/LegalPageLayout";
 
 export const metadata: Metadata = {
@@ -6,85 +7,47 @@ export const metadata: Metadata = {
   description: "Syarat dan ketentuan penggunaan platform Harmoni Clothing.",
 };
 
-export default function SyaratKetentuanPage() {
+export default async function SyaratKetentuanPage() {
+  const t = await getTranslations("public.legal.terms");
   return (
     <LegalPageLayout
-      title="Syarat & Ketentuan"
-      updatedAt="1 Juli 2026"
+      title={t("title")}
+      updatedAt={t("updatedAt")}
       sections={[
         {
           id: "definisi",
-          title: "1. Definisi",
-          body: (
-            <p>
-              &quot;Harmoni Clothing&quot; adalah platform print-on-demand dan marketplace desain
-              yang dioperasikan untuk menghubungkan Pelanggan, Kreator, dan layanan produksi
-              konveksi.
-            </p>
-          ),
+          title: t("sections.definitions.title"),
+          body: <p>{t("sections.definitions.body")}</p>,
         },
         {
           id: "akun-pengguna",
-          title: "2. Akun Pengguna",
-          body: (
-            <p>
-              Kamu bertanggung jawab menjaga kerahasiaan kredensial akunmu. Harmoni berhak
-              menangguhkan akun yang terindikasi melakukan pelanggaran atau aktivitas mencurigakan.
-            </p>
-          ),
+          title: t("sections.userAccount.title"),
+          body: <p>{t("sections.userAccount.body")}</p>,
         },
         {
           id: "pemesanan-pembayaran",
-          title: "3. Pemesanan & Pembayaran",
-          body: (
-            <p>
-              Pesanan dianggap sah setelah pembayaran terverifikasi melalui payment gateway kami.
-              Harga yang tertera sudah termasuk kontribusi desainer untuk produk dari Lapak
-              Desain, belum termasuk ongkos kirim.
-            </p>
-          ),
+          title: t("sections.ordersPayment.title"),
+          body: <p>{t("sections.ordersPayment.body")}</p>,
         },
         {
           id: "hak-kreator",
-          title: "4. Hak & Kewajiban Kreator",
-          body: (
-            <p>
-              Kreator menjamin bahwa desain yang diunggah adalah karya asli atau memiliki hak
-              penuh untuk mendistribusikannya. Harmoni berhak menolak atau menurunkan desain yang
-              melanggar hak cipta atau kebijakan konten.
-            </p>
-          ),
+          title: t("sections.creatorRights.title"),
+          body: <p>{t("sections.creatorRights.body")}</p>,
         },
         {
           id: "pembatalan-pengembalian",
-          title: "5. Pembatalan & Pengembalian",
-          body: (
-            <p>
-              Pesanan dapat dibatalkan selama masih berstatus menunggu approval. Setelah memasuki
-              tahap produksi, pembatalan mengikuti kebijakan retur yang berlaku sesuai kondisi
-              produk.
-            </p>
-          ),
+          title: t("sections.cancellationRefund.title"),
+          body: <p>{t("sections.cancellationRefund.body")}</p>,
         },
         {
           id: "batasan-tanggung-jawab",
-          title: "6. Batasan Tanggung Jawab",
-          body: (
-            <p>
-              Harmoni tidak bertanggung jawab atas keterlambatan yang disebabkan oleh pihak
-              ketiga (mitra logistik) di luar kendali kami.
-            </p>
-          ),
+          title: t("sections.liability.title"),
+          body: <p>{t("sections.liability.body")}</p>,
         },
         {
           id: "perubahan-ketentuan",
-          title: "7. Perubahan Ketentuan",
-          body: (
-            <p>
-              Ketentuan ini dapat diperbarui sewaktu-waktu. Penggunaan layanan setelah perubahan
-              berlaku dianggap sebagai persetujuan atas ketentuan yang baru.
-            </p>
-          ),
+          title: t("sections.termsChanges.title"),
+          body: <p>{t("sections.termsChanges.body")}</p>,
         },
       ]}
     />
