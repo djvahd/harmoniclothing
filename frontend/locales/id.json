@@ -688,6 +688,32 @@
       },
       "empty": "Belum ada antrian produksi.",
       "startProduction": "Mulai Produksi"
+    },
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "groups": {
+        "management": "MANAJEMEN",
+        "operations": "OPERASIONAL",
+        "communication": "KOMUNIKASI",
+        "reports": "LAPORAN"
+      },
+      "items": {
+        "users": "Kelola User & Creator",
+        "creatorApproval": "Approval Creator",
+        "designApproval": "Approval Desain",
+        "catalog": "Kelola Product Catalog",
+        "production": "Kelola Antrian Produksi",
+        "orders": "Kelola Pesanan",
+        "payments": "Kelola Pembayaran & Invoice",
+        "shipments": "Kelola Pengiriman",
+        "chat": "Chat Management",
+        "notificationSettings": "Konfigurasi Notifikasi",
+        "salesReport": "Sales Report",
+        "auditLog": "Audit Log"
+      }
+    },
+    "header": {
+      "adminLabel": "Admin"
     }
   },
   "creator": {

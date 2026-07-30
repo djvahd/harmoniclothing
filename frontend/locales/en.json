@@ -688,6 +688,32 @@
       },
       "empty": "No production queue yet.",
       "startProduction": "Start Production"
+    },
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "groups": {
+        "management": "MANAGEMENT",
+        "operations": "OPERATIONS",
+        "communication": "COMMUNICATION",
+        "reports": "REPORTS"
+      },
+      "items": {
+        "users": "Manage Users & Creators",
+        "creatorApproval": "Creator Approval",
+        "designApproval": "Design Approval",
+        "catalog": "Manage Product Catalog",
+        "production": "Manage Production Queue",
+        "orders": "Manage Orders",
+        "payments": "Manage Payments & Invoices",
+        "shipments": "Manage Shipments",
+        "chat": "Chat Management",
+        "notificationSettings": "Notification Settings",
+        "salesReport": "Sales Report",
+        "auditLog": "Audit Log"
+      }
+    },
+    "header": {
+      "adminLabel": "Admin"
     }
   },
   "creator": {

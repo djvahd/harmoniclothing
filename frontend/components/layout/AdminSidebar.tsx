@@ -1,40 +1,7 @@
-import SidebarNav from "./SidebarNav";
+"use client";
 
-const groups = [
-  { items: [{ href: "/admin/dashboard", label: "Dashboard" }] },
-  {
-    label: "MANAJEMEN",
-    items: [
-      { href: "/admin/users", label: "Kelola User & Creator" },
-      { href: "/admin/creators/approval", label: "Approval Creator" },
-      { href: "/admin/designs/approval", label: "Approval Desain" },
-      { href: "/admin/catalog", label: "Kelola Product Catalog" },
-    ],
-  },
-  {
-    label: "OPERASIONAL",
-    items: [
-      { href: "/admin/production", label: "Kelola Antrian Produksi" },
-      { href: "/admin/orders", label: "Kelola Pesanan" },
-      { href: "/admin/payments", label: "Kelola Pembayaran & Invoice" },
-      { href: "/admin/shipments", label: "Kelola Pengiriman" },
-    ],
-  },
-  {
-    label: "KOMUNIKASI",
-    items: [
-      { href: "/admin/chat", label: "Chat Management" },
-      { href: "/admin/notifications/settings", label: "Konfigurasi Notifikasi" },
-    ],
-  },
-  {
-    label: "LAPORAN",
-    items: [
-      { href: "/admin/reports", label: "Sales Report" },
-      { href: "/admin/audit-log", label: "Audit Log" },
-    ],
-  },
-];
+import { useTranslations } from "next-intl";
+import SidebarNav from "./SidebarNav";
 
 export default function AdminSidebar({
   className,
@@ -43,5 +10,41 @@ export default function AdminSidebar({
   className?: string;
   onNavigate?: () => void;
 }) {
+  const t = useTranslations("admin.sidebar");
+  const groups = [
+    { items: [{ href: "/admin/dashboard", label: t("dashboard") }] },
+    {
+      label: t("groups.management"),
+      items: [
+        { href: "/admin/users", label: t("items.users") },
+        { href: "/admin/creators/approval", label: t("items.creatorApproval") },
+        { href: "/admin/designs/approval", label: t("items.designApproval") },
+        { href: "/admin/catalog", label: t("items.catalog") },
+      ],
+    },
+    {
+      label: t("groups.operations"),
+      items: [
+        { href: "/admin/production", label: t("items.production") },
+        { href: "/admin/orders", label: t("items.orders") },
+        { href: "/admin/payments", label: t("items.payments") },
+        { href: "/admin/shipments", label: t("items.shipments") },
+      ],
+    },
+    {
+      label: t("groups.communication"),
+      items: [
+        { href: "/admin/chat", label: t("items.chat") },
+        { href: "/admin/notifications/settings", label: t("items.notificationSettings") },
+      ],
+    },
+    {
+      label: t("groups.reports"),
+      items: [
+        { href: "/admin/reports", label: t("items.salesReport") },
+        { href: "/admin/audit-log", label: t("items.auditLog") },
+      ],
+    },
+  ];
   return <SidebarNav groups={groups} className={className} onNavigate={onNavigate} />;
 }
