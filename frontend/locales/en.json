@@ -969,6 +969,21 @@
         "unisex": "Unisex",
         "anak": "Kids"
       }
+    },
+    "errorState": {
+      "title": "Something went wrong.",
+      "description": "Sorry, something's not right. Try reloading the page.",
+      "retry": "Try Again"
+    },
+    "promptModal": {
+      "minChars": "At least {count} characters."
+    },
+    "cartItemRow": {
+      "removeAria": "Remove from cart"
+    },
+    "wishlistButton": {
+      "removeAria": "Remove from wishlist",
+      "addAria": "Add to wishlist"
     }
   },
   "creator": {

@@ -1,6 +1,9 @@
 "use client";
 
+"use client";
+
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import Button from "./Button";
 import Input from "./Input";
 
@@ -20,10 +23,12 @@ export default function PromptModal({
   title,
   label,
   minLength = 0,
-  confirmLabel = "Konfirmasi",
+  confirmLabel,
   onConfirm,
   onCancel,
 }: PromptModalProps) {
+  const t = useTranslations("ui.promptModal");
+  const tCommon = useTranslations("common");
   const [value, setValue] = useState("");
 
   useEffect(() => {
@@ -46,15 +51,15 @@ export default function PromptModal({
         />
         {minLength > 0 && (
           <p className="-mt-2 font-body text-xs text-text-secondary">
-            Minimal {minLength} karakter.
+            {t("minChars", { count: minLength })}
           </p>
         )}
         <div className="flex justify-end gap-3">
           <Button variant="secondary" onClick={onCancel}>
-            Batal
+            {tCommon("cancel")}
           </Button>
           <Button disabled={invalid} onClick={() => onConfirm(value.trim())}>
-            {confirmLabel}
+            {confirmLabel ?? tCommon("confirm")}
           </Button>
         </div>
       </div>

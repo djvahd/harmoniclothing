@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Heart } from "lucide-react";
 import clsx from "clsx";
+import { useTranslations } from "next-intl";
 import { useAuthStore } from "@/store/auth-store";
 import { useAuthModalStore } from "@/store/auth-modal-store";
 import { addToWishlist, removeFromWishlist } from "@/services/wishlist";
@@ -15,6 +16,7 @@ interface WishlistButtonProps {
 }
 
 export default function WishlistButton({ productId, designId, className }: WishlistButtonProps) {
+  const t = useTranslations("ui.wishlistButton");
   const user = useAuthStore((state) => state.user);
   const openAuthModal = useAuthModalStore((state) => state.open);
   const { items } = useWishlist(!!user);
@@ -48,7 +50,7 @@ export default function WishlistButton({ productId, designId, className }: Wishl
   return (
     <button
       type="button"
-      aria-label={existing ? "Hapus dari wishlist" : "Tambah ke wishlist"}
+      aria-label={existing ? t("removeAria") : t("addAria")}
       onClick={handleClick}
       disabled={pending}
       className={clsx(

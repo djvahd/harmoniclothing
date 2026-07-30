@@ -969,6 +969,21 @@
         "unisex": "Unisex",
         "anak": "Kids"
       }
+    },
+    "errorState": {
+      "title": "Terjadi kesalahan.",
+      "description": "Maaf, ada yang tidak beres. Coba muat ulang halaman.",
+      "retry": "Coba Lagi"
+    },
+    "promptModal": {
+      "minChars": "Minimal {count} karakter."
+    },
+    "cartItemRow": {
+      "removeAria": "Hapus dari keranjang"
+    },
+    "wishlistButton": {
+      "removeAria": "Hapus dari wishlist",
+      "addAria": "Tambah ke wishlist"
     }
   },
   "creator": {

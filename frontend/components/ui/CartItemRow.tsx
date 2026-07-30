@@ -1,4 +1,7 @@
+"use client";
+
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import ProductThumbnail from "./ProductThumbnail";
 import QuantityStepper from "./QuantityStepper";
 import { formatCurrency } from "@/lib/format";
@@ -13,6 +16,8 @@ interface CartItemRowProps {
 
 /** One cart line item: thumbnail, name/variant, quantity stepper, subtotal, and a remove button. */
 export default function CartItemRow({ item, onQuantityChange, onRemove }: CartItemRowProps) {
+  const t = useTranslations("ui.cartItemRow");
+  const tCommon = useTranslations("common");
   const product = item.product_variant.product;
   const thumbnail = storageUrl(
     item.design?.thumbnail_path ?? item.product_variant.mockup_asset_path,
@@ -20,7 +25,7 @@ export default function CartItemRow({ item, onQuantityChange, onRemove }: CartIt
 
   return (
     <div className="flex items-center gap-3">
-      <ProductThumbnail src={thumbnail} alt={product?.name ?? "Produk"} />
+      <ProductThumbnail src={thumbnail} alt={product?.name ?? tCommon("productFallback")} />
       <div className="flex flex-col gap-1">
         <p className="font-body text-sm font-semibold text-text-primary">{product?.name}</p>
         <p className="font-body text-xs text-text-secondary">
@@ -36,7 +41,7 @@ export default function CartItemRow({ item, onQuantityChange, onRemove }: CartIt
       </p>
       <button
         type="button"
-        aria-label="Hapus dari keranjang"
+        aria-label={t("removeAria")}
         onClick={() => onRemove(item.id)}
         className="text-text-secondary hover:text-danger"
       >
