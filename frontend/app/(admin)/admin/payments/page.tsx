@@ -3,6 +3,7 @@
 import { useState } from "react";
 import useSWR from "swr";
 import { Receipt } from "lucide-react";
+import { useTranslations } from "next-intl";
 import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Badge from "@/components/ui/Badge";
@@ -13,6 +14,7 @@ import { getPayments, type Payment } from "@/services/admin";
 import { formatCurrency } from "@/lib/format";
 
 export default function KelolaPembayaranPage() {
+  const t = useTranslations("admin.payments");
   const [page, setPage] = useState(1);
   const { data, isLoading } = useSWR(["/admin/payments", page], () => getPayments({ page }));
   const payments = data?.data ?? [];
@@ -21,20 +23,20 @@ export default function KelolaPembayaranPage() {
     <SidebarPageShell sidebar={<AdminSidebar />}>
       <div className="flex flex-col gap-6">
         <h1 className="font-heading text-h3 font-semibold text-text-primary">
-          Kelola Pembayaran & Invoice
+          {t("title")}
         </h1>
         <DataTable<Payment>
           columns={[
-            { key: "order_number", header: "No. Pesanan" },
-            { key: "customer", header: "Customer" },
-            { key: "method", header: "Metode" },
-            { key: "amount", header: "Jumlah" },
-            { key: "status", header: "Status" },
+            { key: "order_number", header: t("columns.orderNumber") },
+            { key: "customer", header: t("columns.customer") },
+            { key: "method", header: t("columns.method") },
+            { key: "amount", header: t("columns.amount") },
+            { key: "status", header: t("columns.status") },
           ]}
           data={payments}
           isLoading={isLoading}
           getRowKey={(payment) => payment.id}
-          emptyState={<EmptyState icon={Receipt} title="Belum ada pembayaran." />}
+          emptyState={<EmptyState icon={Receipt} title={t("empty")} />}
           renderRow={(payment) => (
             <tr className="border-b border-border last:border-0">
               <td className="p-4 font-medium text-text-primary">{payment.order.order_number}</td>

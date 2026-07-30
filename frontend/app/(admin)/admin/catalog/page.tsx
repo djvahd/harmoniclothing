@@ -3,6 +3,7 @@
 import { Fragment, useState } from "react";
 import { mutate } from "swr";
 import { ChevronDown, ChevronRight, PackageSearch, Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Button from "@/components/ui/Button";
@@ -22,6 +23,7 @@ function refreshAdminProducts() {
 }
 
 export default function KelolaKatalogPage() {
+  const t = useTranslations("admin.catalog");
   const { data, isLoading } = useProducts("admin", ADMIN_PRODUCTS_PARAMS);
   const products = data?.data ?? [];
 
@@ -37,10 +39,10 @@ export default function KelolaKatalogPage() {
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between">
           <h1 className="font-heading text-h3 font-semibold text-text-primary">
-            Kelola Product Catalog
+            {t("title")}
           </h1>
           <Button onClick={() => setShowForm((v) => !v)}>
-            <Plus className="size-4" /> Tambah Produk
+            <Plus className="size-4" /> {t("addProduct")}
           </Button>
         </div>
 
@@ -58,9 +60,9 @@ export default function KelolaKatalogPage() {
             <thead className="border-b border-border text-text-secondary">
               <tr>
                 <th className="w-8 p-4" />
-                <th className="p-4">Nama</th>
-                <th className="p-4">Kategori</th>
-                <th className="p-4">Harga Dasar</th>
+                <th className="p-4">{t("columns.name")}</th>
+                <th className="p-4">{t("columns.category")}</th>
+                <th className="p-4">{t("columns.basePrice")}</th>
               </tr>
             </thead>
             <tbody>
@@ -68,7 +70,7 @@ export default function KelolaKatalogPage() {
               {!isLoading && products.length === 0 && (
                 <tr>
                   <td colSpan={4} className="p-0">
-                    <EmptyState icon={PackageSearch} title="Belum ada produk." />
+                    <EmptyState icon={PackageSearch} title={t("empty")} />
                   </td>
                 </tr>
               )}
@@ -93,20 +95,20 @@ export default function KelolaKatalogPage() {
                     <tr key={`${product.id}-variants`} className="border-b border-border bg-surface last:border-0">
                       <td colSpan={4} className="p-4">
                         <div className="flex flex-col gap-4">
-                          <h3 className="font-heading text-sm font-semibold text-text-primary">Varian Produk</h3>
+                          <h3 className="font-heading text-sm font-semibold text-text-primary">{t("productVariants")}</h3>
 
                           {!!product.variants?.length && (
                             <div className="overflow-x-auto rounded-md border border-border">
                               <table className="w-full text-left font-body text-sm">
                                 <thead className="border-b border-border text-text-secondary">
                                   <tr>
-                                    <th className="p-3">Warna</th>
-                                    <th className="p-3">Ukuran</th>
-                                    <th className="p-3">Potongan</th>
-                                    <th className="p-3">Material</th>
-                                    <th className="p-3">Print Area</th>
-                                    <th className="p-3">Tambahan Harga</th>
-                                    <th className="p-3">Aksi</th>
+                                    <th className="p-3">{t("variantColumns.color")}</th>
+                                    <th className="p-3">{t("variantColumns.size")}</th>
+                                    <th className="p-3">{t("variantColumns.cutType")}</th>
+                                    <th className="p-3">{t("variantColumns.material")}</th>
+                                    <th className="p-3">{t("variantColumns.printArea")}</th>
+                                    <th className="p-3">{t("variantColumns.priceAddon")}</th>
+                                    <th className="p-3">{t("variantColumns.actions")}</th>
                                   </tr>
                                 </thead>
                                 <tbody>

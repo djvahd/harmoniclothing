@@ -772,6 +772,86 @@
         "title": "Tolak Desain",
         "label": "Alasan penolakan"
       }
+    },
+    "users": {
+      "title": "Kelola User & Creator",
+      "columns": {
+        "name": "Nama",
+        "email": "Email",
+        "role": "Role",
+        "status": "Status"
+      },
+      "empty": "Belum ada pengguna."
+    },
+    "payments": {
+      "title": "Kelola Pembayaran & Invoice",
+      "columns": {
+        "orderNumber": "No. Pesanan",
+        "customer": "Customer",
+        "method": "Metode",
+        "amount": "Jumlah",
+        "status": "Status"
+      },
+      "empty": "Belum ada pembayaran."
+    },
+    "shipments": {
+      "title": "Kelola Pengiriman",
+      "columns": {
+        "orderNumber": "No. Pesanan",
+        "courier": "Kurir",
+        "tracking": "Resi",
+        "status": "Status",
+        "actions": "Aksi"
+      },
+      "empty": "Tidak ada pesanan siap dikirim.",
+      "booked": "Sudah Dibooking",
+      "notBooked": "Belum Dibooking",
+      "bookCourier": "Booking Kurir",
+      "bookModal": {
+        "title": "Booking Kurir",
+        "label": "Nama kurir (mis. JNE, J&T)",
+        "confirm": "Booking"
+      }
+    },
+    "reports": {
+      "title": "Sales Report",
+      "period": "Periode: {from} - {to} (30 hari terakhir)",
+      "stats": {
+        "totalRevenue": "Total Pendapatan",
+        "avgOrderValue": "Rata-rata Nilai Pesanan",
+        "totalOrders": "Total Pesanan"
+      },
+      "ordersByStatus": "Pesanan per Status",
+      "topProducts": "Top 5 Produk",
+      "unitsSold": "{count} terjual"
+    },
+    "notificationSettings": {
+      "title": "Konfigurasi Notifikasi"
+    },
+    "chat": {
+      "title": "Chat Management",
+      "noConversations": "Belum ada percakapan.",
+      "replyPlaceholder": "Balas pesan..."
+    },
+    "catalog": {
+      "title": "Kelola Product Catalog",
+      "addProduct": "Tambah Produk",
+      "columns": {
+        "name": "Nama",
+        "category": "Kategori",
+        "basePrice": "Harga Dasar"
+      },
+      "empty": "Belum ada produk.",
+      "productVariants": "Varian Produk",
+      "variantColumns": {
+        "color": "Warna",
+        "size": "Ukuran",
+        "cutType": "Potongan",
+        "material": "Material",
+        "printArea": "Print Area",
+        "priceAddon": "Tambahan Harga",
+        "actions": "Aksi"
+      }
     }
   },
   "creator": {

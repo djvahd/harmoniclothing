@@ -772,6 +772,86 @@
         "title": "Reject Design",
         "label": "Rejection reason"
       }
+    },
+    "users": {
+      "title": "Manage Users & Creators",
+      "columns": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "status": "Status"
+      },
+      "empty": "No users yet."
+    },
+    "payments": {
+      "title": "Manage Payments & Invoices",
+      "columns": {
+        "orderNumber": "Order No.",
+        "customer": "Customer",
+        "method": "Method",
+        "amount": "Amount",
+        "status": "Status"
+      },
+      "empty": "No payments yet."
+    },
+    "shipments": {
+      "title": "Manage Shipments",
+      "columns": {
+        "orderNumber": "Order No.",
+        "courier": "Courier",
+        "tracking": "Tracking No.",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "empty": "No orders ready to ship.",
+      "booked": "Booked",
+      "notBooked": "Not Booked",
+      "bookCourier": "Book Courier",
+      "bookModal": {
+        "title": "Book Courier",
+        "label": "Courier name (e.g. JNE, J&T)",
+        "confirm": "Book"
+      }
+    },
+    "reports": {
+      "title": "Sales Report",
+      "period": "Period: {from} - {to} (last 30 days)",
+      "stats": {
+        "totalRevenue": "Total Revenue",
+        "avgOrderValue": "Average Order Value",
+        "totalOrders": "Total Orders"
+      },
+      "ordersByStatus": "Orders by Status",
+      "topProducts": "Top 5 Products",
+      "unitsSold": "{count} sold"
+    },
+    "notificationSettings": {
+      "title": "Notification Settings"
+    },
+    "chat": {
+      "title": "Chat Management",
+      "noConversations": "No conversations yet.",
+      "replyPlaceholder": "Reply to message..."
+    },
+    "catalog": {
+      "title": "Manage Product Catalog",
+      "addProduct": "Add Product",
+      "columns": {
+        "name": "Name",
+        "category": "Category",
+        "basePrice": "Base Price"
+      },
+      "empty": "No products yet.",
+      "productVariants": "Product Variants",
+      "variantColumns": {
+        "color": "Color",
+        "size": "Size",
+        "cutType": "Cut Type",
+        "material": "Material",
+        "printArea": "Print Area",
+        "priceAddon": "Price Add-on",
+        "actions": "Actions"
+      }
     }
   },
   "creator": {

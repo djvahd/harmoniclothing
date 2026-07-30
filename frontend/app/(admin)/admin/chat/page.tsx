@@ -3,6 +3,7 @@
 import { useState } from "react";
 import useSWR from "swr";
 import { Send } from "lucide-react";
+import { useTranslations } from "next-intl";
 import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import {
@@ -12,6 +13,7 @@ import {
 } from "@/services/admin";
 
 export default function AdminChatManagementPage() {
+  const t = useTranslations("admin.chat");
   const { data: threadsData } = useSWR("/admin/chat/threads", getAdminChatThreads);
   const threads = threadsData?.data ?? [];
   const [activeId, setActiveId] = useState<number | null>(null);
@@ -35,7 +37,7 @@ export default function AdminChatManagementPage() {
     <SidebarPageShell sidebar={<AdminSidebar />}>
       <div className="flex flex-col gap-6">
         <h1 className="font-heading text-h3 font-semibold text-text-primary">
-          Chat Management
+          {t("title")}
         </h1>
         <div className="flex gap-4">
           <div className="flex w-64 shrink-0 flex-col gap-1 rounded-md border border-border bg-surface p-2">
@@ -53,7 +55,7 @@ export default function AdminChatManagementPage() {
               </button>
             ))}
             {threads.length === 0 && (
-              <p className="p-3 font-body text-xs text-text-secondary">Belum ada percakapan.</p>
+              <p className="p-3 font-body text-xs text-text-secondary">{t("noConversations")}</p>
             )}
           </div>
 
@@ -78,7 +80,7 @@ export default function AdminChatManagementPage() {
                   value={draft}
                   onChange={(e) => setDraft(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                  placeholder="Balas pesan..."
+                  placeholder={t("replyPlaceholder")}
                   className="flex-1 rounded-sm border border-border bg-surface px-3 py-2 font-body text-sm outline-none"
                 />
                 <button onClick={handleSend} className="text-primary">

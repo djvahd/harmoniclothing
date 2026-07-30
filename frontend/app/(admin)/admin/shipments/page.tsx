@@ -3,6 +3,7 @@
 import { useState } from "react";
 import useSWR, { mutate } from "swr";
 import { Truck } from "lucide-react";
+import { useTranslations } from "next-intl";
 import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Badge from "@/components/ui/Badge";
@@ -14,6 +15,7 @@ import { bookShipment, getProductionQueue } from "@/services/admin";
 import type { Order } from "@/types/order";
 
 export default function KelolaPengirimanPage() {
+  const t = useTranslations("admin.shipments");
   const { data, isLoading } = useSWR("/admin/production-queue", getProductionQueue);
   const orders = (data?.data ?? []).filter((o) => o.status === "diproses_produksi");
   const [loadingId, setLoadingId] = useState<number | null>(null);
@@ -36,21 +38,21 @@ export default function KelolaPengirimanPage() {
     <SidebarPageShell sidebar={<AdminSidebar />}>
       <div className="flex flex-col gap-6">
         <h1 className="font-heading text-h3 font-semibold text-text-primary">
-          Kelola Pengiriman
+          {t("title")}
         </h1>
         <DataTable<Order>
           columns={[
-            { key: "order_number", header: "No. Pesanan" },
-            { key: "courier", header: "Kurir" },
-            { key: "tracking", header: "Resi" },
-            { key: "status", header: "Status" },
-            { key: "actions", header: "Aksi" },
+            { key: "order_number", header: t("columns.orderNumber") },
+            { key: "courier", header: t("columns.courier") },
+            { key: "tracking", header: t("columns.tracking") },
+            { key: "status", header: t("columns.status") },
+            { key: "actions", header: t("columns.actions") },
           ]}
           data={orders}
           isLoading={isLoading}
           getRowKey={(order) => order.id}
           emptyState={
-            <EmptyState icon={Truck} title="Tidak ada pesanan siap dikirim." />
+            <EmptyState icon={Truck} title={t("empty")} />
           }
           renderRow={(order) => (
             <tr className="border-b border-border last:border-0">
@@ -59,13 +61,13 @@ export default function KelolaPengirimanPage() {
               <td className="p-4 text-text-secondary">{order.shipment?.tracking_number ?? "-"}</td>
               <td className="p-4">
                 <Badge variant={order.shipment ? "success" : "neutral"}>
-                  {order.shipment ? "Sudah Dibooking" : "Belum Dibooking"}
+                  {order.shipment ? t("booked") : t("notBooked")}
                 </Badge>
               </td>
               <td className="p-4">
                 {!order.shipment && (
                   <Button loading={loadingId === order.id} onClick={() => setBookingId(order.id)}>
-                    Booking Kurir
+                    {t("bookCourier")}
                   </Button>
                 )}
               </td>
@@ -75,10 +77,10 @@ export default function KelolaPengirimanPage() {
       </div>
       <PromptModal
         open={bookingId !== null}
-        title="Booking Kurir"
-        label="Nama kurir (mis. JNE, J&T)"
+        title={t("bookModal.title")}
+        label={t("bookModal.label")}
         minLength={1}
-        confirmLabel="Booking"
+        confirmLabel={t("bookModal.confirm")}
         onConfirm={handleBook}
         onCancel={() => setBookingId(null)}
       />

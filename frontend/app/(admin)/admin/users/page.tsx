@@ -3,6 +3,7 @@
 import { useState } from "react";
 import useSWR from "swr";
 import { Users } from "lucide-react";
+import { useTranslations } from "next-intl";
 import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Badge from "@/components/ui/Badge";
@@ -13,6 +14,7 @@ import { getUsers } from "@/services/admin";
 import type { User } from "@/types/user";
 
 export default function KelolaPenggunaPage() {
+  const t = useTranslations("admin.users");
   const [page, setPage] = useState(1);
   const { data, isLoading } = useSWR(["/admin/users", page], () => getUsers({ page }));
   const users = data?.data ?? [];
@@ -21,20 +23,20 @@ export default function KelolaPenggunaPage() {
     <SidebarPageShell sidebar={<AdminSidebar />}>
       <div className="flex flex-col gap-6">
         <h1 className="font-heading text-h3 font-semibold text-text-primary">
-          Kelola User & Creator
+          {t("title")}
         </h1>
         <DataTable<User>
           columns={[
-            { key: "name", header: "Nama" },
-            { key: "email", header: "Email" },
-            { key: "role", header: "Role" },
-            { key: "status", header: "Status" },
+            { key: "name", header: t("columns.name") },
+            { key: "email", header: t("columns.email") },
+            { key: "role", header: t("columns.role") },
+            { key: "status", header: t("columns.status") },
           ]}
           data={users}
           isLoading={isLoading}
           getRowKey={(user) => user.id}
           emptyState={
-            <EmptyState icon={Users} title="Belum ada pengguna." />
+            <EmptyState icon={Users} title={t("empty")} />
           }
           renderRow={(user) => (
             <tr className="border-b border-border last:border-0">
