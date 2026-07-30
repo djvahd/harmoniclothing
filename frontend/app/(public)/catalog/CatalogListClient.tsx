@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ArrowUpDown, PackageSearch, Search, X } from "lucide-react";
 import clsx from "clsx";
+import { useTranslations } from "next-intl";
 import ProductCard, { ProductCardSkeleton } from "@/components/ui/ProductCard";
 import Button from "@/components/ui/Button";
 import FilterSidebar, { EMPTY_FILTER_VALUE, type FilterSidebarValue } from "@/components/ui/FilterSidebar";
@@ -14,15 +15,16 @@ import type { Product } from "@/types/product";
 
 const PER_PAGE = 40;
 
-const SORT_OPTIONS: { value: ProductSort; label: string }[] = [
-  { value: "terbaru", label: "Terbaru" },
-  { value: "harga_asc", label: "Harga: Rendah ke Tinggi" },
-  { value: "harga_desc", label: "Harga: Tinggi ke Rendah" },
-  { value: "terlaris", label: "Terlaris" },
-  { value: "rating", label: "Rating Tertinggi" },
+const SORT_OPTIONS: { value: ProductSort; key: string }[] = [
+  { value: "terbaru", key: "newest" },
+  { value: "harga_asc", key: "priceAsc" },
+  { value: "harga_desc", key: "priceDesc" },
+  { value: "terlaris", key: "bestSelling" },
+  { value: "rating", key: "topRated" },
 ];
 
 function KatalogPageContent() {
+  const t = useTranslations("public.catalogList");
   const searchParams = useSearchParams();
   const kategoriParam = searchParams.get("kategori");
 
@@ -121,18 +123,15 @@ function KatalogPageContent() {
       >
         <div className="flex max-w-xl flex-col gap-4">
           <h1 className="font-heading text-h3 font-semibold text-text-primary md:text-h1">
-            Katalog Produk
+            {t("title")}
           </h1>
-          <p className="font-body text-sm text-text-secondary md:text-base">
-            Pilih dari berbagai jenis produk blank berkualitas tinggi, siap kamu kustomisasi
-            sesuai keinginan sendiri.
-          </p>
+          <p className="font-body text-sm text-text-secondary md:text-base">{t("subtitle")}</p>
           <div className="flex gap-3">
             <a href="#product-grid">
-              <Button variant="primary">Mulai Custom Design</Button>
+              <Button variant="primary">{t("ctaCustomDesign")}</Button>
             </a>
             <Link href="/marketplace">
-              <Button variant="secondary">Lihat Desain</Button>
+              <Button variant="secondary">{t("ctaViewDesigns")}</Button>
             </Link>
           </div>
         </div>
@@ -148,13 +147,13 @@ function KatalogPageContent() {
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Cari produk..."
+                placeholder={t("searchPlaceholder")}
                 className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
               />
               {search && (
                 <button
                   onClick={() => setSearch("")}
-                  aria-label="Hapus pencarian"
+                  aria-label={t("clearSearch")}
                   className="shrink-0 rounded-full p-0.5 text-text-secondary transition-colors hover:bg-border/50 hover:text-text-primary"
                 >
                   <X className="size-3.5" />
@@ -168,7 +167,7 @@ function KatalogPageContent() {
                 className="flex items-center gap-1.5 rounded-full border border-border bg-surface px-4 py-2 font-body text-sm text-text-secondary transition-colors hover:border-primary hover:bg-border/40 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
               >
                 <ArrowUpDown className="size-3.5" />
-                Urutkan
+                {t("sortLabel")}
               </button>
               {showSort && (
                 <div className="absolute right-0 top-full z-10 mt-2 w-56 rounded-md border border-border bg-surface p-1.5 shadow-md">
@@ -186,7 +185,7 @@ function KatalogPageContent() {
                           : "text-text-secondary hover:bg-border/50",
                       )}
                     >
-                      {opt.label}
+                      {t(`sortOptions.${opt.key}`)}
                     </button>
                   ))}
                 </div>
@@ -196,7 +195,7 @@ function KatalogPageContent() {
 
           {!isLoadingInitial && !error && (
             <p className="font-body text-sm text-text-secondary">
-              Menampilkan {filtered.length} dari {grandTotal ?? filtered.length} produk
+              {t("resultCount", { shown: filtered.length, total: grandTotal ?? filtered.length })}
             </p>
           )}
 
@@ -206,9 +205,7 @@ function KatalogPageContent() {
             {!isLoadingInitial && !error && hasActiveQuery && filtered.length === 0 && (
               <div className="flex w-full flex-col items-center gap-3 py-16 text-center">
                 <PackageSearch className="size-10 text-text-secondary" />
-                <p className="font-body text-sm text-text-secondary">
-                  Belum ada produk ditemukan untuk filter ini.
-                </p>
+                <p className="font-body text-sm text-text-secondary">{t("noResults")}</p>
                 <button
                   onClick={() => {
                     setSearch("");
@@ -216,7 +213,7 @@ function KatalogPageContent() {
                   }}
                   className="font-body text-sm font-medium text-primary underline"
                 >
-                  Reset pencarian & filter
+                  {t("resetFilters")}
                 </button>
               </div>
             )}
@@ -228,7 +225,7 @@ function KatalogPageContent() {
           {hasMore && (
             <div className="flex justify-center pt-2">
               <Button variant="secondary" loading={isLoadingMore} onClick={() => setPage((p) => p + 1)}>
-                Muat Lebih Banyak
+                {t("loadMore")}
               </Button>
             </div>
           )}

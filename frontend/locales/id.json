@@ -223,6 +223,64 @@
         "title": "Mari Wujudkan Desainmu Bersama Kami",
         "cta": "Daftar Gratis"
       }
+    },
+    "catalogList": {
+      "title": "Katalog Produk",
+      "subtitle": "Pilih dari berbagai jenis produk blank berkualitas tinggi, siap kamu kustomisasi sesuai keinginan sendiri.",
+      "ctaCustomDesign": "Mulai Custom Design",
+      "ctaViewDesigns": "Lihat Desain",
+      "searchPlaceholder": "Cari produk...",
+      "clearSearch": "Hapus pencarian",
+      "sortLabel": "Urutkan",
+      "sortOptions": {
+        "newest": "Terbaru",
+        "priceAsc": "Harga: Rendah ke Tinggi",
+        "priceDesc": "Harga: Tinggi ke Rendah",
+        "bestSelling": "Terlaris",
+        "topRated": "Rating Tertinggi"
+      },
+      "resultCount": "Menampilkan {shown} dari {total} produk",
+      "noResults": "Belum ada produk ditemukan untuk filter ini.",
+      "resetFilters": "Reset pencarian & filter",
+      "loadMore": "Muat Lebih Banyak"
+    },
+    "productDetail": {
+      "breadcrumbCatalog": "Katalog Produk",
+      "ratingSummary": "{rating} ({count} ulasan)",
+      "soldCount": "Terjual {count} kali",
+      "uploadLabel": "Upload Desain Sendiri (opsional)",
+      "uploadStatusUploading": "Mengunggah...",
+      "uploadStatusUploaded": "File terunggah — klik untuk ganti",
+      "uploadStatusIdle": "Klik atau drag file di sini (PNG/JPG, maks 20MB)",
+      "uploadError": "Gagal mengunggah file.",
+      "marketplaceLink": "atau pilih desain siap pakai dari Lapak Desain →",
+      "quantityLabel": "Jumlah",
+      "notesLabel": "Catatan (opsional)",
+      "notesPlaceholder": "Permintaan revisi/khusus untuk produk ini...",
+      "selectVariantError": "Pilih warna dan ukuran terlebih dahulu.",
+      "addToCartSuccess": "Ditambahkan ke keranjang.",
+      "addToCart": "Tambah ke Keranjang",
+      "buyNow": "Beli Sekarang",
+      "bulkOrderLink": "Butuh dalam jumlah besar? Pesan lewat Bulk Order →",
+      "notFoundMessage": "Produk tidak ditemukan.",
+      "notFoundBackLabel": "Kembali ke Katalog Produk",
+      "tabs": {
+        "description": "Deskripsi",
+        "specs": "Spesifikasi",
+        "care": "Bahan & Perawatan",
+        "shipping": "Pengiriman",
+        "reviews": "Ulasan"
+      },
+      "specsMaterial": "Bahan: {material}",
+      "specsCutType": "Jenis potongan: {cutType}",
+      "specsPrintAreas": "Area cetak: {areas}",
+      "specsSelectVariantPrompt": "Pilih warna dan ukuran untuk melihat spesifikasi.",
+      "reviewsEmptyMessage": "Belum ada ulasan untuk produk ini.",
+      "printAreas": {
+        "depan": "Depan",
+        "belakang": "Belakang",
+        "lengan": "Lengan"
+      }
     }
   }
 }

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { ChevronRight, Star, Upload } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Button from "@/components/ui/Button";
 import QuantityStepper from "@/components/ui/QuantityStepper";
 import WishlistButton from "@/components/ui/WishlistButton";
@@ -29,23 +30,19 @@ import { getErrorMessage } from "@/lib/api";
 import { toast } from "@/store/toast-store";
 import type { Product, PrintArea } from "@/types/product";
 
-const PRINT_AREA_LABELS: Record<PrintArea, string> = {
-  depan: "Depan",
-  belakang: "Belakang",
-  lengan: "Lengan",
-};
-
 const TABS = [
-  { key: "deskripsi", label: "Deskripsi" },
-  { key: "spesifikasi", label: "Spesifikasi" },
-  { key: "perawatan", label: "Bahan & Perawatan" },
-  { key: "pengiriman", label: "Pengiriman" },
-  { key: "ulasan", label: "Ulasan" },
+  { key: "deskripsi", tKey: "description" },
+  { key: "spesifikasi", tKey: "specs" },
+  { key: "perawatan", tKey: "care" },
+  { key: "pengiriman", tKey: "shipping" },
+  { key: "ulasan", tKey: "reviews" },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
 
 export default function DetailProdukPage() {
+  const t = useTranslations("public.productDetail");
+  const tCommon = useTranslations("common");
   const params = useParams<{ slug: string }>();
   const router = useRouter();
   const { product, isLoading } = useProduct(params.slug);
@@ -108,7 +105,7 @@ export default function DetailProdukPage() {
       const { data } = await uploadDesignFile(file);
       setUploadedPath(data.path);
     } catch (err) {
-      setError(getErrorMessage(err, "Gagal mengunggah file."));
+      setError(getErrorMessage(err, t("uploadError")));
     } finally {
       setUploading(false);
     }
@@ -116,7 +113,7 @@ export default function DetailProdukPage() {
 
   async function handleSubmit(destination: "cart" | "buy") {
     if (!selectedVariant) {
-      setError("Pilih warna dan ukuran terlebih dahulu.");
+      setError(t("selectVariantError"));
       return;
     }
     setError(null);
@@ -129,10 +126,10 @@ export default function DetailProdukPage() {
         custom_design_file_path: uploadedPath ?? undefined,
       });
       await invalidateCart();
-      if (destination === "cart") toast("Ditambahkan ke keranjang.", "success");
+      if (destination === "cart") toast(t("addToCartSuccess"), "success");
       router.push(destination === "cart" ? "/cart" : "/checkout");
     } catch (err) {
-      setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
+      setError(getErrorMessage(err, tCommon("errorGeneric")));
     } finally {
       setPendingAction(null);
     }
@@ -145,9 +142,9 @@ export default function DetailProdukPage() {
   if (!product) {
     return (
       <DetailNotFound
-        message="Produk tidak ditemukan."
+        message={t("notFoundMessage")}
         backHref="/catalog"
-        backLabel="Kembali ke Katalog Produk"
+        backLabel={t("notFoundBackLabel")}
       />
     );
   }
@@ -160,7 +157,7 @@ export default function DetailProdukPage() {
     <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 px-4 py-10 md:px-20">
       <nav className="flex flex-wrap items-center gap-1.5 font-body text-sm text-text-secondary">
         <Link href="/catalog" className="transition-colors hover:text-primary">
-          Katalog Produk
+          {t("breadcrumbCatalog")}
         </Link>
         {product.category && (
           <>
@@ -201,11 +198,11 @@ export default function DetailProdukPage() {
                 {hasRating && (
                   <span className="flex items-center gap-1">
                     <Star className="size-3.5 fill-warning text-warning" />
-                    {product.rating_average} ({product.review_count} ulasan)
+                    {t("ratingSummary", { rating: product.rating_average ?? 0, count: product.review_count ?? 0 })}
                   </span>
                 )}
                 {hasRating && hasSold && <span>·</span>}
-                {hasSold && <span>Terjual {product.sold_count} kali</span>}
+                {hasSold && <span>{t("soldCount", { count: product.sold_count ?? 0 })}</span>}
               </div>
             )}
           </div>
@@ -225,17 +222,15 @@ export default function DetailProdukPage() {
           />
 
           <div className="flex flex-col gap-2">
-            <p className="font-body text-sm font-medium text-text-primary">
-              Upload Desain Sendiri (opsional)
-            </p>
+            <p className="font-body text-sm font-medium text-text-primary">{t("uploadLabel")}</p>
             <label className="flex cursor-pointer flex-col items-center gap-2 rounded-sm border border-dashed border-border py-5 text-center transition-colors hover:border-primary/50">
               <Upload className="size-5 text-text-secondary" />
               <span className="font-body text-xs text-text-secondary">
                 {uploading
-                  ? "Mengunggah..."
+                  ? t("uploadStatusUploading")
                   : uploadedPath
-                    ? "File terunggah — klik untuk ganti"
-                    : "Klik atau drag file di sini (PNG/JPG, maks 20MB)"}
+                    ? t("uploadStatusUploaded")
+                    : t("uploadStatusIdle")}
               </span>
               <input type="file" accept="image/png,image/jpeg" className="hidden" onChange={handleUpload} />
             </label>
@@ -243,25 +238,25 @@ export default function DetailProdukPage() {
               href="/marketplace"
               className="font-body text-sm font-medium text-primary transition-colors hover:underline"
             >
-              atau pilih desain siap pakai dari Lapak Desain →
+              {t("marketplaceLink")}
             </Link>
           </div>
 
           <div className="flex items-center justify-between pt-1">
-            <p className="font-body text-sm font-medium text-text-primary">Jumlah</p>
+            <p className="font-body text-sm font-medium text-text-primary">{t("quantityLabel")}</p>
             <QuantityStepper value={quantity} onChange={setQuantity} />
           </div>
 
           <p className="font-heading text-h3 font-semibold text-primary">{formatCurrency(total)}</p>
 
           <div className="flex flex-col gap-2">
-            <p className="font-body text-sm font-medium text-text-primary">Catatan (opsional)</p>
+            <p className="font-body text-sm font-medium text-text-primary">{t("notesLabel")}</p>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={2}
               className="w-full rounded-sm border border-border bg-surface px-3 py-2.5 font-body text-sm text-text-primary outline-none"
-              placeholder="Permintaan revisi/khusus untuk produk ini..."
+              placeholder={t("notesPlaceholder")}
             />
           </div>
 
@@ -274,7 +269,7 @@ export default function DetailProdukPage() {
               disabled={pendingAction !== null}
               onClick={() => handleSubmit("cart")}
             >
-              Tambah ke Keranjang
+              {t("addToCart")}
             </Button>
             <Button
               variant="secondary"
@@ -283,7 +278,7 @@ export default function DetailProdukPage() {
               disabled={pendingAction !== null}
               onClick={() => handleSubmit("buy")}
             >
-              Beli Sekarang
+              {t("buyNow")}
             </Button>
           </div>
 
@@ -291,7 +286,7 @@ export default function DetailProdukPage() {
             href={`/bulk-order/${product.slug}`}
             className="font-body text-sm font-medium text-primary transition-colors hover:underline"
           >
-            Butuh dalam jumlah besar? Pesan lewat Bulk Order →
+            {t("bulkOrderLink")}
           </Link>
 
           <TrustBadges />
@@ -300,9 +295,10 @@ export default function DetailProdukPage() {
 
       <div className="flex flex-col gap-6">
         <ProductTabs
-          tabs={TABS.map((t) => ({
-            ...t,
-            badge: t.key === "ulasan" ? product.review_count ?? undefined : undefined,
+          tabs={TABS.map((tabDef) => ({
+            key: tabDef.key,
+            label: t(`tabs.${tabDef.tKey}`),
+            badge: tabDef.key === "ulasan" ? product.review_count ?? undefined : undefined,
           }))}
           active={tab}
           onChange={(key) => setTab(key as TabKey)}
@@ -313,16 +309,18 @@ export default function DetailProdukPage() {
           {tab === "spesifikasi" &&
             (selectedVariant ? (
               <ul className="flex flex-col gap-1">
-                <li>Bahan: {selectedVariant.material}</li>
-                <li>Jenis potongan: {selectedVariant.cut_type}</li>
+                <li>{t("specsMaterial", { material: selectedVariant.material })}</li>
+                <li>{t("specsCutType", { cutType: selectedVariant.cut_type })}</li>
                 {!!selectedVariant.print_areas?.length && (
                   <li>
-                    Area cetak: {selectedVariant.print_areas.map((a) => PRINT_AREA_LABELS[a]).join(", ")}
+                    {t("specsPrintAreas", {
+                      areas: selectedVariant.print_areas.map((a) => t(`printAreas.${a}`)).join(", "),
+                    })}
                   </li>
                 )}
               </ul>
             ) : (
-              <p>Pilih warna dan ukuran untuk melihat spesifikasi.</p>
+              <p>{t("specsSelectVariantPrompt")}</p>
             ))}
           {tab === "perawatan" && CARE_TAB_CONTENT}
           {tab === "pengiriman" && SHIPPING_TAB_CONTENT}
@@ -331,7 +329,7 @@ export default function DetailProdukPage() {
               hasRating={hasRating}
               ratingAverage={product.rating_average}
               reviewCount={product.review_count}
-              emptyMessage="Belum ada ulasan untuk produk ini."
+              emptyMessage={t("reviewsEmptyMessage")}
               reviews={reviews}
               reviewsLoading={reviewsLoading}
               meta={reviewsMeta}

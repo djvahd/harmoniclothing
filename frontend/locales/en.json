@@ -223,6 +223,64 @@
         "title": "Let's Bring Your Design to Life With Us",
         "cta": "Sign Up Free"
       }
+    },
+    "catalogList": {
+      "title": "Product Catalog",
+      "subtitle": "Choose from a wide range of high-quality blank products, ready for you to customize any way you like.",
+      "ctaCustomDesign": "Start Custom Design",
+      "ctaViewDesigns": "Browse Designs",
+      "searchPlaceholder": "Search products...",
+      "clearSearch": "Clear search",
+      "sortLabel": "Sort",
+      "sortOptions": {
+        "newest": "Newest",
+        "priceAsc": "Price: Low to High",
+        "priceDesc": "Price: High to Low",
+        "bestSelling": "Best Selling",
+        "topRated": "Top Rated"
+      },
+      "resultCount": "Showing {shown} of {total} products",
+      "noResults": "No products found for this filter.",
+      "resetFilters": "Reset search & filters",
+      "loadMore": "Load More"
+    },
+    "productDetail": {
+      "breadcrumbCatalog": "Product Catalog",
+      "ratingSummary": "{rating} ({count} reviews)",
+      "soldCount": "{count} sold",
+      "uploadLabel": "Upload Your Own Design (optional)",
+      "uploadStatusUploading": "Uploading...",
+      "uploadStatusUploaded": "File uploaded — click to change",
+      "uploadStatusIdle": "Click or drag a file here (PNG/JPG, max 20MB)",
+      "uploadError": "Failed to upload file.",
+      "marketplaceLink": "or pick a ready-made design from the Design Marketplace →",
+      "quantityLabel": "Quantity",
+      "notesLabel": "Notes (optional)",
+      "notesPlaceholder": "Special or revision requests for this product...",
+      "selectVariantError": "Please select a color and size first.",
+      "addToCartSuccess": "Added to cart.",
+      "addToCart": "Add to Cart",
+      "buyNow": "Buy Now",
+      "bulkOrderLink": "Need it in bulk? Order through Bulk Order →",
+      "notFoundMessage": "Product not found.",
+      "notFoundBackLabel": "Back to Product Catalog",
+      "tabs": {
+        "description": "Description",
+        "specs": "Specifications",
+        "care": "Material & Care",
+        "shipping": "Shipping",
+        "reviews": "Reviews"
+      },
+      "specsMaterial": "Material: {material}",
+      "specsCutType": "Cut type: {cutType}",
+      "specsPrintAreas": "Print areas: {areas}",
+      "specsSelectVariantPrompt": "Select a color and size to see specifications.",
+      "reviewsEmptyMessage": "No reviews yet for this product.",
+      "printAreas": {
+        "depan": "Front",
+        "belakang": "Back",
+        "lengan": "Sleeve"
+      }
     }
   }
 }
