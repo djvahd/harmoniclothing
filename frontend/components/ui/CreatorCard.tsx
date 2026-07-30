@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { Star, UserRound } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { CreatorSummary } from "@/services/marketplace";
 
 export function CreatorCardSkeleton() {
@@ -15,6 +18,7 @@ export function CreatorCardSkeleton() {
 
 /** Marketplace creator grid card: avatar, name/bio, design count, rating/sold count, links to the public profile. */
 export default function CreatorCard({ creator }: { creator: CreatorSummary }) {
+  const t = useTranslations("ui.card");
   const hasRating = creator.review_count > 0 && creator.rating_average != null;
   const hasSold = creator.sold_count > 0;
 
@@ -34,7 +38,7 @@ export default function CreatorCard({ creator }: { creator: CreatorSummary }) {
         )}
       </div>
 
-      <p className="font-body text-[12px] text-text-primary">{creator.design_count} desain</p>
+      <p className="font-body text-[12px] text-text-primary">{t("designCount", { count: creator.design_count })}</p>
 
       <div className="flex items-center gap-1 font-body text-[11px] text-text-secondary">
         {hasRating || hasSold ? (
@@ -46,7 +50,7 @@ export default function CreatorCard({ creator }: { creator: CreatorSummary }) {
               </span>
             )}
             {hasRating && hasSold && <span>·</span>}
-            {hasSold && <span>{creator.sold_count} terjual</span>}
+            {hasSold && <span>{t("sold", { count: creator.sold_count ?? 0 })}</span>}
           </>
         ) : (
           <>&nbsp;</>

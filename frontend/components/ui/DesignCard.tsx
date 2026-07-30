@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { Star } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
 import type { Design } from "@/types/product";
@@ -28,6 +31,7 @@ interface DesignCardProps {
 
 /** Marketplace grid card: thumbnail, title, creator name, starting price, rating/sold count, wishlist toggle. */
 export default function DesignCard({ design, startingPrice }: DesignCardProps) {
+  const t = useTranslations("ui.card");
   const thumbnail = storageUrl(design.thumbnail_path);
   const price =
     startingPrice ??
@@ -63,11 +67,13 @@ export default function DesignCard({ design, startingPrice }: DesignCardProps) {
         <p className="line-clamp-2 font-heading text-body-sm font-medium text-text-primary">
           {design.title}
         </p>
-        <p className="line-clamp-1 font-body text-[11px] text-text-secondary">by {design.creator.name}</p>
+        <p className="line-clamp-1 font-body text-[11px] text-text-secondary">
+          {t("byCreator", { name: design.creator.name })}
+        </p>
       </div>
 
       <p className="font-body text-[12px] font-semibold text-text-primary">
-        {price !== undefined ? `Mulai dari ${formatCurrency(price)}` : " "}
+        {price !== undefined ? t("startingFrom", { price: formatCurrency(price) }) : " "}
       </p>
 
       <div className="flex items-center gap-1 font-body text-[11px] text-text-secondary">
@@ -80,7 +86,7 @@ export default function DesignCard({ design, startingPrice }: DesignCardProps) {
               </span>
             )}
             {hasRating && hasSold && <span>·</span>}
-            {hasSold && <span>{design.sold_count} terjual</span>}
+            {hasSold && <span>{t("sold", { count: design.sold_count ?? 0 })}</span>}
           </>
         ) : (
           <>&nbsp;</>

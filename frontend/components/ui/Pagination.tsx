@@ -1,3 +1,7 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+
 export interface PaginationMeta {
   current_page: number;
   per_page: number;
@@ -12,6 +16,7 @@ export default function Pagination({
   meta: PaginationMeta;
   onPageChange: (page: number) => void;
 }) {
+  const t = useTranslations("ui.pagination");
   const totalPages = Math.max(1, Math.ceil(meta.total / meta.per_page));
   if (totalPages <= 1) return null;
 
@@ -20,9 +25,7 @@ export default function Pagination({
 
   return (
     <div className="flex items-center justify-between gap-4 font-body text-sm text-text-secondary">
-      <p>
-        Halaman {meta.current_page} dari {totalPages} ({meta.total} total)
-      </p>
+      <p>{t("pageInfo", { current: meta.current_page, total: totalPages, grandTotal: meta.total })}</p>
       <div className="flex items-center gap-2">
         <button
           type="button"
@@ -30,7 +33,7 @@ export default function Pagination({
           onClick={() => onPageChange(meta.current_page - 1)}
           className="rounded-sm border border-border px-3 py-1.5 font-medium text-text-primary transition-colors hover:border-primary disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Sebelumnya
+          {t("previous")}
         </button>
         <button
           type="button"
@@ -38,7 +41,7 @@ export default function Pagination({
           onClick={() => onPageChange(meta.current_page + 1)}
           className="rounded-sm border border-border px-3 py-1.5 font-medium text-text-primary transition-colors hover:border-primary disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Berikutnya
+          {t("next")}
         </button>
       </div>
     </div>

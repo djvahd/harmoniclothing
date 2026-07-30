@@ -1025,6 +1025,21 @@
     },
     "toaster": {
       "closeAria": "Close notification"
+    },
+    "pagination": {
+      "pageInfo": "Page {current} of {total} ({grandTotal} total)",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "card": {
+      "startingFrom": "Starting from {price}",
+      "sold": "{count} sold",
+      "byCreator": "by {name}",
+      "designCount": "{count} designs"
+    },
+    "quantityStepper": {
+      "decrease": "Decrease quantity",
+      "increase": "Increase quantity"
     }
   },
   "creator": {

@@ -1025,6 +1025,21 @@
     },
     "toaster": {
       "closeAria": "Tutup notifikasi"
+    },
+    "pagination": {
+      "pageInfo": "Halaman {current} dari {total} ({grandTotal} total)",
+      "previous": "Sebelumnya",
+      "next": "Berikutnya"
+    },
+    "card": {
+      "startingFrom": "Mulai dari {price}",
+      "sold": "{count} terjual",
+      "byCreator": "by {name}",
+      "designCount": "{count} desain"
+    },
+    "quantityStepper": {
+      "decrease": "Kurangi jumlah",
+      "increase": "Tambah jumlah"
     }
   },
   "creator": {

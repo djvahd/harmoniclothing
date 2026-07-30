@@ -1,4 +1,7 @@
+"use client";
+
 import { Minus, Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface QuantityStepperProps {
   value: number;
@@ -14,11 +17,12 @@ export default function QuantityStepper({
   min = 1,
   max = 999,
 }: QuantityStepperProps) {
+  const t = useTranslations("ui.quantityStepper");
   return (
     <div className="flex items-center rounded-sm border border-border bg-surface">
       <button
         type="button"
-        aria-label="Kurangi jumlah"
+        aria-label={t("decrease")}
         disabled={value <= min}
         onClick={() => onChange(Math.max(min, value - 1))}
         className="flex size-9 items-center justify-center text-text-primary disabled:opacity-40"
@@ -30,7 +34,7 @@ export default function QuantityStepper({
       </span>
       <button
         type="button"
-        aria-label="Tambah jumlah"
+        aria-label={t("increase")}
         disabled={value >= max}
         onClick={() => onChange(Math.min(max, value + 1))}
         className="flex size-9 items-center justify-center text-text-primary disabled:opacity-40"

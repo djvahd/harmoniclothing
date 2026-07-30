@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { Star } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
 import type { Product } from "@/types/product";
@@ -22,6 +25,7 @@ export function ProductCardSkeleton() {
 
 /** Catalog grid card: thumbnail, name, starting price, rating/sold count, wishlist toggle, links to the product detail page. */
 export default function ProductCard({ product }: { product: Product }) {
+  const t = useTranslations("ui.card");
   const thumbnail = storageUrl(product.variants?.[0]?.mockup_asset_path);
 
   const hasRating = !!product.review_count && product.review_count > 0 && product.rating_average != null;
@@ -52,7 +56,7 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
 
       <p className="font-body text-[12px] font-semibold text-text-primary">
-        Mulai dari {formatCurrency(product.base_price)}
+        {t("startingFrom", { price: formatCurrency(product.base_price) })}
       </p>
 
       <div className="flex items-center gap-1 font-body text-[11px] text-text-secondary">
@@ -65,7 +69,7 @@ export default function ProductCard({ product }: { product: Product }) {
               </span>
             )}
             {hasRating && hasSold && <span>·</span>}
-            {hasSold && <span>{product.sold_count} terjual</span>}
+            {hasSold && <span>{t("sold", { count: product.sold_count ?? 0 })}</span>}
           </>
         ) : (
           <>&nbsp;</>
