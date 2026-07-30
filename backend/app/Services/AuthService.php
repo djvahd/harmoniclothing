@@ -45,7 +45,7 @@ class AuthService
     {
         if (! Auth::attempt($credentials)) {
             throw ValidationException::withMessages([
-                'email' => ['Email atau password salah.'],
+                'email' => [__('messages.auth.invalid_credentials')],
             ]);
         }
 
@@ -56,7 +56,7 @@ class AuthService
             Auth::guard('web')->logout();
 
             throw ValidationException::withMessages([
-                'email' => ['Akun belum verifikasi email. Silakan cek email Anda atau kirim ulang tautan verifikasi.'],
+                'email' => [__('messages.auth.email_not_verified')],
             ]);
         }
 

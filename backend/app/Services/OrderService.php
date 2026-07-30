@@ -37,7 +37,7 @@ class OrderService
     {
         if ($order->status !== 'menunggu_approval') {
             throw ValidationException::withMessages([
-                'status' => ['Pesanan hanya dapat dibatalkan selama status Menunggu Approval.'],
+                'status' => [__('messages.order.cancel_invalid_status')],
             ]);
         }
 
@@ -61,7 +61,7 @@ class OrderService
     {
         if ($order->status !== 'menunggu_konfirmasi') {
             throw ValidationException::withMessages([
-                'status' => ['Pesanan hanya dapat dikonfirmasi selama status Menunggu Konfirmasi.'],
+                'status' => [__('messages.order.confirm_invalid_status')],
             ]);
         }
 
@@ -117,7 +117,7 @@ class OrderService
     {
         if ($order->status !== 'menunggu_approval') {
             throw ValidationException::withMessages([
-                'status' => ['Pesanan hanya dapat dimasukkan ke produksi selama status Menunggu Approval.'],
+                'status' => [__('messages.order.production_invalid_status')],
             ]);
         }
 
@@ -137,7 +137,7 @@ class OrderService
     public function reject(Order $order, User $admin, string $reason): Order
     {
         if ($order->status !== 'menunggu_approval') {
-            throw new ConflictHttpException('Pesanan sudah tidak dalam status Menunggu Approval.');
+            throw new ConflictHttpException(__('messages.order.reject_invalid_status'));
         }
 
         $order->update(['status' => 'ditolak', 'rejection_reason' => $reason]);
@@ -168,13 +168,13 @@ class OrderService
     {
         if ($order->status !== 'diproses_produksi') {
             throw ValidationException::withMessages([
-                'status' => ['Pengiriman hanya dapat dibuat selama status Diproses Produksi.'],
+                'status' => [__('messages.order.shipment_invalid_status')],
             ]);
         }
 
         if ($order->shipment()->exists()) {
             throw ValidationException::withMessages([
-                'order' => ['Pesanan ini sudah memiliki data pengiriman.'],
+                'order' => [__('messages.order.shipment_already_exists')],
             ]);
         }
 

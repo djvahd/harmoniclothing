@@ -52,10 +52,10 @@ class CreatorVerificationRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'guardian_name.required' => 'Nama wali wajib diisi untuk Creator di bawah 18 tahun.',
-            'guardian_id_number.required' => 'Nomor KTP wali wajib diisi untuk Creator di bawah 18 tahun.',
-            'guardian_consent.required' => 'Persetujuan wali wajib diberikan untuk Creator di bawah 18 tahun.',
-            'guardian_consent.accepted' => 'Persetujuan wali wajib diberikan untuk Creator di bawah 18 tahun.',
+            'guardian_name.required' => __('messages.creator.guardian_name_required'),
+            'guardian_id_number.required' => __('messages.creator.guardian_id_required'),
+            'guardian_consent.required' => __('messages.creator.guardian_consent_required'),
+            'guardian_consent.accepted' => __('messages.creator.guardian_consent_required'),
         ];
     }
 }

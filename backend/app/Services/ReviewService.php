@@ -14,7 +14,7 @@ class ReviewService
     {
         if ($order->status !== 'selesai') {
             throw ValidationException::withMessages([
-                'status' => ['Rating hanya dapat diberikan setelah pesanan Selesai.'],
+                'status' => [__('messages.review.not_completed')],
             ]);
         }
 
@@ -22,13 +22,13 @@ class ReviewService
 
         if (! $item) {
             throw ValidationException::withMessages([
-                'order_item_id' => ['Item tidak ditemukan pada pesanan ini.'],
+                'order_item_id' => [__('messages.review.item_not_found')],
             ]);
         }
 
         if ($item->review) {
             throw ValidationException::withMessages([
-                'order_item_id' => ['Item ini sudah direview sebelumnya.'],
+                'order_item_id' => [__('messages.review.already_reviewed')],
             ]);
         }
 

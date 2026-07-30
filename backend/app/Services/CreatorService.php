@@ -33,7 +33,7 @@ class CreatorService
     {
         if ($user->creatorProfile) {
             throw ValidationException::withMessages([
-                'user' => ['Akun ini sudah mengajukan diri sebagai Creator.'],
+                'user' => [__('messages.creator.already_applied')],
             ]);
         }
 
@@ -59,7 +59,7 @@ class CreatorService
 
         if (! $profile) {
             throw ValidationException::withMessages([
-                'user' => ['Ajukan diri sebagai Creator terlebih dahulu.'],
+                'user' => [__('messages.creator.not_applied_yet')],
             ]);
         }
 
@@ -108,7 +108,7 @@ class CreatorService
     {
         if ($profile->status !== 'menunggu_approval') {
             throw ValidationException::withMessages([
-                'status' => ['Pengajuan Creator ini tidak sedang menunggu approval.'],
+                'status' => [__('messages.creator.not_pending_approval')],
             ]);
         }
 
@@ -136,7 +136,7 @@ class CreatorService
     {
         if ($profile->status !== 'menunggu_approval') {
             throw ValidationException::withMessages([
-                'status' => ['Pengajuan Creator ini tidak sedang menunggu approval.'],
+                'status' => [__('messages.creator.not_pending_approval')],
             ]);
         }
 

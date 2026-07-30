@@ -82,7 +82,7 @@ class CheckoutService
         $inactive = $variants->first(fn (ProductVariant $variant) => ! $variant->product->is_active);
         if ($inactive) {
             throw ValidationException::withMessages([
-                'items' => ['Produk ini sudah tidak tersedia.'],
+                'items' => [__('messages.checkout.product_unavailable')],
             ]);
         }
 
@@ -91,7 +91,7 @@ class CheckoutService
 
         if ($bulkUnitPrice === null) {
             throw ValidationException::withMessages([
-                'items' => ['Kuantitas tidak memenuhi tingkat harga Bulk Order manapun.'],
+                'items' => [__('messages.checkout.bulk_quantity_no_tier')],
             ]);
         }
 
@@ -140,7 +140,7 @@ class CheckoutService
 
         if ($unavailable) {
             throw ValidationException::withMessages([
-                'cart_item_ids' => ['Salah satu item di keranjang sudah tidak tersedia.'],
+                'cart_item_ids' => [__('messages.checkout.cart_item_unavailable')],
             ]);
         }
 

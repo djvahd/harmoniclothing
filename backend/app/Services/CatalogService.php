@@ -126,7 +126,7 @@ class CatalogService
 
         if ($exists) {
             throw ValidationException::withMessages([
-                'color' => ['Kombinasi warna/ukuran/potongan ini sudah ada untuk produk ini.'],
+                'color' => [__('messages.catalog.variant_combination_exists')],
             ]);
         }
     }

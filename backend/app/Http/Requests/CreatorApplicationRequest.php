@@ -25,8 +25,8 @@ class CreatorApplicationRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'terms_accepted.required' => 'Anda harus menyetujui Syarat & Ketentuan Creator.',
-            'terms_accepted.accepted' => 'Anda harus menyetujui Syarat & Ketentuan Creator.',
+            'terms_accepted.required' => __('messages.creator.terms_required'),
+            'terms_accepted.accepted' => __('messages.creator.terms_required'),
         ];
     }
 }

@@ -57,7 +57,7 @@ class CreatorDesignService
     {
         if ($design->status !== 'ditolak') {
             throw ValidationException::withMessages([
-                'status' => ['Desain hanya dapat direvisi selama status Ditolak.'],
+                'status' => [__('messages.design.revise_invalid_status')],
             ]);
         }
 
@@ -134,7 +134,7 @@ class CreatorDesignService
     {
         if ($design->status !== 'menunggu_approval') {
             throw ValidationException::withMessages([
-                'status' => ['Desain ini tidak sedang menunggu approval.'],
+                'status' => [__('messages.design.not_pending_approval')],
             ]);
         }
 
@@ -162,7 +162,7 @@ class CreatorDesignService
     {
         if ($design->status !== 'menunggu_approval') {
             throw ValidationException::withMessages([
-                'status' => ['Desain ini tidak sedang menunggu approval.'],
+                'status' => [__('messages.design.not_pending_approval')],
             ]);
         }
 

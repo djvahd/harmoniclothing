@@ -58,7 +58,7 @@ class CreatorDesignController extends Controller
 
         if ($unconfirmed !== []) {
             return response()->json([
-                'message' => 'Masih ada jenis apparel yang belum dikonfirmasi.',
+                'message' => __('messages.design.unconfirmed_apparel'),
                 'unconfirmed_product_ids' => $unconfirmed,
             ], 422);
         }

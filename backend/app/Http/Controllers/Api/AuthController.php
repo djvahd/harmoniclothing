@@ -66,20 +66,20 @@ class AuthController extends Controller
     public function verifyEmail(Request $request, int $id, string $hash): JsonResponse
     {
         if (! URL::hasValidSignature($request)) {
-            abort(403, 'Tautan verifikasi tidak valid atau sudah kedaluwarsa.');
+            abort(403, __('messages.auth.verification_link_expired'));
         }
 
         $user = User::findOrFail($id);
 
         if (! hash_equals(sha1($user->getEmailForVerification()), $hash)) {
-            abort(403, 'Tautan verifikasi tidak valid.');
+            abort(403, __('messages.auth.verification_link_invalid'));
         }
 
         if (! $user->hasVerifiedEmail()) {
             $user->markEmailAsVerified();
         }
 
-        return response()->json(['data' => null, 'message' => 'Email berhasil diverifikasi.']);
+        return response()->json(['data' => null, 'message' => __('messages.auth.email_verified')]);
     }
 
     /** POST /auth/verify-email/resend — lihat AuthService::resendVerification. */
@@ -91,7 +91,7 @@ class AuthController extends Controller
 
         return response()->json([
             'data' => null,
-            'message' => 'Jika email terdaftar dan belum terverifikasi, tautan verifikasi telah dikirim.',
+            'message' => __('messages.auth.verification_resent'),
         ]);
     }
 
@@ -105,7 +105,7 @@ class AuthController extends Controller
         // Balasan generik selalu sama baik email terdaftar atau tidak (cegah user enumeration).
         return response()->json([
             'data' => null,
-            'message' => 'Jika email terdaftar, tautan reset password telah dikirim.',
+            'message' => __('messages.auth.reset_link_sent'),
         ]);
     }
 
@@ -131,6 +131,6 @@ class AuthController extends Controller
             ]);
         }
 
-        return response()->json(['data' => null, 'message' => 'Password berhasil diubah.']);
+        return response()->json(['data' => null, 'message' => __('messages.auth.password_reset_success')]);
     }
 }

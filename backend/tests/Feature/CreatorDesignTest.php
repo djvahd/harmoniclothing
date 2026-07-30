@@ -69,7 +69,11 @@ class CreatorDesignTest extends TestCase
         $product = Product::factory()->create();
         $design->products()->attach($product->id); // not confirmed
 
-        $response = $this->actingAs($creator)->postJson("/api/creator/designs/{$design->id}/submit");
+        // Explicit ?lang=id: Symfony's test Request::create() factory injects a
+        // synthetic default "Accept-Language: en-us,en;q=0.5" header when none
+        // is set (a testing-only artifact — real requests never do this), which
+        // would otherwise silently resolve SetLocaleFromRequest to "en" here.
+        $response = $this->actingAs($creator)->postJson("/api/creator/designs/{$design->id}/submit?lang=id");
 
         $response->assertStatus(422)
             ->assertJson([
