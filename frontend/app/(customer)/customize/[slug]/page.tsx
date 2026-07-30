@@ -4,6 +4,7 @@ import { Suspense, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Upload } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Tag from "@/components/ui/Tag";
 import QuantityStepper from "@/components/ui/QuantityStepper";
 import PriceSummaryRow from "@/components/ui/PriceSummaryRow";
@@ -19,6 +20,7 @@ import LoadingState from "@/components/ui/LoadingState";
 import { toast } from "@/store/toast-store";
 
 function ProductEditorForm() {
+  const t = useTranslations("customer.customize");
   const params = useParams<{ slug: string }>();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -69,7 +71,7 @@ function ProductEditorForm() {
       const { data } = await uploadDesignFile(file);
       setUploadedPath(data.path);
     } catch (err) {
-      setError(getErrorMessage(err, "Gagal mengunggah file."));
+      setError(getErrorMessage(err, t("uploadError")));
     } finally {
       setUploading(false);
     }
@@ -77,7 +79,7 @@ function ProductEditorForm() {
 
   async function handleAddToCart() {
     if (!selectedVariant) {
-      setError("Pilih warna dan ukuran terlebih dahulu.");
+      setError(t("selectVariantError"));
       return;
     }
     setError(null);
@@ -91,10 +93,10 @@ function ProductEditorForm() {
         custom_design_file_path: uploadedPath ?? undefined,
       });
       await invalidateCart();
-      toast("Ditambahkan ke keranjang.", "success");
+      toast(t("addToCartSuccess"), "success");
       router.push("/cart");
     } catch (err) {
-      setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
+      setError(getErrorMessage(err, t("submitError")));
     } finally {
       setSubmitting(false);
     }
@@ -108,9 +110,9 @@ function ProductEditorForm() {
     <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-8 md:flex-row md:px-20">
       <div className="flex flex-1 flex-col gap-3">
         <div className="flex gap-4 font-body text-sm font-medium text-text-secondary">
-          <span>Depan</span>
-          <span>Belakang</span>
-          <span>Samping</span>
+          <span>{t("viewFront")}</span>
+          <span>{t("viewBack")}</span>
+          <span>{t("viewSide")}</span>
         </div>
         <div
           className="relative h-[500px] w-full overflow-hidden rounded-md"
@@ -123,19 +125,16 @@ function ProductEditorForm() {
             <Image src={previewImage} alt={product.name} fill className="object-contain p-10" />
           )}
         </div>
-        <p className="font-body text-xs text-text-secondary">
-          Preview 3D real-time — update otomatis saat warna/desain diubah (belum tersedia,
-          menampilkan mockup foto sesuai warna terpilih).
-        </p>
+        <p className="font-body text-xs text-text-secondary">{t("previewNote")}</p>
       </div>
 
       <div className="flex w-full flex-col gap-6 md:w-[480px]">
         <h1 className="font-heading text-h3 font-semibold text-text-primary">
-          Kustomisasi {product.name}
+          {t("title")} {product.name}
         </h1>
 
         <div className="flex flex-col gap-2">
-          <p className="font-body text-sm font-medium text-text-primary">Pilih Warna</p>
+          <p className="font-body text-sm font-medium text-text-primary">{t("chooseColor")}</p>
           <div className="flex gap-2">
             {colors.map((c) => (
               <button
@@ -157,7 +156,7 @@ function ProductEditorForm() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <p className="font-body text-sm font-medium text-text-primary">Pilih Ukuran</p>
+          <p className="font-body text-sm font-medium text-text-primary">{t("chooseSize")}</p>
           <div className="flex flex-wrap gap-2">
             {sizesForColor.map((s) => (
               <button key={s} onClick={() => setSize(s)}>
@@ -178,22 +177,22 @@ function ProductEditorForm() {
             </div>
             <div className="flex flex-col">
               <p className="font-body text-sm font-semibold text-text-primary">{design.title}</p>
-              <p className="font-body text-xs text-text-secondary">by {design.creator.name}</p>
+              <p className="font-body text-xs text-text-secondary">
+                {t("byCreator", { name: design.creator.name })}
+              </p>
             </div>
           </div>
         ) : (
           <div className="flex flex-col gap-2">
-            <p className="font-body text-sm font-medium text-text-primary">
-              Upload Desain Sendiri
-            </p>
+            <p className="font-body text-sm font-medium text-text-primary">{t("uploadLabel")}</p>
             <label className="flex cursor-pointer flex-col items-center gap-2 rounded-sm border border-dashed border-border py-6 text-center">
               <Upload className="size-5 text-text-secondary" />
               <span className="font-body text-xs text-text-secondary">
                 {uploading
-                  ? "Mengunggah..."
+                  ? t("uploadStatusUploading")
                   : uploadedPath
-                    ? "File terunggah - klik untuk ganti"
-                    : "Klik atau drag file di sini (PNG/JPG, maks 20MB)"}
+                    ? t("uploadStatusUploaded")
+                    : t("uploadStatusIdle")}
               </span>
               <input type="file" accept="image/png,image/jpeg" className="hidden" onChange={handleUpload} />
             </label>
@@ -201,29 +200,29 @@ function ProductEditorForm() {
         )}
 
         <div className="flex items-center justify-between">
-          <p className="font-body text-sm font-medium text-text-primary">Jumlah</p>
+          <p className="font-body text-sm font-medium text-text-primary">{t("quantityLabel")}</p>
           <QuantityStepper value={quantity} onChange={setQuantity} />
         </div>
 
         <div className="flex flex-col gap-2">
-          <p className="font-body text-sm font-medium text-text-primary">Catatan (opsional)</p>
+          <p className="font-body text-sm font-medium text-text-primary">{t("notesLabel")}</p>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
             className="w-full rounded-sm border border-border bg-surface px-3 py-2.5 font-body text-sm text-text-primary outline-none"
-            placeholder="Permintaan revisi/khusus untuk produk ini..."
+            placeholder={t("notesPlaceholder")}
           />
         </div>
 
         <div className="border-t border-border pt-4">
-          <PriceSummaryRow label="Harga Produk" amount={unitPrice} />
-          <PriceSummaryRow label="Total" amount={total} emphasis />
+          <PriceSummaryRow label={t("productPrice")} amount={unitPrice} />
+          <PriceSummaryRow label={t("total")} amount={total} emphasis />
         </div>
 
         {error && <p className="font-body text-xs text-danger">{error}</p>}
         <Button fullWidth loading={submitting} onClick={handleAddToCart}>
-          Tambah ke Keranjang
+          {t("addToCart")}
         </Button>
       </div>
     </div>

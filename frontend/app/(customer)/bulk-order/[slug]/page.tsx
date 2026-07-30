@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import clsx from "clsx";
 import { Upload } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Button from "@/components/ui/Button";
 import QuantityStepper from "@/components/ui/QuantityStepper";
 import PriceSummaryRow from "@/components/ui/PriceSummaryRow";
@@ -22,6 +23,7 @@ import { getErrorMessage } from "@/lib/api";
 
 /** Flow 7 — Pemesanan Bulk Order: pick a design + quantity per size across every variant of one product, priced by ONE tier from the combined total (BR-012). */
 function BulkOrderForm() {
+  const t = useTranslations("customer.bulkOrder");
   const params = useParams<{ slug: string }>();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -59,7 +61,7 @@ function BulkOrderForm() {
       const { data } = await uploadDesignFile(file);
       setUploadedPath(data.path);
     } catch (err) {
-      setError(getErrorMessage(err, "Gagal mengunggah file."));
+      setError(getErrorMessage(err, t("uploadError")));
     } finally {
       setUploading(false);
     }
@@ -80,11 +82,11 @@ function BulkOrderForm() {
       });
 
     if (items.length === 0) {
-      setError("Isi kuantitas minimal satu ukuran.");
+      setError(t("noQuantityError"));
       return;
     }
     if (!currentTier) {
-      setError("Total kuantitas belum memenuhi tingkat harga Bulk Order manapun.");
+      setError(t("noTierError"));
       return;
     }
     setError(null);
@@ -107,9 +109,9 @@ function BulkOrderForm() {
   if (!product) {
     return (
       <DetailNotFound
-        message="Produk tidak ditemukan."
+        message={t("productNotFound")}
         backHref="/catalog"
-        backLabel="Kembali ke Katalog Produk"
+        backLabel={t("backToCatalog")}
       />
     );
   }
@@ -119,12 +121,9 @@ function BulkOrderForm() {
       <div className="flex flex-1 flex-col gap-6">
         <div>
           <h1 className="font-heading text-h3 font-semibold text-text-primary">
-            Bulk Order — {product.name}
+            {t("title")} — {product.name}
           </h1>
-          <p className="font-body text-sm text-text-secondary">
-            Isi kuantitas untuk tiap kombinasi warna/ukuran. Harga per-unit ditentukan dari TOTAL
-            kuantitas seluruh kombinasi (BR-012), bukan per-ukuran.
-          </p>
+          <p className="font-body text-sm text-text-secondary">{t("subtitle")}</p>
         </div>
 
         {design ? (
@@ -141,22 +140,22 @@ function BulkOrderForm() {
             </div>
             <div className="flex flex-col">
               <p className="font-body text-sm font-semibold text-text-primary">{design.title}</p>
-              <p className="font-body text-xs text-text-secondary">by {design.creator.name}</p>
+              <p className="font-body text-xs text-text-secondary">
+                {t("byCreator", { name: design.creator.name })}
+              </p>
             </div>
           </div>
         ) : (
           <div className="flex flex-col gap-2">
-            <p className="font-body text-sm font-medium text-text-primary">
-              Upload Desain Sendiri (opsional)
-            </p>
+            <p className="font-body text-sm font-medium text-text-primary">{t("uploadLabel")}</p>
             <label className="flex cursor-pointer flex-col items-center gap-2 rounded-sm border border-dashed border-border py-5 text-center transition-colors hover:border-primary/50">
               <Upload className="size-5 text-text-secondary" />
               <span className="font-body text-xs text-text-secondary">
                 {uploading
-                  ? "Mengunggah..."
+                  ? t("uploadStatusUploading")
                   : uploadedPath
-                    ? "File terunggah — klik untuk ganti"
-                    : "Klik atau drag file di sini (PNG/JPG, maks 20MB)"}
+                    ? t("uploadStatusUploaded")
+                    : t("uploadStatusIdle")}
               </span>
               <input
                 type="file"
@@ -169,7 +168,7 @@ function BulkOrderForm() {
               href="/marketplace"
               className="font-body text-sm font-medium text-primary transition-colors hover:underline"
             >
-              atau pilih desain siap pakai dari Lapak Desain →
+              {t("marketplaceLink")}
             </Link>
           </div>
         )}
@@ -195,50 +194,50 @@ function BulkOrderForm() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <p className="font-body text-sm font-medium text-text-primary">Catatan (opsional)</p>
+          <p className="font-body text-sm font-medium text-text-primary">{t("notesLabel")}</p>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
             className="w-full rounded-sm border border-border bg-surface px-3 py-2.5 font-body text-sm text-text-primary outline-none"
-            placeholder="Permintaan revisi/khusus untuk produk ini..."
+            placeholder={t("notesPlaceholder")}
           />
         </div>
       </div>
 
       <div className="flex w-full flex-col gap-4 rounded-md border border-border bg-surface p-5 md:w-[320px]">
-        <p className="font-heading text-lg font-semibold text-text-primary">Tingkat Harga Bulk</p>
+        <p className="font-heading text-lg font-semibold text-text-primary">{t("priceTiers")}</p>
         <div className="flex flex-col gap-1.5">
-          {tiers.map((t) => (
+          {tiers.map((tier) => (
             <div
-              key={t.min_qty}
+              key={tier.min_qty}
               className={clsx(
                 "flex items-center justify-between rounded-sm px-2.5 py-1.5 font-body text-sm",
-                currentTier?.min_qty === t.min_qty
+                currentTier?.min_qty === tier.min_qty
                   ? "bg-accent/10 font-semibold text-primary"
                   : "text-text-secondary",
               )}
             >
               <span>
-                {t.min_qty}
-                {t.max_qty ? `–${t.max_qty}` : "+"} pcs
+                {tier.min_qty}
+                {tier.max_qty ? `–${tier.max_qty}` : "+"} pcs
               </span>
-              <span>{formatCurrency(t.price_per_unit)}/pcs</span>
+              <span>{formatCurrency(tier.price_per_unit)}/pcs</span>
             </div>
           ))}
         </div>
 
         <div className="flex flex-col gap-1 border-t border-border pt-3">
           <div className="flex items-center justify-between font-body text-sm">
-            <p className="text-text-secondary">Total Kuantitas</p>
+            <p className="text-text-secondary">{t("totalQuantity")}</p>
             <p className="font-semibold text-text-primary">{totalQuantity} pcs</p>
           </div>
-          <PriceSummaryRow label="Total Harga" amount={subtotal} emphasis />
+          <PriceSummaryRow label={t("totalPrice")} amount={subtotal} emphasis />
         </div>
 
         {error && <p className="font-body text-xs text-danger">{error}</p>}
         <Button fullWidth onClick={handleContinue}>
-          Lanjut ke Checkout Bulk
+          {t("continueToBulkCheckout")}
         </Button>
       </div>
     </div>

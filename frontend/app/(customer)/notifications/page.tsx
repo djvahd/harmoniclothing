@@ -2,6 +2,7 @@
 
 import clsx from "clsx";
 import { Bell } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import AccountSidebar from "@/components/layout/AccountSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import LoadingState from "@/components/ui/LoadingState";
@@ -10,6 +11,8 @@ import { markNotificationRead } from "@/services/notifications";
 import { useNotifications, invalidateNotifications } from "@/hooks/useNotifications";
 
 export default function NotifikasiPage() {
+  const t = useTranslations("customer.notifications");
+  const locale = useLocale();
   const { notifications, isLoading } = useNotifications();
 
   async function handleClick(id: number, isRead: boolean) {
@@ -21,11 +24,11 @@ export default function NotifikasiPage() {
   return (
     <SidebarPageShell sidebar={<AccountSidebar />}>
       <div className="flex flex-col gap-6">
-        <h1 className="font-heading text-h3 font-semibold text-text-primary">Notifikasi</h1>
+        <h1 className="font-heading text-h3 font-semibold text-text-primary">{t("title")}</h1>
 
         {isLoading && <LoadingState rows={4} />}
         {!isLoading && notifications.length === 0 && (
-          <EmptyState icon={Bell} title="Belum ada notifikasi." />
+          <EmptyState icon={Bell} title={t("empty")} />
         )}
 
         <div className="flex flex-col gap-2">
@@ -45,7 +48,7 @@ export default function NotifikasiPage() {
                 <p className="font-body text-sm font-semibold text-text-primary">{n.title}</p>
                 <p className="font-body text-sm text-text-secondary">{n.body}</p>
                 <p className="font-body text-xs text-text-secondary">
-                  {new Date(n.created_at).toLocaleString("id-ID")}
+                  {new Date(n.created_at).toLocaleString(locale === "id" ? "id-ID" : "en-US")}
                 </p>
               </div>
             </button>
