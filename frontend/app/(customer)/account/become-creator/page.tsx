@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Award, Palette, Wallet } from "lucide-react";
+import { useTranslations } from "next-intl";
 import AccountSidebar from "@/components/layout/AccountSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import FeatureCard from "@/components/ui/FeatureCard";
@@ -12,6 +13,8 @@ import { becomeCreator } from "@/services/creator";
 import { getErrorMessage } from "@/lib/api";
 
 export default function AjukanUpgradeCreatorPage() {
+  const t = useTranslations("customer.becomeCreator");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const [brandName, setBrandName] = useState("");
   const [bio, setBio] = useState("");
@@ -33,7 +36,7 @@ export default function AjukanUpgradeCreatorPage() {
       });
       router.push("/creator/verification");
     } catch (err) {
-      setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
+      setError(getErrorMessage(err, tCommon("errorGeneric")));
     } finally {
       setLoading(false);
     }
@@ -42,39 +45,35 @@ export default function AjukanUpgradeCreatorPage() {
   return (
     <SidebarPageShell sidebar={<AccountSidebar />}>
       <div className="flex max-w-2xl flex-col gap-6">
-        <h1 className="font-heading text-h3 font-semibold text-text-primary">
-          Ajukan Upgrade Creator
-        </h1>
-        <p className="font-body text-sm text-text-secondary">
-          Jadi Kreator di Harmoni Clothing dan dapatkan komisi dari setiap penjualan desainmu.
-        </p>
+        <h1 className="font-heading text-h3 font-semibold text-text-primary">{t("title")}</h1>
+        <p className="font-body text-sm text-text-secondary">{t("subtitle")}</p>
 
         <div className="flex flex-wrap gap-4">
-          <FeatureCard icon={Palette} title="Upload Desain Bebas" description="Unggah karya orisinalmu kapan saja." />
-          <FeatureCard icon={Award} title="Terpajang di Lapak Desain" description="Desainmu bisa ditemukan pembeli di seluruh Indonesia." />
-          <FeatureCard icon={Wallet} title="Komisi Otomatis" description="Dapatkan komisi setiap desainmu terjual." />
+          <FeatureCard icon={Palette} title={t("benefits.upload.title")} description={t("benefits.upload.description")} />
+          <FeatureCard icon={Award} title={t("benefits.featured.title")} description={t("benefits.featured.description")} />
+          <FeatureCard icon={Wallet} title={t("benefits.commission.title")} description={t("benefits.commission.description")} />
         </div>
 
         <form onSubmit={handleApply} className="flex flex-col gap-4 rounded-md border border-border bg-surface p-5">
           <Input
-            label="Nama Brand/Toko (opsional)"
-            placeholder="Contoh: Studio Rangga"
+            label={t("fields.brandName")}
+            placeholder={t("fields.brandNamePlaceholder")}
             value={brandName}
             onChange={(e) => setBrandName(e.target.value)}
           />
           <div className="flex flex-col gap-1.5">
-            <label className="font-body text-xs font-medium text-text-secondary">Bio Singkat (opsional)</label>
+            <label className="font-body text-xs font-medium text-text-secondary">{t("fields.bio")}</label>
             <textarea
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               rows={3}
               maxLength={500}
-              placeholder="Ceritakan singkat tentang dirimu sebagai Creator."
+              placeholder={t("fields.bioPlaceholder")}
               className="w-full rounded-sm border border-border bg-surface px-3 py-2.5 font-body text-sm text-text-primary outline-none"
             />
           </div>
           <Input
-            label="Link Portfolio/Sosial Media (opsional)"
+            label={t("fields.portfolioUrl")}
             placeholder="https://instagram.com/namamu"
             type="url"
             value={portfolioUrl}
@@ -89,18 +88,15 @@ export default function AjukanUpgradeCreatorPage() {
               className="mt-0.5"
               required
             />
-            Saya menyetujui Syarat & Ketentuan Creator (komisi dan kebijakan konten desain).
+            {t("termsCheckbox")}
           </label>
 
           {error && <p className="font-body text-xs text-danger">{error}</p>}
           <Button type="submit" loading={loading}>
-            Ajukan Sekarang
+            {t("submit")}
           </Button>
         </form>
-        <p className="font-body text-xs text-text-secondary">
-          Setelah pengajuan, kamu akan diarahkan untuk melengkapi verifikasi identitas sebelum
-          akun Kreator diaktifkan oleh tim kami.
-        </p>
+        <p className="font-body text-xs text-text-secondary">{t("footerNote")}</p>
       </div>
     </SidebarPageShell>
   );

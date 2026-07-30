@@ -506,6 +506,53 @@
       "email": "Email",
       "saveSuccess": "Changes saved successfully.",
       "saveChanges": "Save Changes"
+    },
+    "addresses": {
+      "title": "Address Book",
+      "addAddress": "Add Address",
+      "fields": {
+        "label": "Label (e.g. Home)",
+        "recipientName": "Recipient Name",
+        "phone": "Phone Number",
+        "province": "Province",
+        "city": "City/Regency",
+        "district": "District",
+        "postalCode": "Postal Code",
+        "addressLine": "Full Address"
+      },
+      "setAsDefault": "Set as default address",
+      "saveAddress": "Save Address",
+      "empty": "No saved addresses yet.",
+      "defaultBadge": "Default",
+      "delete": "Delete",
+      "saveSuccess": "Address saved successfully.",
+      "deleteSuccess": "Address deleted successfully."
+    },
+    "wishlist": {
+      "title": "Wishlist",
+      "empty": "No items in your wishlist yet.",
+      "removeAria": "Remove from wishlist",
+      "unavailable": "Unavailable",
+      "browseCatalog": "Browse Catalog"
+    },
+    "becomeCreator": {
+      "title": "Apply to Become a Creator",
+      "subtitle": "Become a Creator on Harmoni Clothing and earn a commission on every design you sell.",
+      "benefits": {
+        "upload": { "title": "Unlimited Design Uploads", "description": "Upload your original work anytime." },
+        "featured": { "title": "Featured in the Design Marketplace", "description": "Your designs can be found by buyers across Indonesia." },
+        "commission": { "title": "Automatic Commission", "description": "Earn a commission every time your design sells." }
+      },
+      "fields": {
+        "brandName": "Brand/Store Name (optional)",
+        "brandNamePlaceholder": "e.g. Studio Rangga",
+        "bio": "Short Bio (optional)",
+        "bioPlaceholder": "Tell us a bit about yourself as a Creator.",
+        "portfolioUrl": "Portfolio/Social Media Link (optional)"
+      },
+      "termsCheckbox": "I agree to the Creator Terms & Conditions (commission and design content policy).",
+      "submit": "Apply Now",
+      "footerNote": "After applying, you'll be guided through identity verification before your Creator account is activated by our team."
     }
   }
 }

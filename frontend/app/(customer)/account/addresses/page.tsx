@@ -3,6 +3,7 @@
 import { useState } from "react";
 import useSWR, { mutate } from "swr";
 import { MapPin, Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 import AccountSidebar from "@/components/layout/AccountSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Badge from "@/components/ui/Badge";
@@ -27,6 +28,7 @@ const EMPTY_FORM = {
 };
 
 export default function AddressBookPage() {
+  const t = useTranslations("customer.addresses");
   const { data, isLoading } = useSWR("/account/addresses", getAddresses);
   const addresses = data?.data ?? [];
   const [showForm, setShowForm] = useState(false);
@@ -45,7 +47,7 @@ export default function AddressBookPage() {
       await mutate("/account/addresses");
       setForm(EMPTY_FORM);
       setShowForm(false);
-      toast("Alamat berhasil disimpan.", "success");
+      toast(t("saveSuccess"), "success");
     } finally {
       setSaving(false);
     }
@@ -54,16 +56,16 @@ export default function AddressBookPage() {
   async function handleDelete(id: number) {
     await deleteAddress(id);
     mutate("/account/addresses");
-    toast("Alamat berhasil dihapus.", "success");
+    toast(t("deleteSuccess"), "success");
   }
 
   return (
     <SidebarPageShell sidebar={<AccountSidebar />}>
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between">
-          <h1 className="font-heading text-h3 font-semibold text-text-primary">Address Book</h1>
+          <h1 className="font-heading text-h3 font-semibold text-text-primary">{t("title")}</h1>
           <Button onClick={() => setShowForm((v) => !v)}>
-            <Plus className="size-4" /> Tambah Alamat
+            <Plus className="size-4" /> {t("addAddress")}
           </Button>
         </div>
 
@@ -73,32 +75,32 @@ export default function AddressBookPage() {
             className="flex flex-col gap-4 rounded-md border border-border bg-surface p-5"
           >
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <Input label="Label (mis. Rumah)" value={form.label} onChange={(e) => update("label", e.target.value)} required />
-              <Input label="Nama Penerima" value={form.recipient_name} onChange={(e) => update("recipient_name", e.target.value)} required />
-              <Input label="No. Telepon" value={form.phone} onChange={(e) => update("phone", e.target.value)} required />
-              <Input label="Provinsi" value={form.province} onChange={(e) => update("province", e.target.value)} required />
-              <Input label="Kota/Kabupaten" value={form.city} onChange={(e) => update("city", e.target.value)} required />
-              <Input label="Kecamatan" value={form.district} onChange={(e) => update("district", e.target.value)} required />
-              <Input label="Kode Pos" value={form.postal_code} onChange={(e) => update("postal_code", e.target.value)} required />
+              <Input label={t("fields.label")} value={form.label} onChange={(e) => update("label", e.target.value)} required />
+              <Input label={t("fields.recipientName")} value={form.recipient_name} onChange={(e) => update("recipient_name", e.target.value)} required />
+              <Input label={t("fields.phone")} value={form.phone} onChange={(e) => update("phone", e.target.value)} required />
+              <Input label={t("fields.province")} value={form.province} onChange={(e) => update("province", e.target.value)} required />
+              <Input label={t("fields.city")} value={form.city} onChange={(e) => update("city", e.target.value)} required />
+              <Input label={t("fields.district")} value={form.district} onChange={(e) => update("district", e.target.value)} required />
+              <Input label={t("fields.postalCode")} value={form.postal_code} onChange={(e) => update("postal_code", e.target.value)} required />
             </div>
-            <Input label="Alamat Lengkap" value={form.address_line} onChange={(e) => update("address_line", e.target.value)} required />
+            <Input label={t("fields.addressLine")} value={form.address_line} onChange={(e) => update("address_line", e.target.value)} required />
             <label className="flex items-center gap-2 font-body text-sm text-text-secondary">
               <input
                 type="checkbox"
                 checked={form.is_default}
                 onChange={(e) => update("is_default", e.target.checked)}
               />
-              Jadikan alamat utama
+              {t("setAsDefault")}
             </label>
             <Button type="submit" loading={saving}>
-              Simpan Alamat
+              {t("saveAddress")}
             </Button>
           </form>
         )}
 
         {isLoading && <LoadingState rows={2} />}
         {!isLoading && addresses.length === 0 && (
-          <EmptyState icon={MapPin} title="Belum ada alamat tersimpan." />
+          <EmptyState icon={MapPin} title={t("empty")} />
         )}
         <div className="flex flex-col gap-3">
           {addresses.map((address) => (
@@ -106,7 +108,7 @@ export default function AddressBookPage() {
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2">
                   <p className="font-body text-sm font-semibold text-text-primary">{address.label}</p>
-                  {address.is_default && <Badge variant="success">Utama</Badge>}
+                  {address.is_default && <Badge variant="success">{t("defaultBadge")}</Badge>}
                 </div>
                 <p className="font-body text-sm text-text-secondary">
                   {address.recipient_name} · {address.phone}
@@ -120,7 +122,7 @@ export default function AddressBookPage() {
                 onClick={() => handleDelete(address.id)}
                 className="font-body text-sm font-medium text-danger"
               >
-                Hapus
+                {t("delete")}
               </button>
             </div>
           ))}

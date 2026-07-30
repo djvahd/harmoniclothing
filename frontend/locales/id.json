@@ -506,6 +506,53 @@
       "email": "Email",
       "saveSuccess": "Perubahan berhasil disimpan.",
       "saveChanges": "Simpan Perubahan"
+    },
+    "addresses": {
+      "title": "Address Book",
+      "addAddress": "Tambah Alamat",
+      "fields": {
+        "label": "Label (mis. Rumah)",
+        "recipientName": "Nama Penerima",
+        "phone": "No. Telepon",
+        "province": "Provinsi",
+        "city": "Kota/Kabupaten",
+        "district": "Kecamatan",
+        "postalCode": "Kode Pos",
+        "addressLine": "Alamat Lengkap"
+      },
+      "setAsDefault": "Jadikan alamat utama",
+      "saveAddress": "Simpan Alamat",
+      "empty": "Belum ada alamat tersimpan.",
+      "defaultBadge": "Utama",
+      "delete": "Hapus",
+      "saveSuccess": "Alamat berhasil disimpan.",
+      "deleteSuccess": "Alamat berhasil dihapus."
+    },
+    "wishlist": {
+      "title": "Wishlist",
+      "empty": "Belum ada item di wishlist.",
+      "removeAria": "Hapus dari wishlist",
+      "unavailable": "Tidak Tersedia",
+      "browseCatalog": "Jelajahi Katalog"
+    },
+    "becomeCreator": {
+      "title": "Ajukan Upgrade Creator",
+      "subtitle": "Jadi Kreator di Harmoni Clothing dan dapatkan komisi dari setiap penjualan desainmu.",
+      "benefits": {
+        "upload": { "title": "Upload Desain Bebas", "description": "Unggah karya orisinalmu kapan saja." },
+        "featured": { "title": "Terpajang di Lapak Desain", "description": "Desainmu bisa ditemukan pembeli di seluruh Indonesia." },
+        "commission": { "title": "Komisi Otomatis", "description": "Dapatkan komisi setiap desainmu terjual." }
+      },
+      "fields": {
+        "brandName": "Nama Brand/Toko (opsional)",
+        "brandNamePlaceholder": "Contoh: Studio Rangga",
+        "bio": "Bio Singkat (opsional)",
+        "bioPlaceholder": "Ceritakan singkat tentang dirimu sebagai Creator.",
+        "portfolioUrl": "Link Portfolio/Sosial Media (opsional)"
+      },
+      "termsCheckbox": "Saya menyetujui Syarat & Ketentuan Creator (komisi dan kebijakan konten desain).",
+      "submit": "Ajukan Sekarang",
+      "footerNote": "Setelah pengajuan, kamu akan diarahkan untuk melengkapi verifikasi identitas sebelum akun Kreator diaktifkan oleh tim kami."
     }
   }
 }
