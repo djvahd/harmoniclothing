@@ -1,17 +1,20 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import SidebarNav from "./SidebarNav";
 
-const groups = [
-  {
-    items: [
-      { href: "/creator/dashboard", label: "Dashboard" },
-      { href: "/creator/verification", label: "Verifikasi Data Diri" },
-      { href: "/creator/designs", label: "Kelola Desain" },
-      { href: "/creator/designs/upload", label: "Upload Desain" },
-      { href: "/creator/earnings", label: "Statistik & Komisi" },
-    ],
-  },
-];
-
 export default function CreatorSidebar({ className }: { className?: string }) {
+  const t = useTranslations("creator.sidebar");
+  const groups = [
+    {
+      items: [
+        { href: "/creator/dashboard", label: t("dashboard") },
+        { href: "/creator/verification", label: t("verification") },
+        { href: "/creator/designs", label: t("manageDesigns") },
+        { href: "/creator/designs/upload", label: t("uploadDesign") },
+        { href: "/creator/earnings", label: t("earnings") },
+      ],
+    },
+  ];
   return <SidebarNav groups={groups} className={className} />;
 }

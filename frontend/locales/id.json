@@ -25,6 +25,12 @@
       "selesai": "Selesai",
       "dibatalkan": "Dibatalkan",
       "ditolak": "Ditolak"
+    },
+    "designStatus": {
+      "draft": "Draft",
+      "menunggu_approval": "Menunggu Review",
+      "published": "Published",
+      "ditolak": "Ditolak"
     }
   },
   "layout": {
@@ -682,6 +688,90 @@
       },
       "empty": "Belum ada antrian produksi.",
       "startProduction": "Mulai Produksi"
+    }
+  },
+  "creator": {
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "verification": "Verifikasi Data Diri",
+      "manageDesigns": "Kelola Desain",
+      "uploadDesign": "Upload Desain",
+      "earnings": "Statistik & Komisi"
+    },
+    "dashboard": {
+      "title": "Dashboard Kreator",
+      "totalDesigns": "Total Desain",
+      "activeDesigns": "Desain Aktif",
+      "pendingApproval": "Menunggu Approval",
+      "latestDesigns": "Desain Terbaru",
+      "viewAll": "Lihat Semua",
+      "empty": "Belum ada desain. Yuk upload desain pertamamu."
+    },
+    "designs": {
+      "title": "Kelola Desain",
+      "uploadDesign": "Upload Desain",
+      "empty": "Belum ada desain diunggah."
+    },
+    "earnings": {
+      "title": "Statistik & Komisi",
+      "totalCommission": "Total Komisi",
+      "unpaid": "Belum Dibayar",
+      "paid": "Sudah Dibayar",
+      "payoutHistory": "Riwayat Pencairan",
+      "empty": "Belum ada komisi.",
+      "commissionStatus": {
+        "terhutang": "Terhutang",
+        "dibayar": "Dibayar",
+        "ditahan": "Ditahan"
+      }
+    },
+    "verification": {
+      "title": "Verifikasi Data Diri",
+      "statusLabel": "Status:",
+      "statusPendingReview": "Menunggu Review",
+      "fields": {
+        "fullName": "Nama Lengkap (sesuai KTP)",
+        "idNumber": "Nomor KTP",
+        "birthDate": "Tanggal Lahir",
+        "address": "Alamat Lengkap",
+        "ktpPlaceholder": "Klik atau drag foto KTP di sini (JPG/PNG, maks 5MB)",
+        "payoutMethod": "Metode Pencairan Komisi",
+        "accountNumber": "Nomor Rekening",
+        "phoneNumber": "Nomor HP Terdaftar",
+        "accountHolder": "Nama Pemilik Rekening/Akun",
+        "guardianName": "Nama Wali",
+        "guardianIdNumber": "Nomor KTP Wali"
+      },
+      "payoutMethods": {
+        "bankTransfer": "Transfer Bank",
+        "gopay": "GoPay",
+        "ovo": "OVO",
+        "dana": "DANA",
+        "shopeepay": "ShopeePay"
+      },
+      "minorNotice": "Karena kamu berusia di bawah 18 tahun, data wali/orang tua diperlukan.",
+      "guardianConsent": "Saya (sebagai wali) menyetujui anak saya menjadi Creator di Harmoni Clothing. Pencairan komisi akan dilakukan ke rekening/akun atas nama wali.",
+      "submit": "Kirim Verifikasi",
+      "footerNote": "Tim kami akan meninjau datamu dan mengaktifkan akun Kreator dalam 1-3 hari kerja.",
+      "uploadKtpError": "Unggah foto KTP terlebih dahulu."
+    },
+    "uploadDesign": {
+      "title": "Upload Desain",
+      "fields": {
+        "title": "Judul Desain",
+        "description": "Deskripsi"
+      },
+      "fileDropzone": "Klik atau drag file di sini (PNG/SVG, maks 20MB)",
+      "chooseApparel": "Pilih Jenis Apparel",
+      "noFileError": "Pilih file desain terlebih dahulu.",
+      "noApparelError": "Pilih minimal satu jenis apparel."
+    },
+    "designPreview": {
+      "notFound": "Desain tidak ditemukan.",
+      "productLabel": "Produk ",
+      "confirmed": "Terkonfirmasi",
+      "confirmPreview": "Konfirmasi Preview",
+      "submitForApproval": "Submit untuk Approval"
     }
   }
 }

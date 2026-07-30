@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Upload } from "lucide-react";
+import { useTranslations } from "next-intl";
 import CreatorSidebar from "@/components/layout/CreatorSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Input from "@/components/ui/Input";
@@ -13,6 +14,8 @@ import { getErrorMessage } from "@/lib/api";
 import { useProducts } from "@/hooks/useProducts";
 
 export default function UploadDesainPage() {
+  const t = useTranslations("creator.uploadDesign");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const { data: productsData } = useProducts("all", { per_page: 100 });
   const products = productsData?.data ?? [];
@@ -34,11 +37,11 @@ export default function UploadDesainPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!file) {
-      setError("Pilih file desain terlebih dahulu.");
+      setError(t("noFileError"));
       return;
     }
     if (selectedProducts.length === 0) {
-      setError("Pilih minimal satu jenis apparel.");
+      setError(t("noApparelError"));
       return;
     }
     setLoading(true);
@@ -53,7 +56,7 @@ export default function UploadDesainPage() {
       });
       router.push(`/creator/designs/${design.id}`);
     } catch (err) {
-      setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
+      setError(getErrorMessage(err, tCommon("errorGeneric")));
     } finally {
       setLoading(false);
     }
@@ -62,11 +65,11 @@ export default function UploadDesainPage() {
   return (
     <SidebarPageShell sidebar={<CreatorSidebar />}>
       <div className="flex max-w-2xl flex-col gap-6">
-        <h1 className="font-heading text-h3 font-semibold text-text-primary">Upload Desain</h1>
+        <h1 className="font-heading text-h3 font-semibold text-text-primary">{t("title")}</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-md border border-border bg-surface p-5">
-          <Input label="Judul Desain" value={title} onChange={(e) => setTitle(e.target.value)} required />
+          <Input label={t("fields.title")} value={title} onChange={(e) => setTitle(e.target.value)} required />
           <div className="flex flex-col gap-1.5">
-            <label className="font-body text-xs font-medium text-text-secondary">Deskripsi</label>
+            <label className="font-body text-xs font-medium text-text-secondary">{t("fields.description")}</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -78,7 +81,7 @@ export default function UploadDesainPage() {
           <label className="flex cursor-pointer flex-col items-center gap-2 rounded-sm border border-dashed border-border py-6 text-center">
             <Upload className="size-5 text-text-secondary" />
             <span className="font-body text-xs text-text-secondary">
-              {file ? file.name : "Klik atau drag file di sini (PNG/SVG, maks 20MB)"}
+              {file ? file.name : t("fileDropzone")}
             </span>
             <input
               type="file"
@@ -89,7 +92,7 @@ export default function UploadDesainPage() {
           </label>
 
           <div className="flex flex-col gap-2">
-            <p className="font-body text-sm font-medium text-text-primary">Pilih Jenis Apparel</p>
+            <p className="font-body text-sm font-medium text-text-primary">{t("chooseApparel")}</p>
             <div className="flex flex-wrap gap-2">
               {products.map((product) => (
                 <button
@@ -112,7 +115,7 @@ export default function UploadDesainPage() {
 
           {error && <p className="font-body text-xs text-danger">{error}</p>}
           <Button type="submit" loading={loading}>
-            Upload Desain
+            {t("title")}
           </Button>
         </form>
       </div>

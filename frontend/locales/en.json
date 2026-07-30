@@ -25,6 +25,12 @@
       "selesai": "Completed",
       "dibatalkan": "Cancelled",
       "ditolak": "Rejected"
+    },
+    "designStatus": {
+      "draft": "Draft",
+      "menunggu_approval": "Pending Review",
+      "published": "Published",
+      "ditolak": "Rejected"
     }
   },
   "layout": {
@@ -682,6 +688,90 @@
       },
       "empty": "No production queue yet.",
       "startProduction": "Start Production"
+    }
+  },
+  "creator": {
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "verification": "Identity Verification",
+      "manageDesigns": "Manage Designs",
+      "uploadDesign": "Upload Design",
+      "earnings": "Stats & Commission"
+    },
+    "dashboard": {
+      "title": "Creator Dashboard",
+      "totalDesigns": "Total Designs",
+      "activeDesigns": "Active Designs",
+      "pendingApproval": "Pending Approval",
+      "latestDesigns": "Latest Designs",
+      "viewAll": "View All",
+      "empty": "No designs yet. Upload your first design."
+    },
+    "designs": {
+      "title": "Manage Designs",
+      "uploadDesign": "Upload Design",
+      "empty": "No designs uploaded yet."
+    },
+    "earnings": {
+      "title": "Stats & Commission",
+      "totalCommission": "Total Commission",
+      "unpaid": "Unpaid",
+      "paid": "Paid",
+      "payoutHistory": "Payout History",
+      "empty": "No commissions yet.",
+      "commissionStatus": {
+        "terhutang": "Outstanding",
+        "dibayar": "Paid",
+        "ditahan": "On Hold"
+      }
+    },
+    "verification": {
+      "title": "Identity Verification",
+      "statusLabel": "Status:",
+      "statusPendingReview": "Pending Review",
+      "fields": {
+        "fullName": "Full Name (as on ID card)",
+        "idNumber": "ID Card Number",
+        "birthDate": "Date of Birth",
+        "address": "Full Address",
+        "ktpPlaceholder": "Click or drag your ID card photo here (JPG/PNG, max 5MB)",
+        "payoutMethod": "Commission Payout Method",
+        "accountNumber": "Account Number",
+        "phoneNumber": "Registered Phone Number",
+        "accountHolder": "Account Holder Name",
+        "guardianName": "Guardian Name",
+        "guardianIdNumber": "Guardian's ID Card Number"
+      },
+      "payoutMethods": {
+        "bankTransfer": "Bank Transfer",
+        "gopay": "GoPay",
+        "ovo": "OVO",
+        "dana": "DANA",
+        "shopeepay": "ShopeePay"
+      },
+      "minorNotice": "Since you're under 18, we need your guardian/parent's information.",
+      "guardianConsent": "I (as guardian) consent to my child becoming a Creator on Harmoni Clothing. Commission payouts will be made to an account in the guardian's name.",
+      "submit": "Submit Verification",
+      "footerNote": "Our team will review your information and activate your Creator account within 1-3 business days.",
+      "uploadKtpError": "Please upload your ID card photo first."
+    },
+    "uploadDesign": {
+      "title": "Upload Design",
+      "fields": {
+        "title": "Design Title",
+        "description": "Description"
+      },
+      "fileDropzone": "Click or drag a file here (PNG/SVG, max 20MB)",
+      "chooseApparel": "Choose Apparel Types",
+      "noFileError": "Please select a design file first.",
+      "noApparelError": "Please select at least one apparel type."
+    },
+    "designPreview": {
+      "notFound": "Design not found.",
+      "productLabel": "Product ",
+      "confirmed": "Confirmed",
+      "confirmPreview": "Confirm Preview",
+      "submitForApproval": "Submit for Approval"
     }
   }
 }

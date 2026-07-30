@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import useSWR, { mutate } from "swr";
 import { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import LoadingState from "@/components/ui/LoadingState";
@@ -13,6 +14,8 @@ import { storageUrl } from "@/lib/storage";
 import { getErrorMessage } from "@/lib/api";
 
 export default function EditorPreviewMultiApparelPage() {
+  const t = useTranslations("creator.designPreview");
+  const tCommon = useTranslations("common");
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const designId = Number(params.id);
@@ -40,7 +43,7 @@ export default function EditorPreviewMultiApparelPage() {
       router.push("/creator/designs");
     } catch (err) {
       setError(
-        getErrorMessage(err, "Terjadi kesalahan, coba lagi."),
+        getErrorMessage(err, tCommon("errorGeneric")),
       );
     } finally {
       setLoading(false);
@@ -48,7 +51,7 @@ export default function EditorPreviewMultiApparelPage() {
   }
 
   if (isLoading) return <LoadingState variant="detail" />;
-  if (!design) return <p className="p-8 font-body text-sm text-text-secondary">Desain tidak ditemukan.</p>;
+  if (!design) return <p className="p-8 font-body text-sm text-text-secondary">{t("notFound")}</p>;
 
   const thumbnail = storageUrl(design.thumbnail_path);
 
@@ -56,7 +59,7 @@ export default function EditorPreviewMultiApparelPage() {
     <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-8 md:px-20">
       <div className="flex items-center justify-between">
         <h1 className="font-heading text-h3 font-semibold text-text-primary">{design.title}</h1>
-        <Badge variant="neutral">{design.status}</Badge>
+        <Badge variant="neutral">{tCommon(`designStatus.${design.status}`)}</Badge>
       </div>
 
       <div className="flex flex-wrap justify-center gap-6">
@@ -71,11 +74,11 @@ export default function EditorPreviewMultiApparelPage() {
               )}
             </div>
             <p className="font-body text-sm font-semibold text-text-primary">
-              Produk #{apparel.product_id}
+              {t("productLabel")}#{apparel.product_id}
             </p>
             {apparel.confirmed_at ? (
               <div className="flex items-center gap-1.5 font-body text-xs text-accent">
-                <CheckCircle2 className="size-4" /> Terkonfirmasi
+                <CheckCircle2 className="size-4" /> {t("confirmed")}
               </div>
             ) : (
               <Button
@@ -83,7 +86,7 @@ export default function EditorPreviewMultiApparelPage() {
                 loading={loading}
                 onClick={() => handleConfirm(apparel.product_id)}
               >
-                Konfirmasi Preview
+                {t("confirmPreview")}
               </Button>
             )}
           </div>
@@ -93,7 +96,7 @@ export default function EditorPreviewMultiApparelPage() {
       {error && <p className="font-body text-xs text-danger">{error}</p>}
       {design.status === "draft" && (
         <Button loading={loading} onClick={handleSubmit} className="self-start">
-          Submit untuk Approval
+          {t("submitForApproval")}
         </Button>
       )}
     </div>

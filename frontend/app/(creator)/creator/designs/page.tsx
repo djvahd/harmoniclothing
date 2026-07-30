@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import useSWR from "swr";
 import { Palette, Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 import CreatorSidebar from "@/components/layout/CreatorSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Badge from "@/components/ui/Badge";
@@ -21,14 +22,9 @@ const STATUS_VARIANT: Record<DesignStatus, "success" | "warning" | "danger" | "n
   ditolak: "danger",
 };
 
-const STATUS_LABEL: Record<DesignStatus, string> = {
-  draft: "Draft",
-  menunggu_approval: "Menunggu Review",
-  published: "Published",
-  ditolak: "Ditolak",
-};
-
 export default function KelolaDesainPage() {
+  const t = useTranslations("creator.designs");
+  const tCommon = useTranslations("common");
   const { data, isLoading } = useSWR("/creator/designs", getMyDesigns);
   const designs = data?.data ?? [];
 
@@ -36,17 +32,17 @@ export default function KelolaDesainPage() {
     <SidebarPageShell sidebar={<CreatorSidebar />}>
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between">
-          <h1 className="font-heading text-h3 font-semibold text-text-primary">Kelola Desain</h1>
+          <h1 className="font-heading text-h3 font-semibold text-text-primary">{t("title")}</h1>
           <Link href="/creator/designs/upload">
             <Button>
-              <Plus className="size-4" /> Upload Desain
+              <Plus className="size-4" /> {t("uploadDesign")}
             </Button>
           </Link>
         </div>
 
         {isLoading && <LoadingState rows={3} />}
         {!isLoading && designs.length === 0 && (
-          <EmptyState icon={Palette} title="Belum ada desain diunggah." />
+          <EmptyState icon={Palette} title={t("empty")} />
         )}
 
         <div className="flex flex-col gap-3">
@@ -67,7 +63,7 @@ export default function KelolaDesainPage() {
                   {design.title}
                 </p>
                 <Badge variant={STATUS_VARIANT[design.status]}>
-                  {STATUS_LABEL[design.status]}
+                  {tCommon(`designStatus.${design.status}`)}
                 </Badge>
               </Link>
             );

@@ -2,6 +2,7 @@
 
 import useSWR from "swr";
 import { Clock, Wallet, CheckCircle2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import CreatorSidebar from "@/components/layout/CreatorSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import StatCard from "@/components/ui/StatCard";
@@ -18,6 +19,7 @@ const STATUS_VARIANT = {
 } as const;
 
 export default function StatistikKomisiPage() {
+  const t = useTranslations("creator.earnings");
   const { data, isLoading } = useSWR("/creator/earnings", getEarnings);
   const commissions = data?.data ?? [];
   const summary = data?.summary;
@@ -26,22 +28,22 @@ export default function StatistikKomisiPage() {
     <SidebarPageShell sidebar={<CreatorSidebar />}>
       <div className="flex flex-col gap-6">
         <h1 className="font-heading text-h3 font-semibold text-text-primary">
-          Statistik & Komisi
+          {t("title")}
         </h1>
 
         <div className="flex flex-wrap gap-4">
-          <StatCard icon={Wallet} label="Total Komisi" value={formatCurrency(Number(summary?.total ?? 0))} />
-          <StatCard icon={Clock} label="Belum Dibayar" value={formatCurrency(Number(summary?.terhutang ?? 0))} />
-          <StatCard icon={CheckCircle2} label="Sudah Dibayar" value={formatCurrency(Number(summary?.dibayar ?? 0))} />
+          <StatCard icon={Wallet} label={t("totalCommission")} value={formatCurrency(Number(summary?.total ?? 0))} />
+          <StatCard icon={Clock} label={t("unpaid")} value={formatCurrency(Number(summary?.terhutang ?? 0))} />
+          <StatCard icon={CheckCircle2} label={t("paid")} value={formatCurrency(Number(summary?.dibayar ?? 0))} />
         </div>
 
         <div className="flex flex-col gap-3">
           <p className="font-heading text-lg font-semibold text-text-primary">
-            Riwayat Pencairan
+            {t("payoutHistory")}
           </p>
           {isLoading && <LoadingState rows={3} />}
           {!isLoading && commissions.length === 0 && (
-            <EmptyState icon={Wallet} title="Belum ada komisi." />
+            <EmptyState icon={Wallet} title={t("empty")} />
           )}
           {commissions.map((c) => (
             <div key={c.id} className="flex items-center justify-between rounded-md border border-border bg-surface p-4">
@@ -53,7 +55,7 @@ export default function StatistikKomisiPage() {
                   {formatDate(c.created_at)}
                 </p>
               </div>
-              <Badge variant={STATUS_VARIANT[c.status]}>{c.status}</Badge>
+              <Badge variant={STATUS_VARIANT[c.status]}>{t(`commissionStatus.${c.status}`)}</Badge>
             </div>
           ))}
         </div>
