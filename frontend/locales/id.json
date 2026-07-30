@@ -129,5 +129,100 @@
       "viewAll": "Lihat Semua Desain →",
       "viewAllAria": "Lihat semua desain terpopuler"
     }
+  },
+  "public": {
+    "about": {
+      "hero": {
+        "title": "Tentang Harmoni Clothing",
+        "subtitle": "Platform konveksi modern yang menghubungkan brand, individu, dan kreator lokal untuk menciptakan apparel yang benar-benar sesuai gaya masing-masing.",
+        "altTshirt": "Kaos custom Harmoni Clothing",
+        "altCap": "Topi custom Harmoni Clothing"
+      },
+      "mission": {
+        "eyebrow": "Visi & Misi",
+        "title": "Yang Kami Perjuangkan",
+        "visionTitle": "Visi",
+        "visionText": "Menjadi platform konveksi custom terpercaya nomor satu di Indonesia yang memberdayakan setiap individu dan kreator lokal untuk mewujudkan ide menjadi produk nyata.",
+        "missionTitle": "Misi",
+        "missionItems": {
+          "customApparel": "Menyediakan layanan custom apparel berkualitas tinggi tanpa minimum order.",
+          "creatorSpace": "Membuka ruang bagi kreator lokal untuk berkarya dan mendapat penghasilan.",
+          "transparentProcess": "Menghadirkan proses pemesanan yang transparan, cepat, dan mudah diakses di seluruh Indonesia.",
+          "community": "Membangun komunitas kreatif yang saling mendukung."
+        }
+      },
+      "reasons": {
+        "eyebrow": "Kenapa Harmoni",
+        "title": "Kenapa Memilih Harmoni?",
+        "items": {
+          "unlimitedCustom": { "title": "Custom Tanpa Batas", "description": "Desain sendiri atau pilih dari Lapak Desain, produk tetap terasa milikmu." },
+          "guaranteedQuality": { "title": "Kualitas Terjamin", "description": "Bahan premium dan proses produksi terstandar di setiap pesanan." },
+          "localCreatorHub": { "title": "Wadah Kreator Lokal", "description": "Kreator bisa upload desain dan dapat komisi dari tiap penjualan." },
+          "secureTransaction": { "title": "Transaksi Aman", "description": "Pembayaran terverifikasi dan status pesanan transparan." },
+          "personalService": { "title": "Layanan Personal", "description": "Tim kami siap bantu lewat live chat untuk setiap kendala." }
+        }
+      },
+      "values": {
+        "eyebrow": "Nilai Kami",
+        "title": "Prinsip di Balik Setiap Produk",
+        "items": {
+          "quality": { "title": "Kualitas", "description": "Setiap produk melewati standar kontrol kualitas yang ketat sebelum dikirim." },
+          "creativity": { "title": "Kreativitas", "description": "Kami percaya setiap ide punya nilai dan layak untuk diwujudkan." },
+          "community": { "title": "Komunitas", "description": "Kreator dan pelanggan adalah bagian dari keluarga besar Harmoni." },
+          "transparency": { "title": "Transparansi", "description": "Harga, status pesanan, dan komisi kreator selalu jelas dan terbuka." }
+        }
+      },
+      "stats": {
+        "items": {
+          "delivered": { "value": "10.000+", "label": "Produk Terkirim" },
+          "activeCreators": { "value": "500+", "label": "Kreator Aktif" },
+          "designs": { "value": "5.000+", "label": "Desain Tersedia" },
+          "rating": { "value": "4.9/5", "label": "Rating Kepuasan" },
+          "provinces": { "value": "34", "label": "Provinsi Terjangkau" }
+        }
+      },
+      "creatorCta": {
+        "eyebrow": "Lapak Desain",
+        "title": "Untuk Kreator Lokal",
+        "description": "Punya desain keren? Upload di Lapak Desain dan dapatkan komisi dari setiap penjualan. Karyamu, penghasilanmu.",
+        "benefits": {
+          "easyUpload": "Upload Mudah",
+          "transparentCommission": "Komisi Transparan",
+          "nationalReach": "Jangkauan Nasional"
+        },
+        "cta": "Jadi Kreator →"
+      },
+      "timeline": {
+        "title": "Cerita Harmoni",
+        "items": {
+          "y2023": { "title": "Harmoni Dimulai", "description": "Berawal dari kebutuhan konveksi custom yang cepat dan terpercaya." },
+          "y2024": { "title": "Lapak Desain Diluncurkan", "description": "Membuka ruang bagi kreator lokal untuk memasarkan karyanya." },
+          "y2026": { "title": "Platform Digital Penuh", "description": "Seluruh proses, dari desain hingga pengiriman, kini bisa dilakukan online." }
+        }
+      },
+      "process": {
+        "title": "Proses Kami",
+        "steps": {
+          "design": { "title": "Desain", "description": "Custom sendiri atau pilih dari Lapak Desain" },
+          "production": { "title": "Produksi", "description": "Diproduksi dengan bahan dan sablon premium" },
+          "qc": { "title": "Quality Check", "description": "Setiap produk dicek sebelum dikirim" },
+          "delivery": { "title": "Sampai ke Kamu", "description": "Dikirim ke seluruh Indonesia" }
+        }
+      },
+      "testimonials": {
+        "eyebrow": "Apa Kata Mereka",
+        "title": "Dipercaya Pelanggan & Kreator",
+        "items": {
+          "bella": { "quote": "Sebagai kreator, royalti dari desain yang kejual kelihatan jelas di dashboard.", "role": "Kreator Desain" },
+          "fajar": { "quote": "Tim CS-nya responsif, bikin tenang order custom dalam jumlah besar.", "role": "Ketua Komunitas Motor" },
+          "dimas": { "quote": "Kualitas sablon dan bahan konsisten dari order pertama sampai sekarang.", "role": "Founder Local Brand" },
+          "nadia": { "quote": "Proses gabung jadi kreator gampang, dan support timnya cepat tanggap.", "role": "Content Creator" }
+        }
+      },
+      "finalCta": {
+        "title": "Mari Wujudkan Desainmu Bersama Kami",
+        "cta": "Daftar Gratis"
+      }
+    }
   }
 }

@@ -129,5 +129,100 @@
       "viewAll": "View All Designs →",
       "viewAllAria": "View all trending designs"
     }
+  },
+  "public": {
+    "about": {
+      "hero": {
+        "title": "About Harmoni Clothing",
+        "subtitle": "A modern print-on-demand platform connecting brands, individuals, and local creators to make apparel that truly fits each person's style.",
+        "altTshirt": "Custom Harmoni Clothing t-shirt",
+        "altCap": "Custom Harmoni Clothing cap"
+      },
+      "mission": {
+        "eyebrow": "Vision & Mission",
+        "title": "What We Stand For",
+        "visionTitle": "Vision",
+        "visionText": "To become Indonesia's most trusted custom apparel platform, empowering every individual and local creator to turn ideas into real products.",
+        "missionTitle": "Mission",
+        "missionItems": {
+          "customApparel": "Provide high-quality custom apparel with no minimum order.",
+          "creatorSpace": "Open a space for local creators to make and earn.",
+          "transparentProcess": "Deliver an ordering process that's transparent, fast, and accessible across Indonesia.",
+          "community": "Build a creative community that supports one another."
+        }
+      },
+      "reasons": {
+        "eyebrow": "Why Harmoni",
+        "title": "Why Choose Harmoni?",
+        "items": {
+          "unlimitedCustom": { "title": "Unlimited Customization", "description": "Design it yourself or pick one from the Design Marketplace — the product still feels like yours." },
+          "guaranteedQuality": { "title": "Guaranteed Quality", "description": "Premium materials and a standardized production process on every order." },
+          "localCreatorHub": { "title": "A Home for Local Creators", "description": "Creators can upload designs and earn a commission on every sale." },
+          "secureTransaction": { "title": "Secure Transactions", "description": "Verified payments and transparent order status." },
+          "personalService": { "title": "Personal Service", "description": "Our team is ready to help via live chat for any issue." }
+        }
+      },
+      "values": {
+        "eyebrow": "Our Values",
+        "title": "The Principles Behind Every Product",
+        "items": {
+          "quality": { "title": "Quality", "description": "Every product goes through strict quality control before it ships." },
+          "creativity": { "title": "Creativity", "description": "We believe every idea has value and deserves to be brought to life." },
+          "community": { "title": "Community", "description": "Creators and customers are part of the wider Harmoni family." },
+          "transparency": { "title": "Transparency", "description": "Pricing, order status, and creator commissions are always clear and open." }
+        }
+      },
+      "stats": {
+        "items": {
+          "delivered": { "value": "10,000+", "label": "Products Delivered" },
+          "activeCreators": { "value": "500+", "label": "Active Creators" },
+          "designs": { "value": "5,000+", "label": "Designs Available" },
+          "rating": { "value": "4.9/5", "label": "Satisfaction Rating" },
+          "provinces": { "value": "34", "label": "Provinces Covered" }
+        }
+      },
+      "creatorCta": {
+        "eyebrow": "Design Marketplace",
+        "title": "For Local Creators",
+        "description": "Have a great design? Upload it to the Design Marketplace and earn a commission on every sale. Your work, your income.",
+        "benefits": {
+          "easyUpload": "Easy Upload",
+          "transparentCommission": "Transparent Commission",
+          "nationalReach": "Nationwide Reach"
+        },
+        "cta": "Become a Creator →"
+      },
+      "timeline": {
+        "title": "The Harmoni Story",
+        "items": {
+          "y2023": { "title": "Harmoni Begins", "description": "Born from the need for fast, trustworthy custom apparel manufacturing." },
+          "y2024": { "title": "Design Marketplace Launches", "description": "Opens a space for local creators to sell their work." },
+          "y2026": { "title": "A Fully Digital Platform", "description": "Every step, from design to delivery, can now be done online." }
+        }
+      },
+      "process": {
+        "title": "Our Process",
+        "steps": {
+          "design": { "title": "Design", "description": "Custom your own or pick one from the Design Marketplace" },
+          "production": { "title": "Production", "description": "Made with premium materials and printing" },
+          "qc": { "title": "Quality Check", "description": "Every product is checked before it ships" },
+          "delivery": { "title": "Delivered to You", "description": "Shipped anywhere in Indonesia" }
+        }
+      },
+      "testimonials": {
+        "eyebrow": "What They Say",
+        "title": "Trusted by Customers & Creators",
+        "items": {
+          "bella": { "quote": "As a creator, my royalties from sold designs are clearly visible on the dashboard.", "role": "Design Creator" },
+          "fajar": { "quote": "The support team is responsive, which makes large custom orders stress-free.", "role": "Motorcycle Community Leader" },
+          "dimas": { "quote": "Print and fabric quality has stayed consistent from my first order until now.", "role": "Local Brand Founder" },
+          "nadia": { "quote": "Joining as a creator was easy, and the support team responds quickly.", "role": "Content Creator" }
+        }
+      },
+      "finalCta": {
+        "title": "Let's Bring Your Design to Life With Us",
+        "cta": "Sign Up Free"
+      }
+    }
   }
 }
