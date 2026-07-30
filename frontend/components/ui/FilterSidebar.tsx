@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronUp, LayoutGrid, Tag as TagIcon } from "lucide-react";
 import clsx from "clsx";
+import { useTranslations } from "next-intl";
 import type { GenderSegment } from "@/types/product";
 
 export interface FilterSidebarOptions {
@@ -27,13 +28,6 @@ export interface FilterSidebarValue {
   priceMin: string;
   priceMax: string;
 }
-
-const GENDER_LABELS: Record<GenderSegment, string> = {
-  pria: "Men's",
-  wanita: "Women's",
-  unisex: "Unisex",
-  anak: "Kids",
-};
 
 const GENDER_ORDER: GenderSegment[] = ["pria", "wanita", "unisex", "anak"];
 
@@ -140,6 +134,7 @@ export function CategoryList({
   selected: string[];
   onSelect: (slugs: string[]) => void;
 }) {
+  const t = useTranslations("ui.filterSidebar");
   return (
     <div className="flex flex-col">
       <p className="mb-2 font-heading text-sm font-semibold text-text-primary">{label}</p>
@@ -155,7 +150,7 @@ export function CategoryList({
           )}
         >
           <Icon className="size-4 shrink-0" />
-          Semua
+          {t("all")}
         </button>
         {items.map((c) => (
           <button
@@ -191,6 +186,7 @@ export default function FilterSidebar({
   /** Number of facet-group placeholders in the loading skeleton — pass the real count for the page using this sidebar (Katalog Produk: 5 — Segmen/Warna/Ukuran/Material/Harga; Marketplace Desain: 2 — Tag/Harga). */
   skeletonFacetCount?: number;
 }) {
+  const t = useTranslations("ui.filterSidebar");
   const [openSections, setOpenSections] = useState({
     segmen: true,
     warna: true,
@@ -283,7 +279,7 @@ export default function FilterSidebar({
     <aside className="flex w-[220px] shrink-0 flex-col gap-6">
       {!!options?.categories.length && (
         <CategoryList
-          label="Kategori"
+          label={t("category")}
           icon={LayoutGrid}
           items={options.categories}
           selected={value.categories}
@@ -294,7 +290,7 @@ export default function FilterSidebar({
       <div className="flex flex-col">
         <div className="flex items-center justify-between border-b border-border pb-3">
           <h2 className="font-heading text-sm font-semibold text-text-primary">
-            Filter{activeCount > 0 ? ` (${activeCount})` : ""}
+            {activeCount > 0 ? `${t("filter")} (${activeCount})` : t("filter")}
           </h2>
           {activeCount > 0 && (
             <button
@@ -306,14 +302,14 @@ export default function FilterSidebar({
               }
               className="rounded-sm font-body text-sm text-text-secondary underline transition-colors hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
             >
-              Reset
+              {t("reset")}
             </button>
           )}
         </div>
 
         <div className="flex flex-col">
           {!!options?.genders.length && (
-            <Section title="Segmen" isOpen={openSections.segmen} onToggle={() => toggleSection("segmen")}>
+            <Section title={t("segment")} isOpen={openSections.segmen} onToggle={() => toggleSection("segmen")}>
               <div className="flex flex-wrap gap-2">
                 {GENDER_ORDER.filter((g) => options.genders.includes(g)).map((g) => (
                   <button
@@ -326,7 +322,7 @@ export default function FilterSidebar({
                         : "border-border text-text-secondary hover:border-primary hover:bg-border/40 hover:text-text-primary",
                     )}
                   >
-                    {GENDER_LABELS[g]}
+                    {t(`genders.${g}`)}
                   </button>
                 ))}
               </div>
@@ -334,7 +330,7 @@ export default function FilterSidebar({
           )}
 
           {!!options?.colors.length && (
-            <Section title="Warna" isOpen={openSections.warna} onToggle={() => toggleSection("warna")}>
+            <Section title={t("color")} isOpen={openSections.warna} onToggle={() => toggleSection("warna")}>
               <div className="flex flex-wrap gap-2">
                 {options.colors.map((c) => (
                   <button
@@ -355,7 +351,7 @@ export default function FilterSidebar({
           )}
 
           {!!options?.sizes.length && (
-            <Section title="Ukuran" isOpen={openSections.ukuran} onToggle={() => toggleSection("ukuran")}>
+            <Section title={t("size")} isOpen={openSections.ukuran} onToggle={() => toggleSection("ukuran")}>
               <div className="flex flex-wrap gap-2">
                 {options.sizes.map((s) => (
                   <button
@@ -376,7 +372,7 @@ export default function FilterSidebar({
           )}
 
           {!!options?.materials.length && (
-            <Section title="Material" isOpen={openSections.material} onToggle={() => toggleSection("material")}>
+            <Section title={t("material")} isOpen={openSections.material} onToggle={() => toggleSection("material")}>
               <div className="flex flex-wrap gap-2">
                 {options.materials.map((m) => (
                   <button
@@ -397,7 +393,7 @@ export default function FilterSidebar({
           )}
 
           {!!options?.popular_tags?.length && (
-            <Section title="Tag" isOpen={openSections.tag} onToggle={() => toggleSection("tag")}>
+            <Section title={t("tag")} isOpen={openSections.tag} onToggle={() => toggleSection("tag")}>
               <div className="flex flex-wrap gap-2">
                 {options.popular_tags.map((t) => (
                   <button
@@ -418,14 +414,14 @@ export default function FilterSidebar({
             </Section>
           )}
 
-          <Section title="Harga" isOpen={openSections.harga} onToggle={() => toggleSection("harga")}>
+          <Section title={t("price")} isOpen={openSections.harga} onToggle={() => toggleSection("harga")}>
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-1.5 rounded-sm border border-border bg-surface py-1 pl-2 pr-1 transition-colors hover:border-primary hover:bg-border/40 focus-within:border-primary focus-within:bg-surface">
                 <span className="font-body text-sm font-medium text-text-secondary">Rp</span>
                 <input
                   type="text"
                   inputMode="numeric"
-                  placeholder="Minimum"
+                  placeholder={t("minimum")}
                   value={formatPriceDigits(priceDraft.min)}
                   onChange={(e) => handlePriceInput("min", e.target.value)}
                   onBlur={() => applyPrice(priceDraft)}
@@ -435,7 +431,7 @@ export default function FilterSidebar({
                 <div className="flex shrink-0 flex-col">
                   <button
                     type="button"
-                    aria-label="Naikkan harga minimum"
+                    aria-label={t("increaseMinPrice")}
                     onClick={() => stepPrice("min", 1)}
                     className="rounded-t-sm px-0.5 text-text-secondary transition-colors hover:bg-border/60 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
                   >
@@ -443,7 +439,7 @@ export default function FilterSidebar({
                   </button>
                   <button
                     type="button"
-                    aria-label="Turunkan harga minimum"
+                    aria-label={t("decreaseMinPrice")}
                     onClick={() => stepPrice("min", -1)}
                     className="rounded-b-sm px-0.5 text-text-secondary transition-colors hover:bg-border/60 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
                   >
@@ -456,7 +452,7 @@ export default function FilterSidebar({
                 <input
                   type="text"
                   inputMode="numeric"
-                  placeholder="Maksimum"
+                  placeholder={t("maximum")}
                   value={formatPriceDigits(priceDraft.max)}
                   onChange={(e) => handlePriceInput("max", e.target.value)}
                   onBlur={() => applyPrice(priceDraft)}
@@ -466,7 +462,7 @@ export default function FilterSidebar({
                 <div className="flex shrink-0 flex-col">
                   <button
                     type="button"
-                    aria-label="Naikkan harga maksimum"
+                    aria-label={t("increaseMaxPrice")}
                     onClick={() => stepPrice("max", 1)}
                     className="rounded-t-sm px-0.5 text-text-secondary transition-colors hover:bg-border/60 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
                   >
@@ -474,7 +470,7 @@ export default function FilterSidebar({
                   </button>
                   <button
                     type="button"
-                    aria-label="Turunkan harga maksimum"
+                    aria-label={t("decreaseMaxPrice")}
                     onClick={() => stepPrice("max", -1)}
                     className="rounded-b-sm px-0.5 text-text-secondary transition-colors hover:bg-border/60 hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
                   >

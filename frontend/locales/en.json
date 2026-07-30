@@ -71,6 +71,14 @@
       "becomeCreator": "Apply to Become a Creator",
       "notifications": "Notifications"
     },
+    "chatWidget": {
+      "collapseAria": "Collapse chat",
+      "title": "Chat with Admin",
+      "empty": "Start a conversation with the Harmoni team.",
+      "placeholder": "Write a message...",
+      "sendAria": "Send message",
+      "openAria": "Open chat"
+    },
     "footer": {
       "tagline": "A modern print-on-demand platform for creators and brands.",
       "productsTitle": "PRODUCTS",
@@ -935,6 +943,32 @@
     "relatedGrid": {
       "defaultTitle": "You Might Like",
       "viewAll": "View All →"
+    }
+  },
+  "ui": {
+    "filterSidebar": {
+      "all": "All",
+      "category": "Category",
+      "filter": "Filter",
+      "reset": "Reset",
+      "segment": "Segment",
+      "color": "Color",
+      "size": "Size",
+      "material": "Material",
+      "tag": "Tag",
+      "price": "Price",
+      "minimum": "Minimum",
+      "maximum": "Maximum",
+      "increaseMinPrice": "Increase minimum price",
+      "decreaseMinPrice": "Decrease minimum price",
+      "increaseMaxPrice": "Increase maximum price",
+      "decreaseMaxPrice": "Decrease maximum price",
+      "genders": {
+        "pria": "Men's",
+        "wanita": "Women's",
+        "unisex": "Unisex",
+        "anak": "Kids"
+      }
     }
   },
   "creator": {

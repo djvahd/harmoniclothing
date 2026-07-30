@@ -71,6 +71,14 @@
       "becomeCreator": "Ajukan Upgrade Creator",
       "notifications": "Notifikasi"
     },
+    "chatWidget": {
+      "collapseAria": "Ciutkan chat",
+      "title": "Chat dengan Admin",
+      "empty": "Mulai percakapan dengan tim Harmoni.",
+      "placeholder": "Tulis pesan...",
+      "sendAria": "Kirim pesan",
+      "openAria": "Buka chat"
+    },
     "footer": {
       "tagline": "Platform konveksi modern untuk kreator dan brand.",
       "productsTitle": "PRODUK",
@@ -935,6 +943,32 @@
     "relatedGrid": {
       "defaultTitle": "Kamu Mungkin Suka",
       "viewAll": "Lihat Semua →"
+    }
+  },
+  "ui": {
+    "filterSidebar": {
+      "all": "Semua",
+      "category": "Kategori",
+      "filter": "Filter",
+      "reset": "Reset",
+      "segment": "Segmen",
+      "color": "Warna",
+      "size": "Ukuran",
+      "material": "Material",
+      "tag": "Tag",
+      "price": "Harga",
+      "minimum": "Minimum",
+      "maximum": "Maksimum",
+      "increaseMinPrice": "Naikkan harga minimum",
+      "decreaseMinPrice": "Turunkan harga minimum",
+      "increaseMaxPrice": "Naikkan harga maksimum",
+      "decreaseMaxPrice": "Turunkan harga maksimum",
+      "genders": {
+        "pria": "Men's",
+        "wanita": "Women's",
+        "unisex": "Unisex",
+        "anak": "Kids"
+      }
     }
   },
   "creator": {
