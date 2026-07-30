@@ -325,6 +325,60 @@
         "resetFilters": "Reset pencarian & kategori",
         "loadMore": "Muat Lebih Banyak"
       }
+    },
+    "creatorProfile": {
+      "notFound": "Kreator tidak ditemukan.",
+      "backToMarketplace": "Kembali ke Lapak Desain",
+      "creatorSince": "Kreator sejak {date}",
+      "viewPortfolio": "Lihat Portofolio",
+      "statDesigns": "Desain",
+      "statRating": "Rating",
+      "statTotalSold": "Total Terjual",
+      "designsByCreator": "Desain oleh {name} ({count})",
+      "noDesigns": "Belum ada desain yang dipublikasikan."
+    },
+    "designDetail": {
+      "breadcrumbMarketplace": "Lapak Desain",
+      "selectVariantError": "Pilih warna dan ukuran terlebih dahulu.",
+      "addToCartSuccess": "Ditambahkan ke keranjang.",
+      "notFoundMessage": "Desain tidak ditemukan.",
+      "notFoundBackLabel": "Kembali ke Lapak Desain",
+      "ratingSummary": "{rating} ({count} ulasan)",
+      "soldCount": "Terjual {count} kali",
+      "noProductsAvailable": "Belum ada produk yang tersedia untuk desain ini.",
+      "chooseProduct": "Pilih Produk",
+      "quantityLabel": "Jumlah",
+      "royaltyTooltip": "Perkiraan kontribusi untuk kreator dari harga produk — angka final ditentukan saat checkout",
+      "royaltyLabel": "Kontribusi untuk Kreator",
+      "notesLabel": "Catatan (opsional)",
+      "notesPlaceholder": "Permintaan revisi/khusus untuk produk ini...",
+      "addToCart": "Tambah ke Keranjang",
+      "buyNow": "Beli Sekarang",
+      "tabs": {
+        "description": "Deskripsi",
+        "productDetail": "Detail Produk",
+        "care": "Bahan & Perawatan",
+        "shipping": "Pengiriman",
+        "reviews": "Ulasan"
+      },
+      "specsMaterial": "Bahan: {material}",
+      "specsCutType": "Jenis potongan: {cutType}",
+      "specsPrintAreas": "Area cetak: {areas}",
+      "noProductForDesign": "Belum ada produk untuk desain ini.",
+      "reviewsEmptyMessage": "Belum ada ulasan untuk desain ini.",
+      "printAreas": {
+        "depan": "Depan",
+        "belakang": "Belakang",
+        "lengan": "Lengan"
+      },
+      "creatorSummary": {
+        "viewProfile": "Lihat Profil",
+        "statDesigns": "Desain",
+        "statRating": "Rating",
+        "statTotalSold": "Total Terjual",
+        "otherWorks": "Koleksi Lainnya",
+        "viewAll": "Lihat Semua →"
+      }
     }
   }
 }

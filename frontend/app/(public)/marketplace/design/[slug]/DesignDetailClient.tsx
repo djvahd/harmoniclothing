@@ -7,6 +7,7 @@ import { useParams, useRouter } from "next/navigation";
 import useSWR from "swr";
 import clsx from "clsx";
 import { ChevronRight, LayoutGrid, Package, Star, UserRound } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Tag from "@/components/ui/Tag";
 import Button from "@/components/ui/Button";
 import QuantityStepper from "@/components/ui/QuantityStepper";
@@ -32,7 +33,7 @@ import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
 import { getErrorMessage } from "@/lib/api";
 import { toast } from "@/store/toast-store";
-import type { Design, Product, PrintArea } from "@/types/product";
+import type { Design, Product } from "@/types/product";
 
 // Display-only estimate mirroring backend's config('creator.commission_rate')
 // placeholder default (backend/config/creator.php) — the real rate isn't
@@ -40,23 +41,19 @@ import type { Design, Product, PrintArea } from "@/types/product";
 // at checkout.
 const CREATOR_ROYALTY_RATE = 0.2;
 
-const PRINT_AREA_LABELS: Record<PrintArea, string> = {
-  depan: "Depan",
-  belakang: "Belakang",
-  lengan: "Lengan",
-};
-
 const TABS = [
-  { key: "deskripsi", label: "Deskripsi" },
-  { key: "produk", label: "Detail Produk" },
-  { key: "perawatan", label: "Bahan & Perawatan" },
-  { key: "pengiriman", label: "Pengiriman" },
-  { key: "ulasan", label: "Ulasan" },
+  { key: "deskripsi", tKey: "description" },
+  { key: "produk", tKey: "productDetail" },
+  { key: "perawatan", tKey: "care" },
+  { key: "pengiriman", tKey: "shipping" },
+  { key: "ulasan", tKey: "reviews" },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
 
 export default function DetailDesainPage() {
+  const t = useTranslations("public.designDetail");
+  const tCommon = useTranslations("common");
   const params = useParams<{ slug: string }>();
   const router = useRouter();
   const { design, isLoading } = useDesign(params.slug);
@@ -126,7 +123,7 @@ export default function DetailDesainPage() {
 
   async function handleSubmit(destination: "cart" | "buy") {
     if (!selectedVariant || !design) {
-      setError("Pilih warna dan ukuran terlebih dahulu.");
+      setError(t("selectVariantError"));
       return;
     }
     setError(null);
@@ -139,10 +136,10 @@ export default function DetailDesainPage() {
         notes: notes || undefined,
       });
       await invalidateCart();
-      if (destination === "cart") toast("Ditambahkan ke keranjang.", "success");
+      if (destination === "cart") toast(t("addToCartSuccess"), "success");
       router.push(destination === "cart" ? "/cart" : "/checkout");
     } catch (err) {
-      setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
+      setError(getErrorMessage(err, tCommon("errorGeneric")));
     } finally {
       setPendingAction(null);
     }
@@ -155,9 +152,9 @@ export default function DetailDesainPage() {
   if (!design) {
     return (
       <DetailNotFound
-        message="Desain tidak ditemukan."
+        message={t("notFoundMessage")}
         backHref="/marketplace"
-        backLabel="Kembali ke Lapak Desain"
+        backLabel={t("notFoundBackLabel")}
       />
     );
   }
@@ -170,7 +167,7 @@ export default function DetailDesainPage() {
     <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 px-4 py-10 md:px-20">
       <nav className="flex flex-wrap items-center gap-1.5 font-body text-sm text-text-secondary">
         <Link href="/marketplace" className="transition-colors hover:text-primary">
-          Lapak Desain
+          {t("breadcrumbMarketplace")}
         </Link>
         {design.category && (
           <>
@@ -221,23 +218,21 @@ export default function DetailDesainPage() {
               {hasRating && (
                 <span className="flex items-center gap-1">
                   <Star className="size-3.5 fill-warning text-warning" />
-                  {design.rating_average} ({design.review_count} ulasan)
+                  {t("ratingSummary", { rating: design.rating_average ?? 0, count: design.review_count ?? 0 })}
                 </span>
               )}
               {hasRating && hasSold && <span>·</span>}
-              {hasSold && <span>Terjual {design.sold_count} kali</span>}
+              {hasSold && <span>{t("soldCount", { count: design.sold_count ?? 0 })}</span>}
             </div>
           </div>
 
           {products.length === 0 ? (
-            <p className="font-body text-sm text-text-secondary">
-              Belum ada produk yang tersedia untuk desain ini.
-            </p>
+            <p className="font-body text-sm text-text-secondary">{t("noProductsAvailable")}</p>
           ) : (
             <>
               {products.length > 1 && (
                 <div className="flex flex-col gap-2">
-                  <p className="font-body text-sm font-medium text-text-primary">Pilih Produk</p>
+                  <p className="font-body text-sm font-medium text-text-primary">{t("chooseProduct")}</p>
                   <div className="flex flex-wrap gap-2">
                     {products.map((p: Product) => (
                       <button
@@ -276,7 +271,7 @@ export default function DetailDesainPage() {
               />
 
               <div className="flex items-center justify-between pt-1">
-                <p className="font-body text-sm font-medium text-text-primary">Jumlah</p>
+                <p className="font-body text-sm font-medium text-text-primary">{t("quantityLabel")}</p>
                 <QuantityStepper value={quantity} onChange={setQuantity} />
               </div>
 
@@ -286,22 +281,22 @@ export default function DetailDesainPage() {
 
               <div
                 className="flex items-center justify-between rounded-sm bg-border/30 px-3 py-2.5 font-body text-sm"
-                title="Perkiraan kontribusi untuk kreator dari harga produk — angka final ditentukan saat checkout"
+                title={t("royaltyTooltip")}
               >
-                <span className="text-text-secondary">Kontribusi untuk Kreator</span>
+                <span className="text-text-secondary">{t("royaltyLabel")}</span>
                 <span className="font-medium text-text-primary">
                   {formatCurrency(royalty)} ({Math.round(CREATOR_ROYALTY_RATE * 100)}%)
                 </span>
               </div>
 
               <div className="flex flex-col gap-2">
-                <p className="font-body text-sm font-medium text-text-primary">Catatan (opsional)</p>
+                <p className="font-body text-sm font-medium text-text-primary">{t("notesLabel")}</p>
                 <textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   rows={2}
                   className="w-full rounded-sm border border-border bg-surface px-3 py-2.5 font-body text-sm text-text-primary outline-none"
-                  placeholder="Permintaan revisi/khusus untuk produk ini..."
+                  placeholder={t("notesPlaceholder")}
                 />
               </div>
 
@@ -314,7 +309,7 @@ export default function DetailDesainPage() {
                   disabled={pendingAction !== null}
                   onClick={() => handleSubmit("cart")}
                 >
-                  Tambah ke Keranjang
+                  {t("addToCart")}
                 </Button>
                 <Button
                   variant="secondary"
@@ -323,7 +318,7 @@ export default function DetailDesainPage() {
                   disabled={pendingAction !== null}
                   onClick={() => handleSubmit("buy")}
                 >
-                  Beli Sekarang
+                  {t("buyNow")}
                 </Button>
               </div>
 
@@ -335,9 +330,10 @@ export default function DetailDesainPage() {
 
       <div className="flex flex-col gap-6">
         <ProductTabs
-          tabs={TABS.map((t) => ({
-            ...t,
-            badge: t.key === "ulasan" ? design.review_count ?? undefined : undefined,
+          tabs={TABS.map((tabDef) => ({
+            key: tabDef.key,
+            label: t(`tabs.${tabDef.tKey}`),
+            badge: tabDef.key === "ulasan" ? design.review_count ?? undefined : undefined,
           }))}
           active={tab}
           onChange={(key) => setTab(key as TabKey)}
@@ -349,8 +345,8 @@ export default function DetailDesainPage() {
               <p>{design.description}</p>
               {!!design.tags?.length && (
                 <div className="flex flex-wrap gap-2">
-                  {design.tags.map((t) => (
-                    <Tag key={t.slug}>{t.name}</Tag>
+                  {design.tags.map((dt) => (
+                    <Tag key={dt.slug}>{dt.name}</Tag>
                   ))}
                 </div>
               )}
@@ -363,19 +359,20 @@ export default function DetailDesainPage() {
                 <p>{selectedProduct.description}</p>
                 {selectedVariant && (
                   <ul className="mt-1 flex flex-col gap-1">
-                    <li>Bahan: {selectedVariant.material}</li>
-                    <li>Jenis potongan: {selectedVariant.cut_type}</li>
+                    <li>{t("specsMaterial", { material: selectedVariant.material })}</li>
+                    <li>{t("specsCutType", { cutType: selectedVariant.cut_type })}</li>
                     {!!selectedVariant.print_areas?.length && (
                       <li>
-                        Area cetak:{" "}
-                        {selectedVariant.print_areas.map((a) => PRINT_AREA_LABELS[a]).join(", ")}
+                        {t("specsPrintAreas", {
+                          areas: selectedVariant.print_areas.map((a) => t(`printAreas.${a}`)).join(", "),
+                        })}
                       </li>
                     )}
                   </ul>
                 )}
               </div>
             ) : (
-              <p>Belum ada produk untuk desain ini.</p>
+              <p>{t("noProductForDesign")}</p>
             ))}
           {tab === "perawatan" && CARE_TAB_CONTENT}
           {tab === "pengiriman" && SHIPPING_TAB_CONTENT}
@@ -384,7 +381,7 @@ export default function DetailDesainPage() {
               hasRating={hasRating}
               ratingAverage={design.rating_average}
               reviewCount={design.review_count}
-              emptyMessage="Belum ada ulasan untuk desain ini."
+              emptyMessage={t("reviewsEmptyMessage")}
               reviews={reviews}
               reviewsLoading={reviewsLoading}
               meta={reviewsMeta}
@@ -434,6 +431,7 @@ function CreatorSummaryCard({
   creatorName: string;
   excludeId: number;
 }) {
+  const t = useTranslations("public.designDetail.creatorSummary");
   const { data, isLoading } = useSWR(swrKeys.creatorBySlug(creatorSlug), () =>
     getCreatorBySlug(creatorSlug),
   );
@@ -475,7 +473,7 @@ function CreatorSummaryCard({
               href={`/marketplace/${creatorSlug}`}
               className="font-body text-sm text-primary transition-colors hover:underline"
             >
-              Lihat Profil
+              {t("viewProfile")}
             </Link>
           </div>
         </div>
@@ -484,7 +482,7 @@ function CreatorSummaryCard({
           <div className="flex flex-col items-center gap-1">
             <LayoutGrid className="size-4 text-text-secondary" />
             <p className="font-heading text-lg font-semibold text-text-primary">{designs.length}</p>
-            <p className="font-body text-xs text-text-secondary">Desain</p>
+            <p className="font-body text-xs text-text-secondary">{t("statDesigns")}</p>
           </div>
           {avgRating != null && (
             <div className="flex flex-col items-center gap-1">
@@ -492,13 +490,13 @@ function CreatorSummaryCard({
               <p className="font-heading text-lg font-semibold text-text-primary">
                 {avgRating.toFixed(1)}
               </p>
-              <p className="font-body text-xs text-text-secondary">Rating</p>
+              <p className="font-body text-xs text-text-secondary">{t("statRating")}</p>
             </div>
           )}
           <div className="flex flex-col items-center gap-1">
             <Package className="size-4 text-text-secondary" />
             <p className="font-heading text-lg font-semibold text-text-primary">{totalSold}</p>
-            <p className="font-body text-xs text-text-secondary">Total Terjual</p>
+            <p className="font-body text-xs text-text-secondary">{t("statTotalSold")}</p>
           </div>
         </div>
       </div>
@@ -506,12 +504,12 @@ function CreatorSummaryCard({
       {others.length > 0 && (
         <div className="flex flex-col gap-3 border-t border-border pt-4">
           <div className="flex items-center justify-between">
-            <p className="font-heading text-sm font-semibold text-text-primary">Koleksi Lainnya</p>
+            <p className="font-heading text-sm font-semibold text-text-primary">{t("otherWorks")}</p>
             <Link
               href={`/marketplace/${creatorSlug}`}
               className="font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4"
             >
-              Lihat Semua →
+              {t("viewAll")}
             </Link>
           </div>
           <div className="flex flex-wrap gap-2">

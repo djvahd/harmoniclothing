@@ -325,6 +325,60 @@
         "resetFilters": "Reset search & category",
         "loadMore": "Load More"
       }
+    },
+    "creatorProfile": {
+      "notFound": "Creator not found.",
+      "backToMarketplace": "Back to Design Marketplace",
+      "creatorSince": "Creator since {date}",
+      "viewPortfolio": "View Portfolio",
+      "statDesigns": "Designs",
+      "statRating": "Rating",
+      "statTotalSold": "Total Sold",
+      "designsByCreator": "Designs by {name} ({count})",
+      "noDesigns": "No designs published yet."
+    },
+    "designDetail": {
+      "breadcrumbMarketplace": "Design Marketplace",
+      "selectVariantError": "Please select a color and size first.",
+      "addToCartSuccess": "Added to cart.",
+      "notFoundMessage": "Design not found.",
+      "notFoundBackLabel": "Back to Design Marketplace",
+      "ratingSummary": "{rating} ({count} reviews)",
+      "soldCount": "{count} sold",
+      "noProductsAvailable": "No products are available for this design yet.",
+      "chooseProduct": "Choose a Product",
+      "quantityLabel": "Quantity",
+      "royaltyTooltip": "Estimated creator contribution from the product price — the final amount is set at checkout",
+      "royaltyLabel": "Creator Contribution",
+      "notesLabel": "Notes (optional)",
+      "notesPlaceholder": "Special or revision requests for this product...",
+      "addToCart": "Add to Cart",
+      "buyNow": "Buy Now",
+      "tabs": {
+        "description": "Description",
+        "productDetail": "Product Details",
+        "care": "Material & Care",
+        "shipping": "Shipping",
+        "reviews": "Reviews"
+      },
+      "specsMaterial": "Material: {material}",
+      "specsCutType": "Cut type: {cutType}",
+      "specsPrintAreas": "Print areas: {areas}",
+      "noProductForDesign": "No product available for this design yet.",
+      "reviewsEmptyMessage": "No reviews yet for this design.",
+      "printAreas": {
+        "depan": "Front",
+        "belakang": "Back",
+        "lengan": "Sleeve"
+      },
+      "creatorSummary": {
+        "viewProfile": "View Profile",
+        "statDesigns": "Designs",
+        "statRating": "Rating",
+        "statTotalSold": "Total Sold",
+        "otherWorks": "More From This Creator",
+        "viewAll": "View All →"
+      }
     }
   }
 }

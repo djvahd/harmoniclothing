@@ -4,12 +4,15 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import useSWR from "swr";
 import { ExternalLink, LayoutGrid, PackageSearch, Star, UserRound } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import DesignCard, { DesignCardSkeleton } from "@/components/ui/DesignCard";
 import { getCreatorBySlug } from "@/services/marketplace";
 import { swrKeys } from "@/lib/swr-keys";
 import type { Design } from "@/types/product";
 
 export default function ProfilPublikCreatorPage() {
+  const t = useTranslations("public.creatorProfile");
+  const locale = useLocale();
   const params = useParams<{ slug: string }>();
   const { data, isLoading } = useSWR(swrKeys.creatorBySlug(params.slug), () =>
     getCreatorBySlug(params.slug),
@@ -39,12 +42,12 @@ export default function ProfilPublikCreatorPage() {
     return (
       <div className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-3 px-4 py-24 text-center md:px-20">
         <PackageSearch className="size-10 text-text-secondary" />
-        <p className="font-body text-sm text-text-secondary">Kreator tidak ditemukan.</p>
+        <p className="font-body text-sm text-text-secondary">{t("notFound")}</p>
         <Link
           href="/marketplace?tab=creator"
           className="font-body text-sm font-medium text-primary underline underline-offset-4"
         >
-          Kembali ke Lapak Desain
+          {t("backToMarketplace")}
         </Link>
       </div>
     );
@@ -67,10 +70,11 @@ export default function ProfilPublikCreatorPage() {
             <h1 className="font-heading text-h3 font-semibold text-text-primary">{creator.name}</h1>
             {creator.since && (
               <p className="font-body text-sm text-text-secondary">
-                Kreator sejak{" "}
-                {new Date(creator.since).toLocaleDateString("id-ID", {
-                  month: "long",
-                  year: "numeric",
+                {t("creatorSince", {
+                  date: new Date(creator.since).toLocaleDateString(locale === "id" ? "id-ID" : "en-US", {
+                    month: "long",
+                    year: "numeric",
+                  }),
                 })}
               </p>
             )}
@@ -84,7 +88,7 @@ export default function ProfilPublikCreatorPage() {
                 rel="noopener noreferrer"
                 className="flex w-fit items-center gap-1 font-body text-sm font-medium text-primary transition-colors hover:underline"
               >
-                Lihat Portofolio
+                {t("viewPortfolio")}
                 <ExternalLink className="size-3.5" />
               </a>
             )}
@@ -97,7 +101,7 @@ export default function ProfilPublikCreatorPage() {
             <p className="font-heading text-lg font-semibold text-text-primary">
               {creator.designs.length}
             </p>
-            <p className="font-body text-xs text-text-secondary">Desain</p>
+            <p className="font-body text-xs text-text-secondary">{t("statDesigns")}</p>
           </div>
           {avgRating != null && (
             <div className="flex flex-col items-center gap-1">
@@ -105,25 +109,25 @@ export default function ProfilPublikCreatorPage() {
               <p className="font-heading text-lg font-semibold text-text-primary">
                 {avgRating.toFixed(1)}
               </p>
-              <p className="font-body text-xs text-text-secondary">Rating</p>
+              <p className="font-body text-xs text-text-secondary">{t("statRating")}</p>
             </div>
           )}
           <div className="flex flex-col items-center gap-1">
             <PackageSearch className="size-4 text-text-secondary" />
             <p className="font-heading text-lg font-semibold text-text-primary">{totalSold}</p>
-            <p className="font-body text-xs text-text-secondary">Total Terjual</p>
+            <p className="font-body text-xs text-text-secondary">{t("statTotalSold")}</p>
           </div>
         </div>
       </div>
 
       <div className="flex flex-col gap-4">
         <p className="font-heading text-lg font-semibold text-text-primary">
-          Desain oleh {creator.name} ({creator.designs.length})
+          {t("designsByCreator", { name: creator.name, count: creator.designs.length })}
         </p>
         {creator.designs.length === 0 ? (
           <div className="flex w-full flex-col items-center gap-3 py-16 text-center">
             <PackageSearch className="size-10 text-text-secondary" />
-            <p className="font-body text-sm text-text-secondary">Belum ada desain yang dipublikasikan.</p>
+            <p className="font-body text-sm text-text-secondary">{t("noDesigns")}</p>
           </div>
         ) : (
           <div className="flex flex-wrap gap-6">
