@@ -854,6 +854,46 @@
       }
     }
   },
+  "auth": {
+    "modal": {
+      "close": "Tutup",
+      "loginTitle": "Masuk ke Akun",
+      "registerTitle": "Buat Akun Baru",
+      "forgotPasswordTitle": "Lupa Password"
+    },
+    "login": {
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Lupa password?",
+      "submit": "Masuk",
+      "noAccount": "Belum punya akun?",
+      "registerLink": "Daftar"
+    },
+    "register": {
+      "fullName": "Nama Lengkap",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Konfirmasi Password",
+      "passwordMismatch": "Konfirmasi password tidak cocok.",
+      "registerSuccess": "Akun berhasil dibuat. Silakan masuk.",
+      "agreeTo": "Saya menyetujui",
+      "termsLink": "Syarat & Ketentuan",
+      "and": "dan",
+      "privacyLink": "Kebijakan Privasi",
+      "brandSuffix": "Harmoni Clothing.",
+      "submit": "Daftar Gratis",
+      "hasAccount": "Sudah punya akun?",
+      "loginLink": "Masuk"
+    },
+    "forgotPassword": {
+      "email": "Email",
+      "description": "Masukkan email akunmu, kami akan kirimkan tautan untuk reset password.",
+      "sentMessage": "Jika email terdaftar, tautan reset password telah dikirim ke {email}.",
+      "submit": "Kirim Tautan Reset",
+      "backTo": "Kembali ke",
+      "loginLink": "Masuk"
+    }
+  },
   "creator": {
     "sidebar": {
       "dashboard": "Dashboard",

@@ -2,18 +2,14 @@
 
 import { useEffect } from "react";
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useAuthModalStore, type AuthModalView } from "@/store/auth-modal-store";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 import LupaPasswordForm from "./LupaPasswordForm";
 
-const TITLES: Record<AuthModalView, string> = {
-  login: "Masuk ke Akun",
-  register: "Buat Akun Baru",
-  "lupa-password": "Lupa Password",
-};
-
 export default function AuthModal() {
+  const t = useTranslations("auth.modal");
   const view = useAuthModalStore((state) => state.view);
   const message = useAuthModalStore((state) => state.message);
   const close = useAuthModalStore((state) => state.close);
@@ -40,6 +36,12 @@ export default function AuthModal() {
 
   if (!view) return null;
 
+  const titleKeys: Record<AuthModalView, string> = {
+    login: "loginTitle",
+    register: "registerTitle",
+    "lupa-password": "forgotPasswordTitle",
+  };
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-4"
@@ -52,12 +54,12 @@ export default function AuthModal() {
         <button
           type="button"
           onClick={close}
-          aria-label="Tutup"
+          aria-label={t("close")}
           className="absolute right-4 top-4 text-text-secondary transition-colors hover:text-text-primary"
         >
           <X className="size-5" />
         </button>
-        <h1 className="pr-6 font-heading text-h3 font-semibold text-text-primary">{TITLES[view]}</h1>
+        <h1 className="pr-6 font-heading text-h3 font-semibold text-text-primary">{t(titleKeys[view])}</h1>
         {view === "login" && <LoginForm message={message} />}
         {view === "register" && <RegisterForm />}
         {view === "lupa-password" && <LupaPasswordForm />}

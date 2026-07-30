@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Mail, User } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Input from "@/components/ui/Input";
 import PasswordInput from "@/components/ui/PasswordInput";
 import Button from "@/components/ui/Button";
@@ -14,6 +15,8 @@ const linkClass =
   "font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4";
 
 export default function RegisterForm() {
+  const t = useTranslations("auth.register");
+  const tCommon = useTranslations("common");
   const openModal = useAuthModalStore((state) => state.open);
   const [form, setForm] = useState({
     name: "",
@@ -33,7 +36,7 @@ export default function RegisterForm() {
     e.preventDefault();
     setErrors({});
     if (form.password !== form.password_confirmation) {
-      setErrors({ password_confirmation: ["Konfirmasi password tidak cocok."] });
+      setErrors({ password_confirmation: [t("passwordMismatch")] });
       return;
     }
     setLoading(true);
@@ -43,12 +46,12 @@ export default function RegisterForm() {
         privacy_accepted: accepted,
         terms_accepted: accepted,
       });
-      openModal("login", "Akun berhasil dibuat. Silakan masuk.");
+      openModal("login", t("registerSuccess"));
     } catch (err) {
       if (err instanceof ApiError && err.errors) {
         setErrors(err.errors);
       } else {
-        setErrors({ general: ["Terjadi kesalahan, coba lagi."] });
+        setErrors({ general: [tCommon("errorGeneric")] });
       }
     } finally {
       setLoading(false);
@@ -59,7 +62,7 @@ export default function RegisterForm() {
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <Input
         id="name"
-        label="Nama Lengkap"
+        label={t("fullName")}
         icon={User}
         autoComplete="name"
         value={form.name}
@@ -70,7 +73,7 @@ export default function RegisterForm() {
       <Input
         id="email"
         type="email"
-        label="Email"
+        label={t("email")}
         icon={Mail}
         autoComplete="email"
         value={form.email}
@@ -80,7 +83,7 @@ export default function RegisterForm() {
       />
       <PasswordInput
         id="password"
-        label="Password"
+        label={t("password")}
         autoComplete="new-password"
         value={form.password}
         onChange={(e) => update("password", e.target.value)}
@@ -89,7 +92,7 @@ export default function RegisterForm() {
       />
       <PasswordInput
         id="password_confirmation"
-        label="Konfirmasi Password"
+        label={t("confirmPassword")}
         autoComplete="new-password"
         value={form.password_confirmation}
         onChange={(e) => update("password_confirmation", e.target.value)}
@@ -105,25 +108,25 @@ export default function RegisterForm() {
           required
         />
         <span>
-          Saya menyetujui{" "}
+          {t("agreeTo")}{" "}
           <Link href="/legal/terms" className={linkClass} target="_blank">
-            Syarat & Ketentuan
+            {t("termsLink")}
           </Link>{" "}
-          dan{" "}
+          {t("and")}{" "}
           <Link href="/legal/privacy-policy" className={linkClass} target="_blank">
-            Kebijakan Privasi
+            {t("privacyLink")}
           </Link>{" "}
-          Harmoni Clothing.
+          {t("brandSuffix")}
         </span>
       </label>
       {errors.general && <p className="font-body text-xs text-danger">{errors.general[0]}</p>}
       <Button type="submit" fullWidth loading={loading}>
-        Daftar Gratis
+        {t("submit")}
       </Button>
       <p className="font-body text-body-sm text-text-secondary">
-        Sudah punya akun?{" "}
+        {t("hasAccount")}{" "}
         <button type="button" onClick={() => openModal("login")} className={linkClass}>
-          Masuk
+          {t("loginLink")}
         </button>
       </p>
     </form>

@@ -854,6 +854,46 @@
       }
     }
   },
+  "auth": {
+    "modal": {
+      "close": "Close",
+      "loginTitle": "Log In to Your Account",
+      "registerTitle": "Create a New Account",
+      "forgotPasswordTitle": "Forgot Password"
+    },
+    "login": {
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Forgot password?",
+      "submit": "Log In",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Sign Up"
+    },
+    "register": {
+      "fullName": "Full Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "passwordMismatch": "Password confirmation doesn't match.",
+      "registerSuccess": "Account created successfully. Please log in.",
+      "agreeTo": "I agree to the",
+      "termsLink": "Terms & Conditions",
+      "and": "and",
+      "privacyLink": "Privacy Policy",
+      "brandSuffix": "of Harmoni Clothing.",
+      "submit": "Sign Up Free",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Log In"
+    },
+    "forgotPassword": {
+      "email": "Email",
+      "description": "Enter your account email and we'll send you a link to reset your password.",
+      "sentMessage": "If the email is registered, a password reset link has been sent to {email}.",
+      "submit": "Send Reset Link",
+      "backTo": "Back to",
+      "loginLink": "Log In"
+    }
+  },
   "creator": {
     "sidebar": {
       "dashboard": "Dashboard",

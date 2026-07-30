@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { CheckCircle2, Mail } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Input from "@/components/ui/Input";
 import PasswordInput from "@/components/ui/PasswordInput";
 import Button from "@/components/ui/Button";
@@ -13,6 +14,8 @@ const linkClass =
   "font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4";
 
 export default function LoginForm({ message }: { message: string | null }) {
+  const t = useTranslations("auth.login");
+  const tCommon = useTranslations("common");
   const login = useAuthStore((state) => state.login);
   const closeModal = useAuthModalStore((state) => state.close);
   const openModal = useAuthModalStore((state) => state.open);
@@ -29,7 +32,7 @@ export default function LoginForm({ message }: { message: string | null }) {
       await login(email, password);
       closeModal();
     } catch (err) {
-      setError(getErrorMessage(err, "Terjadi kesalahan, coba lagi."));
+      setError(getErrorMessage(err, tCommon("errorGeneric")));
     } finally {
       setLoading(false);
     }
@@ -47,7 +50,7 @@ export default function LoginForm({ message }: { message: string | null }) {
         <Input
           id="email"
           type="email"
-          label="Email"
+          label={t("email")}
           icon={Mail}
           autoComplete="email"
           value={email}
@@ -56,23 +59,23 @@ export default function LoginForm({ message }: { message: string | null }) {
         />
         <PasswordInput
           id="password"
-          label="Password"
+          label={t("password")}
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
         <button type="button" onClick={() => openModal("lupa-password")} className={`w-fit font-body text-body-sm ${linkClass}`}>
-          Lupa password?
+          {t("forgotPassword")}
         </button>
         {error && <p className="font-body text-xs text-danger">{error}</p>}
         <Button type="submit" fullWidth loading={loading}>
-          Masuk
+          {t("submit")}
         </Button>
         <p className="font-body text-body-sm text-text-secondary">
-          Belum punya akun?{" "}
+          {t("noAccount")}{" "}
           <button type="button" onClick={() => openModal("register")} className={linkClass}>
-            Daftar
+            {t("registerLink")}
           </button>
         </p>
       </form>
