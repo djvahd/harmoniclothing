@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import LegalPageLayout from "@/components/layout/LegalPageLayout";
 
-export const metadata: Metadata = {
-  title: "Syarat & Ketentuan",
-  description: "Syarat dan ketentuan penggunaan platform Harmoni Clothing.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const tMeta = await getTranslations("public.legal.meta.terms");
+  return { title: tMeta("title"), description: tMeta("description") };
+}
 
 export default async function SyaratKetentuanPage() {
   const t = await getTranslations("public.legal.terms");

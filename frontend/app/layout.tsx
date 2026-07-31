@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Montserrat } from "next/font/google";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import "./globals.css";
 import AppProviders from "@/providers/AppProviders";
 import I18nProvider from "@/providers/I18nProvider";
@@ -16,14 +16,16 @@ const inter = Inter({
   weight: ["400", "500", "700"],
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "Harmoni Clothing",
-    template: "%s | Harmoni Clothing",
-  },
-  description:
-    "Platform print-on-demand, custom apparel, dan marketplace desain Indonesia.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("metadata");
+  return {
+    title: {
+      default: "Harmoni Clothing",
+      template: "%s | Harmoni Clothing",
+    },
+    description: t("siteDescription"),
+  };
+}
 
 export default async function RootLayout({
   children,

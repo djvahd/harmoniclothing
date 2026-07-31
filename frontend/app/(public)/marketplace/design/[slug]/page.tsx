@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { fetchPublic } from "@/lib/server-fetch";
 import type { Design } from "@/types/product";
 import DesignDetailClient from "./DesignDetailClient";
@@ -13,7 +14,8 @@ export async function generateMetadata({
   const design = result?.data;
 
   if (!design) {
-    return { title: "Desain Tidak Ditemukan" };
+    const t = await getTranslations("public.designDetail.meta");
+    return { title: t("notFoundTitle") };
   }
 
   return {

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { fetchPublic } from "@/lib/server-fetch";
 import type { CreatorProfile } from "@/services/marketplace";
 import CreatorProfileClient from "./CreatorProfileClient";
@@ -11,14 +12,15 @@ export async function generateMetadata({
   const { slug } = await params;
   const result = await fetchPublic<{ data: CreatorProfile }>(`/marketplace/creators/${slug}`);
   const creator = result?.data;
+  const t = await getTranslations("public.creatorProfile.meta");
 
   if (!creator) {
-    return { title: "Kreator Tidak Ditemukan" };
+    return { title: t("notFoundTitle") };
   }
 
   return {
     title: creator.name,
-    description: creator.bio?.slice(0, 160) ?? `Profil kreator ${creator.name} di Harmoni Clothing.`,
+    description: creator.bio?.slice(0, 160) ?? t("descriptionFallback", { name: creator.name }),
   };
 }
 

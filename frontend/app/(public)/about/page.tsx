@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import AboutClient from "./AboutClient";
 
-export const metadata: Metadata = {
-  title: "Tentang Kami",
-  description:
-    "Platform konveksi modern yang menghubungkan brand, individu, dan kreator lokal untuk menciptakan apparel custom.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("public.about.meta");
+  return { title: t("title"), description: t("description") };
+}
 
 export default function AboutPage() {
   return <AboutClient />;

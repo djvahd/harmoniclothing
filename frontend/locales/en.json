@@ -1,4 +1,14 @@
 {
+  "metadata": {
+    "siteDescription": "Print-on-demand, custom apparel, and design marketplace platform for Indonesia."
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "Sorry, the page you're looking for isn't available or has been moved. Let's head back home or browse our custom products.",
+    "backHome": "Back to Home",
+    "viewCatalog": "View Product Catalog",
+    "imageAlt": "Product not found"
+  },
   "common": {
     "language": "Language",
     "loading": "Loading...",
@@ -162,6 +172,10 @@
   },
   "public": {
     "about": {
+      "meta": {
+        "title": "About Us",
+        "description": "A modern custom apparel platform connecting brands, individuals, and local creators."
+      },
       "hero": {
         "title": "About Harmoni Clothing",
         "subtitle": "A modern print-on-demand platform connecting brands, individuals, and local creators to make apparel that truly fits each person's style.",
@@ -255,6 +269,10 @@
       }
     },
     "catalogList": {
+      "meta": {
+        "title": "Product Catalog",
+        "description": "Choose from a wide range of high-quality blank products, ready to customize however you like."
+      },
       "title": "Product Catalog",
       "subtitle": "Choose from a wide range of high-quality blank products, ready for you to customize any way you like.",
       "ctaCustomDesign": "Start Custom Design",
@@ -275,6 +293,9 @@
       "loadMore": "Load More"
     },
     "productDetail": {
+      "meta": {
+        "notFoundTitle": "Product Not Found"
+      },
       "breadcrumbCatalog": "Product Catalog",
       "ratingSummary": "{rating} ({count} reviews)",
       "soldCount": "{count} sold",
@@ -313,6 +334,10 @@
       }
     },
     "marketplaceList": {
+      "meta": {
+        "title": "Design Marketplace",
+        "description": "Browse thousands of ready-made designs from local creators, or become a creator and earn commission on every sale."
+      },
       "title": "Design Marketplace",
       "subtitle": "Browse hundreds of ready-made designs from local Indonesian creators, or find your favorite creator.",
       "ctaBecomeCreator": "Become a Creator",
@@ -357,6 +382,10 @@
       }
     },
     "creatorProfile": {
+      "meta": {
+        "notFoundTitle": "Creator Not Found",
+        "descriptionFallback": "{name}'s creator profile on Harmoni Clothing."
+      },
       "notFound": "Creator not found.",
       "backToMarketplace": "Back to Design Marketplace",
       "creatorSince": "Creator since {date}",
@@ -368,6 +397,9 @@
       "noDesigns": "No designs published yet."
     },
     "designDetail": {
+      "meta": {
+        "notFoundTitle": "Design Not Found"
+      },
       "breadcrumbMarketplace": "Design Marketplace",
       "selectVariantError": "Please select a color and size first.",
       "addToCartSuccess": "Added to cart.",
@@ -411,6 +443,16 @@
       }
     },
     "legal": {
+      "meta": {
+        "terms": {
+          "title": "Terms & Conditions",
+          "description": "Terms and conditions for using the Harmoni Clothing platform."
+        },
+        "privacyPolicy": {
+          "title": "Privacy Policy",
+          "description": "Harmoni Clothing's privacy policy: the data we collect and how we use it."
+        }
+      },
       "layout": {
         "lastUpdated": "Last updated:",
         "tableOfContents": "TABLE OF CONTENTS"
@@ -578,7 +620,8 @@
         "brandNamePlaceholder": "e.g. Studio Rangga",
         "bio": "Short Bio (optional)",
         "bioPlaceholder": "Tell us a bit about yourself as a Creator.",
-        "portfolioUrl": "Portfolio/Social Media Link (optional)"
+        "portfolioUrl": "Portfolio/Social Media Link (optional)",
+        "portfolioUrlPlaceholder": "https://instagram.com/yourname"
       },
       "termsCheckbox": "I agree to the Creator Terms & Conditions (commission and design content policy).",
       "submit": "Apply Now",

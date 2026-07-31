@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import MarketplaceListClient from "./MarketplaceListClient";
 
-export const metadata: Metadata = {
-  title: "Lapak Desain",
-  description:
-    "Jelajahi ribuan desain siap pakai dari kreator lokal, atau jadi kreator dan dapatkan komisi dari setiap penjualan.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("public.marketplaceList.meta");
+  return { title: t("title"), description: t("description") };
+}
 
 export default function MarketplacePage() {
   return <MarketplaceListClient />;

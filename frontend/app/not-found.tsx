@@ -1,12 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Home, Search } from "lucide-react";
+import { useTranslations } from "next-intl";
 import SiteHeader from "@/components/layout/SiteHeader";
 import Footer from "@/components/layout/Footer";
 import ChatWidget from "@/components/layout/ChatWidget";
 import Button from "@/components/ui/Button";
 
 export default function NotFound() {
+  const t = useTranslations("notFound");
+
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
@@ -24,23 +27,22 @@ export default function NotFound() {
                 404
               </span>
               <h1 className="font-heading text-h3 font-semibold text-text-primary md:text-h1">
-                Halaman Tidak Ditemukan
+                {t("title")}
               </h1>
               <p className="font-body text-base text-text-secondary">
-                Maaf, halaman yang kamu cari tidak tersedia atau sudah dipindahkan. Yuk kembali ke
-                beranda atau jelajahi produk custom kami.
+                {t("description")}
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Link href="/">
                   <Button variant="primary" className="gap-2">
                     <Home className="size-4" />
-                    Kembali ke Beranda
+                    {t("backHome")}
                   </Button>
                 </Link>
                 <Link href="/catalog">
                   <Button variant="secondary" className="gap-2">
                     <Search className="size-4" />
-                    Lihat Katalog Produk
+                    {t("viewCatalog")}
                   </Button>
                 </Link>
               </div>
@@ -49,7 +51,7 @@ export default function NotFound() {
               <div className="absolute left-1/2 top-0 h-[220px] w-[196px] -translate-x-1/2 rotate-[-8deg]">
                 <Image
                   src="/hero/kaos.png"
-                  alt="Produk tidak ditemukan"
+                  alt={t("imageAlt")}
                   fill
                   sizes="196px"
                   className="object-contain opacity-80 drop-shadow-xl grayscale"

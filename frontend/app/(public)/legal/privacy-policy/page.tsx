@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import LegalPageLayout from "@/components/layout/LegalPageLayout";
 
-export const metadata: Metadata = {
-  title: "Kebijakan Privasi",
-  description: "Kebijakan privasi Harmoni Clothing: data yang kami kumpulkan dan cara kami menggunakannya.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const tMeta = await getTranslations("public.legal.meta.privacyPolicy");
+  return { title: tMeta("title"), description: tMeta("description") };
+}
 
 export default async function KebijakanPrivasiPage() {
   const t = await getTranslations("public.legal.privacyPolicy");

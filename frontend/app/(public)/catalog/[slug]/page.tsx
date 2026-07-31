@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { fetchPublic } from "@/lib/server-fetch";
 import type { Product } from "@/types/product";
 import ProductDetailClient from "./ProductDetailClient";
@@ -13,7 +14,8 @@ export async function generateMetadata({
   const product = result?.data;
 
   if (!product) {
-    return { title: "Produk Tidak Ditemukan" };
+    const t = await getTranslations("public.productDetail.meta");
+    return { title: t("notFoundTitle") };
   }
 
   return {

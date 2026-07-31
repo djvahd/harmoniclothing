@@ -74,7 +74,7 @@ export default function AjukanUpgradeCreatorPage() {
           </div>
           <Input
             label={t("fields.portfolioUrl")}
-            placeholder="https://instagram.com/namamu"
+            placeholder={t("fields.portfolioUrlPlaceholder")}
             type="url"
             value={portfolioUrl}
             onChange={(e) => setPortfolioUrl(e.target.value)}

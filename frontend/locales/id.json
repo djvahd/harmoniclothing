@@ -1,4 +1,14 @@
 {
+  "metadata": {
+    "siteDescription": "Platform print-on-demand, custom apparel, dan marketplace desain Indonesia."
+  },
+  "notFound": {
+    "title": "Halaman Tidak Ditemukan",
+    "description": "Maaf, halaman yang kamu cari tidak tersedia atau sudah dipindahkan. Yuk kembali ke beranda atau jelajahi produk custom kami.",
+    "backHome": "Kembali ke Beranda",
+    "viewCatalog": "Lihat Katalog Produk",
+    "imageAlt": "Produk tidak ditemukan"
+  },
   "common": {
     "language": "Bahasa",
     "loading": "Memuat...",
@@ -255,6 +265,10 @@
       }
     },
     "catalogList": {
+      "meta": {
+        "title": "Katalog Produk",
+        "description": "Pilih dari berbagai jenis produk blank berkualitas tinggi, siap kamu kustomisasi sesuai keinginan sendiri."
+      },
       "title": "Katalog Produk",
       "subtitle": "Pilih dari berbagai jenis produk blank berkualitas tinggi, siap kamu kustomisasi sesuai keinginan sendiri.",
       "ctaCustomDesign": "Mulai Custom Design",
@@ -275,6 +289,9 @@
       "loadMore": "Muat Lebih Banyak"
     },
     "productDetail": {
+      "meta": {
+        "notFoundTitle": "Produk Tidak Ditemukan"
+      },
       "breadcrumbCatalog": "Katalog Produk",
       "ratingSummary": "{rating} ({count} ulasan)",
       "soldCount": "Terjual {count} kali",
@@ -313,6 +330,10 @@
       }
     },
     "marketplaceList": {
+      "meta": {
+        "title": "Lapak Desain",
+        "description": "Jelajahi ribuan desain siap pakai dari kreator lokal, atau jadi kreator dan dapatkan komisi dari setiap penjualan."
+      },
       "title": "Lapak Desain",
       "subtitle": "Jelajahi ratusan desain siap pakai dari kreator lokal Indonesia, atau temukan kreator favoritmu.",
       "ctaBecomeCreator": "Jadi Kreator",
@@ -357,6 +378,10 @@
       }
     },
     "creatorProfile": {
+      "meta": {
+        "notFoundTitle": "Kreator Tidak Ditemukan",
+        "descriptionFallback": "Profil kreator {name} di Harmoni Clothing."
+      },
       "notFound": "Kreator tidak ditemukan.",
       "backToMarketplace": "Kembali ke Lapak Desain",
       "creatorSince": "Kreator sejak {date}",
@@ -368,6 +393,9 @@
       "noDesigns": "Belum ada desain yang dipublikasikan."
     },
     "designDetail": {
+      "meta": {
+        "notFoundTitle": "Desain Tidak Ditemukan"
+      },
       "breadcrumbMarketplace": "Lapak Desain",
       "selectVariantError": "Pilih warna dan ukuran terlebih dahulu.",
       "addToCartSuccess": "Ditambahkan ke keranjang.",
@@ -411,6 +439,16 @@
       }
     },
     "legal": {
+      "meta": {
+        "terms": {
+          "title": "Syarat & Ketentuan",
+          "description": "Syarat dan ketentuan penggunaan platform Harmoni Clothing."
+        },
+        "privacyPolicy": {
+          "title": "Kebijakan Privasi",
+          "description": "Kebijakan privasi Harmoni Clothing: data yang kami kumpulkan dan cara kami menggunakannya."
+        }
+      },
       "layout": {
         "lastUpdated": "Terakhir diperbarui:",
         "tableOfContents": "DAFTAR ISI"
@@ -578,7 +616,8 @@
         "brandNamePlaceholder": "Contoh: Studio Rangga",
         "bio": "Bio Singkat (opsional)",
         "bioPlaceholder": "Ceritakan singkat tentang dirimu sebagai Creator.",
-        "portfolioUrl": "Link Portfolio/Sosial Media (opsional)"
+        "portfolioUrl": "Link Portfolio/Sosial Media (opsional)",
+        "portfolioUrlPlaceholder": "https://instagram.com/namamu"
       },
       "termsCheckbox": "Saya menyetujui Syarat & Ketentuan Creator (komisi dan kebijakan konten desain).",
       "submit": "Ajukan Sekarang",
