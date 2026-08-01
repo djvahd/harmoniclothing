@@ -1,15 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { ChevronDown, MessageCircle, Send } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { getMessages, getThreads, sendMessage } from "@/services/chat";
 import { useAuthStore } from "@/store/auth-store";
+import { useRealtimeNotifications } from "@/hooks/useNotifications";
+import { getEcho } from "@/lib/echo";
 
 export default function ChatWidget() {
   const t = useTranslations("layout.chatWidget");
   const user = useAuthStore((state) => state.user);
+  useRealtimeNotifications(user?.id);
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState("");
 
@@ -20,6 +23,15 @@ export default function ChatWidget() {
     () => getMessages(thread!.id),
   );
   const messages = messagesData?.data ?? [];
+
+  useEffect(() => {
+    if (!thread) return;
+    const channelName = `chat.${thread.id}`;
+    getEcho().private(channelName).listen(".chat.message.sent", () => mutate());
+    return () => {
+      getEcho().leave(channelName);
+    };
+  }, [thread, mutate]);
 
   async function handleSend() {
     if (!thread || !draft.trim()) return;

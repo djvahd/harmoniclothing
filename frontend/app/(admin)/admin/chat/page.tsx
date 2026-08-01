@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { Send } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -11,10 +11,11 @@ import {
   getAdminChatThreads,
   sendAdminChatMessage,
 } from "@/services/admin";
+import { getEcho } from "@/lib/echo";
 
 export default function AdminChatManagementPage() {
   const t = useTranslations("admin.chat");
-  const { data: threadsData } = useSWR("/admin/chat/threads", getAdminChatThreads);
+  const { data: threadsData, mutate: mutateThreads } = useSWR("/admin/chat/threads", getAdminChatThreads);
   const threads = threadsData?.data ?? [];
   const [activeId, setActiveId] = useState<number | null>(null);
   const activeThread = activeId ?? threads[0]?.id ?? null;
@@ -25,6 +26,22 @@ export default function AdminChatManagementPage() {
   );
   const messages = messagesData?.data ?? [];
   const [draft, setDraft] = useState("");
+
+  useEffect(() => {
+    getEcho().private("admin.chat").listen(".chat.message.sent", () => mutateThreads());
+    return () => {
+      getEcho().leave("admin.chat");
+    };
+  }, [mutateThreads]);
+
+  useEffect(() => {
+    if (!activeThread) return;
+    const channelName = `chat.${activeThread}`;
+    getEcho().private(channelName).listen(".chat.message.sent", () => mutate());
+    return () => {
+      getEcho().leave(channelName);
+    };
+  }, [activeThread, mutate]);
 
   async function handleSend() {
     if (!activeThread || !draft.trim()) return;

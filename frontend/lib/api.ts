@@ -11,14 +11,14 @@ export class ApiError extends Error {
   }
 }
 
-function readCookie(name: string): string | null {
+export function readCookie(name: string): string | null {
   const match = document.cookie
     .split("; ")
     .find((row) => row.startsWith(`${name}=`));
   return match ? decodeURIComponent(match.split("=").slice(1).join("=")) : null;
 }
 
-async function ensureCsrfCookie() {
+export async function ensureCsrfCookie() {
   if (readCookie("XSRF-TOKEN")) return;
   await fetch(`${API_URL}/sanctum/csrf-cookie`, { credentials: "include" });
 }

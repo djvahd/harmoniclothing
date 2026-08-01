@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\ChatMessageSent;
 use App\Models\ChatMessage;
 use App\Models\ChatThread;
 use App\Models\User;
@@ -54,6 +55,8 @@ class ChatService
         ]);
 
         $thread->update(['last_message_at' => now()]);
+
+        broadcast(new ChatMessageSent($chatMessage));
 
         // FE-041 note: no admin is assigned to a thread until the (not yet
         // built) Admin Dashboard picks it up, so this is a no-op for now.
