@@ -654,7 +654,17 @@
       "cancelOrder": "Cancel Order",
       "confirmReceived": "Confirm Received",
       "reorder": "Reorder",
-      "viewInvoice": "View Invoice"
+      "viewInvoice": "View Invoice",
+      "review": {
+        "rateItem": "Rate This Item",
+        "yourRating": "Your Rating",
+        "starLabel": "{n} stars",
+        "commentPlaceholder": "Share your experience with this product (optional)",
+        "selectRatingError": "Please select a star rating first.",
+        "submit": "Submit Rating",
+        "submitSuccess": "Rating submitted, thank you!",
+        "submitError": "Failed to submit rating."
+      }
     },
     "invoice": {
       "notAvailable": "Invoice not available yet - the order may not be paid.",

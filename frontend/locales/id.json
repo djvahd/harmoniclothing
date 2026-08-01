@@ -650,7 +650,17 @@
       "cancelOrder": "Batalkan Pesanan",
       "confirmReceived": "Konfirmasi Diterima",
       "reorder": "Pesan Lagi",
-      "viewInvoice": "Lihat Invoice"
+      "viewInvoice": "Lihat Invoice",
+      "review": {
+        "rateItem": "Beri Rating untuk Item Ini",
+        "yourRating": "Rating Kamu",
+        "starLabel": "{n} bintang",
+        "commentPlaceholder": "Bagikan pengalamanmu dengan produk ini (opsional)",
+        "selectRatingError": "Pilih rating bintang terlebih dahulu.",
+        "submit": "Kirim Rating",
+        "submitSuccess": "Rating berhasil dikirim, terima kasih!",
+        "submitError": "Gagal mengirim rating."
+      }
     },
     "invoice": {
       "notAvailable": "Invoice belum tersedia - pesanan mungkin belum dibayar.",

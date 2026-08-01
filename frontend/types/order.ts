@@ -1,4 +1,4 @@
-import type { Design, ProductVariant } from "./product";
+import type { Design, ProductVariant, Review } from "./product";
 
 /** BR-012 tiered pricing for Bulk Order — total quantity across all variants of one product picks a single tier. */
 export interface BulkPricingTier {
@@ -34,6 +34,7 @@ export interface OrderItem {
   design_position: Record<string, unknown> | null;
   product_variant: ProductVariant & { product?: { name: string; slug: string } };
   design: Design | null;
+  review: Review | null;
 }
 
 export interface Order {

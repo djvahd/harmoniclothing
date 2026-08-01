@@ -10,6 +10,7 @@ import ProductThumbnail from "@/components/ui/ProductThumbnail";
 import PriceSummaryRow from "@/components/ui/PriceSummaryRow";
 import Button from "@/components/ui/Button";
 import LoadingState from "@/components/ui/LoadingState";
+import OrderItemReview from "@/components/order/OrderItemReview";
 import { cancelOrder, confirmReceived, reorder } from "@/services/orders";
 import { useOrder, invalidateOrder } from "@/hooks/useOrders";
 import { storageUrl } from "@/lib/storage";
@@ -104,22 +105,32 @@ export default function DetailPesananPage() {
 
         <div className="flex flex-col gap-3 rounded-md border border-border bg-surface p-5">
           {order.items.map((item) => (
-            <div key={item.id} className="flex items-center gap-3">
-              <ProductThumbnail
-                src={storageUrl(item.design?.thumbnail_path ?? item.product_variant.mockup_asset_path)}
-                alt={item.product_variant.product?.name ?? tCommon("productFallback")}
-              />
-              <div className="flex flex-1 flex-col">
+            <div key={item.id} className="flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <ProductThumbnail
+                  src={storageUrl(item.design?.thumbnail_path ?? item.product_variant.mockup_asset_path)}
+                  alt={item.product_variant.product?.name ?? tCommon("productFallback")}
+                />
+                <div className="flex flex-1 flex-col">
+                  <p className="font-body text-sm font-semibold text-text-primary">
+                    {item.product_variant.product?.name}
+                  </p>
+                  <p className="font-body text-xs text-text-secondary">
+                    {item.product_variant.size} · {item.product_variant.color} · x{item.quantity}
+                  </p>
+                </div>
                 <p className="font-body text-sm font-semibold text-text-primary">
-                  {item.product_variant.product?.name}
-                </p>
-                <p className="font-body text-xs text-text-secondary">
-                  {item.product_variant.size} · {item.product_variant.color} · x{item.quantity}
+                  {formatCurrency(item.subtotal)}
                 </p>
               </div>
-              <p className="font-body text-sm font-semibold text-text-primary">
-                {formatCurrency(item.subtotal)}
-              </p>
+              {order.status === "selesai" && (
+                <OrderItemReview
+                  orderId={order.id}
+                  orderItemId={item.id}
+                  review={item.review}
+                  onSubmitted={() => invalidateOrder(order.id)}
+                />
+              )}
             </div>
           ))}
         </div>

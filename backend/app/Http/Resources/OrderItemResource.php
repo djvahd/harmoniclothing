@@ -20,6 +20,7 @@ class OrderItemResource extends JsonResource
             'design_position' => $this->design_position,
             'product_variant' => new ProductVariantResource($this->whenLoaded('productVariant')),
             'design' => $this->design ? new DesignResource($this->design) : null,
+            'review' => $this->whenLoaded('review', fn () => $this->review ? new ReviewResource($this->review) : null),
         ];
     }
 }
