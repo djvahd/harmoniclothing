@@ -28,7 +28,7 @@ import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
 import { getErrorMessage } from "@/lib/api";
 import { toast } from "@/store/toast-store";
-import type { Product, PrintArea } from "@/types/product";
+import type { Product } from "@/types/product";
 
 const TABS = [
   { key: "deskripsi", tKey: "description" },

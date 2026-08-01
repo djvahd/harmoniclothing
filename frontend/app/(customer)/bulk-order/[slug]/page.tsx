@@ -220,9 +220,9 @@ function BulkOrderForm() {
             >
               <span>
                 {tier.min_qty}
-                {tier.max_qty ? `–${tier.max_qty}` : "+"} pcs
+                {tier.max_qty ? `–${tier.max_qty}` : "+"} {t("unitPcs")}
               </span>
-              <span>{formatCurrency(tier.price_per_unit)}/pcs</span>
+              <span>{formatCurrency(tier.price_per_unit)}/{t("unitPcs")}</span>
             </div>
           ))}
         </div>
@@ -230,7 +230,7 @@ function BulkOrderForm() {
         <div className="flex flex-col gap-1 border-t border-border pt-3">
           <div className="flex items-center justify-between font-body text-sm">
             <p className="text-text-secondary">{t("totalQuantity")}</p>
-            <p className="font-semibold text-text-primary">{totalQuantity} pcs</p>
+            <p className="font-semibold text-text-primary">{totalQuantity} {t("unitPcs")}</p>
           </div>
           <PriceSummaryRow label={t("totalPrice")} amount={subtotal} emphasis />
         </div>

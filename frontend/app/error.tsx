@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable i18next/no-literal-string -- can't use next-intl here, see docblock below */
+
 import { useEffect } from "react";
 
 /**

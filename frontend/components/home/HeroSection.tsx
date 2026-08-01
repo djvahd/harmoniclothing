@@ -274,12 +274,14 @@ export default function HeroSection() {
               <p className="font-body text-xs text-text-secondary">{t("cardSubtitle")}</p>
               <div className="flex items-center gap-2">
                 <div className="flex -space-x-1.5">
+                  {/* eslint-disable-next-line i18next/no-literal-string -- asset filenames, not display text */}
                   {["avatar1", "avatar2", "avatar3", "avatar4"].map((a) => (
                     <div key={a} className="relative size-[22px] rounded-full ring-1 ring-white">
                       <Image src={`/hero/${a}.png`} alt="" fill sizes="22px" className="rounded-full" priority />
                     </div>
                   ))}
                 </div>
+                {/* eslint-disable-next-line i18next/no-literal-string -- decorative placeholder stat, not real data */}
                 <p className="font-body text-xs font-semibold text-text-secondary">12.3K</p>
               </div>
             </div>

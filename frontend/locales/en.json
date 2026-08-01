@@ -681,6 +681,7 @@
       "notesLabel": "Notes (optional)",
       "notesPlaceholder": "Special or revision requests for this product...",
       "priceTiers": "Bulk Price Tiers",
+      "unitPcs": "pcs",
       "totalQuantity": "Total Quantity",
       "totalPrice": "Total Price",
       "continueToBulkCheckout": "Continue to Bulk Checkout",

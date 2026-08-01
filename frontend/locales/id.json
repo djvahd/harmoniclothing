@@ -677,6 +677,7 @@
       "notesLabel": "Catatan (opsional)",
       "notesPlaceholder": "Permintaan revisi/khusus untuk produk ini...",
       "priceTiers": "Tingkat Harga Bulk",
+      "unitPcs": "pcs",
       "totalQuantity": "Total Kuantitas",
       "totalPrice": "Total Harga",
       "continueToBulkCheckout": "Lanjut ke Checkout Bulk",
