@@ -127,7 +127,7 @@ function KatalogPageContent() {
           </h1>
           <p className="font-body text-sm text-text-secondary md:text-base">{t("subtitle")}</p>
           <div className="flex gap-3">
-            <a href="#product-grid">
+            <a href="#catalog-body">
               <Button variant="primary">{t("ctaCustomDesign")}</Button>
             </a>
             <Link href="/marketplace">
@@ -137,7 +137,10 @@ function KatalogPageContent() {
         </div>
       </section>
 
-      <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-8 md:flex-row md:px-20">
+      <section
+        id="catalog-body"
+        className="mx-auto flex w-full max-w-[1440px] scroll-mt-6 flex-col gap-6 px-4 py-8 md:flex-row md:px-20"
+      >
         <FilterSidebar options={filterOptions} value={filters} onChange={setFilters} skeletonFacetCount={5} />
 
         <div className="flex flex-1 flex-col gap-6">

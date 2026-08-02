@@ -28,6 +28,8 @@ import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
 import { getErrorMessage } from "@/lib/api";
 import { toast } from "@/store/toast-store";
+import { useAuthStore } from "@/store/auth-store";
+import { useAuthModalStore } from "@/store/auth-modal-store";
 import type { Product } from "@/types/product";
 
 const TABS = [
@@ -43,8 +45,11 @@ type TabKey = (typeof TABS)[number]["key"];
 export default function DetailProdukPage() {
   const t = useTranslations("public.productDetail");
   const tCommon = useTranslations("common");
+  const tGuards = useTranslations("auth.guards");
   const params = useParams<{ slug: string }>();
   const router = useRouter();
+  const user = useAuthStore((state) => state.user);
+  const openAuthModal = useAuthModalStore((state) => state.open);
   const { product, isLoading } = useProduct(params.slug);
   const [reviewPage, setReviewPage] = useState(1);
   const { reviews, meta: reviewsMeta, isLoading: reviewsLoading } = useProductReviews(params.slug, reviewPage);
@@ -114,6 +119,10 @@ export default function DetailProdukPage() {
   async function handleSubmit(destination: "cart" | "buy") {
     if (!selectedVariant) {
       setError(t("selectVariantError"));
+      return;
+    }
+    if (!user) {
+      openAuthModal("login", tGuards("loginRequired"));
       return;
     }
     setError(null);

@@ -33,6 +33,8 @@ import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
 import { getErrorMessage } from "@/lib/api";
 import { toast } from "@/store/toast-store";
+import { useAuthStore } from "@/store/auth-store";
+import { useAuthModalStore } from "@/store/auth-modal-store";
 import type { Design, Product } from "@/types/product";
 
 // Display-only estimate mirroring backend's config('creator.commission_rate')
@@ -54,8 +56,11 @@ type TabKey = (typeof TABS)[number]["key"];
 export default function DetailDesainPage() {
   const t = useTranslations("public.designDetail");
   const tCommon = useTranslations("common");
+  const tGuards = useTranslations("auth.guards");
   const params = useParams<{ slug: string }>();
   const router = useRouter();
+  const user = useAuthStore((state) => state.user);
+  const openAuthModal = useAuthModalStore((state) => state.open);
   const { design, isLoading } = useDesign(params.slug);
   const [reviewPage, setReviewPage] = useState(1);
   const { reviews, meta: reviewsMeta, isLoading: reviewsLoading } = useDesignReviews(params.slug, reviewPage);
@@ -124,6 +129,10 @@ export default function DetailDesainPage() {
   async function handleSubmit(destination: "cart" | "buy") {
     if (!selectedVariant || !design) {
       setError(t("selectVariantError"));
+      return;
+    }
+    if (!user) {
+      openAuthModal("login", tGuards("loginRequired"));
       return;
     }
     setError(null);

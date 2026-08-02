@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import clsx from "clsx";
 import { useTranslations } from "next-intl";
 
 export interface LegalSection {
@@ -18,6 +20,28 @@ export default function LegalPageLayout({
   sections: LegalSection[];
 }) {
   const t = useTranslations("public.legal.layout");
+  const [activeId, setActiveId] = useState<string | null>(sections[0]?.id ?? null);
+
+  useEffect(() => {
+    const headings = sections
+      .map((section) => document.getElementById(section.id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (headings.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible[0]) setActiveId(visible[0].target.id);
+      },
+      { rootMargin: "-96px 0px -70% 0px", threshold: 0 },
+    );
+
+    headings.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [sections]);
+
   return (
     <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-10 md:flex-row md:px-20">
       <div className="flex-1">
@@ -49,7 +73,12 @@ export default function LegalPageLayout({
             <a
               key={section.id}
               href={`#${section.id}`}
-              className="font-body text-sm text-text-secondary hover:text-primary"
+              className={clsx(
+                "font-body text-sm transition-colors hover:text-primary",
+                section.id === activeId
+                  ? "font-semibold text-primary"
+                  : "text-text-secondary",
+              )}
             >
               {section.title}
             </a>

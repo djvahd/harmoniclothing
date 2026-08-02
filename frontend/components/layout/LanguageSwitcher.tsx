@@ -1,14 +1,21 @@
 "use client";
 
 import { useTransition } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 import clsx from "clsx";
 import { setUserLocale } from "@/lib/locale-actions";
 import { locales, type Locale } from "@/i18n/config";
 
-export default function LanguageSwitcher({ className }: { className?: string }) {
+export default function LanguageSwitcher({
+  className,
+  variant = "light",
+}: {
+  className?: string;
+  /** "dark" is for placement on a solid `bg-primary` surface (e.g. the footer), where the
+   * default colors — tuned for a light background — would wash out. */
+  variant?: "light" | "dark";
+}) {
   const locale = useLocale();
-  const t = useTranslations("common");
   const [isPending, startTransition] = useTransition();
 
   function handleChange(next: Locale) {
@@ -24,8 +31,12 @@ export default function LanguageSwitcher({ className }: { className?: string }) 
 
   return (
     <div className={clsx("flex items-center gap-1.5", className)}>
-      <span className="font-body text-xs text-text-secondary">{t("language")}</span>
-      <div className="flex items-center rounded-full border border-border p-0.5">
+      <div
+        className={clsx(
+          "flex items-center rounded-full border p-0.5",
+          variant === "dark" ? "border-text-on-accent/40" : "border-border",
+        )}
+      >
         {locales.map((l) => (
           <button
             key={l}
@@ -35,9 +46,13 @@ export default function LanguageSwitcher({ className }: { className?: string }) 
             onClick={() => handleChange(l)}
             className={clsx(
               "rounded-full px-2 py-0.5 font-body text-xs font-medium uppercase transition-colors",
-              l === locale
-                ? "bg-primary text-text-on-accent"
-                : "text-text-secondary hover:text-text-primary",
+              variant === "dark"
+                ? l === locale
+                  ? "bg-surface text-primary"
+                  : "text-text-on-accent/80 hover:text-text-on-accent"
+                : l === locale
+                  ? "bg-primary text-text-on-accent"
+                  : "text-text-secondary hover:text-text-primary",
             )}
           >
             {l}

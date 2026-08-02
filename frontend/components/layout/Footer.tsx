@@ -44,7 +44,7 @@ export default async function Footer() {
       <div className="h-px w-full bg-text-on-accent/40" />
       <div className="flex flex-col items-start justify-between gap-3 md:flex-row md:items-center">
         <p className="font-body text-caption text-text-on-accent">{t("copyright")}</p>
-        <LanguageSwitcher />
+        <LanguageSwitcher variant="dark" />
       </div>
     </footer>
   );
