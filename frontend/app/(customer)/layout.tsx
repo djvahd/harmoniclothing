@@ -3,8 +3,8 @@ import AuthGuard from "@/components/auth/AuthGuard";
 
 export default function CustomerLayout({ children }: { children: React.ReactNode }) {
   return (
-    <AuthGuard>
-      <AppShell>{children}</AppShell>
-    </AuthGuard>
+    <AppShell>
+      <AuthGuard>{children}</AuthGuard>
+    </AppShell>
   );
 }

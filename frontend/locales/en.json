@@ -992,7 +992,8 @@
     },
     "guards": {
       "loginRequired": "Please log in to access this page.",
-      "adminLoginRequired": "Please log in as an admin to access this page."
+      "adminLoginRequired": "Please log in as an admin to access this page.",
+      "adminAccessDenied": "You don't have access to this admin page."
     }
   },
   "product": {

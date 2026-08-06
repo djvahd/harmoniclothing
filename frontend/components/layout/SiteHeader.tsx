@@ -48,7 +48,7 @@ export default function SiteHeader() {
   }
 
   return (
-    <header className="flex w-full items-center justify-between border-b border-border bg-surface px-4 py-4 md:grid md:h-[76px] md:grid-cols-[1fr_auto_1fr] md:px-20 md:py-0">
+    <header className="flex w-full items-center justify-between border-b border-border bg-surface px-4 py-4 md:grid md:h-[76px] md:grid-cols-[1fr_auto_1fr] md:gap-x-8 md:px-20 md:py-0">
       <div className="md:justify-self-start">
         <Logo />
       </div>

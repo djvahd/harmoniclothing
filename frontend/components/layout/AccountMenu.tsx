@@ -55,8 +55,8 @@ export default function AccountMenu({
   return (
     <div className="relative" onMouseEnter={onOpen} onMouseLeave={onScheduleClose}>
       <button type="button" className="flex items-center gap-2">
-        <span className="size-8 rounded-full bg-border" />
-        <span className="font-body text-sm font-medium text-text-primary">{user.name}</span>
+        <span className="size-8 shrink-0 rounded-full bg-border" />
+        <span className="whitespace-nowrap font-body text-sm font-medium text-text-primary">{user.name}</span>
       </button>
       {open && (
         <div

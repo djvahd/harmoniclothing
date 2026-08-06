@@ -22,7 +22,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
   if (status !== "ready" || !user) {
     return (
-      <div className="flex min-h-screen w-full items-center justify-center bg-background">
+      <div className="flex min-h-[60vh] w-full items-center justify-center bg-background">
         <Loader2 className="size-6 animate-spin text-text-secondary" />
       </div>
     );

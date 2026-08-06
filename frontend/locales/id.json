@@ -988,7 +988,8 @@
     },
     "guards": {
       "loginRequired": "Silakan masuk untuk mengakses halaman ini.",
-      "adminLoginRequired": "Silakan masuk sebagai admin untuk mengakses halaman ini."
+      "adminLoginRequired": "Silakan masuk sebagai admin untuk mengakses halaman ini.",
+      "adminAccessDenied": "Anda tidak memiliki akses ke halaman admin ini."
     }
   },
   "product": {

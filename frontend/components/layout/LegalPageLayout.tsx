@@ -74,10 +74,10 @@ export default function LegalPageLayout({
               key={section.id}
               href={`#${section.id}`}
               className={clsx(
-                "font-body text-sm transition-colors hover:text-primary",
+                "border-l-2 py-0.5 pl-2.5 font-body text-sm transition-colors hover:text-primary",
                 section.id === activeId
-                  ? "font-semibold text-primary"
-                  : "text-text-secondary",
+                  ? "border-primary text-primary"
+                  : "border-transparent text-text-secondary",
               )}
             >
               {section.title}
