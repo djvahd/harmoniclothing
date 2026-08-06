@@ -197,33 +197,15 @@
         }
       },
       "reasons": {
-        "eyebrow": "Why Harmoni",
+        "eyebrow": "Our Principles",
         "title": "Why Choose Harmoni?",
         "items": {
           "unlimitedCustom": { "title": "Unlimited Customization", "description": "Design it yourself or pick one from the Design Marketplace — the product still feels like yours." },
-          "guaranteedQuality": { "title": "Guaranteed Quality", "description": "Premium materials and a standardized production process on every order." },
-          "localCreatorHub": { "title": "A Home for Local Creators", "description": "Creators can upload designs and earn a commission on every sale." },
-          "secureTransaction": { "title": "Secure Transactions", "description": "Verified payments and transparent order status." },
-          "personalService": { "title": "Personal Service", "description": "Our team is ready to help via live chat for any issue." }
-        }
-      },
-      "values": {
-        "eyebrow": "Our Values",
-        "title": "The Principles Behind Every Product",
-        "items": {
-          "quality": { "title": "Quality", "description": "Every product goes through strict quality control before it ships." },
+          "guaranteedQuality": { "title": "Guaranteed Quality", "description": "Premium materials and a standardized production process, checked closely before it ships." },
           "creativity": { "title": "Creativity", "description": "We believe every idea has value and deserves to be brought to life." },
-          "community": { "title": "Community", "description": "Creators and customers are part of the wider Harmoni family." },
-          "transparency": { "title": "Transparency", "description": "Pricing, order status, and creator commissions are always clear and open." }
-        }
-      },
-      "stats": {
-        "items": {
-          "delivered": { "value": "10,000+", "label": "Products Delivered" },
-          "activeCreators": { "value": "500+", "label": "Active Creators" },
-          "designs": { "value": "5,000+", "label": "Designs Available" },
-          "rating": { "value": "4.9/5", "label": "Satisfaction Rating" },
-          "provinces": { "value": "34", "label": "Provinces Covered" }
+          "localCreatorHub": { "title": "A Home for Local Creators", "description": "Creators upload designs and earn a commission on every sale — part of the wider Harmoni family." },
+          "secureTransparent": { "title": "Secure & Transparent", "description": "Verified payments, with pricing and order status always clear and open." },
+          "personalService": { "title": "Personal Service", "description": "Our team is ready to help via live chat for any issue." }
         }
       },
       "creatorCta": {
@@ -238,6 +220,7 @@
         "cta": "Become a Creator"
       },
       "timeline": {
+        "eyebrow": "Our Journey",
         "title": "The Harmoni Story",
         "items": {
           "y2023": { "title": "Harmoni Begins", "description": "Born from the need for fast, trustworthy custom apparel manufacturing." },

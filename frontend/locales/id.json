@@ -173,6 +173,10 @@
   },
   "public": {
     "about": {
+      "meta": {
+        "title": "Tentang Kami",
+        "description": "Platform konveksi custom modern yang menghubungkan brand, individu, dan kreator lokal di seluruh Indonesia."
+      },
       "hero": {
         "title": "Tentang Harmoni Clothing",
         "subtitle": "Platform konveksi modern yang menghubungkan brand, individu, dan kreator lokal untuk menciptakan apparel yang benar-benar sesuai gaya masing-masing.",
@@ -193,33 +197,15 @@
         }
       },
       "reasons": {
-        "eyebrow": "Kenapa Harmoni",
+        "eyebrow": "Prinsip Kami",
         "title": "Kenapa Memilih Harmoni?",
         "items": {
           "unlimitedCustom": { "title": "Custom Tanpa Batas", "description": "Desain sendiri atau pilih dari Lapak Desain, produk tetap terasa milikmu." },
-          "guaranteedQuality": { "title": "Kualitas Terjamin", "description": "Bahan premium dan proses produksi terstandar di setiap pesanan." },
-          "localCreatorHub": { "title": "Wadah Kreator Lokal", "description": "Kreator bisa upload desain dan dapat komisi dari tiap penjualan." },
-          "secureTransaction": { "title": "Transaksi Aman", "description": "Pembayaran terverifikasi dan status pesanan transparan." },
-          "personalService": { "title": "Layanan Personal", "description": "Tim kami siap bantu lewat live chat untuk setiap kendala." }
-        }
-      },
-      "values": {
-        "eyebrow": "Nilai Kami",
-        "title": "Prinsip di Balik Setiap Produk",
-        "items": {
-          "quality": { "title": "Kualitas", "description": "Setiap produk melewati standar kontrol kualitas yang ketat sebelum dikirim." },
+          "guaranteedQuality": { "title": "Kualitas Terjamin", "description": "Bahan premium dan proses produksi terstandar, dicek ketat sebelum dikirim." },
           "creativity": { "title": "Kreativitas", "description": "Kami percaya setiap ide punya nilai dan layak untuk diwujudkan." },
-          "community": { "title": "Komunitas", "description": "Kreator dan pelanggan adalah bagian dari keluarga besar Harmoni." },
-          "transparency": { "title": "Transparansi", "description": "Harga, status pesanan, dan komisi kreator selalu jelas dan terbuka." }
-        }
-      },
-      "stats": {
-        "items": {
-          "delivered": { "value": "10.000+", "label": "Produk Terkirim" },
-          "activeCreators": { "value": "500+", "label": "Kreator Aktif" },
-          "designs": { "value": "5.000+", "label": "Desain Tersedia" },
-          "rating": { "value": "4.9/5", "label": "Rating Kepuasan" },
-          "provinces": { "value": "34", "label": "Provinsi Terjangkau" }
+          "localCreatorHub": { "title": "Wadah Kreator Lokal", "description": "Kreator upload desain dan dapat komisi dari tiap penjualan — bagian dari keluarga besar Harmoni." },
+          "secureTransparent": { "title": "Transaksi Aman & Transparan", "description": "Pembayaran terverifikasi, harga dan status pesanan selalu jelas dan terbuka." },
+          "personalService": { "title": "Layanan Personal", "description": "Tim kami siap bantu lewat live chat untuk setiap kendala." }
         }
       },
       "creatorCta": {
@@ -234,6 +220,7 @@
         "cta": "Jadi Kreator"
       },
       "timeline": {
+        "eyebrow": "Perjalanan Kami",
         "title": "Cerita Harmoni",
         "items": {
           "y2023": { "title": "Harmoni Dimulai", "description": "Berawal dari kebutuhan konveksi custom yang cepat dan terpercaya." },
