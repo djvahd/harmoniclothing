@@ -1061,6 +1061,10 @@
     "promptModal": {
       "minChars": "At least {count} characters."
     },
+    "logoutConfirm": {
+      "title": "Confirm Logout",
+      "message": "Are you sure you want to log out?"
+    },
     "cartItemRow": {
       "removeAria": "Remove from cart"
     },

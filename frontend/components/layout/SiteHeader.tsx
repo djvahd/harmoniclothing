@@ -14,16 +14,21 @@ import CartPopover from "./CartPopover";
 import NotificationPopover from "./NotificationPopover";
 import AccountMenu, { AccountMenuLinks } from "./AccountMenu";
 import Button from "@/components/ui/Button";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { useAuthStore } from "@/store/auth-store";
 import { useAuthModalStore } from "@/store/auth-modal-store";
+import { useLogoutConfirm } from "@/hooks/useLogoutConfirm";
 
 type Panel = "cart" | "notif" | "account" | null;
 
 export default function SiteHeader() {
   const t = useTranslations("layout.header");
+  const tLogoutConfirm = useTranslations("ui.logoutConfirm");
+  const tCommon = useTranslations("common");
   const pathname = usePathname();
-  const { user, logout } = useAuthStore();
+  const { user } = useAuthStore();
   const openAuthModal = useAuthModalStore((state) => state.open);
+  const { confirmOpen, requestLogout, cancelLogout, confirmLogout } = useLogoutConfirm();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [openPanel, setOpenPanel] = useState<Panel>(null);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -48,6 +53,7 @@ export default function SiteHeader() {
   }
 
   return (
+    <>
     <header className="flex w-full items-center justify-between border-b border-border bg-surface px-4 py-4 md:grid md:h-[76px] md:grid-cols-[1fr_auto_1fr] md:gap-x-8 md:px-20 md:py-0">
       <div className="md:justify-self-start">
         <Logo />
@@ -95,7 +101,7 @@ export default function SiteHeader() {
               onNavigate={() => setOpenPanel(null)}
               onLogout={() => {
                 setOpenPanel(null);
-                logout();
+                requestLogout();
               }}
             />
           </>
@@ -130,7 +136,7 @@ export default function SiteHeader() {
                 type="button"
                 onClick={() => {
                   setDrawerOpen(false);
-                  logout();
+                  requestLogout();
                 }}
                 className="text-left font-body text-sm text-text-primary"
               >
@@ -164,5 +170,15 @@ export default function SiteHeader() {
         </div>
       </MobileDrawer>
     </header>
+    <ConfirmDialog
+      open={confirmOpen}
+      title={tLogoutConfirm("title")}
+      message={tLogoutConfirm("message")}
+      confirmLabel={t("logout")}
+      cancelLabel={tCommon("cancel")}
+      onConfirm={confirmLogout}
+      onCancel={cancelLogout}
+    />
+    </>
   );
 }

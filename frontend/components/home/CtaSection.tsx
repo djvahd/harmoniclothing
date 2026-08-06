@@ -3,10 +3,12 @@ import { useTranslations } from "next-intl";
 import Button from "@/components/ui/Button";
 import Reveal from "@/components/ui/Reveal";
 import { useAuthModalStore } from "@/store/auth-modal-store";
+import { useAuthStore } from "@/store/auth-store";
 
 /** The closing "Siap Mewujudkan Ide" call-to-action banner. */
 export default function CtaSection() {
   const t = useTranslations("home.cta");
+  const { user } = useAuthStore();
   const openAuthModal = useAuthModalStore((state) => state.open);
 
   return (
@@ -26,13 +28,15 @@ export default function CtaSection() {
               {t("ctaCustomDesign")}
             </Button>
           </Link>
-          <Button
-            variant="secondary"
-            className="!border-white !bg-transparent !text-text-on-accent hover:!bg-white/10"
-            onClick={() => openAuthModal("register")}
-          >
-            {t("ctaRegister")}
-          </Button>
+          {!user && (
+            <Button
+              variant="secondary"
+              className="!border-white !bg-transparent !text-text-on-accent hover:!bg-white/10"
+              onClick={() => openAuthModal("register")}
+            >
+              {t("ctaRegister")}
+            </Button>
+          )}
         </div>
       </Reveal>
     </section>

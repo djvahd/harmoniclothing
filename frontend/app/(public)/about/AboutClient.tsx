@@ -27,6 +27,7 @@ import TestimonialCard from "@/components/ui/TestimonialCard";
 import Button from "@/components/ui/Button";
 import Reveal from "@/components/ui/Reveal";
 import { useAuthModalStore } from "@/store/auth-modal-store";
+import { useAuthStore } from "@/store/auth-store";
 
 const REASONS = [
   { icon: Sparkles, key: "unlimitedCustom" },
@@ -73,6 +74,7 @@ const TESTIMONIALS = [
 export default function TentangKamiPage() {
   const t = useTranslations("public.about");
   const openAuthModal = useAuthModalStore((state) => state.open);
+  const { user } = useAuthStore();
   return (
     <div className="flex flex-col">
       <section
@@ -312,9 +314,11 @@ export default function TentangKamiPage() {
           <h2 className="font-heading text-h3 font-semibold text-text-on-accent md:text-h2">
             {t("finalCta.title")}
           </h2>
-          <Button variant="primary" onClick={() => openAuthModal("register")}>
-            {t("finalCta.cta")}
-          </Button>
+          {!user && (
+            <Button variant="primary" onClick={() => openAuthModal("register")}>
+              {t("finalCta.cta")}
+            </Button>
+          )}
         </Reveal>
       </section>
     </div>

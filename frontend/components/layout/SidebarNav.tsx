@@ -4,7 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
-import { useAuthStore } from "@/store/auth-store";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
+import { useLogoutConfirm } from "@/hooks/useLogoutConfirm";
 
 export interface SidebarGroup {
   label?: string;
@@ -19,10 +20,13 @@ interface SidebarNavProps {
 
 export default function SidebarNav({ groups, className, onNavigate }: SidebarNavProps) {
   const t = useTranslations("layout.header");
+  const tLogoutConfirm = useTranslations("ui.logoutConfirm");
+  const tCommon = useTranslations("common");
   const pathname = usePathname();
-  const logout = useAuthStore((state) => state.logout);
+  const { confirmOpen, requestLogout, cancelLogout, confirmLogout } = useLogoutConfirm();
 
   return (
+    <>
     <nav
       className={clsx(
         "flex w-[260px] flex-col gap-0.5 rounded-md border border-border bg-surface p-3",
@@ -56,11 +60,21 @@ export default function SidebarNav({ groups, className, onNavigate }: SidebarNav
       <div className="my-1 border-t border-border" />
       <button
         type="button"
-        onClick={() => logout()}
+        onClick={() => requestLogout()}
         className="rounded-sm px-3 py-2.5 text-left font-body text-sm font-medium text-text-secondary hover:bg-background"
       >
         {t("logout")}
       </button>
     </nav>
+    <ConfirmDialog
+      open={confirmOpen}
+      title={tLogoutConfirm("title")}
+      message={tLogoutConfirm("message")}
+      confirmLabel={t("logout")}
+      cancelLabel={tCommon("cancel")}
+      onConfirm={confirmLogout}
+      onCancel={cancelLogout}
+    />
+    </>
   );
 }

@@ -1057,6 +1057,10 @@
     "promptModal": {
       "minChars": "Minimal {count} karakter."
     },
+    "logoutConfirm": {
+      "title": "Konfirmasi Keluar",
+      "message": "Apakah Anda yakin ingin keluar?"
+    },
     "cartItemRow": {
       "removeAria": "Hapus dari keranjang"
     },
