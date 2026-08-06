@@ -15,7 +15,7 @@ export default function MobileDrawer({ open, onClose, children }: MobileDrawerPr
 
   return (
     <div className="fixed inset-0 z-50 md:hidden">
-      <div className="absolute inset-0 bg-black/45" onClick={onClose} />
+      <div className="absolute inset-0 animate-fade-in bg-black/45" onClick={onClose} />
       <div className="absolute inset-y-0 right-0 flex w-72 flex-col gap-6 bg-surface p-6 shadow-lg">
         <button
           type="button"

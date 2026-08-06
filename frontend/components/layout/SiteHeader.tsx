@@ -59,11 +59,13 @@ export default function SiteHeader() {
         <Logo />
       </div>
 
-      <HeaderNav variant="desktop" pathname={pathname} />
+      {status === "ready" && (
+        <>
+      <HeaderNav variant="desktop" pathname={pathname} className="animate-fade-slide-in" />
 
-      <div className="hidden items-center gap-4 md:flex md:justify-self-end">
+      <div className="hidden animate-fade-slide-in items-center gap-4 md:flex md:justify-self-end">
         <LanguageSwitcher />
-        {status !== "ready" ? null : user ? (
+        {user ? (
           <>
             <CartPopover
               open={openPanel === "cart"}
@@ -120,7 +122,7 @@ export default function SiteHeader() {
       <button
         type="button"
         aria-label={t("openMenu")}
-        className="text-text-primary md:hidden"
+        className="animate-fade-slide-in text-text-primary md:hidden"
         onClick={() => setDrawerOpen(true)}
       >
         <Menu className="size-6" />
@@ -129,7 +131,7 @@ export default function SiteHeader() {
       <MobileDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
         <HeaderNav variant="mobile" pathname={pathname} onNavigate={() => setDrawerOpen(false)} />
         <div className="border-t border-border pt-4">
-          {status !== "ready" ? null : user ? (
+          {user ? (
             <div className="flex flex-col gap-3">
               <AccountMenuLinks user={user} onNavigate={() => setDrawerOpen(false)} />
               <button
@@ -169,6 +171,8 @@ export default function SiteHeader() {
           )}
         </div>
       </MobileDrawer>
+        </>
+      )}
     </header>
     <ConfirmDialog
       open={confirmOpen}

@@ -41,15 +41,19 @@ export default function CartPopover({
         )}
       </button>
       {open && (
-        <div
-          onMouseEnter={onCancelClose}
-          className="absolute right-0 top-full z-40 mt-2 w-[340px] rounded-md border border-border bg-surface shadow-lg"
-        >
+          <div
+            onMouseEnter={onCancelClose}
+            className="absolute left-0 top-full z-40 mt-2 w-[340px] rounded-md border border-border bg-surface shadow-lg"
+          >
           <div className="flex items-center justify-between px-5 py-3">
             <p className="font-body text-sm font-semibold text-text-primary">
               {t("title")} {!isLoading && `(${total})`}
             </p>
-            <Link href="/cart" onClick={onNavigate} className="font-body text-sm font-medium text-primary">
+            <Link
+              href="/cart"
+              onClick={onNavigate}
+              className="font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4"
+            >
               {tCommon("viewAll")}
             </Link>
           </div>
@@ -74,7 +78,12 @@ export default function CartPopover({
           ) : (
             <div className="flex flex-col gap-3.5 px-5 py-3.5">
               {preview.map((item) => (
-                <div key={item.id} className="flex items-center gap-3">
+                <Link
+                  key={item.id}
+                  href="/cart"
+                  onClick={onNavigate}
+                  className="-mx-2 flex items-center gap-3 rounded-sm px-2 py-1 transition-colors hover:bg-background"
+                >
                   <ProductThumbnail
                     src={storageUrl(
                       item.design?.thumbnail_path ?? item.product_variant.mockup_asset_path,
@@ -93,7 +102,7 @@ export default function CartPopover({
                   <p className="font-body text-sm font-semibold text-text-primary">
                     {formatCurrency(item.subtotal)}
                   </p>
-                </div>
+                </Link>
               ))}
             </div>
           )}
@@ -113,7 +122,7 @@ export default function CartPopover({
               </div>
             </>
           )}
-        </div>
+          </div>
       )}
     </div>
   );

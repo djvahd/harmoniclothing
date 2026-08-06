@@ -44,7 +44,7 @@ export default function AuthModal() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 p-4"
+      className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center bg-black/45 p-4"
       onClick={close}
     >
       <div

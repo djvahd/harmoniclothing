@@ -40,7 +40,7 @@ export default function PromptModal({
   const invalid = value.trim().length < minLength;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 px-4">
+    <div className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center bg-black/45 px-4">
       <div className="flex w-full max-w-sm flex-col gap-4 rounded-md bg-surface p-6">
         <p className="font-heading text-lg font-semibold text-text-primary">{title}</p>
         <Input

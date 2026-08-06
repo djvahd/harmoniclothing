@@ -70,11 +70,21 @@ const config: Config = {
           "13%": { clipPath: "inset(0 0% 0 0)", opacity: "0" },
           "13.5%, 100%": { clipPath: "inset(0 100% 0 0)", opacity: "0" },
         },
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        "fade-slide-in": {
+          "0%": { opacity: "0", transform: "translateY(-6px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         marquee: "marquee 100s linear infinite",
         "step-glow": "step-glow 10.5s ease-in-out infinite backwards",
         "line-glow": "line-glow 10.5s ease-out infinite backwards",
+        "fade-in": "fade-in 150ms ease-out",
+        "fade-slide-in": "fade-slide-in 300ms ease-out",
       },
     },
   },

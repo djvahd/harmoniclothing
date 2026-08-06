@@ -16,10 +16,12 @@ export default function HeaderNav({
   variant,
   pathname,
   onNavigate,
+  className,
 }: {
   variant: "desktop" | "mobile";
   pathname: string;
   onNavigate?: () => void;
+  className?: string;
 }) {
   const t = useTranslations("layout.nav");
 
@@ -36,7 +38,12 @@ export default function HeaderNav({
   }
 
   return (
-    <nav className="hidden items-center gap-6 font-body text-sm md:flex md:justify-self-center">
+    <nav
+      className={clsx(
+        "hidden items-center gap-6 font-body text-sm md:flex md:justify-self-center",
+        className,
+      )}
+    >
       {NAV_LINKS.map((link) => {
         const isActive = pathname === link.href;
         return (
