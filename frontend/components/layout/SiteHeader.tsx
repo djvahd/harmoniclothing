@@ -26,7 +26,7 @@ export default function SiteHeader() {
   const tLogoutConfirm = useTranslations("ui.logoutConfirm");
   const tCommon = useTranslations("common");
   const pathname = usePathname();
-  const { user } = useAuthStore();
+  const { user, status } = useAuthStore();
   const openAuthModal = useAuthModalStore((state) => state.open);
   const { confirmOpen, requestLogout, cancelLogout, confirmLogout } = useLogoutConfirm();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -63,7 +63,7 @@ export default function SiteHeader() {
 
       <div className="hidden items-center gap-4 md:flex md:justify-self-end">
         <LanguageSwitcher />
-        {user ? (
+        {status !== "ready" ? null : user ? (
           <>
             <CartPopover
               open={openPanel === "cart"}
@@ -129,7 +129,7 @@ export default function SiteHeader() {
       <MobileDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
         <HeaderNav variant="mobile" pathname={pathname} onNavigate={() => setDrawerOpen(false)} />
         <div className="border-t border-border pt-4">
-          {user ? (
+          {status !== "ready" ? null : user ? (
             <div className="flex flex-col gap-3">
               <AccountMenuLinks user={user} onNavigate={() => setDrawerOpen(false)} />
               <button

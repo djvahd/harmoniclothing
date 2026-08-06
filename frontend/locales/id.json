@@ -113,7 +113,7 @@
       "headline2": "Ciptakan Produk.",
       "headline3": "Bergerak Bersama.",
       "subtitle": "Platform konveksi modern untuk kreator, brand, dan komunitas — custom design, tanpa minimum order.",
-      "ctaCustomDesign": "Mulai Custom Design →",
+      "ctaCustomDesign": "Mulai Custom Design",
       "ctaExploreProducts": "Jelajahi Produk",
       "altHoodie": "Hoodie",
       "altTshirt": "Kaos",
@@ -140,8 +140,8 @@
       "headline1": "Siap Mewujudkan",
       "headline2": "Ide Menjadi Produk Nyata?",
       "subtitle": "Gabung bersama ribuan kreator dan brand yang percaya pada Harmoni.",
-      "ctaCustomDesign": "Mulai Custom Design →",
-      "ctaRegister": "Daftar Gratis →"
+      "ctaCustomDesign": "Mulai Custom Design",
+      "ctaRegister": "Daftar Gratis"
     },
     "testimonials": {
       "eyebrow": "Apa Kata Mereka",
@@ -230,7 +230,7 @@
           "transparentCommission": "Komisi Transparan",
           "nationalReach": "Jangkauan Nasional"
         },
-        "cta": "Jadi Kreator →"
+        "cta": "Jadi Kreator"
       },
       "timeline": {
         "title": "Cerita Harmoni",

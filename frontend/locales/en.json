@@ -113,7 +113,7 @@
       "headline2": "Create Products.",
       "headline3": "Move Forward Together.",
       "subtitle": "A modern print-on-demand platform for creators, brands, and communities — custom design, no minimum order.",
-      "ctaCustomDesign": "Start Custom Design →",
+      "ctaCustomDesign": "Start Custom Design",
       "ctaExploreProducts": "Explore Products",
       "altHoodie": "Hoodie",
       "altTshirt": "T-Shirt",
@@ -140,8 +140,8 @@
       "headline1": "Ready to Bring Your",
       "headline2": "Ideas to Life?",
       "subtitle": "Join thousands of creators and brands who trust Harmoni.",
-      "ctaCustomDesign": "Start Custom Design →",
-      "ctaRegister": "Sign Up Free →"
+      "ctaCustomDesign": "Start Custom Design",
+      "ctaRegister": "Sign Up Free"
     },
     "testimonials": {
       "eyebrow": "What They Say",
@@ -234,7 +234,7 @@
           "transparentCommission": "Transparent Commission",
           "nationalReach": "Nationwide Reach"
         },
-        "cta": "Become a Creator →"
+        "cta": "Become a Creator"
       },
       "timeline": {
         "title": "The Harmoni Story",

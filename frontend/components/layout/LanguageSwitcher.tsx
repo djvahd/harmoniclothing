@@ -49,10 +49,10 @@ export default function LanguageSwitcher({
               variant === "dark"
                 ? l === locale
                   ? "bg-surface text-primary"
-                  : "text-text-on-accent/80 hover:text-text-on-accent"
+                  : "text-text-on-accent/80 hover:text-accent"
                 : l === locale
                   ? "bg-primary text-text-on-accent"
-                  : "text-text-secondary hover:text-text-primary",
+                  : "text-text-secondary hover:text-accent",
             )}
           >
             {l}
