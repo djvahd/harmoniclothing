@@ -92,7 +92,8 @@
       "empty": "Mulai percakapan dengan tim Harmoni.",
       "placeholder": "Tulis pesan...",
       "sendAria": "Kirim pesan",
-      "openAria": "Buka chat"
+      "openAria": "Buka chat",
+      "openLabel": "Chat"
     },
     "footer": {
       "tagline": "Platform konveksi modern untuk kreator dan brand.",

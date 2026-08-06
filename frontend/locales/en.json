@@ -92,7 +92,8 @@
       "empty": "Start a conversation with the Harmoni team.",
       "placeholder": "Write a message...",
       "sendAria": "Send message",
-      "openAria": "Open chat"
+      "openAria": "Open chat",
+      "openLabel": "Chat"
     },
     "footer": {
       "tagline": "A modern print-on-demand platform for creators and brands.",

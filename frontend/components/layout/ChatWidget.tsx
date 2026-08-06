@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 import { ChevronDown, MessageCircle, Send } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -13,10 +13,24 @@ export default function ChatWidget() {
   const t = useTranslations("layout.chatWidget");
   const user = useAuthStore((state) => state.user);
   useRealtimeNotifications(user?.id);
-  const [open, setOpen] = useState(false);
+  const [phase, setPhase] = useState<"closed" | "opening" | "open" | "closing">("closed");
   const [draft, setDraft] = useState("");
+  const transitionTimeout = useRef<ReturnType<typeof setTimeout>>();
 
-  const { data: threadsData } = useSWR(open && user ? "/chat/threads" : null, getThreads);
+  useEffect(() => () => clearTimeout(transitionTimeout.current), []);
+
+  function openPanel() {
+    setPhase("opening");
+    transitionTimeout.current = setTimeout(() => setPhase("open"), 160);
+  }
+
+  function closePanel() {
+    setPhase("closing");
+    transitionTimeout.current = setTimeout(() => setPhase("closed"), 160);
+  }
+
+  const panelMounted = phase === "open" || phase === "closing";
+  const { data: threadsData } = useSWR(panelMounted && user ? "/chat/threads" : null, getThreads);
   const thread = threadsData?.data?.[0];
   const { data: messagesData, mutate } = useSWR(
     thread ? `/chat/threads/${thread.id}/messages` : null,
@@ -43,12 +57,16 @@ export default function ChatWidget() {
   if (!user) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-40">
-      {open && (
-        <div className="flex h-[380px] w-[340px] flex-col overflow-hidden rounded-md border border-border bg-surface shadow-lg">
+    <div className="fixed bottom-10 right-10 z-40">
+      {panelMounted && (
+        <div
+          className={`flex h-[380px] w-[340px] flex-col overflow-hidden rounded-md border border-border bg-surface shadow-lg ${
+            phase === "closing" ? "animate-fade-pop-out" : "animate-fade-pop-in"
+          }`}
+        >
           <button
             type="button"
-            onClick={() => setOpen(false)}
+            onClick={closePanel}
             aria-label={t("collapseAria")}
             className="flex w-full items-center justify-between bg-primary px-4 py-3"
           >
@@ -89,13 +107,18 @@ export default function ChatWidget() {
         </div>
       )}
 
-      {!open && (
+      {(phase === "closed" || phase === "opening") && (
         <button
-          onClick={() => setOpen(true)}
+          onClick={openPanel}
           aria-label={t("openAria")}
-          className="flex size-14 items-center justify-center rounded-full bg-accent shadow-lg"
+          className={`flex items-center gap-2 rounded-full bg-surface py-3 pl-3 pr-5 shadow-lg ${
+            phase === "opening" ? "animate-fade-pop-out" : "animate-fade-pop-in"
+          }`}
         >
-          <MessageCircle className="size-6 text-text-on-accent" />
+          <span className="flex size-8 items-center justify-center rounded-full bg-accent">
+            <MessageCircle className="size-4 text-text-on-accent" />
+          </span>
+          <span className="font-body text-sm font-semibold text-accent">{t("openLabel")}</span>
         </button>
       )}
     </div>

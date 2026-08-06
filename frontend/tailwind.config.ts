@@ -78,6 +78,14 @@ const config: Config = {
           "0%": { opacity: "0", transform: "translateY(-6px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        "fade-pop-in": {
+          "0%": { opacity: "0", transform: "translateY(10px) scale(0.96)" },
+          "100%": { opacity: "1", transform: "translateY(0) scale(1)" },
+        },
+        "fade-pop-out": {
+          "0%": { opacity: "1", transform: "translateY(0) scale(1)" },
+          "100%": { opacity: "0", transform: "translateY(10px) scale(0.96)" },
+        },
       },
       animation: {
         marquee: "marquee 100s linear infinite",
@@ -85,6 +93,8 @@ const config: Config = {
         "line-glow": "line-glow 10.5s ease-out infinite backwards",
         "fade-in": "fade-in 150ms ease-out",
         "fade-slide-in": "fade-slide-in 300ms ease-out",
+        "fade-pop-in": "fade-pop-in 220ms ease-out",
+        "fade-pop-out": "fade-pop-out 160ms ease-in forwards",
       },
     },
   },
