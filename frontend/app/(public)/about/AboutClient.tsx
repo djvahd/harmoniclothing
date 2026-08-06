@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import {
@@ -80,36 +79,12 @@ export default function TentangKamiPage() {
             "linear-gradient(to bottom, transparent 85%, #f8fafc 100%), linear-gradient(28deg, #f8fafc 25%, #eef6f3 64%, #e0f1ea 96%)",
         }}
       >
-        <Reveal className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-8 text-center lg:flex-row lg:items-center lg:justify-between lg:text-left">
-          <div className="flex max-w-2xl flex-col items-center gap-4 lg:items-start">
+        <Reveal className="mx-auto flex w-full max-w-[1440px] flex-col items-center gap-8 text-center">
+          <div className="flex max-w-2xl flex-col items-center gap-4">
             <h1 className="font-heading text-h3 font-semibold text-text-primary md:text-h1">
-              {t("hero.title")}
+              {t("hero.titlePrefix")} <span className="text-accent">Harmoni Clothing</span>
             </h1>
             <p className="font-body text-base text-text-secondary">{t("hero.subtitle")}</p>
-          </div>
-          <div className="relative h-[180px] w-[210px] shrink-0 sm:h-[220px] sm:w-[255px] lg:h-[260px] lg:w-[300px]">
-            <div className="absolute left-1/2 top-0 h-[152px] w-[137px] -translate-x-1/2 rotate-[-6deg] sm:h-[186px] sm:w-[167px] lg:h-[220px] lg:w-[196px]">
-              <Image
-                src="/hero/kaos.png"
-                alt={t("hero.altTshirt")}
-                fill
-                sizes="196px"
-                className="object-contain drop-shadow-xl"
-                priority
-              />
-            </div>
-            <div className="absolute bottom-2 left-0 h-[76px] w-[90px] rotate-[10deg] sm:h-[93px] sm:w-[110px] lg:h-[110px] lg:w-[130px]">
-              <Image
-                src="/hero/topi.png"
-                alt={t("hero.altCap")}
-                fill
-                sizes="130px"
-                className="object-contain drop-shadow-lg"
-              />
-            </div>
-            <div className="absolute right-0 top-6 h-[42px] w-[36px] rotate-[-12deg] sm:h-[51px] sm:w-[44px] lg:h-[60px] lg:w-[52px]">
-              <Image src="/hero/daun.png" alt="" fill sizes="52px" className="object-contain drop-shadow-lg" />
-            </div>
           </div>
         </Reveal>
       </section>

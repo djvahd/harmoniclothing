@@ -178,7 +178,7 @@
         "description": "A modern custom apparel platform connecting brands, individuals, and local creators."
       },
       "hero": {
-        "title": "About Harmoni Clothing",
+        "titlePrefix": "About",
         "subtitle": "A modern print-on-demand platform connecting brands, individuals, and local creators to make apparel that truly fits each person's style.",
         "altTshirt": "Custom Harmoni Clothing t-shirt",
         "altCap": "Custom Harmoni Clothing cap"

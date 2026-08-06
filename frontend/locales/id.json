@@ -178,7 +178,7 @@
         "description": "Platform konveksi custom modern yang menghubungkan brand, individu, dan kreator lokal di seluruh Indonesia."
       },
       "hero": {
-        "title": "Tentang Harmoni Clothing",
+        "titlePrefix": "Tentang",
         "subtitle": "Platform konveksi modern yang menghubungkan brand, individu, dan kreator lokal untuk menciptakan apparel yang benar-benar sesuai gaya masing-masing.",
         "altTshirt": "Kaos custom Harmoni Clothing",
         "altCap": "Topi custom Harmoni Clothing"
