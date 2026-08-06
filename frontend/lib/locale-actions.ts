@@ -1,7 +1,6 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { revalidatePath } from "next/cache";
 import { locales, LOCALE_COOKIE, type Locale } from "@/i18n/config";
 
 export async function setUserLocale(locale: Locale) {
@@ -10,7 +9,9 @@ export async function setUserLocale(locale: Locale) {
   const store = await cookies();
   store.set(LOCALE_COOKIE, locale, { path: "/", maxAge: 60 * 60 * 24 * 365 });
 
-  // Re-runs the root layout's Server Components (I18nProvider, <html lang>)
-  // with the freshly-set cookie so the switch takes effect immediately.
-  revalidatePath("/", "layout");
+  // No revalidatePath here: the caller always follows this with a hard
+  // window.location.reload(), which alone picks up the new cookie. Revalidating
+  // here would apply the new locale to the RSC tree mid-flight (before this
+  // action's promise resolves), causing a visible flash of new-language text
+  // followed by the reload's own flash — a jarring double transition.
 }
