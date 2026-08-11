@@ -221,7 +221,16 @@ export default function TentangKamiPage() {
           </div>
           <div className="flex shrink-0 flex-col items-center gap-4">
             <ImageSlot className="h-36 w-full max-w-[260px] md:w-[220px]" />
-            <Link href="/account/become-creator" className="w-full max-w-[260px] md:w-[220px]">
+            <Link
+              href="/account/become-creator"
+              className="w-full max-w-[260px] md:w-[220px]"
+              onClick={(e) => {
+                if (!user) {
+                  e.preventDefault();
+                  openAuthModal("login");
+                }
+              }}
+            >
               <Button variant="primary" fullWidth>
                 {t("creatorCta.cta")}
               </Button>

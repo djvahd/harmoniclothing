@@ -8,11 +8,15 @@ import { useTranslations } from "next-intl";
 import Button from "@/components/ui/Button";
 import DesainTab from "@/components/marketplace/DesainTab";
 import CreatorTab from "@/components/marketplace/CreatorTab";
+import { useAuthStore } from "@/store/auth-store";
+import { useAuthModalStore } from "@/store/auth-modal-store";
 
 type Tab = "desain" | "creator";
 
 function MarketplaceDesainPageContent() {
   const t = useTranslations("public.marketplaceList");
+  const user = useAuthStore((state) => state.user);
+  const openAuthModal = useAuthModalStore((state) => state.open);
   const searchParams = useSearchParams();
   const kategoriParam = searchParams.get("kategori");
   // Beranda's "Desain Populer" row links here with ?sort=populer — map that
@@ -43,7 +47,15 @@ function MarketplaceDesainPageContent() {
           </h1>
           <p className="font-body text-sm text-text-secondary md:text-base">{t("subtitle")}</p>
           <div className="flex gap-3">
-            <Link href="/account/become-creator">
+            <Link
+              href="/account/become-creator"
+              onClick={(e) => {
+                if (!user) {
+                  e.preventDefault();
+                  openAuthModal("login");
+                }
+              }}
+            >
               <Button variant="primary">{t("ctaBecomeCreator")}</Button>
             </Link>
             <Link href="/catalog">

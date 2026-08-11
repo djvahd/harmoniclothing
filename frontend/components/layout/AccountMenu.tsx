@@ -9,6 +9,7 @@ const ACCOUNT_LINKS = (isAdmin: boolean) => [
   { href: "/account/profile", key: "profile" },
   { href: "/account/addresses", key: "addresses" },
   { href: "/account/wishlist", key: "wishlist" },
+  { href: "/cart", key: "cart" },
   { href: "/account/orders", key: "orders" },
   { href: "/account/become-creator", key: "becomeCreator" },
   { href: "/notifications", key: "notifications" },

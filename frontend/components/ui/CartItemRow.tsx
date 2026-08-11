@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { Heart, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import ProductThumbnail from "./ProductThumbnail";
 import QuantityStepper from "./QuantityStepper";
@@ -10,12 +10,22 @@ import type { CartItem } from "@/types/product";
 
 interface CartItemRowProps {
   item: CartItem;
+  selected: boolean;
+  onToggleSelected: (id: number) => void;
   onQuantityChange: (id: number, quantity: number) => void;
   onRemove: (id: number) => void;
+  onMoveToWishlist: (id: number) => void;
 }
 
-/** One cart line item: thumbnail, name/variant, quantity stepper, subtotal, and a remove button. */
-export default function CartItemRow({ item, onQuantityChange, onRemove }: CartItemRowProps) {
+/** One cart line item: checkbox, thumbnail, name/variant, price, and quantity/wishlist/remove controls. */
+export default function CartItemRow({
+  item,
+  selected,
+  onToggleSelected,
+  onQuantityChange,
+  onRemove,
+  onMoveToWishlist,
+}: CartItemRowProps) {
   const t = useTranslations("ui.cartItemRow");
   const tCommon = useTranslations("common");
   const product = item.product_variant.product;
@@ -24,29 +34,48 @@ export default function CartItemRow({ item, onQuantityChange, onRemove }: CartIt
   );
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-start gap-3">
+      <input
+        type="checkbox"
+        checked={selected}
+        onChange={() => onToggleSelected(item.id)}
+        aria-label={t("selectAria")}
+        className="mt-6 size-4 shrink-0"
+      />
       <ProductThumbnail src={thumbnail} alt={product?.name ?? tCommon("productFallback")} />
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-1 flex-col gap-1 pt-1">
         <p className="font-body text-sm font-semibold text-text-primary">{product?.name}</p>
         <p className="font-body text-xs text-text-secondary">
           {item.product_variant.size} · {item.product_variant.color}
         </p>
       </div>
-      <QuantityStepper
-        value={item.quantity}
-        onChange={(quantity) => onQuantityChange(item.id, quantity)}
-      />
-      <p className="font-body text-sm font-semibold text-text-primary">
-        {formatCurrency(item.subtotal)}
-      </p>
-      <button
-        type="button"
-        aria-label={t("removeAria")}
-        onClick={() => onRemove(item.id)}
-        className="text-text-secondary hover:text-danger"
-      >
-        <X className="size-4" />
-      </button>
+      <div className="flex flex-col items-end gap-2 pt-1">
+        <p className="font-body text-sm font-semibold text-text-primary">
+          {formatCurrency(item.subtotal)}
+        </p>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            aria-label={t("moveToWishlistAria")}
+            onClick={() => onMoveToWishlist(item.id)}
+            className="text-text-secondary transition-colors hover:text-accent"
+          >
+            <Heart className="size-4" />
+          </button>
+          <button
+            type="button"
+            aria-label={t("removeAria")}
+            onClick={() => onRemove(item.id)}
+            className="text-text-secondary transition-colors hover:text-danger"
+          >
+            <Trash2 className="size-4" />
+          </button>
+          <QuantityStepper
+            value={item.quantity}
+            onChange={(quantity) => onQuantityChange(item.id, quantity)}
+          />
+        </div>
+      </div>
     </div>
   );
 }

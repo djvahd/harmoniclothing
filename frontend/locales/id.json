@@ -82,6 +82,7 @@
       "profile": "Kelola Profil",
       "addresses": "Address Book",
       "wishlist": "Wishlist",
+      "cart": "Keranjang",
       "orders": "Riwayat Pesanan",
       "becomeCreator": "Ajukan Upgrade Creator",
       "notifications": "Notifikasi"
@@ -394,10 +395,6 @@
       "noProductsAvailable": "Belum ada produk yang tersedia untuk desain ini.",
       "chooseProduct": "Pilih Produk",
       "quantityLabel": "Jumlah",
-      "royaltyTooltip": "Perkiraan kontribusi untuk kreator dari harga produk — angka final ditentukan saat checkout",
-      "royaltyLabel": "Kontribusi untuk Kreator",
-      "notesLabel": "Catatan (opsional)",
-      "notesPlaceholder": "Permintaan revisi/khusus untuk produk ini...",
       "addToCart": "Tambah ke Keranjang",
       "buyNow": "Beli Sekarang",
       "tabs": {
@@ -514,10 +511,12 @@
       "empty": "Keranjangmu masih kosong.",
       "startShopping": "Mulai Belanja",
       "itemUnavailable": "Produk ini sudah tidak tersedia.",
-      "orderSummary": "Ringkasan Pesanan",
-      "subtotal": "Subtotal",
+      "orderSummary": "Ringkasan Belanja",
       "total": "Total",
-      "continueToCheckout": "Lanjut ke Checkout"
+      "buy": "Beli",
+      "selectAll": "Pilih Semua ({count})",
+      "defaultStoreName": "Harmoni Clothing",
+      "movedToWishlist": "Dipindahkan ke wishlist."
     },
     "checkout": {
       "title": "Checkout",
@@ -975,8 +974,6 @@
       "success": "Password berhasil diperbarui. Silakan masuk."
     },
     "guards": {
-      "loginRequired": "Silakan masuk untuk mengakses halaman ini.",
-      "adminLoginRequired": "Silakan masuk sebagai admin untuk mengakses halaman ini.",
       "adminAccessDenied": "Anda tidak memiliki akses ke halaman admin ini."
     }
   },
@@ -987,11 +984,6 @@
       "ratingSummary": "Rating {rating} dari {count} ulasan pembeli.",
       "loadingReviews": "Memuat ulasan...",
       "buyerFallback": "Pembeli"
-    },
-    "trustBadges": {
-      "fastProduction": "Produksi Cepat",
-      "premiumQuality": "Kualitas Premium",
-      "satisfactionGuarantee": "Garansi Kepuasan"
     },
     "variantPicker": {
       "chooseColor": "Pilih Warna Produk",
@@ -1050,7 +1042,9 @@
       "message": "Apakah Anda yakin ingin keluar?"
     },
     "cartItemRow": {
-      "removeAria": "Hapus dari keranjang"
+      "removeAria": "Hapus dari keranjang",
+      "selectAria": "Pilih item",
+      "moveToWishlistAria": "Pindahkan ke wishlist"
     },
     "wishlistButton": {
       "removeAria": "Hapus dari wishlist",

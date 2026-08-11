@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import useSWR from "swr";
 import { ShieldCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -13,12 +13,22 @@ import { checkout } from "@/services/checkout";
 import { getErrorMessage } from "@/lib/api";
 import { useCart } from "@/hooks/useCart";
 
-export default function CheckoutPage() {
+function CheckoutPageContent() {
   const t = useTranslations("customer.checkout");
   const tCommon = useTranslations("common");
   const router = useRouter();
-  const { items } = useCart();
+  const searchParams = useSearchParams();
+  const { items: allItems } = useCart();
   const { data: addressData } = useSWR("/account/addresses", getAddresses);
+
+  // /cart lets the customer pick a subset to buy; ?items carries that
+  // selection here. No param (e.g. a direct link) checks out the whole cart.
+  const selectedParam = searchParams.get("items");
+  const items = useMemo(() => {
+    if (!selectedParam) return allItems;
+    const selectedIds = new Set(selectedParam.split(",").map(Number));
+    return allItems.filter((item) => selectedIds.has(item.id));
+  }, [allItems, selectedParam]);
 
   const addresses = addressData?.data ?? [];
   const subtotal = items.reduce((sum, item) => sum + Number(item.subtotal), 0);
@@ -119,5 +129,13 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={null}>
+      <CheckoutPageContent />
+    </Suspense>
   );
 }

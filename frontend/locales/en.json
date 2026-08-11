@@ -82,6 +82,7 @@
       "profile": "Manage Profile",
       "addresses": "Address Book",
       "wishlist": "Wishlist",
+      "cart": "Cart",
       "orders": "Order History",
       "becomeCreator": "Apply to Become a Creator",
       "notifications": "Notifications"
@@ -394,10 +395,6 @@
       "noProductsAvailable": "No products are available for this design yet.",
       "chooseProduct": "Choose a Product",
       "quantityLabel": "Quantity",
-      "royaltyTooltip": "Estimated creator contribution from the product price — the final amount is set at checkout",
-      "royaltyLabel": "Creator Contribution",
-      "notesLabel": "Notes (optional)",
-      "notesPlaceholder": "Special or revision requests for this product...",
       "addToCart": "Add to Cart",
       "buyNow": "Buy Now",
       "tabs": {
@@ -515,9 +512,11 @@
       "startShopping": "Start Shopping",
       "itemUnavailable": "This product is no longer available.",
       "orderSummary": "Order Summary",
-      "subtotal": "Subtotal",
       "total": "Total",
-      "continueToCheckout": "Continue to Checkout"
+      "buy": "Buy",
+      "selectAll": "Select All ({count})",
+      "defaultStoreName": "Harmoni Clothing",
+      "movedToWishlist": "Moved to wishlist."
     },
     "checkout": {
       "title": "Checkout",
@@ -975,8 +974,6 @@
       "success": "Password updated successfully. Please log in."
     },
     "guards": {
-      "loginRequired": "Please log in to access this page.",
-      "adminLoginRequired": "Please log in as an admin to access this page.",
       "adminAccessDenied": "You don't have access to this admin page."
     }
   },
@@ -987,11 +984,6 @@
       "ratingSummary": "Rating {rating} from {count} buyer reviews.",
       "loadingReviews": "Loading reviews...",
       "buyerFallback": "Buyer"
-    },
-    "trustBadges": {
-      "fastProduction": "Fast Production",
-      "premiumQuality": "Premium Quality",
-      "satisfactionGuarantee": "Satisfaction Guarantee"
     },
     "variantPicker": {
       "chooseColor": "Choose Product Color",
@@ -1050,7 +1042,9 @@
       "message": "Are you sure you want to log out?"
     },
     "cartItemRow": {
-      "removeAria": "Remove from cart"
+      "removeAria": "Remove from cart",
+      "selectAria": "Select item",
+      "moveToWishlistAria": "Move to wishlist"
     },
     "wishlistButton": {
       "removeAria": "Remove from wishlist",

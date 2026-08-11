@@ -11,7 +11,6 @@ import WishlistButton from "@/components/ui/WishlistButton";
 import ProductCard, { ProductCardSkeleton } from "@/components/ui/ProductCard";
 import ProductGallery from "@/components/product/ProductGallery";
 import VariantPicker from "@/components/product/VariantPicker";
-import TrustBadges from "@/components/product/TrustBadges";
 import RelatedGrid from "@/components/product/RelatedGrid";
 import DetailPageSkeleton from "@/components/product/DetailPageSkeleton";
 import DetailNotFound from "@/components/product/DetailNotFound";
@@ -45,7 +44,6 @@ type TabKey = (typeof TABS)[number]["key"];
 export default function DetailProdukPage() {
   const t = useTranslations("public.productDetail");
   const tCommon = useTranslations("common");
-  const tGuards = useTranslations("auth.guards");
   const params = useParams<{ slug: string }>();
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
@@ -122,7 +120,7 @@ export default function DetailProdukPage() {
       return;
     }
     if (!user) {
-      openAuthModal("login", tGuards("loginRequired"));
+      openAuthModal("login");
       return;
     }
     setError(null);
@@ -294,11 +292,15 @@ export default function DetailProdukPage() {
           <Link
             href={`/bulk-order/${product.slug}`}
             className="font-body text-sm font-medium text-primary transition-colors hover:underline"
+            onClick={(e) => {
+              if (!user) {
+                e.preventDefault();
+                openAuthModal("login");
+              }
+            }}
           >
             {t("bulkOrderLink")}
           </Link>
-
-          <TrustBadges />
         </div>
       </div>
 

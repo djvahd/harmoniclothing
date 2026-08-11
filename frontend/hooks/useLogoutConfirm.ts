@@ -18,8 +18,8 @@ export function useLogoutConfirm() {
 
   async function confirmLogout() {
     setConfirmOpen(false);
-    await logout();
     router.push("/");
+    await logout();
   }
 
   return { confirmOpen, requestLogout, cancelLogout, confirmLogout };

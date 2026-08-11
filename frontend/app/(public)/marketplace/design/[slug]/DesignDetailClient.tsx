@@ -15,7 +15,6 @@ import WishlistButton from "@/components/ui/WishlistButton";
 import DesignCard, { DesignCardSkeleton } from "@/components/ui/DesignCard";
 import ProductGallery from "@/components/product/ProductGallery";
 import VariantPicker from "@/components/product/VariantPicker";
-import TrustBadges from "@/components/product/TrustBadges";
 import RelatedGrid from "@/components/product/RelatedGrid";
 import DetailPageSkeleton from "@/components/product/DetailPageSkeleton";
 import DetailNotFound from "@/components/product/DetailNotFound";
@@ -37,12 +36,6 @@ import { useAuthStore } from "@/store/auth-store";
 import { useAuthModalStore } from "@/store/auth-modal-store";
 import type { Design, Product } from "@/types/product";
 
-// Display-only estimate mirroring backend's config('creator.commission_rate')
-// placeholder default (backend/config/creator.php) — the real rate isn't
-// exposed by any API, so this is cosmetic, not the value actually applied
-// at checkout.
-const CREATOR_ROYALTY_RATE = 0.2;
-
 const TABS = [
   { key: "deskripsi", tKey: "description" },
   { key: "produk", tKey: "productDetail" },
@@ -56,7 +49,6 @@ type TabKey = (typeof TABS)[number]["key"];
 export default function DetailDesainPage() {
   const t = useTranslations("public.designDetail");
   const tCommon = useTranslations("common");
-  const tGuards = useTranslations("auth.guards");
   const params = useParams<{ slug: string }>();
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
@@ -116,14 +108,12 @@ export default function DetailDesainPage() {
   const previewImage = storageUrl(activeGalleryItem?.path ?? null);
 
   const [quantity, setQuantity] = useState(1);
-  const [notes, setNotes] = useState("");
   const [tab, setTab] = useState<TabKey>("deskripsi");
   const [showSizeChart, setShowSizeChart] = useState(false);
   const [pendingAction, setPendingAction] = useState<"cart" | "buy" | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const unitPrice = Number(selectedProduct?.base_price ?? 0) + Number(selectedVariant?.price_modifier ?? 0);
-  const royalty = Math.round(unitPrice * CREATOR_ROYALTY_RATE);
   const total = unitPrice * quantity;
 
   async function handleSubmit(destination: "cart" | "buy") {
@@ -132,7 +122,7 @@ export default function DetailDesainPage() {
       return;
     }
     if (!user) {
-      openAuthModal("login", tGuards("loginRequired"));
+      openAuthModal("login");
       return;
     }
     setError(null);
@@ -142,7 +132,6 @@ export default function DetailDesainPage() {
         product_variant_id: selectedVariant.id,
         design_id: design.id,
         quantity,
-        notes: notes || undefined,
       });
       await invalidateCart();
       if (destination === "cart") toast(t("addToCartSuccess"), "success");
@@ -288,26 +277,6 @@ export default function DetailDesainPage() {
                 {formatCurrency(total)}
               </p>
 
-              <div
-                className="flex items-center justify-between rounded-sm bg-border/30 px-3 py-2.5 font-body text-sm"
-                title={t("royaltyTooltip")}
-              >
-                <span className="text-text-secondary">{t("royaltyLabel")}</span>
-                <span className="font-medium text-text-primary">
-                  {formatCurrency(royalty)} ({Math.round(CREATOR_ROYALTY_RATE * 100)}%)
-                </span>
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <p className="font-body text-sm font-medium text-text-primary">{t("notesLabel")}</p>
-                <textarea
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  rows={2}
-                  className="w-full rounded-sm border border-border bg-surface px-3 py-2.5 font-body text-sm text-text-primary outline-none"
-                  placeholder={t("notesPlaceholder")}
-                />
-              </div>
 
               {error && <p className="font-body text-xs text-danger">{error}</p>}
 
@@ -330,8 +299,6 @@ export default function DetailDesainPage() {
                   {t("buyNow")}
                 </Button>
               </div>
-
-              <TrustBadges />
             </>
           )}
         </div>
