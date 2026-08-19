@@ -9,6 +9,7 @@ use App\Repositories\CartRepository;
 use App\Repositories\OrderRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
@@ -30,26 +31,41 @@ class OrderService
     }
 
     /**
+     * Re-fetches the order with a row lock inside the caller's transaction, so
+     * concurrent status transitions (two admin actions, or an admin action
+     * racing a webhook) see a consistent status instead of a stale in-memory
+     * copy — closes a TOCTOU gap between the status check and the update.
+     */
+    private function lockOrder(Order $order): Order
+    {
+        return Order::whereKey($order->id)->lockForUpdate()->firstOrFail();
+    }
+
+    /**
      * BR-010: cancellable only while "menunggu_approval" — once production
      * has started, cancellation is not available.
      */
     public function cancel(Order $order): Order
     {
-        if ($order->status !== 'menunggu_approval') {
-            throw ValidationException::withMessages([
-                'status' => [__('messages.order.cancel_invalid_status')],
+        return DB::transaction(function () use ($order) {
+            $order = $this->lockOrder($order);
+
+            if ($order->status !== 'menunggu_approval') {
+                throw ValidationException::withMessages([
+                    'status' => [__('messages.order.cancel_invalid_status')],
+                ]);
+            }
+
+            $order->update([
+                'status' => 'dibatalkan',
+                'cancelled_at' => now(),
+                'cancelled_by' => 'customer',
             ]);
-        }
 
-        $order->update([
-            'status' => 'dibatalkan',
-            'cancelled_at' => now(),
-            'cancelled_by' => 'customer',
-        ]);
+            $this->orders->recordStatusHistory($order, 'menunggu_approval', 'dibatalkan', 'customer', $order->user_id);
 
-        $this->orders->recordStatusHistory($order, 'menunggu_approval', 'dibatalkan', 'customer', $order->user_id);
-
-        return $order;
+            return $order;
+        });
     }
 
     /**
@@ -59,16 +75,20 @@ class OrderService
      */
     public function confirmReceived(Order $order): Order
     {
-        if ($order->status !== 'menunggu_konfirmasi') {
-            throw ValidationException::withMessages([
-                'status' => [__('messages.order.confirm_invalid_status')],
-            ]);
-        }
+        return DB::transaction(function () use ($order) {
+            $order = $this->lockOrder($order);
 
-        $order->update(['status' => 'selesai', 'confirmed_at' => now(), 'completed_at' => now()]);
-        $this->orders->recordStatusHistory($order, 'menunggu_konfirmasi', 'selesai', 'customer', $order->user_id);
+            if ($order->status !== 'menunggu_konfirmasi') {
+                throw ValidationException::withMessages([
+                    'status' => [__('messages.order.confirm_invalid_status')],
+                ]);
+            }
 
-        return $order;
+            $order->update(['status' => 'selesai', 'confirmed_at' => now(), 'completed_at' => now()]);
+            $this->orders->recordStatusHistory($order, 'menunggu_konfirmasi', 'selesai', 'customer', $order->user_id);
+
+            return $order;
+        });
     }
 
     /**
@@ -115,17 +135,21 @@ class OrderService
      */
     public function updateStatus(Order $order, User $admin): Order
     {
-        if ($order->status !== 'menunggu_approval') {
-            throw ValidationException::withMessages([
-                'status' => [__('messages.order.production_invalid_status')],
-            ]);
-        }
+        return DB::transaction(function () use ($order, $admin) {
+            $order = $this->lockOrder($order);
 
-        $order->update(['status' => 'diproses_produksi', 'production_started_at' => now()]);
-        $this->orders->recordStatusHistory($order, 'menunggu_approval', 'diproses_produksi', 'admin', $admin->id);
-        $this->auditLog->record($admin, 'order.status_update', $order, 'diproses_produksi');
+            if ($order->status !== 'menunggu_approval') {
+                throw ValidationException::withMessages([
+                    'status' => [__('messages.order.production_invalid_status')],
+                ]);
+            }
 
-        return $order;
+            $order->update(['status' => 'diproses_produksi', 'production_started_at' => now()]);
+            $this->orders->recordStatusHistory($order, 'menunggu_approval', 'diproses_produksi', 'admin', $admin->id);
+            $this->auditLog->record($admin, 'order.status_update', $order, 'diproses_produksi');
+
+            return $order;
+        });
     }
 
     /**
@@ -136,23 +160,27 @@ class OrderService
      */
     public function reject(Order $order, User $admin, string $reason): Order
     {
-        if ($order->status !== 'menunggu_approval') {
-            throw new ConflictHttpException(__('messages.order.reject_invalid_status'));
-        }
+        return DB::transaction(function () use ($order, $admin, $reason) {
+            $order = $this->lockOrder($order);
 
-        $order->update(['status' => 'ditolak', 'rejection_reason' => $reason]);
-        $this->orders->recordStatusHistory($order, 'menunggu_approval', 'ditolak', 'admin', $admin->id, $reason);
+            if ($order->status !== 'menunggu_approval') {
+                throw new ConflictHttpException(__('messages.order.reject_invalid_status'));
+            }
 
-        $this->notifications->notify(
-            $order->user,
-            'order.rejected',
-            'Pesanan ditolak',
-            "Pesanan {$order->order_number} ditolak: {$reason}",
-            $order,
-        );
-        $this->auditLog->record($admin, 'order.reject', $order, $reason);
+            $order->update(['status' => 'ditolak', 'rejection_reason' => $reason]);
+            $this->orders->recordStatusHistory($order, 'menunggu_approval', 'ditolak', 'admin', $admin->id, $reason);
 
-        return $order;
+            $this->notifications->notify(
+                $order->user,
+                'order.rejected',
+                'Pesanan ditolak',
+                "Pesanan {$order->order_number} ditolak: {$reason}",
+                $order,
+            );
+            $this->auditLog->record($admin, 'order.reject', $order, $reason);
+
+            return $order;
+        });
     }
 
     /**
@@ -164,33 +192,56 @@ class OrderService
      * webhook-driven (BiteshipWebhookService), since booking and "actually
      * shipped" are different moments.
      */
+    /**
+     * Split into two short transactions bookending the Biteship call rather
+     * than one long one, so the row lock isn't held across an external HTTP
+     * request — the second transaction re-checks shipment existence to catch
+     * a request that raced past the first check while the booking call was
+     * in flight.
+     */
     public function bookShipment(Order $order, User $admin, string $courier): Shipment
     {
-        if ($order->status !== 'diproses_produksi') {
-            throw ValidationException::withMessages([
-                'status' => [__('messages.order.shipment_invalid_status')],
-            ]);
-        }
+        $order = DB::transaction(function () use ($order) {
+            $locked = $this->lockOrder($order);
 
-        if ($order->shipment()->exists()) {
-            throw ValidationException::withMessages([
-                'order' => [__('messages.order.shipment_already_exists')],
-            ]);
-        }
+            if ($locked->status !== 'diproses_produksi') {
+                throw ValidationException::withMessages([
+                    'status' => [__('messages.order.shipment_invalid_status')],
+                ]);
+            }
+
+            if ($locked->shipment()->exists()) {
+                throw ValidationException::withMessages([
+                    'order' => [__('messages.order.shipment_already_exists')],
+                ]);
+            }
+
+            return $locked;
+        });
 
         $booking = blank(config('services.biteship.api_key'))
             ? ['biteship_order_id' => null, 'tracking_number' => null]
             : $this->biteship->createBooking($order, $courier);
 
-        $shipment = Shipment::create([
-            'order_id' => $order->id,
-            'biteship_order_id' => $booking['biteship_order_id'],
-            'tracking_number' => $booking['tracking_number'],
-            'courier' => $courier,
-            'status' => 'menunggu_pickup',
-        ]);
-        $this->auditLog->record($admin, 'order.shipment_book', $order, "courier: {$courier}");
+        return DB::transaction(function () use ($order, $admin, $courier, $booking) {
+            $locked = $this->lockOrder($order);
 
-        return $shipment;
+            if ($locked->shipment()->exists()) {
+                throw ValidationException::withMessages([
+                    'order' => [__('messages.order.shipment_already_exists')],
+                ]);
+            }
+
+            $shipment = Shipment::create([
+                'order_id' => $locked->id,
+                'biteship_order_id' => $booking['biteship_order_id'],
+                'tracking_number' => $booking['tracking_number'],
+                'courier' => $courier,
+                'status' => 'menunggu_pickup',
+            ]);
+            $this->auditLog->record($admin, 'order.shipment_book', $locked, "courier: {$courier}");
+
+            return $shipment;
+        });
     }
 }

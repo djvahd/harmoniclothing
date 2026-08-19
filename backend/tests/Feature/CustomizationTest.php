@@ -42,13 +42,35 @@ class CustomizationTest extends TestCase
     public function test_authenticated_user_can_upload_an_svg_design(): void
     {
         $user = User::factory()->create();
-        $file = UploadedFile::fake()->create('design.svg', 10, 'image/svg+xml');
+        $file = UploadedFile::fake()->createWithContent(
+            'design.svg',
+            '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><rect width="10" height="10"/></svg>'
+        );
 
         $response = $this->actingAs($user)
             ->postJson('/api/customization/uploads', ['file' => $file]);
 
         $response->assertCreated();
         $this->assertStringEndsWith('.svg', $response->json('data.path'));
+    }
+
+    public function test_svg_upload_strips_embedded_script(): void
+    {
+        $user = User::factory()->create();
+        $file = UploadedFile::fake()->createWithContent(
+            'malicious.svg',
+            '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(document.cookie)</script><rect width="10" height="10"/></svg>'
+        );
+
+        $response = $this->actingAs($user)
+            ->postJson('/api/customization/uploads', ['file' => $file]);
+
+        $response->assertCreated();
+
+        $stored = Storage::disk('public')->get($response->json('data.path'));
+
+        $this->assertStringNotContainsString('<script', $stored);
+        $this->assertStringNotContainsString('alert(', $stored);
     }
 
     public function test_upload_rejects_disallowed_mime_type(): void

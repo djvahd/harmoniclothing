@@ -169,7 +169,10 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE'),
+    // Defaults to true in production even if SESSION_SECURE_COOKIE is never
+    // set explicitly, so the session cookie isn't sent over plain HTTP by a
+    // deploy that forgot to configure it — override still wins if set.
+    'secure' => env('SESSION_SECURE_COOKIE', env('APP_ENV') === 'production'),
 
     /*
     |--------------------------------------------------------------------------

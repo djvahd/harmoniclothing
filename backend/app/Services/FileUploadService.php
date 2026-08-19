@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use enshrined\svgSanitize\Sanitizer;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -22,6 +23,20 @@ class FileUploadService
         // with that check rather than trusting client-controlled metadata.
         $extension = $file->getMimeType() === 'image/svg+xml' ? 'svg' : 'png';
         $filename = Str::uuid().'.'.$extension;
+
+        // SVG is XML and can embed <script>/event-handler payloads — sanitize
+        // before it ever touches disk so the public storage URL can't serve
+        // stored XSS to whoever opens it (e.g. an admin reviewing a design).
+        if ($extension === 'svg') {
+            $sanitizer = new Sanitizer;
+            $clean = $sanitizer->sanitize((string) file_get_contents($file->getRealPath()));
+
+            abort_if($clean === false, 422, 'File SVG tidak valid.');
+
+            Storage::disk('public')->put($directory.'/'.$filename, $clean);
+
+            return $directory.'/'.$filename;
+        }
 
         return $file->storeAs($directory, $filename, 'public');
     }
