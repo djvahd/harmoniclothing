@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 /**
@@ -28,9 +29,6 @@ class PaymentTest extends TestCase
             'order_id' => 'HC-20260101-0001',
             'status_code' => '200',
             'gross_amount' => '100000.00',
-            'transaction_status' => 'settlement',
-            'transaction_id' => 'trx-1',
-            'payment_type' => 'bank_transfer',
         ], $overrides);
 
         $payload['signature_key'] = hash(
@@ -39,6 +37,28 @@ class PaymentTest extends TestCase
         );
 
         return $payload;
+    }
+
+    /**
+     * The webhook now re-fetches the authoritative transaction status from
+     * Midtrans server-to-server rather than trusting the notification body, so
+     * tests fake that outbound call instead of relying on the POSTed payload.
+     */
+    private function fakeMidtransStatus(array $overrides = []): void
+    {
+        $status = array_merge([
+            'order_id' => 'HC-20260101-0001',
+            'status_code' => '200',
+            'gross_amount' => '100000.00',
+            'transaction_status' => 'settlement',
+            'fraud_status' => 'accept',
+            'transaction_id' => 'trx-1',
+            'payment_type' => 'bank_transfer',
+        ], $overrides);
+
+        Http::fake([
+            'api.sandbox.midtrans.com/v2/*/status' => Http::response($status, 200),
+        ]);
     }
 
     public function test_webhook_rejects_invalid_signature(): void
@@ -58,6 +78,8 @@ class PaymentTest extends TestCase
             'total' => 100000,
         ]);
         Payment::factory()->for($order)->create(['amount' => 100000]);
+
+        $this->fakeMidtransStatus();
 
         $this->postJson('/api/webhooks/midtrans', $this->signedPayload())->assertOk();
 
@@ -82,15 +104,36 @@ class PaymentTest extends TestCase
         ]);
         Payment::factory()->for($order)->create(['amount' => 100000]);
 
-        $this->postJson('/api/webhooks/midtrans', $this->signedPayload(['transaction_status' => 'deny']))
-            ->assertOk();
+        $this->fakeMidtransStatus(['transaction_status' => 'deny', 'fraud_status' => null]);
+
+        $this->postJson('/api/webhooks/midtrans', $this->signedPayload())->assertOk();
 
         $this->assertSame('gagal', $order->payment()->first()->status);
         $this->assertSame('belum_dibayar', $order->fresh()->status);
     }
 
+    public function test_webhook_treats_challenged_capture_as_pending_not_paid(): void
+    {
+        $user = User::factory()->create();
+        $address = Address::factory()->for($user)->create();
+        $order = Order::factory()->for($user)->for($address, 'address')->create([
+            'order_number' => 'HC-20260101-0001',
+            'total' => 100000,
+        ]);
+        Payment::factory()->for($order)->create(['amount' => 100000]);
+
+        $this->fakeMidtransStatus(['transaction_status' => 'capture', 'fraud_status' => 'challenge']);
+
+        $this->postJson('/api/webhooks/midtrans', $this->signedPayload())->assertOk();
+
+        $this->assertSame('belum_dibayar', $order->fresh()->status);
+        $this->assertNotSame('berhasil', $order->payment()->first()->status);
+    }
+
     public function test_webhook_is_idempotent_for_an_unknown_order(): void
     {
+        $this->fakeMidtransStatus(['order_id' => 'HC-NOPE']);
+
         $this->postJson('/api/webhooks/midtrans', $this->signedPayload(['order_id' => 'HC-NOPE']))
             ->assertOk();
     }
@@ -106,6 +149,8 @@ class PaymentTest extends TestCase
         Payment::factory()->for($order)->create(['amount' => 100000]);
 
         $this->actingAs($user)->getJson("/api/orders/{$order->id}/invoice")->assertNotFound();
+
+        $this->fakeMidtransStatus();
 
         $this->postJson('/api/webhooks/midtrans', $this->signedPayload())->assertOk();
 

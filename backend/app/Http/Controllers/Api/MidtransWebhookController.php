@@ -26,7 +26,11 @@ class MidtransWebhookController extends Controller
 
         abort_unless($this->midtrans->verifySignature($payload), 403, 'Invalid signature.');
 
-        $this->webhook->handle($payload);
+        // transaction_status/fraud_status aren't covered by the signature — re-fetch
+        // the authoritative status server-to-server rather than trusting the body.
+        $status = $this->midtrans->getTransactionStatus($payload['order_id']);
+
+        $this->webhook->handle($status);
 
         return response()->json([]); // Midtrans only checks the status code, not the body
     }

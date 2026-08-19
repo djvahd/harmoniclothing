@@ -14,6 +14,17 @@ class ShippingTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        config(['services.biteship.webhook_token' => 'test-webhook-token']);
+    }
+
+    private function webhookUrl(): string
+    {
+        return '/api/webhooks/biteship?token=test-webhook-token';
+    }
+
     private function orderWithShipment(string $orderStatus, string $shipmentStatus): Order
     {
         $user = User::factory()->create();
@@ -27,11 +38,20 @@ class ShippingTest extends TestCase
         return $order;
     }
 
+    public function test_webhook_rejects_missing_or_invalid_token(): void
+    {
+        $this->postJson('/api/webhooks/biteship', ['order_id' => 'biteship-test-1', 'status' => 'delivered'])
+            ->assertForbidden();
+
+        $this->postJson('/api/webhooks/biteship?token=wrong', ['order_id' => 'biteship-test-1', 'status' => 'delivered'])
+            ->assertForbidden();
+    }
+
     public function test_webhook_moves_order_to_dikirim_when_shipment_ships(): void
     {
         $order = $this->orderWithShipment('diproses_produksi', 'menunggu_pickup');
 
-        $this->postJson('/api/webhooks/biteship', [
+        $this->postJson($this->webhookUrl(), [
             'order_id' => 'biteship-test-1',
             'status' => 'dikirim',
             'waybill_id' => 'JNE123',
@@ -47,7 +67,7 @@ class ShippingTest extends TestCase
     {
         $order = $this->orderWithShipment('dikirim', 'dikirim');
 
-        $this->postJson('/api/webhooks/biteship', [
+        $this->postJson($this->webhookUrl(), [
             'order_id' => 'biteship-test-1',
             'status' => 'delivered',
         ])->assertOk();
@@ -58,7 +78,7 @@ class ShippingTest extends TestCase
 
     public function test_webhook_is_idempotent_for_unknown_shipment(): void
     {
-        $this->postJson('/api/webhooks/biteship', ['order_id' => 'nope', 'status' => 'delivered'])
+        $this->postJson($this->webhookUrl(), ['order_id' => 'nope', 'status' => 'delivered'])
             ->assertOk();
     }
 

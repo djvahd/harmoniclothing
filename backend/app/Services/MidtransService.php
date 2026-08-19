@@ -41,10 +41,36 @@ class MidtransService
         return hash_equals($expected, $payload['signature_key'] ?? '');
     }
 
+    /**
+     * Server-to-server status check. verifySignature() only covers order_id +
+     * status_code + gross_amount — transaction_status/fraud_status are not part
+     * of the signed payload, so a captured notification could be replayed with
+     * those fields edited. The webhook re-fetches the authoritative state from
+     * here rather than trusting the notification body for anything that
+     * determines payment/order state.
+     */
+    public function getTransactionStatus(string $orderId): array
+    {
+        $response = Http::withBasicAuth(config('services.midtrans.server_key'), '')
+            ->get($this->statusUrl($orderId))
+            ->throw();
+
+        return $response->json();
+    }
+
     private function snapUrl(): string
     {
         return config('services.midtrans.is_production')
             ? 'https://app.midtrans.com/snap/v1/transactions'
             : 'https://app.sandbox.midtrans.com/snap/v1/transactions';
+    }
+
+    private function statusUrl(string $orderId): string
+    {
+        $base = config('services.midtrans.is_production')
+            ? 'https://api.midtrans.com'
+            : 'https://api.sandbox.midtrans.com';
+
+        return $base.'/v2/'.rawurlencode($orderId).'/status';
     }
 }

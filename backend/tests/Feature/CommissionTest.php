@@ -11,6 +11,7 @@ use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 /** BR-007 — commission auto-generated per paid transaction involving a Creator's design. */
@@ -30,7 +31,6 @@ class CommissionTest extends TestCase
             'order_id' => $orderNumber,
             'status_code' => '200',
             'gross_amount' => $grossAmount,
-            'transaction_status' => 'settlement',
         ];
         $payload['signature_key'] = hash(
             'sha512',
@@ -38,6 +38,19 @@ class CommissionTest extends TestCase
         );
 
         return $payload;
+    }
+
+    private function fakeMidtransStatus(string $orderNumber, string $grossAmount): void
+    {
+        Http::fake([
+            'api.sandbox.midtrans.com/v2/*/status' => Http::response([
+                'order_id' => $orderNumber,
+                'status_code' => '200',
+                'gross_amount' => $grossAmount,
+                'transaction_status' => 'settlement',
+                'fraud_status' => 'accept',
+            ], 200),
+        ]);
     }
 
     public function test_settlement_generates_commission_for_design_linked_item(): void
@@ -53,6 +66,8 @@ class CommissionTest extends TestCase
             'design_id' => $design->id,
             'subtotal' => 100000,
         ]);
+
+        $this->fakeMidtransStatus('HC-COMM-0001', '100000.00');
 
         $this->postJson('/api/webhooks/midtrans', $this->signedPayload('HC-COMM-0001', '100000.00'))
             ->assertOk();
@@ -73,6 +88,8 @@ class CommissionTest extends TestCase
             ->create(['order_number' => 'HC-COMM-0002', 'total' => 50000]);
         Payment::factory()->for($order)->create(['amount' => 50000]);
         OrderItem::factory()->for($order)->create(['design_id' => null, 'subtotal' => 50000]);
+
+        $this->fakeMidtransStatus('HC-COMM-0002', '50000.00');
 
         $this->postJson('/api/webhooks/midtrans', $this->signedPayload('HC-COMM-0002', '50000.00'))
             ->assertOk();

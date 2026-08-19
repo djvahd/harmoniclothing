@@ -13,8 +13,6 @@ use Illuminate\Support\Facades\DB;
  */
 class MidtransWebhookService
 {
-    private const SUCCESS_STATUSES = ['capture', 'settlement'];
-
     private const FAILURE_STATUSES = ['deny', 'cancel', 'expire'];
 
     public function __construct(
@@ -33,16 +31,40 @@ class MidtransWebhookService
         }
 
         $status = $payload['transaction_status'];
+        $fraudStatus = $payload['fraud_status'] ?? null;
 
-        DB::transaction(function () use ($order, $payload, $status) {
-            if (in_array($status, self::SUCCESS_STATUSES, true)) {
+        DB::transaction(function () use ($order, $payload, $status, $fraudStatus) {
+            if ($this->isSuccessful($status, $fraudStatus)) {
                 $this->markPaid($order, $payload);
-            } elseif (in_array($status, self::FAILURE_STATUSES, true)) {
+            } elseif ($this->isFailed($status, $fraudStatus)) {
                 $order->payment->update(['status' => 'gagal', 'raw_response' => $payload]);
             } else {
-                $order->payment->update(['raw_response' => $payload]); // pending
+                $order->payment->update(['raw_response' => $payload]); // pending / challenge
             }
         });
+    }
+
+    /**
+     * settlement is always final. capture (card payments) additionally depends
+     * on fraud_status — only 'accept' means the transaction actually cleared;
+     * 'challenge' needs manual review and must not be treated as paid.
+     */
+    private function isSuccessful(string $status, ?string $fraudStatus): bool
+    {
+        if ($status === 'settlement') {
+            return true;
+        }
+
+        return $status === 'capture' && $fraudStatus === 'accept';
+    }
+
+    private function isFailed(string $status, ?string $fraudStatus): bool
+    {
+        if (in_array($status, self::FAILURE_STATUSES, true)) {
+            return true;
+        }
+
+        return $status === 'capture' && $fraudStatus === 'deny';
     }
 
     private function markPaid(Order $order, array $payload): void

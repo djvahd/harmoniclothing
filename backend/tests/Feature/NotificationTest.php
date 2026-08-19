@@ -9,6 +9,7 @@ use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 /** FR-029/BR-027 — in-app real-time notifications. */
@@ -68,12 +69,21 @@ class NotificationTest extends TestCase
             'order_id' => 'HC-NOTIF-0001',
             'status_code' => '200',
             'gross_amount' => '100000.00',
-            'transaction_status' => 'settlement',
         ];
         $payload['signature_key'] = hash(
             'sha512',
             $payload['order_id'].$payload['status_code'].$payload['gross_amount'].'test-server-key'
         );
+
+        Http::fake([
+            'api.sandbox.midtrans.com/v2/*/status' => Http::response([
+                'order_id' => 'HC-NOTIF-0001',
+                'status_code' => '200',
+                'gross_amount' => '100000.00',
+                'transaction_status' => 'settlement',
+                'fraud_status' => 'accept',
+            ], 200),
+        ]);
 
         $this->postJson('/api/webhooks/midtrans', $payload)->assertOk();
 

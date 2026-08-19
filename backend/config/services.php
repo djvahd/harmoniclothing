@@ -43,6 +43,7 @@ return [
 
     'biteship' => [
         'api_key' => env('BITESHIP_API_KEY'),
+        'webhook_token' => env('BITESHIP_WEBHOOK_TOKEN'),
     ],
 
     // BR-007 (2026-07-22): automatic commission payout. No account signed up
