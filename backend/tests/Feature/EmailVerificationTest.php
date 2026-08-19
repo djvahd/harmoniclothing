@@ -126,4 +126,28 @@ class EmailVerificationTest extends TestCase
 
         Notification::assertSentTo($user, VerifyEmail::class);
     }
+
+    /**
+     * The default VerifyEmail link points straight at this API-only backend's
+     * JSON route, which dumps raw JSON in the browser instead of a page — and
+     * its default mail content is hardcoded English despite APP_LOCALE=id.
+     * AppServiceProvider overrides both; this locks in that the override
+     * still applies to whatever notification actually gets sent.
+     */
+    public function test_verification_email_points_to_frontend_and_is_localized(): void
+    {
+        Notification::fake();
+        config(['app.frontend_url' => 'http://localhost:3000']);
+        app()->setLocale('id');
+
+        $user = User::factory()->unverified()->create();
+        $user->sendEmailVerificationNotification();
+
+        Notification::assertSentTo($user, VerifyEmail::class, function (VerifyEmail $notification) use ($user) {
+            $mail = $notification->toMail($user);
+
+            return str_starts_with($mail->actionUrl, 'http://localhost:3000/verify-email?id=')
+                && $mail->subject === 'Verifikasi Alamat Email Anda';
+        });
+    }
 }

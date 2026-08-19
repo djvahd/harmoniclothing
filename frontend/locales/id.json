@@ -973,6 +973,12 @@
       "submit": "Simpan Password Baru",
       "success": "Password berhasil diperbarui. Silakan masuk."
     },
+    "verifyEmail": {
+      "title": "Verifikasi Email",
+      "verifying": "Memverifikasi email Anda...",
+      "success": "Email berhasil diverifikasi. Silakan masuk.",
+      "continue": "Masuk"
+    },
     "guards": {
       "adminAccessDenied": "Anda tidak memiliki akses ke halaman admin ini."
     }

@@ -16,6 +16,18 @@ return [
         'verification_resent' => 'If the email is registered and not yet verified, a verification link has been sent.',
         'reset_link_sent' => 'If the email is registered, a password reset link has been sent.',
         'password_reset_success' => 'Password changed successfully.',
+
+        'mail' => [
+            'verify_subject' => 'Verify Your Email Address',
+            'verify_line1' => 'Click the button below to verify your email address and activate your Harmoni Clothing account.',
+            'verify_action' => 'Verify Email',
+            'verify_line2' => 'If you did not create this account, no further action is required.',
+            'reset_subject' => 'Reset Your Password',
+            'reset_line1' => 'We received a request to reset the password for your account. Click the button below to choose a new one.',
+            'reset_action' => 'Reset Password',
+            'reset_line2' => 'This password reset link will expire in :count minutes.',
+            'reset_line3' => 'If you did not request a password reset, no further action is required.',
+        ],
     ],
 
     'catalog' => [

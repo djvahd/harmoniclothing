@@ -42,3 +42,9 @@ export function resetPassword(payload: {
     body: payload,
   });
 }
+
+export function verifyEmail(id: string, hash: string, expires: string, signature: string) {
+  return apiFetch<{ data: null; message: string }>(
+    `/auth/verify-email/${id}/${hash}?expires=${expires}&signature=${signature}`,
+  );
+}

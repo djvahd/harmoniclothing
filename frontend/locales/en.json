@@ -973,6 +973,12 @@
       "submit": "Save New Password",
       "success": "Password updated successfully. Please log in."
     },
+    "verifyEmail": {
+      "title": "Verify Email",
+      "verifying": "Verifying your email...",
+      "success": "Email verified successfully. Please log in.",
+      "continue": "Log In"
+    },
     "guards": {
       "adminAccessDenied": "You don't have access to this admin page."
     }

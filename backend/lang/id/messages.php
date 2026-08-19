@@ -16,6 +16,18 @@ return [
         'verification_resent' => 'Jika email terdaftar dan belum terverifikasi, tautan verifikasi telah dikirim.',
         'reset_link_sent' => 'Jika email terdaftar, tautan reset password telah dikirim.',
         'password_reset_success' => 'Password berhasil diubah.',
+
+        'mail' => [
+            'verify_subject' => 'Verifikasi Alamat Email Anda',
+            'verify_line1' => 'Klik tombol di bawah untuk memverifikasi alamat email Anda dan mengaktifkan akun Harmoni Clothing.',
+            'verify_action' => 'Verifikasi Email',
+            'verify_line2' => 'Jika Anda tidak membuat akun ini, abaikan email ini.',
+            'reset_subject' => 'Reset Password Anda',
+            'reset_line1' => 'Kami menerima permintaan reset password untuk akun Anda. Klik tombol di bawah untuk membuat password baru.',
+            'reset_action' => 'Reset Password',
+            'reset_line2' => 'Tautan reset password ini akan kedaluwarsa dalam :count menit.',
+            'reset_line3' => 'Jika Anda tidak meminta reset password, abaikan email ini.',
+        ],
     ],
 
     'catalog' => [
