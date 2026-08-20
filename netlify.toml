@@ -8,3 +8,26 @@
 
 [build.environment]
   NODE_VERSION = "20"
+
+# Proxy API calls through the same origin as the frontend so the Sanctum
+# session/CSRF cookies are first-party, not cross-site — modern browsers
+# increasingly block third-party cookies outright, which SameSite=None
+# alone can't work around. Update the target host here (and in Railway's
+# `api` service's Networking settings) if the backend domain ever changes.
+[[redirects]]
+  from = "/api/*"
+  to = "https://api-production-a4d61.up.railway.app/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/sanctum/*"
+  to = "https://api-production-a4d61.up.railway.app/sanctum/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/broadcasting/*"
+  to = "https://api-production-a4d61.up.railway.app/broadcasting/:splat"
+  status = 200
+  force = true
