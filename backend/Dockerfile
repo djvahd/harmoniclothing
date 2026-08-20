@@ -2,7 +2,7 @@
 # Both Railway services (api, reverb) use this same image — the process that
 # runs is chosen by the "Start Command" set per-service (see DEPLOYMENT.md).
 
-FROM php:8.3-cli-bookworm
+FROM php:8.4-cli-bookworm
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
