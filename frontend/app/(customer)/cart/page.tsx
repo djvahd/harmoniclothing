@@ -28,7 +28,7 @@ export default function KeranjangPage() {
   useEffect(() => {
     setSelectedIds((prev) => {
       const validIds = new Set(items.map((item) => item.id));
-      const next = new Set([...prev].filter((id) => validIds.has(id)));
+      const next = new Set(Array.from(prev).filter((id) => validIds.has(id)));
       items.forEach((item) => {
         if (!prev.has(item.id)) next.add(item.id);
       });
