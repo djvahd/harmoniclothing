@@ -10,9 +10,14 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Mailtrap\Api\AbstractApi;
+use Mailtrap\Bridge\Transport\MailtrapSdkTransport;
+use Mailtrap\Config as MailtrapConfig;
+use Mailtrap\MailtrapClient;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +34,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Railway blocks/stalls outbound SMTP (register hung ~1min on
+        // /api/auth/register waiting for the raw SMTP connect to Mailtrap
+        // to time out) — use Mailtrap's HTTP API transport instead, via the
+        // SDK's own Symfony Mailer bridge. Paired with MAIL_MAILER=mailtrap.
+        Mail::extend('mailtrap', function () {
+            $config = (new MailtrapConfig((string) env('MAILTRAP_API_TOKEN')))
+                ->setHost(AbstractApi::SENDMAIL_TRANSACTIONAL_HOST);
+
+            $emailsSendApiLayer = (new MailtrapClient($config))->sending()->emails();
+
+            return new MailtrapSdkTransport($emailsSendApiLayer, $config);
+        });
+
         // 1.2_Requirement_Gathering.md line 218: register sends the
         // verification email that gates login until confirmed.
         Event::listen(Registered::class, SendEmailVerificationNotification::class);
