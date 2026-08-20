@@ -1,10 +1,9 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState } from "react";
 import { useLocale } from "next-intl";
 import clsx from "clsx";
-import { setUserLocale } from "@/lib/locale-actions";
-import { locales, type Locale } from "@/i18n/config";
+import { locales, LOCALE_COOKIE, type Locale } from "@/i18n/config";
 
 export default function LanguageSwitcher({
   className,
@@ -16,17 +15,23 @@ export default function LanguageSwitcher({
   variant?: "light" | "dark";
 }) {
   const locale = useLocale();
-  const [isPending, startTransition] = useTransition();
+  const [isPending, setIsPending] = useState(false);
 
   function handleChange(next: Locale) {
     if (next === locale || isPending) return;
-    startTransition(async () => {
-      await setUserLocale(next);
-      // Client components fetch data with SWR, which isn't tied to the
-      // locale cookie — a hard reload is the simplest way to refetch
-      // everything (Server Components and SWR alike) in the new language.
-      window.location.reload();
-    });
+    setIsPending(true);
+    // Set the cookie directly on the client rather than via a Server Action:
+    // a Server Action that mutates cookies triggers Next.js to refresh the
+    // current route's Server Components as soon as it resolves, which flips
+    // the page to the new language *before* the reload below runs — visible
+    // as a flash of new-language text followed by the reload's own loading
+    // state. Setting the cookie here avoids that extra refresh entirely, so
+    // the reload's loading state is the only transition the user sees.
+    document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=${60 * 60 * 24 * 365}`;
+    // Client components fetch data with SWR, which isn't tied to the
+    // locale cookie — a hard reload is the simplest way to refetch
+    // everything (Server Components and SWR alike) in the new language.
+    window.location.reload();
   }
 
   return (
