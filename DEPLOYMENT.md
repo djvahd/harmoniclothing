@@ -54,7 +54,6 @@ SESSION_SECURE_COOKIE=true    # also auto-defaults true when APP_ENV=production,
 SESSION_DOMAIN=null
 
 BROADCAST_CONNECTION=reverb
-FILESYSTEM_DISK=r2            # leave as-is; uploads will error until R2 creds are added (known pending gap)
 QUEUE_CONNECTION=redis
 CACHE_STORE=redis
 
@@ -79,11 +78,19 @@ MAIL_FROM_ADDRESS=hello@demomailtrap.co
 MAIL_FROM_NAME=Harmoni Clothing
 MAILTRAP_API_TOKEN=<same token>
 
-# Leave blank for now — pending real credentials (known gap, see project memory)
+# R2: leave FILESYSTEM_DISK_PUBLIC/PRIVATE and the AWS_* values blank until
+# real R2 credentials exist — uploads fall back to the container's local
+# disk (ephemeral! lost on every redeploy) until these are set. Once R2
+# creds exist, set FILESYSTEM_DISK_PUBLIC=r2_public and
+# FILESYSTEM_DISK_PRIVATE=r2_private too (not just the AWS_* creds) or
+# FileUploadService keeps writing to the ephemeral local disk regardless.
+FILESYSTEM_DISK_PUBLIC=
+FILESYSTEM_DISK_PRIVATE=
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
 AWS_DEFAULT_REGION=auto
-AWS_BUCKET=
+AWS_BUCKET_PUBLIC=
+AWS_BUCKET_PRIVATE=
 AWS_ENDPOINT=
 AWS_URL=
 MIDTRANS_SERVER_KEY=

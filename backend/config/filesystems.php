@@ -17,6 +17,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Upload Role Disks
+    |--------------------------------------------------------------------------
+    |
+    | FileUploadService writes design uploads (public) and KYC documents
+    | (private) through these role names rather than a hardcoded disk, so
+    | production can point them at durable storage (R2) via env vars while
+    | local dev keeps using the ephemeral local disks below unchanged.
+    |
+    */
+
+    'public_disk' => env('FILESYSTEM_DISK_PUBLIC', 'public'),
+    'private_disk' => env('FILESYSTEM_DISK_PRIVATE', 'local'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Filesystem Disks
     |--------------------------------------------------------------------------
     |
@@ -47,13 +62,30 @@ return [
             'report' => false,
         ],
 
-        's3' => [
+        // Cloudflare R2, S3-compatible. Two buckets: one public (design
+        // uploads, mockups — served via a public R2.dev/custom domain URL)
+        // and one private (KYC documents — no public URL, accessed only via
+        // Storage::response()/temporaryUrl() through an authenticated route).
+        'r2_public' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
+            'region' => env('AWS_DEFAULT_REGION', 'auto'),
+            'bucket' => env('AWS_BUCKET_PUBLIC'),
             'url' => env('AWS_URL'),
+            'endpoint' => env('AWS_ENDPOINT'),
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
+        'r2_private' => [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION', 'auto'),
+            'bucket' => env('AWS_BUCKET_PRIVATE'),
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,

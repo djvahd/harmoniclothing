@@ -31,10 +31,12 @@ class AdminCreatorController extends Controller
      */
     public function kycDocument(CreatorProfile $creatorProfile): StreamedResponse
     {
-        abort_if(! $creatorProfile->ktp_photo_path, 404);
-        abort_if(! Storage::disk('local')->exists($creatorProfile->ktp_photo_path), 404);
+        $disk = config('filesystems.private_disk');
 
-        return Storage::disk('local')->response($creatorProfile->ktp_photo_path);
+        abort_if(! $creatorProfile->ktp_photo_path, 404);
+        abort_if(! Storage::disk($disk)->exists($creatorProfile->ktp_photo_path), 404);
+
+        return Storage::disk($disk)->response($creatorProfile->ktp_photo_path);
     }
 
     /** POST /admin/creators/{creatorProfile}/approve — BR-001/008. */

@@ -23,6 +23,7 @@ class FileUploadService
         // with that check rather than trusting client-controlled metadata.
         $extension = $file->getMimeType() === 'image/svg+xml' ? 'svg' : 'png';
         $filename = Str::uuid().'.'.$extension;
+        $disk = config('filesystems.public_disk');
 
         // SVG is XML and can embed <script>/event-handler payloads — sanitize
         // before it ever touches disk so the public storage URL can't serve
@@ -33,17 +34,17 @@ class FileUploadService
 
             abort_if($clean === false, 422, 'File SVG tidak valid.');
 
-            Storage::disk('public')->put($directory.'/'.$filename, $clean);
+            Storage::disk($disk)->put($directory.'/'.$filename, $clean);
 
             return $directory.'/'.$filename;
         }
 
-        return $file->storeAs($directory, $filename, 'public');
+        return $file->storeAs($directory, $filename, $disk);
     }
 
     public function url(string $path): string
     {
-        return Storage::disk('public')->url($path);
+        return Storage::disk(config('filesystems.public_disk'))->url($path);
     }
 
     /**
@@ -56,6 +57,6 @@ class FileUploadService
         $extension = $file->getMimeType() === 'image/png' ? 'png' : 'jpg';
         $filename = Str::uuid().'.'.$extension;
 
-        return $file->storeAs($directory, $filename, 'local');
+        return $file->storeAs($directory, $filename, config('filesystems.private_disk'));
     }
 }
