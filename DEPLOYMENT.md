@@ -139,7 +139,7 @@ project level) — Reverb needs `REDIS_*`/`DB_*` too since it shares the same La
 3. Env vars (Site settings → Environment variables):
 
 ```
-NEXT_PUBLIC_API_URL=https://<api-service>.up.railway.app
+NEXT_PUBLIC_API_URL=https://<your-site>.netlify.app
 NEXT_PUBLIC_REVERB_APP_KEY=<same value as Railway's REVERB_APP_KEY>
 NEXT_PUBLIC_REVERB_HOST=<reverb-service>.up.railway.app
 NEXT_PUBLIC_REVERB_PORT=443
@@ -148,6 +148,13 @@ NEXT_PUBLIC_REVERB_SCHEME=https
 
 (Confirmed against `frontend/lib/api.ts` and `frontend/lib/echo.ts` — these are the exact env vars
 the frontend code reads.)
+
+**`NEXT_PUBLIC_API_URL` points at the Netlify site itself, not the Railway URL** — `netlify.toml`
+proxies `/api/*`, `/sanctum/*`, `/broadcasting/*`, and `/storage/*` through to the Railway `api`
+service so Sanctum's session cookie stays first-party (modern browsers increasingly block
+third-party cookies, which broke login with a CSRF token mismatch when this pointed straight at
+`.up.railway.app`). Reverb's websocket still points directly at Railway since an HTTP redirect
+proxy can't carry a WS upgrade.
 
 4. Deploy. Netlify gives you a `https://<random-name>.netlify.app` URL (renameable in Site settings
    → Domain management → Site details, no cost).
@@ -164,8 +171,7 @@ the frontend code reads.)
 
 ## 4. Domain migration checklist (for later, swapping temp URLs for real domains)
 
-All of the following are env-var-driven — no code changes needed when moving off `.netlify.app` /
-`.up.railway.app` to real domains:
+Most of the following are env-var-driven, but two are NOT — both need a code change + redeploy:
 
 - `FRONTEND_URL` (Railway `api`/`reverb`) — drives email link URLs (verify-email, reset-password).
 - `MAIL_FROM_ADDRESS` + verify the real domain in Mailtrap (currently using Mailtrap's shared
@@ -173,3 +179,9 @@ All of the following are env-var-driven — no code changes needed when moving o
 - `backend/config/cors.php`'s `CORS_ALLOWED_ORIGINS` env var (Railway).
 - `SANCTUM_STATEFUL_DOMAINS` (Railway).
 - `NEXT_PUBLIC_API_URL` / `NEXT_PUBLIC_REVERB_*` (Netlify) — only if the backend URL also changes.
+- **`netlify.toml`'s `[[redirects]]` targets** (code change) — the `/api/*`, `/sanctum/*`,
+  `/broadcasting/*`, `/storage/*` rules hardcode the Railway `api` URL as their `to =` target; update
+  if the backend URL changes.
+- **`frontend/next.config.mjs`'s `images.remotePatterns`** (code change) — must list whatever
+  hostname `NEXT_PUBLIC_API_URL` resolves to (currently the Netlify domain, since image URLs are
+  proxied same-origin) or every product/design photo 400s through Next's image optimizer.

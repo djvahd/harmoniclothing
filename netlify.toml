@@ -31,3 +31,14 @@
   to = "https://api-production-a4d61.up.railway.app/broadcasting/:splat"
   status = 200
   force = true
+
+# Publicly-served uploads (design files, product mockup photos) live on the
+# backend's public disk under /storage/*. storageUrl() in the frontend builds
+# these URLs from NEXT_PUBLIC_API_URL, which is this same Netlify domain (see
+# the cookie-proxy comment above) — without this rule every product/design
+# image 404s since Netlify has no route for /storage/* on its own.
+[[redirects]]
+  from = "/storage/*"
+  to = "https://api-production-a4d61.up.railway.app/storage/:splat"
+  status = 200
+  force = true
