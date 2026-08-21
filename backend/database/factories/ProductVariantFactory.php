@@ -51,7 +51,7 @@ class ProductVariantFactory extends Factory
         if (! Storage::disk($disk)->exists($relativePath)) {
             Storage::disk($disk)->put(
                 $relativePath,
-                file_get_contents(__DIR__.'/assets/product-placeholder.png')
+                file_get_contents(__DIR__.'/../seeders/assets/product-placeholder.png')
             );
         }
 
