@@ -1,6 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
+import { UserRound } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { User } from "@/types/user";
 
@@ -56,7 +58,19 @@ export default function AccountMenu({
   return (
     <div className="relative" onMouseEnter={onOpen} onMouseLeave={onScheduleClose}>
       <button type="button" className="flex items-center gap-2">
-        <span className="size-8 shrink-0 rounded-full bg-border" />
+        {user.photo_url ? (
+          <Image
+            src={user.photo_url}
+            alt={user.name}
+            width={32}
+            height={32}
+            className="size-8 shrink-0 rounded-full object-cover"
+          />
+        ) : (
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-border text-text-secondary">
+            <UserRound className="size-4" />
+          </span>
+        )}
         <span className="whitespace-nowrap font-body text-sm font-medium text-text-primary">{user.name}</span>
       </button>
       {open && (

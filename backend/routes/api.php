@@ -48,6 +48,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // 5.2_API_List.md §2 — /account/* (User Management: profile & address book)
     Route::patch('/account/profile', [AccountController::class, 'updateProfile']);
+    Route::post('/account/photo', [AccountController::class, 'uploadPhoto']);
+    Route::delete('/account/photo', [AccountController::class, 'removePhoto']);
     Route::get('/account/addresses', [AccountController::class, 'indexAddresses']);
     Route::post('/account/addresses', [AccountController::class, 'storeAddress']);
     Route::patch('/account/addresses/{address}', [AccountController::class, 'updateAddress']);

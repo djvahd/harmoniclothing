@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { Star, UserRound } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -27,9 +28,19 @@ export default function CreatorCard({ creator }: { creator: CreatorSummary }) {
       href={`/marketplace/${creator.slug}`}
       className="group flex w-[196px] flex-col items-center gap-2 rounded-md border border-border bg-surface p-4 text-center transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
     >
-      <span className="flex size-16 shrink-0 items-center justify-center rounded-full bg-border text-text-secondary">
-        <UserRound className="size-7" />
-      </span>
+      {creator.photo_url ? (
+        <Image
+          src={creator.photo_url}
+          alt={creator.name}
+          width={64}
+          height={64}
+          className="size-16 shrink-0 rounded-full object-cover"
+        />
+      ) : (
+        <span className="flex size-16 shrink-0 items-center justify-center rounded-full bg-border text-text-secondary">
+          <UserRound className="size-7" />
+        </span>
+      )}
 
       <div className="flex min-h-[42px] flex-col gap-0.5">
         <p className="line-clamp-1 font-heading text-body-sm font-medium text-text-primary">{creator.name}</p>

@@ -42,6 +42,7 @@ export function getDesignReviews(slug: string, params?: { page?: number; per_pag
 
 export interface CreatorProfile {
   name: string;
+  photo_url: string | null;
   bio: string | null;
   portfolio_url: string | null;
   slug: string;
@@ -53,6 +54,7 @@ export type CreatorSort = "terbaru" | "terlaris" | "rating";
 
 export interface CreatorSummary {
   name: string;
+  photo_url: string | null;
   slug: string;
   bio: string | null;
   since: string | null;

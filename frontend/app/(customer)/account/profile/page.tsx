@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import ProfilePhotoUpload from "@/components/account/ProfilePhotoUpload";
 import AccountSidebar from "@/components/layout/AccountSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Input from "@/components/ui/Input";
@@ -41,6 +42,12 @@ export default function KelolaProfilPage() {
     <SidebarPageShell sidebar={<AccountSidebar />}>
       <div className="flex max-w-lg flex-col gap-6">
         <h1 className="font-heading text-h3 font-semibold text-text-primary">{t("title")}</h1>
+        {user && (
+          <div className="rounded-md border border-border bg-surface p-5">
+            <p className="mb-3 font-body text-xs font-medium text-text-secondary">{t("photo")}</p>
+            <ProfilePhotoUpload user={user} onUpdated={setUser} />
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-md border border-border bg-surface p-5">
           <Input label={t("fullName")} value={name} onChange={(e) => setName(e.target.value)} required />
           <Input label={t("phoneNumber")} value={phone} onChange={(e) => setPhone(e.target.value)} />

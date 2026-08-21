@@ -19,6 +19,22 @@ class AccountService
         return $user;
     }
 
+    /** POST /account/photo. Path is already stored by the caller via FileUploadService. */
+    public function updatePhoto(User $user, string $path): User
+    {
+        $user->update(['photo_path' => $path]);
+
+        return $user;
+    }
+
+    /** DELETE /account/photo. */
+    public function removePhoto(User $user): User
+    {
+        $user->update(['photo_path' => null]);
+
+        return $user;
+    }
+
     /** GET /account/addresses — FR-048. */
     public function listAddresses(User $user): Collection
     {

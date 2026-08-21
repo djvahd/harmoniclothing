@@ -17,6 +17,7 @@
     "pusher-js": "^8.6.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-easy-crop": "^6.2.3",
     "swr": "^2.4.2",
     "zustand": "^5.0.14"
   },

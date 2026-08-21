@@ -48,6 +48,22 @@ class FileUploadService
     }
 
     /**
+     * Profile photo (any role) — separate from storeDesignFile() because that
+     * method only ever writes PNG/SVG; a real photo upload needs its actual
+     * extension (jpeg/png/webp) preserved instead of being mislabeled .png.
+     */
+    public function storeProfilePhoto(UploadedFile $file, string $directory = 'profile-photos'): string
+    {
+        $extension = match ($file->getMimeType()) {
+            'image/jpeg' => 'jpg',
+            'image/webp' => 'webp',
+            default => 'png',
+        };
+
+        return $file->storeAs($directory, Str::uuid().'.'.$extension, config('filesystems.public_disk'));
+    }
+
+    /**
      * KYC documents (KTP photo) are sensitive ID data — stored on the
      * private 'local' disk, never given a public URL. Admin views it via
      * an authenticated streamed download instead (AdminCreatorController).

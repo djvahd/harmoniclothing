@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\CreatorProfile;
+use App\Services\FileUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -21,6 +22,9 @@ class CreatorSummaryResource extends JsonResource
     {
         return [
             'name' => $this->brand_name ?? $this->user->name,
+            'photo_url' => $this->user->photo_path
+                ? app(FileUploadService::class)->url($this->user->photo_path)
+                : null,
             'slug' => $this->slug,
             'bio' => $this->bio,
             'since' => $this->approved_at,

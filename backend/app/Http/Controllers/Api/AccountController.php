@@ -5,20 +5,42 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddressRequest;
 use App\Http\Requests\UpdateProfileRequest;
+use App\Http\Requests\UploadProfilePhotoRequest;
 use App\Http\Resources\UserResource;
 use App\Services\AccountService;
+use App\Services\FileUploadService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /** 5.2_API_List.md §2 — /account/* (profile & address book, FR-004/FR-048). */
 class AccountController extends Controller
 {
-    public function __construct(private readonly AccountService $account) {}
+    public function __construct(
+        private readonly AccountService $account,
+        private readonly FileUploadService $files,
+    ) {}
 
     /** PATCH /account/profile */
     public function updateProfile(UpdateProfileRequest $request): JsonResponse
     {
         $user = $this->account->updateProfile($request->user(), $request->validated());
+
+        return response()->json(['data' => new UserResource($user)]);
+    }
+
+    /** POST /account/photo */
+    public function uploadPhoto(UploadProfilePhotoRequest $request): JsonResponse
+    {
+        $path = $this->files->storeProfilePhoto($request->file('file'));
+        $user = $this->account->updatePhoto($request->user(), $path);
+
+        return response()->json(['data' => new UserResource($user)]);
+    }
+
+    /** DELETE /account/photo */
+    public function removePhoto(Request $request): JsonResponse
+    {
+        $user = $this->account->removePhoto($request->user());
 
         return response()->json(['data' => new UserResource($user)]);
     }

@@ -560,7 +560,16 @@
       "phoneNumber": "Nomor Telepon",
       "email": "Email",
       "saveSuccess": "Perubahan berhasil disimpan.",
-      "saveChanges": "Simpan Perubahan"
+      "saveChanges": "Simpan Perubahan",
+      "photo": "Foto Profil",
+      "changePhoto": "Ganti Foto",
+      "removePhoto": "Hapus Foto",
+      "cropTitle": "Sesuaikan Foto",
+      "cropSave": "Simpan Foto",
+      "cropCancel": "Batal",
+      "photoUpdated": "Foto profil berhasil diperbarui.",
+      "photoRemoved": "Foto profil berhasil dihapus.",
+      "photoUploadError": "Gagal mengunggah foto. Pastikan format JPG/PNG/WebP dan ukuran di bawah 5MB."
     },
     "addresses": {
       "title": "Address Book",

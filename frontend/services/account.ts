@@ -27,3 +27,13 @@ export function deleteAddress(id: number) {
 export function updateProfile(payload: { name?: string; phone?: string }) {
   return apiFetch<{ data: User }>("/account/profile", { method: "PATCH", body: payload });
 }
+
+export function uploadProfilePhoto(file: File) {
+  const formData = new FormData();
+  formData.append("file", file);
+  return apiFetch<{ data: User }>("/account/photo", { method: "POST", body: formData, isFormData: true });
+}
+
+export function removeProfilePhoto() {
+  return apiFetch<{ data: User }>("/account/photo", { method: "DELETE" });
+}

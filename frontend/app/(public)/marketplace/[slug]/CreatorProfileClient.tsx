@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import useSWR from "swr";
@@ -63,9 +64,19 @@ export default function ProfilPublikCreatorPage() {
     <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 px-4 py-10 md:px-20">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
-          <span className="flex size-20 shrink-0 items-center justify-center rounded-full bg-border text-text-secondary">
-            <UserRound className="size-8" />
-          </span>
+          {creator.photo_url ? (
+            <Image
+              src={creator.photo_url}
+              alt={creator.name}
+              width={80}
+              height={80}
+              className="size-20 shrink-0 rounded-full object-cover"
+            />
+          ) : (
+            <span className="flex size-20 shrink-0 items-center justify-center rounded-full bg-border text-text-secondary">
+              <UserRound className="size-8" />
+            </span>
+          )}
           <div className="flex flex-col gap-1">
             <h1 className="font-heading text-h3 font-semibold text-text-primary">{creator.name}</h1>
             {creator.since && (

@@ -560,7 +560,16 @@
       "phoneNumber": "Phone Number",
       "email": "Email",
       "saveSuccess": "Changes saved successfully.",
-      "saveChanges": "Save Changes"
+      "saveChanges": "Save Changes",
+      "photo": "Profile Photo",
+      "changePhoto": "Change Photo",
+      "removePhoto": "Remove Photo",
+      "cropTitle": "Adjust Photo",
+      "cropSave": "Save Photo",
+      "cropCancel": "Cancel",
+      "photoUpdated": "Profile photo updated successfully.",
+      "photoRemoved": "Profile photo removed successfully.",
+      "photoUploadError": "Failed to upload photo. Make sure it's JPG/PNG/WebP and under 5MB."
     },
     "addresses": {
       "title": "Address Book",

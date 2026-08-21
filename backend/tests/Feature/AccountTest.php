@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Models\Address;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 /**
@@ -30,6 +32,53 @@ class AccountTest extends TestCase
 
         $this->assertSame('New Name', $user->fresh()->name);
         $this->assertSame('081234567890', $user->fresh()->phone);
+    }
+
+    public function test_user_can_upload_a_profile_photo(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->postJson('/api/account/photo', ['file' => UploadedFile::fake()->image('me.jpg')]);
+
+        $response->assertOk();
+        $this->assertNotNull($user->fresh()->photo_path);
+        $this->assertNotNull($response->json('data.photo_url'));
+    }
+
+    public function test_profile_photo_upload_rejects_wrong_mimetype(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->postJson('/api/account/photo', ['file' => UploadedFile::fake()->create('resume.pdf', 100, 'application/pdf')])
+            ->assertUnprocessable();
+    }
+
+    public function test_profile_photo_upload_rejects_oversized_file(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->postJson('/api/account/photo', ['file' => UploadedFile::fake()->create('me.jpg', 5121, 'image/jpeg')])
+            ->assertUnprocessable();
+    }
+
+    public function test_user_can_remove_their_profile_photo(): void
+    {
+        Storage::fake('public');
+        $path = UploadedFile::fake()->image('me.jpg')->store('profile-photos', 'public');
+        $user = User::factory()->create(['photo_path' => $path]);
+
+        $this->actingAs($user)
+            ->deleteJson('/api/account/photo')
+            ->assertOk()
+            ->assertJsonPath('data.photo_url', null);
+
+        $this->assertNull($user->fresh()->photo_path);
     }
 
     public function test_first_address_is_forced_default_regardless_of_input(): void
