@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\ProductVariant;
+use App\Services\FileUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -31,7 +32,12 @@ class ProductVariantResource extends JsonResource
             'print_areas' => $this->print_areas,
             'material' => $this->material,
             'price_modifier' => $this->price_modifier,
-            'mockup_asset_path' => $this->mockup_asset_path,
+            // Resolved to a full URL (not the raw stored path) so the
+            // frontend works regardless of which disk is active (local
+            // /storage vs R2's own domain) — see filesystems.php public_disk.
+            'mockup_asset_path' => $this->mockup_asset_path
+                ? app(FileUploadService::class)->url($this->mockup_asset_path)
+                : null,
             'product' => $this->whenLoaded('product', fn () => [
                 'name' => $this->product->{'name_'.$this->locale($request)},
                 'slug' => $this->product->slug,

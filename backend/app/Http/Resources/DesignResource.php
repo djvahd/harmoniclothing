@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Design;
+use App\Services\FileUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,7 +17,12 @@ class DesignResource extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
             'description' => $this->description,
-            'thumbnail_path' => $this->thumbnail_path,
+            // Resolved to a full URL (not the raw stored path) so the
+            // frontend works regardless of which disk is active (local
+            // /storage vs R2's own domain) — see filesystems.php public_disk.
+            'thumbnail_path' => $this->thumbnail_path
+                ? app(FileUploadService::class)->url($this->thumbnail_path)
+                : null,
             'status' => $this->status,
             'rejection_reason' => $this->rejection_reason,
             'starting_price' => $this->starting_price !== null ? (float) $this->starting_price : null,
