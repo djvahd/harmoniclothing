@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @extends Factory<ProductVariant>
@@ -31,8 +32,30 @@ class ProductVariantFactory extends Factory
             'print_areas' => fake()->randomElements(['depan', 'belakang', 'lengan'], fake()->numberBetween(1, 3)),
             'material' => fake()->randomElement(['Cotton Combed 24s', 'Cotton Combed 30s', 'Fleece']),
             'price_modifier' => 0,
-            'mockup_asset_path' => 'mockups/'.fake()->uuid().'.glb',
+            'mockup_asset_path' => $this->placeholderMockupPath(),
         ];
+    }
+
+    /**
+     * Seed data has no real admin-uploaded photo (that flow didn't exist until
+     * FE-046), so point every fake variant at one shared checked-in placeholder
+     * image instead of a fabricated path nothing ever wrote to disk — the
+     * latter 403'd through Next's image optimizer on every product card/detail
+     * page site-wide.
+     */
+    private function placeholderMockupPath(): string
+    {
+        $disk = config('filesystems.public_disk');
+        $relativePath = 'mockups/placeholder.png';
+
+        if (! Storage::disk($disk)->exists($relativePath)) {
+            Storage::disk($disk)->put(
+                $relativePath,
+                file_get_contents(__DIR__.'/assets/product-placeholder.png')
+            );
+        }
+
+        return $relativePath;
     }
 
     /**
