@@ -6,6 +6,9 @@ const nextConfig = {
     remotePatterns: [
       { protocol: "http", hostname: "localhost", port: "8000" },
       { protocol: "https", hostname: "**.r2.cloudflarestorage.com" },
+      // R2 bucket's public "Public Development URL" domain (pub-<id>.r2.dev)
+      // — different from the r2.cloudflarestorage.com S3 API endpoint above.
+      { protocol: "https", hostname: "**.r2.dev" },
       // storageUrl() builds image URLs from NEXT_PUBLIC_API_URL, which in
       // production is this same Netlify domain (proxied to Railway via
       // netlify.toml's /storage/* redirect) — update this alongside
