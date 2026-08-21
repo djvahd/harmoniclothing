@@ -6,19 +6,24 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BulkPricingTierRequest;
 use App\Http\Requests\ProductRequest;
 use App\Http\Requests\ProductVariantRequest;
+use App\Http\Requests\UploadMockupFileRequest;
 use App\Http\Resources\AdminProductResource;
 use App\Http\Resources\BulkPricingTierResource;
 use App\Http\Resources\ProductVariantResource;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Services\CatalogService;
+use App\Services\FileUploadService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /** 5.2_API_List.md §6 — Product Catalog management (FR-031, BR-012). */
 class AdminCatalogController extends Controller
 {
-    public function __construct(private readonly CatalogService $catalog) {}
+    public function __construct(
+        private readonly CatalogService $catalog,
+        private readonly FileUploadService $uploads,
+    ) {}
 
     /** GET /admin/catalog/products — admin management list (gap-filled); shows inactive products too, unlike the public list. */
     public function index(Request $request): JsonResponse
@@ -68,6 +73,19 @@ class AdminCatalogController extends Controller
         $variant = $this->catalog->updateVariant($variant, $request->validated(), $request->user());
 
         return response()->json(['data' => new ProductVariantResource($variant)]);
+    }
+
+    /** POST /admin/catalog/mockup-upload — variant mockup photo upload for the admin catalog form. */
+    public function uploadMockup(UploadMockupFileRequest $request): JsonResponse
+    {
+        $path = $this->uploads->storeDesignFile($request->file('file'), 'mockup-uploads');
+
+        return response()->json([
+            'data' => [
+                'path' => $path,
+                'url' => $this->uploads->url($path),
+            ],
+        ]);
     }
 
     /** POST /admin/catalog/bulk-pricing-tiers — BR-012. */

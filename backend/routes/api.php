@@ -150,6 +150,7 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
     Route::patch('/catalog/products/{product}', [AdminCatalogController::class, 'updateProduct']);
     Route::post('/catalog/products/{product}/variants', [AdminCatalogController::class, 'storeVariant']); // FE-046
     Route::patch('/catalog/variants/{variant}', [AdminCatalogController::class, 'updateVariant']); // FE-046
+    Route::post('/catalog/mockup-upload', [AdminCatalogController::class, 'uploadMockup']); // FE-046
     Route::post('/catalog/bulk-pricing-tiers', [AdminCatalogController::class, 'storeBulkPricingTier']); // BR-012
 
     Route::get('/orders', [AdminOrderController::class, 'index']); // admin management list (gap-filled)

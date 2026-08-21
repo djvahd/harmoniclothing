@@ -921,7 +921,9 @@
         "cutType": "Cut Type",
         "material": "Material",
         "priceAddon": "Price Add-on",
-        "mockupAssetPath": "Mockup Asset Path",
+        "mockupAssetPath": "Mockup Photo",
+        "mockupDropzone": "Click to upload photo",
+        "mockupUploading": "Uploading...",
         "printArea": "Print Area",
         "save": "Save Variant"
       }

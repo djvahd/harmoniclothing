@@ -921,7 +921,9 @@
         "cutType": "Potongan",
         "material": "Material",
         "priceAddon": "Tambahan Harga",
-        "mockupAssetPath": "Path Aset Mockup",
+        "mockupAssetPath": "Foto Mockup",
+        "mockupDropzone": "Klik untuk unggah foto",
+        "mockupUploading": "Mengunggah...",
         "printArea": "Print Area",
         "save": "Simpan Varian"
       }

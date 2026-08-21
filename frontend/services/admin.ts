@@ -167,6 +167,16 @@ export function createVariant(
   });
 }
 
+export function uploadVariantMockup(file: File) {
+  const formData = new FormData();
+  formData.append("file", file);
+  return apiFetch<{ data: { path: string; url: string } }>("/admin/catalog/mockup-upload", {
+    method: "POST",
+    body: formData,
+    isFormData: true,
+  });
+}
+
 export function updateVariant(variantId: number, payload: Partial<Parameters<typeof createVariant>[1]>) {
   return apiFetch<{ data: ProductVariant }>(`/admin/catalog/variants/${variantId}`, {
     method: "PATCH",

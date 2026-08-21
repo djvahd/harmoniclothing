@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { Upload } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import PrintAreaCheckboxes from "./PrintAreaCheckboxes";
-import { createVariant } from "@/services/admin";
+import { createVariant, uploadVariantMockup } from "@/services/admin";
 import { getErrorMessage } from "@/lib/api";
 import type { PrintArea } from "@/types/product";
 
@@ -31,7 +32,24 @@ export default function VariantForm({
   const tCommon = useTranslations("common");
   const [form, setForm] = useState(EMPTY_VARIANT_FORM);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [mockupFileName, setMockupFileName] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  async function handleMockupUpload(file: File | undefined) {
+    if (!file) return;
+    setUploading(true);
+    setError(null);
+    try {
+      const { data } = await uploadVariantMockup(file);
+      setForm((f) => ({ ...f, mockup_asset_path: data.path }));
+      setMockupFileName(file.name);
+    } catch (err) {
+      setError(getErrorMessage(err, tCommon("errorGeneric")));
+    } finally {
+      setUploading(false);
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -70,12 +88,21 @@ export default function VariantForm({
           value={form.price_modifier}
           onChange={(e) => setForm((f) => ({ ...f, price_modifier: e.target.value }))}
         />
-        <Input
-          label={t("mockupAssetPath")}
-          value={form.mockup_asset_path}
-          onChange={(e) => setForm((f) => ({ ...f, mockup_asset_path: e.target.value }))}
-          required
-        />
+        <div className="flex flex-col gap-1.5">
+          <label className="font-body text-xs font-medium text-text-secondary">{t("mockupAssetPath")}</label>
+          <label className="flex cursor-pointer items-center gap-2 rounded-sm border border-dashed border-border px-3 py-2.5 text-center">
+            <Upload className="size-4 shrink-0 text-text-secondary" />
+            <span className="truncate font-body text-xs text-text-secondary">
+              {uploading ? t("mockupUploading") : mockupFileName ?? t("mockupDropzone")}
+            </span>
+            <input
+              type="file"
+              accept="image/png,image/svg+xml"
+              className="hidden"
+              onChange={(e) => handleMockupUpload(e.target.files?.[0])}
+            />
+          </label>
+        </div>
       </div>
       <div className="flex flex-col gap-1.5">
         <label className="font-body text-xs font-medium text-text-secondary">{t("printArea")}</label>
@@ -85,7 +112,7 @@ export default function VariantForm({
         />
       </div>
       {error && <p className="font-body text-xs text-danger">{error}</p>}
-      <Button type="submit" loading={saving} className="w-fit">
+      <Button type="submit" loading={saving} disabled={uploading || !form.mockup_asset_path} className="w-fit">
         {t("save")}
       </Button>
     </form>
