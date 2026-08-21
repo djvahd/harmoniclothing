@@ -160,9 +160,7 @@ function ProductEditorForm() {
           <div className="flex flex-wrap gap-2">
             {sizesForColor.map((s) => (
               <button key={s} onClick={() => setSize(s)}>
-                <Tag>
-                  <span className={size === s ? "text-accent" : undefined}>{s}</span>
-                </Tag>
+                <Tag active={size === s}>{s}</Tag>
               </button>
             ))}
           </div>

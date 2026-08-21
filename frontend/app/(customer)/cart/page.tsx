@@ -25,6 +25,11 @@ export default function KeranjangPage() {
 
   // New items default to selected (matches common cart UX); items removed
   // elsewhere (another tab, checkout) drop out of the selection automatically.
+  // Bails out when the recomputed set has the same members as prev — `items`
+  // isn't guaranteed referentially stable across every SWR revalidation, and
+  // unconditionally returning a new Set object here re-triggers this effect
+  // every render (Set instances are never Object.is-equal), which pegged the
+  // cart page into "Maximum update depth exceeded".
   useEffect(() => {
     setSelectedIds((prev) => {
       const validIds = new Set(items.map((item) => item.id));
@@ -32,6 +37,9 @@ export default function KeranjangPage() {
       items.forEach((item) => {
         if (!prev.has(item.id)) next.add(item.id);
       });
+      if (next.size === prev.size && Array.from(next).every((id) => prev.has(id))) {
+        return prev;
+      }
       return next;
     });
   }, [items]);
