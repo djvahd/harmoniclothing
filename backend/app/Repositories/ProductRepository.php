@@ -30,26 +30,26 @@ class ProductRepository
             ->addSelect(['sold_count' => $this->soldCountSubquery()])
             ->addSelect(['avg_rating' => $this->avgRatingSubquery()])
             ->addSelect(['review_count' => $this->reviewCountSubquery()])
-            ->when(!empty($filters['categories']), fn ($query) => $query->whereHas(
+            ->when(! empty($filters['categories']), fn ($query) => $query->whereHas(
                 'category',
                 fn ($q) => $q->whereIn('slug', $filters['categories'])
             ))
-            ->when(!empty($filters['genders']), fn ($query) => $query->whereIn('gender_segment', $filters['genders']))
+            ->when(! empty($filters['genders']), fn ($query) => $query->whereIn('gender_segment', $filters['genders']))
             ->when(isset($filters['price_min']), fn ($query) => $query->where('base_price', '>=', $filters['price_min']))
             ->when(isset($filters['price_max']), fn ($query) => $query->where('base_price', '<=', $filters['price_max']))
-            ->when(!empty($filters['sizes']), fn ($query) => $query->whereHas(
+            ->when(! empty($filters['sizes']), fn ($query) => $query->whereHas(
                 'variants',
                 fn ($q) => $q->whereIn('size', $filters['sizes'])
             ))
-            ->when(!empty($filters['colors']), fn ($query) => $query->whereHas(
+            ->when(! empty($filters['colors']), fn ($query) => $query->whereHas(
                 'variants',
                 fn ($q) => $q->whereIn('color', $filters['colors'])
             ))
-            ->when(!empty($filters['materials']), fn ($query) => $query->whereHas(
+            ->when(! empty($filters['materials']), fn ($query) => $query->whereHas(
                 'variants',
                 fn ($q) => $q->whereIn('material', $filters['materials'])
             ))
-            ->when(!empty($filters['print_areas']), fn ($query) => $query->whereHas(
+            ->when(! empty($filters['print_areas']), fn ($query) => $query->whereHas(
                 'variants',
                 fn ($q) => $q->where(function ($qq) use ($filters) {
                     foreach ($filters['print_areas'] as $area) {

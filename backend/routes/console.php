@@ -21,7 +21,7 @@ Artisan::command('send-mail', function () {
         return 1;
     }
 
-    $email = (new MailtrapEmail())
+    $email = (new MailtrapEmail)
         ->from(new Address('hello@demomailtrap.co', 'Mailtrap Test'))
         ->to(new Address('harmoniclot@gmail.com'))
         ->subject('You are awesome!')

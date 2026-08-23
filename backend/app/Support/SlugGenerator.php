@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 /**
@@ -11,7 +12,7 @@ use Illuminate\Support\Str;
 class SlugGenerator
 {
     /**
-     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $modelClass
+     * @param  class-string<Model>  $modelClass
      */
     public static function unique(string $text, string $modelClass, string $column = 'slug'): string
     {
