@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import useSWR from "swr";
 import { ShieldCheck } from "lucide-react";
@@ -133,9 +133,5 @@ function CheckoutPageContent() {
 }
 
 export default function CheckoutPage() {
-  return (
-    <Suspense fallback={null}>
-      <CheckoutPageContent />
-    </Suspense>
-  );
+  return <CheckoutPageContent />;
 }

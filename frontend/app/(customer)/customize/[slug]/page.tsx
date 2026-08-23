@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Upload } from "lucide-react";
@@ -228,9 +228,5 @@ function ProductEditorForm() {
 }
 
 export default function ProductEditorPage() {
-  return (
-    <Suspense fallback={null}>
-      <ProductEditorForm />
-    </Suspense>
-  );
+  return <ProductEditorForm />;
 }

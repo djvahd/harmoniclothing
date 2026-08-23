@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ArrowUpDown, PackageSearch, Search, X } from "lucide-react";
@@ -239,9 +239,5 @@ function KatalogPageContent() {
 }
 
 export default function KatalogPage() {
-  return (
-    <Suspense fallback={null}>
-      <KatalogPageContent />
-    </Suspense>
-  );
+  return <KatalogPageContent />;
 }

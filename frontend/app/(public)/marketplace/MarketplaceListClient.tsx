@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import clsx from "clsx";
@@ -93,9 +93,5 @@ function MarketplaceDesainPageContent() {
 }
 
 export default function MarketplaceDesainPage() {
-  return (
-    <Suspense fallback={null}>
-      <MarketplaceDesainPageContent />
-    </Suspense>
-  );
+  return <MarketplaceDesainPageContent />;
 }

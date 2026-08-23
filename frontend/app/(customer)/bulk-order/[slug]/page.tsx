@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
@@ -245,9 +245,5 @@ function BulkOrderForm() {
 }
 
 export default function BulkOrderPage() {
-  return (
-    <Suspense fallback={null}>
-      <BulkOrderForm />
-    </Suspense>
-  );
+  return <BulkOrderForm />;
 }
