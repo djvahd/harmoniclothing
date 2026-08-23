@@ -1,10 +1,11 @@
 # Temporary deploy: Netlify (frontend) + Railway (backend)
 
 Status: **temporary/testing deploy**, not the final infra plan (roadmap Phase 10 is VPS + Docker
-Compose for both). This gets the app live on the internet now, on free/cheap tiers, while
-Midtrans/Biteship/Cloudflare R2 credentials are still pending. Payment, shipping, and file-upload
-features will not work until those three are added later — everything else (auth, catalog, cart,
-orders, chat/notifications via Reverb, email via Mailtrap) will.
+Compose for both). This gets the app live on the internet now, on free/cheap tiers.
+Cloudflare R2 (file uploads) is live in production as of 2026-08-22. Midtrans (payment) and
+Biteship (shipping) credentials are still pending — those two features will not work until added
+later — everything else (auth, catalog, cart, orders, chat/notifications via Reverb, email via
+Mailtrap, file uploads via R2) works.
 
 Repo: `github.com/djvahd/harmoniclothing` (private). Both Railway and Netlify connect directly to it.
 
@@ -78,21 +79,20 @@ MAIL_FROM_ADDRESS=hello@demomailtrap.co
 MAIL_FROM_NAME=Harmoni Clothing
 MAILTRAP_API_TOKEN=<same token>
 
-# R2: leave FILESYSTEM_DISK_PUBLIC/PRIVATE and the AWS_* values blank until
-# real R2 credentials exist — uploads fall back to the container's local
-# disk (ephemeral! lost on every redeploy) until these are set. Once R2
-# creds exist, set FILESYSTEM_DISK_PUBLIC=r2_public and
-# FILESYSTEM_DISK_PRIVATE=r2_private too (not just the AWS_* creds) or
-# FileUploadService keeps writing to the ephemeral local disk regardless.
-FILESYSTEM_DISK_PUBLIC=
-FILESYSTEM_DISK_PRIVATE=
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
+# R2: live in production as of 2026-08-22 (real credentials set on Railway).
+# FILESYSTEM_DISK_PUBLIC/PRIVATE must be r2_public/r2_private (not just the
+# AWS_* creds) or FileUploadService falls back to the ephemeral local disk.
+# league/flysystem-aws-s3-v3 must be a real (non-dev) composer dependency
+# for the s3-driver disks to resolve at all — see commit de2a9ad.
+FILESYSTEM_DISK_PUBLIC=r2_public
+FILESYSTEM_DISK_PRIVATE=r2_private
+AWS_ACCESS_KEY_ID=<set on Railway — see `railway variables --service API`>
+AWS_SECRET_ACCESS_KEY=<set on Railway — see `railway variables --service API`>
 AWS_DEFAULT_REGION=auto
-AWS_BUCKET_PUBLIC=
-AWS_BUCKET_PRIVATE=
-AWS_ENDPOINT=
-AWS_URL=
+AWS_BUCKET_PUBLIC=harmoni-public
+AWS_BUCKET_PRIVATE=harmoni-private
+AWS_ENDPOINT=<R2 S3 API endpoint, e.g. https://<account-id>.r2.cloudflarestorage.com>
+AWS_URL=<R2 bucket's Public Development URL, e.g. https://pub-<id>.r2.dev — must also be allowlisted in frontend/next.config.mjs>
 MIDTRANS_SERVER_KEY=
 MIDTRANS_CLIENT_KEY=
 MIDTRANS_IS_PRODUCTION=false
