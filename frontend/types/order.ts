@@ -19,10 +19,20 @@ export type OrderStatus =
 
 export interface Shipment {
   courier: string;
+  courier_type: string | null;
   tracking_number: string | null;
   status: string;
   shipped_at: string | null;
   delivered_at: string | null;
+}
+
+/** Options returned by POST /checkout/shipping-rates. */
+export interface ShippingRate {
+  courier_company: string;
+  courier_type: string;
+  courier_service_name: string;
+  price: number;
+  duration: string | null;
 }
 
 export interface OrderItem {
@@ -46,6 +56,8 @@ export interface Order {
   notes: string | null;
   subtotal: number;
   shipping_cost: number;
+  courier_company: string | null;
+  courier_type: string | null;
   total: number;
   created_at: string;
   items: OrderItem[];

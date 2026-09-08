@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTO\BulkCheckoutDTO;
 use App\DTO\CheckoutDTO;
+use App\Models\Address;
 use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\ProductVariant;
@@ -15,14 +16,19 @@ use Illuminate\Validation\ValidationException;
 /**
  * FE-027/052/056 checkout. Creates the order up to status="belum_dibayar"
  * (2.3_User_Flow.md line 223) — actual Midtrans Snap API call / redirect
- * URL is the separate, later Payment roadmap module (FE-032); building it
- * here would couple this module to one that doesn't exist yet.
+ * URL happens after, in CheckoutController::respondWithPayment().
+ *
+ * Shipping cost is re-derived from Biteship server-side using the courier
+ * the customer picked (see BiteshipService::rateFor()) — never trusted from
+ * the request body, so a tampered client can only pick which courier, never
+ * the price.
  */
 class CheckoutService
 {
     public function __construct(
         private readonly OrderRepository $orders,
         private readonly PricingService $pricing,
+        private readonly BiteshipService $biteship,
     ) {}
 
     /**
@@ -36,8 +42,11 @@ class CheckoutService
     {
         $items = $this->fetchAndValidateCartItems($user, $dto->cartItemIds);
         $subtotal = $items->reduce(fn ($carry, CartItem $item) => bcadd($carry, $item->subtotal(), 2), '0');
+        $totalQuantity = $items->sum('quantity');
+        $shippingCost = $this->resolveShippingCost($dto->addressId, $totalQuantity, $dto->courierCompany, $dto->courierType);
+        $total = bcadd($subtotal, (string) $shippingCost, 2);
 
-        return DB::transaction(function () use ($user, $dto, $items, $subtotal) {
+        return DB::transaction(function () use ($user, $dto, $items, $subtotal, $shippingCost, $total) {
             $order = $this->orders->create([
                 'user_id' => $user->id,
                 'address_id' => $dto->addressId,
@@ -45,8 +54,10 @@ class CheckoutService
                 'status' => 'belum_dibayar',
                 'notes' => $dto->notes,
                 'subtotal' => $subtotal,
-                'shipping_cost' => 0, // Shipping module (Biteship) not built yet
-                'total' => $subtotal,
+                'shipping_cost' => $shippingCost,
+                'courier_company' => $dto->courierCompany,
+                'courier_type' => $dto->courierType,
+                'total' => $total,
             ]);
 
             $this->orders->addItems($order, $items->map(fn (CartItem $item) => [
@@ -96,8 +107,10 @@ class CheckoutService
         }
 
         $subtotal = bcmul($bulkUnitPrice, (string) $totalQuantity, 2);
+        $shippingCost = $this->resolveShippingCost($dto->addressId, $totalQuantity, $dto->courierCompany, $dto->courierType);
+        $total = bcadd($subtotal, (string) $shippingCost, 2);
 
-        return DB::transaction(function () use ($user, $dto, $subtotal, $bulkUnitPrice) {
+        return DB::transaction(function () use ($user, $dto, $subtotal, $bulkUnitPrice, $shippingCost, $total) {
             $order = $this->orders->create([
                 'user_id' => $user->id,
                 'address_id' => $dto->addressId,
@@ -105,8 +118,10 @@ class CheckoutService
                 'status' => 'belum_dibayar',
                 'notes' => $dto->notes,
                 'subtotal' => $subtotal,
-                'shipping_cost' => 0,
-                'total' => $subtotal,
+                'shipping_cost' => $shippingCost,
+                'courier_company' => $dto->courierCompany,
+                'courier_type' => $dto->courierType,
+                'total' => $total,
             ]);
 
             $this->orders->addItems($order, collect($dto->items)->map(fn (array $item) => [
@@ -122,6 +137,56 @@ class CheckoutService
 
             return $order->load('items.productVariant.product', 'items.design');
         });
+    }
+
+    /**
+     * POST /checkout/shipping-rates — preview courier options before the
+     * customer commits to one. Accepts either a cart selection or a raw
+     * bulk-style item list (see ShippingRateRequest).
+     *
+     * @param  array<int>  $cartItemIds
+     * @param  array<array{product_variant_id:int, quantity:int}>  $bulkItems
+     * @return array<int, array{courier_company: string, courier_type: string, courier_service_name: string, price: int, duration: string}>
+     */
+    public function getShippingRates(User $user, int $addressId, array $cartItemIds = [], array $bulkItems = []): array
+    {
+        $address = Address::query()->findOrFail($addressId);
+
+        $totalQuantity = $cartItemIds !== []
+            ? $this->fetchAndValidateCartItems($user, $cartItemIds)->sum('quantity')
+            : collect($bulkItems)->sum('quantity');
+
+        $totalWeightGrams = $totalQuantity * (int) config('services.biteship.item_weight_grams');
+
+        return $this->biteship->getRates($address->postal_code, $totalWeightGrams);
+    }
+
+    /**
+     * Re-fetches the authoritative price for the customer's chosen courier
+     * from Biteship — see class docblock for why this isn't trusted from
+     * the request. Throws a validation error (rather than letting checkout
+     * silently proceed with a wrong/zero shipping cost) if Biteship can't
+     * confirm that courier is available for this destination right now.
+     */
+    private function resolveShippingCost(int $addressId, int $totalQuantity, string $courierCompany, string $courierType): int
+    {
+        // Same degrade-gracefully convention as BiteshipService::getRates().
+        if (blank(config('services.biteship.api_key'))) {
+            return 0;
+        }
+
+        $address = Address::query()->findOrFail($addressId);
+        $totalWeightGrams = $totalQuantity * (int) config('services.biteship.item_weight_grams');
+
+        $rate = $this->biteship->rateFor($address->postal_code, $totalWeightGrams, $courierCompany, $courierType);
+
+        if ($rate === null) {
+            throw ValidationException::withMessages([
+                'courier_company' => [__('messages.checkout.shipping_rate_unavailable')],
+            ]);
+        }
+
+        return $rate['price'];
     }
 
     /**

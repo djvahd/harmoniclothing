@@ -13,6 +13,7 @@ class ShipmentResource extends JsonResource
     {
         return [
             'courier' => $this->courier,
+            'courier_type' => $this->courier_type,
             'tracking_number' => $this->tracking_number,
             'status' => $this->status,
             'shipped_at' => $this->shipped_at,

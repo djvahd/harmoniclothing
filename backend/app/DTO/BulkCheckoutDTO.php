@@ -9,6 +9,8 @@ class BulkCheckoutDTO
     public function __construct(
         public readonly int $addressId,
         public readonly array $items,
+        public readonly string $courierCompany,
+        public readonly string $courierType,
         public readonly ?int $designId = null,
         public readonly ?string $customDesignFilePath = null,
         public readonly ?string $notes = null,

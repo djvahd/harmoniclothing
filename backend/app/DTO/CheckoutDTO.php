@@ -9,6 +9,8 @@ class CheckoutDTO
     public function __construct(
         public readonly int $addressId,
         public readonly array $cartItemIds,
+        public readonly string $courierCompany,
+        public readonly string $courierType,
         public readonly ?string $notes = null,
     ) {}
 }

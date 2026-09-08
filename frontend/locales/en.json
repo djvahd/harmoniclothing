@@ -522,27 +522,39 @@
       "title": "Checkout",
       "shippingAddress": "Shipping Address",
       "noSavedAddress": "No saved addresses yet. Add one in your Address Book.",
+      "shippingCourier": "Shipping Courier",
+      "loadingRates": "Calculating shipping...",
+      "noRatesAvailable": "No courier available for this address.",
+      "selectAddressFirst": "Select a shipping address to see courier options.",
       "orderSummary": "Order Summary",
       "notesPrefix": "Notes:",
       "subtotal": "Subtotal",
+      "shippingCost": "Shipping Cost",
       "total": "Total",
       "createOrder": "Place Order",
       "securePayment": "Secure & encrypted payment",
-      "selectAddressError": "Please select a shipping address first."
+      "selectAddressError": "Please select a shipping address first.",
+      "selectCourierError": "Please select a shipping courier first."
     },
     "checkoutBulk": {
       "title": "Bulk Order Checkout",
       "shippingAddress": "Shipping Address",
       "noSavedAddress": "No saved addresses yet. Add one in your Address Book.",
+      "shippingCourier": "Shipping Courier",
+      "loadingRates": "Calculating shipping...",
+      "noRatesAvailable": "No courier available for this address.",
+      "selectAddressFirst": "Select a shipping address to see courier options.",
       "orderSummary": "Bulk Order Summary",
       "designPrefix": "Design:",
       "notesPrefix": "Notes:",
       "pricePerUnit": "Price per unit ({qty} pcs)",
       "subtotal": "Subtotal",
+      "shippingCost": "Shipping Cost",
       "total": "Total",
       "createBulkOrder": "Place Bulk Order",
       "securePayment": "Secure & encrypted payment",
       "selectAddressError": "Please select a shipping address first.",
+      "selectCourierError": "Please select a shipping courier first.",
       "noDraft": "No Bulk Order draft yet. Start from a product page first.",
       "backToCatalog": "Back to Product Catalog"
     },
@@ -857,7 +869,8 @@
       "title": "Manage Shipments",
       "columns": {
         "orderNumber": "Order No.",
-        "courier": "Courier",
+        "checkoutCourier": "Customer's Chosen Courier",
+        "courier": "Booked Courier",
         "tracking": "Tracking No.",
         "status": "Status",
         "actions": "Actions"
@@ -865,10 +878,11 @@
       "empty": "No orders ready to ship.",
       "booked": "Booked",
       "notBooked": "Not Booked",
-      "bookCourier": "Book Courier",
-      "bookModal": {
-        "title": "Book Courier",
-        "label": "Courier name (e.g. JNE, J&T)",
+      "bookCourier": "Process Shipment",
+      "overrideCourier": "Change Courier",
+      "overrideModal": {
+        "title": "Change Courier",
+        "label": "Format company:type (e.g. jne:reg)",
         "confirm": "Book"
       }
     },

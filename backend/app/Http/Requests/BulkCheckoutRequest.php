@@ -26,6 +26,8 @@ class BulkCheckoutRequest extends FormRequest
             'items' => ['required', 'array', 'min:1'],
             'items.*.product_variant_id' => ['required', 'integer', 'exists:product_variants,id'],
             'items.*.quantity' => ['required', 'integer', 'min:1'],
+            'courier_company' => ['required', 'string', 'max:50'],
+            'courier_type' => ['required', 'string', 'max:50'],
             'design_id' => ['nullable', 'integer', 'exists:designs,id'],
             'custom_design_file_path' => ['nullable', 'string', 'max:255'],
             'notes' => ['nullable', 'string'],

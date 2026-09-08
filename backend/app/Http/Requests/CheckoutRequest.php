@@ -26,6 +26,8 @@ class CheckoutRequest extends FormRequest
                 'integer',
                 Rule::exists('cart_items', 'id')->where('user_id', $this->user()->id),
             ],
+            'courier_company' => ['required', 'string', 'max:50'],
+            'courier_type' => ['required', 'string', 'max:50'],
             'notes' => ['nullable', 'string'],
         ];
     }

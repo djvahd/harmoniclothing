@@ -7,6 +7,7 @@ use App\DTO\CheckoutDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BulkCheckoutRequest;
 use App\Http\Requests\CheckoutRequest;
+use App\Http\Requests\ShippingRateRequest;
 use App\Http\Resources\OrderResource;
 use App\Services\CheckoutService;
 use App\Services\PaymentService;
@@ -21,12 +22,27 @@ class CheckoutController extends Controller
         private readonly PaymentService $payments,
     ) {}
 
+    /** POST /checkout/shipping-rates — preview courier options before checking out. */
+    public function shippingRates(ShippingRateRequest $request): JsonResponse
+    {
+        $rates = $this->checkout->getShippingRates(
+            $request->user(),
+            (int) $request->validated('address_id'),
+            $request->validated('cart_item_ids', []) ?? [],
+            $request->validated('items', []) ?? [],
+        );
+
+        return response()->json(['data' => $rates]);
+    }
+
     /** POST /checkout */
     public function store(CheckoutRequest $request): JsonResponse
     {
         $dto = new CheckoutDTO(
             addressId: (int) $request->validated('address_id'),
             cartItemIds: $request->validated('cart_item_ids'),
+            courierCompany: $request->validated('courier_company'),
+            courierType: $request->validated('courier_type'),
             notes: $request->validated('notes'),
         );
 
@@ -41,6 +57,8 @@ class CheckoutController extends Controller
         $dto = new BulkCheckoutDTO(
             addressId: (int) $request->validated('address_id'),
             items: $request->validated('items'),
+            courierCompany: $request->validated('courier_company'),
+            courierType: $request->validated('courier_type'),
             designId: $request->validated('design_id') ? (int) $request->validated('design_id') : null,
             customDesignFilePath: $request->validated('custom_design_file_path'),
             notes: $request->validated('notes'),

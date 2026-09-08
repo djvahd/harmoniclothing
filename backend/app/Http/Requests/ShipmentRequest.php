@@ -12,10 +12,16 @@ class ShipmentRequest extends FormRequest
         return true;
     }
 
+    /**
+     * Both optional — defaults to the courier the customer already chose
+     * (and paid shipping for) at checkout. Admin passes these only to
+     * override, e.g. if that courier turns out unavailable for pickup.
+     */
     public function rules(): array
     {
         return [
-            'courier' => ['required', 'string', 'max:50'],
+            'courier_company' => ['nullable', 'string', 'max:50'],
+            'courier_type' => ['nullable', 'string', 'max:50'],
         ];
     }
 }

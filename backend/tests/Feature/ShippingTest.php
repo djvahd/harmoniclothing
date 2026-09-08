@@ -47,15 +47,16 @@ class ShippingTest extends TestCase
             ->assertForbidden();
     }
 
+    /** Field names + status values match Biteship's real webhook payload (verified 2026-09-08), not app-internal ones. */
     public function test_webhook_moves_order_to_dikirim_when_shipment_ships(): void
     {
         $order = $this->orderWithShipment('diproses_produksi', 'menunggu_pickup');
 
         $this->postJson($this->webhookUrl(), [
             'order_id' => 'biteship-test-1',
-            'status' => 'dikirim',
-            'waybill_id' => 'JNE123',
-            'courier' => 'JNE',
+            'status' => 'inTransit',
+            'courier_waybill_id' => 'JNE123',
+            'courier_company' => 'JNE',
         ])->assertOk();
 
         $this->assertSame('dikirim', $order->fresh()->status);
@@ -74,6 +75,31 @@ class ShippingTest extends TestCase
 
         $this->assertSame('menunggu_konfirmasi', $order->fresh()->status);
         $this->assertNotNull($order->shipment()->first()->delivered_at);
+    }
+
+    public function test_webhook_marks_shipment_bermasalah_and_notifies_admins_without_changing_order_status(): void
+    {
+        $admin = User::factory()->create(['role' => \App\Enums\UserRole::Admin]);
+        $order = $this->orderWithShipment('dikirim', 'dikirim');
+
+        $this->postJson($this->webhookUrl(), [
+            'order_id' => 'biteship-test-1',
+            'status' => 'rejected',
+        ])->assertOk();
+
+        $this->assertSame('bermasalah', $order->shipment()->first()->status);
+        $this->assertSame('dikirim', $order->fresh()->status); // order status untouched — BR-014 state machine, admin resolves manually
+        $this->assertDatabaseHas('notifications', ['user_id' => $admin->id, 'type' => 'shipment.problem']);
+    }
+
+    public function test_webhook_ignores_unrecognized_status(): void
+    {
+        $order = $this->orderWithShipment('diproses_produksi', 'menunggu_pickup');
+
+        $this->postJson($this->webhookUrl(), ['order_id' => 'biteship-test-1', 'status' => 'someNewStatusBiteshipAdds'])
+            ->assertOk();
+
+        $this->assertSame('menunggu_pickup', $order->shipment()->first()->status);
     }
 
     public function test_webhook_is_idempotent_for_unknown_shipment(): void

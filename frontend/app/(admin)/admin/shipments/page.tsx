@@ -19,15 +19,28 @@ export default function KelolaPengirimanPage() {
   const { data, isLoading } = useSWR("/admin/production-queue", getProductionQueue);
   const orders = (data?.data ?? []).filter((o) => o.status === "diproses_produksi");
   const [loadingId, setLoadingId] = useState<number | null>(null);
-  const [bookingId, setBookingId] = useState<number | null>(null);
+  const [overrideId, setOverrideId] = useState<number | null>(null);
 
-  async function handleBook(courier: string) {
-    if (bookingId === null) return;
-    const id = bookingId;
-    setBookingId(null);
+  /** Books directly using whatever courier the customer already chose (and paid shipping for) at checkout — no admin input needed. */
+  async function handleBook(id: number) {
     setLoadingId(id);
     try {
-      await bookShipment(id, courier);
+      await bookShipment(id);
+      mutate("/admin/production-queue");
+    } finally {
+      setLoadingId(null);
+    }
+  }
+
+  /** Only used when the checkout-time courier turns out unavailable — value is "company:type", e.g. "jne:reg". */
+  async function handleOverride(value: string) {
+    if (overrideId === null) return;
+    const id = overrideId;
+    const [courier_company, courier_type] = value.split(":").map((s) => s.trim());
+    setOverrideId(null);
+    setLoadingId(id);
+    try {
+      await bookShipment(id, { courier_company, courier_type });
       mutate("/admin/production-queue");
     } finally {
       setLoadingId(null);
@@ -43,6 +56,7 @@ export default function KelolaPengirimanPage() {
         <DataTable<Order>
           columns={[
             { key: "order_number", header: t("columns.orderNumber") },
+            { key: "checkoutCourier", header: t("columns.checkoutCourier") },
             { key: "courier", header: t("columns.courier") },
             { key: "tracking", header: t("columns.tracking") },
             { key: "status", header: t("columns.status") },
@@ -57,6 +71,9 @@ export default function KelolaPengirimanPage() {
           renderRow={(order) => (
             <tr className="border-b border-border last:border-0">
               <td className="p-4 font-medium text-text-primary">{order.order_number}</td>
+              <td className="p-4 text-text-secondary">
+                {order.courier_company ? `${order.courier_company} ${order.courier_type ?? ""}`.trim() : "-"}
+              </td>
               <td className="p-4 text-text-secondary">{order.shipment?.courier ?? "-"}</td>
               <td className="p-4 text-text-secondary">{order.shipment?.tracking_number ?? "-"}</td>
               <td className="p-4">
@@ -66,9 +83,18 @@ export default function KelolaPengirimanPage() {
               </td>
               <td className="p-4">
                 {!order.shipment && (
-                  <Button loading={loadingId === order.id} onClick={() => setBookingId(order.id)}>
-                    {t("bookCourier")}
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button loading={loadingId === order.id} onClick={() => handleBook(order.id)}>
+                      {t("bookCourier")}
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      disabled={loadingId === order.id}
+                      onClick={() => setOverrideId(order.id)}
+                    >
+                      {t("overrideCourier")}
+                    </Button>
+                  </div>
                 )}
               </td>
             </tr>
@@ -76,13 +102,13 @@ export default function KelolaPengirimanPage() {
         />
       </div>
       <PromptModal
-        open={bookingId !== null}
-        title={t("bookModal.title")}
-        label={t("bookModal.label")}
-        minLength={1}
-        confirmLabel={t("bookModal.confirm")}
-        onConfirm={handleBook}
-        onCancel={() => setBookingId(null)}
+        open={overrideId !== null}
+        title={t("overrideModal.title")}
+        label={t("overrideModal.label")}
+        minLength={3}
+        confirmLabel={t("overrideModal.confirm")}
+        onConfirm={handleOverride}
+        onCancel={() => setOverrideId(null)}
       />
     </SidebarPageShell>
   );

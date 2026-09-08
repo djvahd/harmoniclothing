@@ -522,27 +522,39 @@
       "title": "Checkout",
       "shippingAddress": "Alamat Pengiriman",
       "noSavedAddress": "Belum ada alamat tersimpan. Tambahkan alamat di Address Book.",
+      "shippingCourier": "Kurir Pengiriman",
+      "loadingRates": "Menghitung ongkir...",
+      "noRatesAvailable": "Kurir tidak tersedia untuk alamat ini.",
+      "selectAddressFirst": "Pilih alamat pengiriman untuk melihat pilihan kurir.",
       "orderSummary": "Ringkasan Pesanan",
       "notesPrefix": "Catatan:",
       "subtotal": "Subtotal",
+      "shippingCost": "Ongkos Kirim",
       "total": "Total",
       "createOrder": "Buat Pesanan",
       "securePayment": "Pembayaran aman & terenkripsi",
-      "selectAddressError": "Pilih alamat pengiriman terlebih dahulu."
+      "selectAddressError": "Pilih alamat pengiriman terlebih dahulu.",
+      "selectCourierError": "Pilih kurir pengiriman terlebih dahulu."
     },
     "checkoutBulk": {
       "title": "Checkout Bulk Order",
       "shippingAddress": "Alamat Pengiriman",
       "noSavedAddress": "Belum ada alamat tersimpan. Tambahkan alamat di Address Book.",
+      "shippingCourier": "Kurir Pengiriman",
+      "loadingRates": "Menghitung ongkir...",
+      "noRatesAvailable": "Kurir tidak tersedia untuk alamat ini.",
+      "selectAddressFirst": "Pilih alamat pengiriman untuk melihat pilihan kurir.",
       "orderSummary": "Ringkasan Bulk Order",
       "designPrefix": "Desain:",
       "notesPrefix": "Catatan:",
       "pricePerUnit": "Harga per unit ({qty} pcs)",
       "subtotal": "Subtotal",
+      "shippingCost": "Ongkos Kirim",
       "total": "Total",
       "createBulkOrder": "Buat Pesanan Bulk",
       "securePayment": "Pembayaran aman & terenkripsi",
       "selectAddressError": "Pilih alamat pengiriman terlebih dahulu.",
+      "selectCourierError": "Pilih kurir pengiriman terlebih dahulu.",
       "noDraft": "Belum ada draft Bulk Order. Mulai dari halaman produk terlebih dahulu.",
       "backToCatalog": "Kembali ke Katalog Produk"
     },
@@ -857,7 +869,8 @@
       "title": "Kelola Pengiriman",
       "columns": {
         "orderNumber": "No. Pesanan",
-        "courier": "Kurir",
+        "checkoutCourier": "Kurir Pilihan Customer",
+        "courier": "Kurir Dibooking",
         "tracking": "Resi",
         "status": "Status",
         "actions": "Aksi"
@@ -865,10 +878,11 @@
       "empty": "Tidak ada pesanan siap dikirim.",
       "booked": "Sudah Dibooking",
       "notBooked": "Belum Dibooking",
-      "bookCourier": "Booking Kurir",
-      "bookModal": {
-        "title": "Booking Kurir",
-        "label": "Nama kurir (mis. JNE, J&T)",
+      "bookCourier": "Proses Pengiriman",
+      "overrideCourier": "Ganti Kurir",
+      "overrideModal": {
+        "title": "Ganti Kurir",
+        "label": "Format perusahaan:tipe (mis. jne:reg)",
         "confirm": "Booking"
       }
     },

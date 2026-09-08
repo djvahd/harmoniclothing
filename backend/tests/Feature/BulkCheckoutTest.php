@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 /** 5.2_API_List.md §4 — POST /checkout/bulk (FE-052/056, BR-012/026, Flow 7). */
@@ -23,6 +24,9 @@ class BulkCheckoutTest extends TestCase
     /** BR-012: price-per-unit is tiered by the TOTAL quantity across mixed sizes, not per size. */
     public function test_bulk_checkout_prices_by_total_quantity_across_sizes(): void
     {
+        config(['services.biteship.api_key' => 'test-key']);
+        Http::fake(['api.biteship.com/v1/rates/couriers' => Http::response($this->fakeBiteshipRatesResponse())]);
+
         BulkPricingTier::factory()->create(['min_qty' => 1, 'max_qty' => 49, 'price_per_unit' => 80000]);
         BulkPricingTier::factory()->create(['min_qty' => 50, 'max_qty' => null, 'price_per_unit' => 60000]);
 
@@ -38,19 +42,37 @@ class BulkCheckoutTest extends TestCase
                 ['product_variant_id' => $variantS->id, 'quantity' => 30],
                 ['product_variant_id' => $variantM->id, 'quantity' => 25],
             ],
+            'courier_company' => 'jne',
+            'courier_type' => 'reg',
         ]);
 
-        // total qty = 55 -> tiered price 60000/unit applied to every item
+        // total qty = 55 -> tiered price 60000/unit applied to every item, + 18000 shipping
         $response->assertCreated()
             ->assertJsonPath('data.type', 'bulk')
             ->assertJsonPath('data.status', 'belum_dibayar')
-            ->assertJsonPath('data.total', '3300000.00')
+            ->assertJsonPath('data.shipping_cost', '18000.00')
+            ->assertJsonPath('data.total', '3318000.00')
             ->assertJsonCount(2, 'data.items');
 
         $this->assertDatabaseHas('order_status_histories', [
             'to_status' => 'belum_dibayar',
             'changed_by' => 'customer',
         ]);
+    }
+
+    /** Matches BiteshipService::getRates()' parsed shape — a real `pricing[]` response from api.biteship.com/v1/rates/couriers. */
+    private function fakeBiteshipRatesResponse(): array
+    {
+        return [
+            'success' => true,
+            'pricing' => [
+                [
+                    'courier_code' => 'jne', 'courier_name' => 'JNE',
+                    'courier_service_code' => 'reg', 'courier_service_name' => 'Reguler',
+                    'price' => 18000, 'duration' => '1 - 2 days',
+                ],
+            ],
+        ];
     }
 
     /** BR-026 corollary: Flow 7 is one product per Bulk Order page — mixing variants from different products is rejected. */
@@ -86,6 +108,8 @@ class BulkCheckoutTest extends TestCase
             'items' => [
                 ['product_variant_id' => $variant->id, 'quantity' => 10],
             ],
+            'courier_company' => 'jne',
+            'courier_type' => 'reg',
         ])->assertUnprocessable()->assertJsonValidationErrors('items');
     }
 

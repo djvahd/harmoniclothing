@@ -217,10 +217,11 @@ export function rejectOrder(id: number, reason: string) {
   });
 }
 
-export function bookShipment(id: number, courier: string) {
+/** Both optional — omit to use the courier the customer already picked (and paid shipping for) at checkout. */
+export function bookShipment(id: number, override?: { courier_company: string; courier_type: string }) {
   return apiFetch<{ data: unknown }>(`/admin/orders/${id}/shipment`, {
     method: "POST",
-    body: { courier },
+    body: override ?? {},
   });
 }
 

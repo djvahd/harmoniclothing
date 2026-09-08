@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 /** 5.2_API_List.md §4 — POST /checkout (FE-027, FE-052/056: bulk tier pricing applies automatically). */
@@ -23,6 +24,9 @@ class CheckoutTest extends TestCase
 
     public function test_checkout_creates_an_order_and_clears_the_cart(): void
     {
+        config(['services.biteship.api_key' => 'test-key']);
+        Http::fake(['api.biteship.com/v1/rates/couriers' => Http::response($this->fakeBiteshipRatesResponse())]);
+
         $user = User::factory()->create();
         $address = Address::factory()->for($user)->create();
         $variant = ProductVariant::factory()->create();
@@ -34,12 +38,15 @@ class CheckoutTest extends TestCase
         $response = $this->actingAs($user)->postJson('/api/checkout', [
             'address_id' => $address->id,
             'cart_item_ids' => [$cartItem->id],
+            'courier_company' => 'jne',
+            'courier_type' => 'reg',
         ]);
 
         $response->assertCreated()
             ->assertJsonPath('data.type', 'reguler')
             ->assertJsonPath('data.status', 'belum_dibayar')
-            ->assertJsonPath('data.total', '200000.00')
+            ->assertJsonPath('data.shipping_cost', '18000.00')
+            ->assertJsonPath('data.total', '218000.00')
             ->assertJsonCount(1, 'data.items');
 
         $this->assertDatabaseMissing('cart_items', ['id' => $cartItem->id]);
@@ -47,6 +54,21 @@ class CheckoutTest extends TestCase
             'to_status' => 'belum_dibayar',
             'changed_by' => 'customer',
         ]);
+    }
+
+    /** Matches BiteshipService::getRates()' parsed shape — a real `pricing[]` response from api.biteship.com/v1/rates/couriers. */
+    private function fakeBiteshipRatesResponse(): array
+    {
+        return [
+            'success' => true,
+            'pricing' => [
+                [
+                    'courier_code' => 'jne', 'courier_name' => 'JNE',
+                    'courier_service_code' => 'reg', 'courier_service_name' => 'Reguler',
+                    'price' => 18000, 'duration' => '1 - 2 days',
+                ],
+            ],
+        ];
     }
 
     public function test_checkout_rejects_an_inactive_product(): void
@@ -60,6 +82,8 @@ class CheckoutTest extends TestCase
         $this->actingAs($user)->postJson('/api/checkout', [
             'address_id' => $address->id,
             'cart_item_ids' => [$cartItem->id],
+            'courier_company' => 'jne',
+            'courier_type' => 'reg',
         ])->assertUnprocessable()->assertJsonValidationErrors('cart_item_ids');
     }
 
@@ -79,6 +103,9 @@ class CheckoutTest extends TestCase
     /** BR-026: regular checkout must never apply Bulk Order tiered pricing, even when total quantity would qualify for a tier. */
     public function test_checkout_does_not_apply_bulk_pricing_to_regular_orders(): void
     {
+        config(['services.biteship.api_key' => 'test-key']);
+        Http::fake(['api.biteship.com/v1/rates/couriers' => Http::response($this->fakeBiteshipRatesResponse())]);
+
         BulkPricingTier::factory()->create(['min_qty' => 1, 'max_qty' => 49, 'price_per_unit' => 80000]);
         BulkPricingTier::factory()->create(['min_qty' => 50, 'max_qty' => null, 'price_per_unit' => 60000]);
 
@@ -94,12 +121,14 @@ class CheckoutTest extends TestCase
         $response = $this->actingAs($user)->postJson('/api/checkout', [
             'address_id' => $address->id,
             'cart_item_ids' => [$itemS->id, $itemM->id],
+            'courier_company' => 'jne',
+            'courier_type' => 'reg',
         ]);
 
         // total qty = 55 would qualify for the 60000/unit tier, but each item
         // must keep its own 100000 cart-time snapshot regardless (BR-025/026).
         $response->assertCreated()
             ->assertJsonPath('data.type', 'reguler')
-            ->assertJsonPath('data.total', '5500000.00');
+            ->assertJsonPath('data.total', '5518000.00');
     }
 }

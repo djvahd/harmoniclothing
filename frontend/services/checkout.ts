@@ -1,11 +1,24 @@
 /** Regular checkout + Bulk Order checkout (BR-026: two separate flows, never mixed) and the public bulk-pricing tier list. */
 import { apiFetch } from "@/lib/api";
-import type { BulkPricingTier, Order } from "@/types/order";
+import type { BulkPricingTier, Order, ShippingRate } from "@/types/order";
 
 interface CheckoutPayload {
   address_id: number;
   cart_item_ids: number[];
+  courier_company: string;
+  courier_type: string;
   notes?: string;
+}
+
+interface ShippingRatePayload {
+  address_id: number;
+  cart_item_ids?: number[];
+  items?: { product_variant_id: number; quantity: number }[];
+}
+
+/** POST /checkout/shipping-rates — preview courier options + prices before checking out. */
+export function getShippingRates(payload: ShippingRatePayload) {
+  return apiFetch<{ data: ShippingRate[] }>("/checkout/shipping-rates", { method: "POST", body: payload });
 }
 
 export function checkout(payload: CheckoutPayload) {
@@ -20,6 +33,8 @@ export function getBulkPricingTiers() {
 interface BulkCheckoutPayload {
   address_id: number;
   items: { product_variant_id: number; quantity: number }[];
+  courier_company: string;
+  courier_type: string;
   design_id?: number;
   custom_design_file_path?: string;
   notes?: string;

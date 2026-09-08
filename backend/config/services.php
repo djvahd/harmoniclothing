@@ -44,6 +44,23 @@ return [
     'biteship' => [
         'api_key' => env('BITESHIP_API_KEY'),
         'webhook_token' => env('BITESHIP_WEBHOOK_TOKEN'),
+
+        // Single fixed production/warehouse origin (Harmoni is not
+        // multi-warehouse/dropship) — used as `origin_*` on every rate-check
+        // and booking call.
+        'origin_name' => env('BITESHIP_ORIGIN_NAME', 'Harmoni Clothing'),
+        'origin_phone' => env('BITESHIP_ORIGIN_PHONE'),
+        'origin_address' => env('BITESHIP_ORIGIN_ADDRESS'),
+        'origin_postal_code' => env('BITESHIP_ORIGIN_POSTAL_CODE'),
+
+        // v1 simplification: flat weight per item rather than a real
+        // per-variant weight (no `weight` column on product_variants yet).
+        // Revisit if rate accuracy for heavy items (hoodies, jackets) matters.
+        'item_weight_grams' => (int) env('BITESHIP_ITEM_WEIGHT_GRAMS', 250),
+
+        // Couriers offered at checkout rate-check time — comma-separated,
+        // passed straight through to Biteship's `couriers` param.
+        'couriers' => env('BITESHIP_COURIERS', 'jne,jnt,sicepat'),
     ],
 
     // BR-007 (2026-07-22): automatic commission payout. No account signed up

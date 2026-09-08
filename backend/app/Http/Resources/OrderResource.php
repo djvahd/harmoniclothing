@@ -20,6 +20,8 @@ class OrderResource extends JsonResource
             'notes' => $this->notes,
             'subtotal' => $this->subtotal,
             'shipping_cost' => $this->shipping_cost,
+            'courier_company' => $this->courier_company,
+            'courier_type' => $this->courier_type,
             'total' => $this->total,
             'created_at' => $this->created_at,
             'items' => OrderItemResource::collection($this->whenLoaded('items')),

@@ -53,6 +53,7 @@ return [
         'product_unavailable' => 'Produk ini sudah tidak tersedia.',
         'bulk_quantity_no_tier' => 'Kuantitas tidak memenuhi tingkat harga Bulk Order manapun.',
         'cart_item_unavailable' => 'Salah satu item di keranjang sudah tidak tersedia.',
+        'shipping_rate_unavailable' => 'Kurir yang dipilih tidak tersedia untuk alamat ini. Silakan pilih kurir lain.',
     ],
 
     'design' => [

@@ -72,6 +72,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/wishlist/{item}', [WishlistController::class, 'destroy']);
 
     // 5.2_API_List.md §4 — /checkout (FE-027) and /checkout/bulk (FE-052/056, BR-026: separate flow, never mixed)
+    Route::post('/checkout/shipping-rates', [CheckoutController::class, 'shippingRates']);
     Route::post('/checkout', [CheckoutController::class, 'store']);
     Route::post('/checkout/bulk', [CheckoutController::class, 'storeBulk']);
 

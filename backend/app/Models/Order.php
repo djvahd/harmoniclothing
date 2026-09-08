@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 /** 4.3_Table_Design.md — orders (entitas transaksi utama). */
 #[Fillable([
     'order_number', 'user_id', 'address_id', 'type', 'status',
-    'rejection_reason', 'notes', 'subtotal', 'shipping_cost', 'total',
+    'rejection_reason', 'notes', 'subtotal', 'shipping_cost', 'courier_company', 'courier_type', 'total',
     'paid_at', 'production_started_at', 'shipped_at', 'delivered_at',
     'confirmed_at', 'completed_at', 'cancelled_at', 'cancelled_by',
 ])]

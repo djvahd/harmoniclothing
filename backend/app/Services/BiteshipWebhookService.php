@@ -2,23 +2,47 @@
 
 namespace App\Services;
 
+use App\Enums\UserRole;
+use App\Models\Order;
 use App\Models\Shipment;
+use App\Models\User;
 use App\Repositories\OrderRepository;
 use Illuminate\Support\Facades\DB;
 
 /**
- * FE-035 auto tracking. Biteship's exact webhook schema isn't in the specs
- * available here (unlike Midtrans's documented signature formula) — this
- * assumes the sender normalizes status to one of shipments.status's three
- * values directly (menunggu_pickup/dikirim/delivered); adjust the mapping
- * once a real Biteship account/webhook payload is available.
+ * FE-035 auto tracking. Payload field names and the 14-value status enum
+ * verified against Biteship's official webhook docs (biteship.com/en/docs/
+ * api/webhook/overview, biteship.com/en/docs/api/trackings/status) on
+ * 2026-09-08 — the field names here (courier_waybill_id, courier_company)
+ * are not the same as Biteship's Order API response fields, don't conflate
+ * the two.
  *
  * BR-014: order status mirrors shipment status — "dikirim" moves the order
  * to "dikirim", "delivered" moves it to "menunggu_konfirmasi" (starting the
- * 3-business-day auto-complete window).
+ * 3-business-day auto-complete window). A "bermasalah" shipment status does
+ * NOT change order.status — that stays whatever it was, admin resolves
+ * manually (notified below).
  */
 class BiteshipWebhookService
 {
+    /** Biteship's 14 possible `status` values, collapsed to this app's 4. */
+    private const STATUS_MAP = [
+        'confirmed' => 'menunggu_pickup',
+        'allocated' => 'menunggu_pickup',
+        'pickingUp' => 'menunggu_pickup',
+        'picked' => 'menunggu_pickup',
+        'inTransit' => 'dikirim',
+        'droppingOff' => 'dikirim',
+        'delivered' => 'delivered',
+        'returnInTransit' => 'bermasalah',
+        'onHold' => 'bermasalah',
+        'rejected' => 'bermasalah',
+        'courierNotFound' => 'bermasalah',
+        'returned' => 'bermasalah',
+        'cancelled' => 'bermasalah',
+        'disposed' => 'bermasalah',
+    ];
+
     public function __construct(
         private readonly OrderRepository $orders,
         private readonly NotificationService $notifications,
@@ -32,12 +56,19 @@ class BiteshipWebhookService
             return; // nothing to reconcile — respond 200 regardless (idempotent)
         }
 
-        $status = $payload['status'];
+        $biteshipStatus = $payload['status'];
+        $status = self::STATUS_MAP[$biteshipStatus] ?? null;
 
-        DB::transaction(function () use ($shipment, $payload, $status) {
+        if ($status === null) {
+            return; // unrecognized status — ignore rather than guess, respond 200 regardless
+        }
+
+        DB::transaction(function () use ($shipment, $payload, $status, $biteshipStatus) {
+            $wasAlreadyProblem = $shipment->status === 'bermasalah';
+
             $shipment->update([
-                'tracking_number' => $payload['waybill_id'] ?? $shipment->tracking_number,
-                'courier' => $payload['courier'] ?? $shipment->courier,
+                'tracking_number' => $payload['courier_waybill_id'] ?? $shipment->tracking_number,
+                'courier' => $payload['courier_company'] ?? $shipment->courier,
                 'status' => $status,
                 'shipped_at' => $status === 'dikirim' ? ($shipment->shipped_at ?? now()) : $shipment->shipped_at,
                 'delivered_at' => $status === 'delivered' ? now() : $shipment->delivered_at,
@@ -65,7 +96,23 @@ class BiteshipWebhookService
                     "Pesanan {$order->order_number} telah sampai. Konfirmasi penerimaan sekarang.",
                     $order,
                 );
+            } elseif ($status === 'bermasalah' && ! $wasAlreadyProblem) {
+                $this->notifyAdmins($order, $biteshipStatus);
             }
         });
+    }
+
+    /** Admin-facing alert — no dedicated "shipment problem" admin dashboard yet, notification is the whole feature for now. */
+    private function notifyAdmins(Order $order, string $biteshipStatus): void
+    {
+        User::query()->where('role', UserRole::Admin)->get()->each(
+            fn (User $admin) => $this->notifications->notify(
+                $admin,
+                'shipment.problem',
+                'Pengiriman bermasalah',
+                "Pengiriman pesanan {$order->order_number} bermasalah: {$biteshipStatus}. Perlu dicek manual.",
+                $order,
+            )
+        );
     }
 }

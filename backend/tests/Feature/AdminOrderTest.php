@@ -125,12 +125,28 @@ class AdminOrderTest extends TestCase
         $order = Order::factory()->diprosesProduksi()->create();
 
         $response = $this->actingAs($admin)->postJson("/api/admin/orders/{$order->id}/shipment", [
-            'courier' => 'jne',
+            'courier_company' => 'jne',
+            'courier_type' => 'reg',
         ]);
 
         $response->assertCreated()
             ->assertJsonPath('data.courier', 'jne')
+            ->assertJsonPath('data.courier_type', 'reg')
             ->assertJsonPath('data.status', 'menunggu_pickup');
+    }
+
+    /** No override passed — defaults to whatever courier the customer picked at checkout. */
+    public function test_admin_booking_defaults_to_the_checkout_time_courier(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $order = Order::factory()->diprosesProduksi()->create([
+            'courier_company' => 'sicepat', 'courier_type' => 'reg',
+        ]);
+
+        $this->actingAs($admin)->postJson("/api/admin/orders/{$order->id}/shipment", [])
+            ->assertCreated()
+            ->assertJsonPath('data.courier', 'sicepat')
+            ->assertJsonPath('data.courier_type', 'reg');
     }
 
     public function test_cannot_book_a_shipment_before_production_starts(): void
@@ -139,7 +155,8 @@ class AdminOrderTest extends TestCase
         $order = Order::factory()->menungguApproval()->create();
 
         $this->actingAs($admin)->postJson("/api/admin/orders/{$order->id}/shipment", [
-            'courier' => 'jne',
+            'courier_company' => 'jne',
+            'courier_type' => 'reg',
         ])->assertUnprocessable();
     }
 
@@ -147,9 +164,9 @@ class AdminOrderTest extends TestCase
     {
         $admin = User::factory()->admin()->create();
         $order = Order::factory()->diprosesProduksi()->create();
-        $this->actingAs($admin)->postJson("/api/admin/orders/{$order->id}/shipment", ['courier' => 'jne']);
+        $this->actingAs($admin)->postJson("/api/admin/orders/{$order->id}/shipment", ['courier_company' => 'jne', 'courier_type' => 'reg']);
 
-        $this->actingAs($admin)->postJson("/api/admin/orders/{$order->id}/shipment", ['courier' => 'sicepat'])
+        $this->actingAs($admin)->postJson("/api/admin/orders/{$order->id}/shipment", ['courier_company' => 'sicepat', 'courier_type' => 'reg'])
             ->assertUnprocessable();
     }
 }

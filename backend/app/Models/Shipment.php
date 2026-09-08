@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /** 4.3_Table_Design.md — shipments (data pengiriman & resi Biteship). */
 #[Fillable([
-    'order_id', 'biteship_order_id', 'courier', 'tracking_number',
+    'order_id', 'biteship_order_id', 'courier', 'courier_type', 'tracking_number',
     'status', 'shipped_at', 'delivered_at',
 ])]
 class Shipment extends Model

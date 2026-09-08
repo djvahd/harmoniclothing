@@ -53,6 +53,7 @@ return [
         'product_unavailable' => 'This product is no longer available.',
         'bulk_quantity_no_tier' => 'This quantity does not meet any Bulk Order pricing tier.',
         'cart_item_unavailable' => 'One of the items in your cart is no longer available.',
+        'shipping_rate_unavailable' => 'The selected courier is not available for this address. Please pick another courier.',
     ],
 
     'design' => [

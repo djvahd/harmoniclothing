@@ -32,5 +32,14 @@
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
+        <!-- Force-blank third-party credentials regardless of what's in .env — tests must
+             never make real external HTTP calls; anything that needs a response uses
+             Http::fake(). Without this, real local .env secrets leak into the test run. -->
+        <env name="MIDTRANS_SERVER_KEY" value=""/>
+        <env name="MIDTRANS_CLIENT_KEY" value=""/>
+        <env name="BITESHIP_API_KEY" value=""/>
+        <env name="AWS_ACCESS_KEY_ID" value=""/>
+        <env name="AWS_SECRET_ACCESS_KEY" value=""/>
+        <env name="MAILTRAP_API_TOKEN" value=""/>
     </php>
 </phpunit>

@@ -10,7 +10,7 @@ import PriceSummaryRow from "@/components/ui/PriceSummaryRow";
 import Button from "@/components/ui/Button";
 import DetailNotFound from "@/components/product/DetailNotFound";
 import { getAddresses } from "@/services/account";
-import { checkoutBulk } from "@/services/checkout";
+import { checkoutBulk, getShippingRates } from "@/services/checkout";
 import { getErrorMessage } from "@/lib/api";
 import { formatCurrency } from "@/lib/format";
 import { useBulkPricingTiers, findBulkTier } from "@/hooks/useBulkPricing";
@@ -33,6 +33,7 @@ export default function BulkCheckoutPage() {
   const subtotal = unitPrice * totalQuantity;
 
   const [addressId, setAddressId] = useState<number | null>(null);
+  const [courier, setCourier] = useState<{ company: string; type: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -43,10 +44,34 @@ export default function BulkCheckoutPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addresses]);
 
+  const bulkItems = draft?.items.map((item) => ({
+    product_variant_id: item.productVariantId,
+    quantity: item.quantity,
+  }));
+  const ratesKey = addressId && bulkItems && bulkItems.length > 0
+    ? ["/checkout/shipping-rates", "bulk", addressId, ...bulkItems.map((i) => `${i.product_variant_id}:${i.quantity}`)]
+    : null;
+  const { data: ratesData, isLoading: ratesLoading } = useSWR(ratesKey, () =>
+    getShippingRates({ address_id: addressId!, items: bulkItems }),
+  );
+  const rates = ratesData?.data ?? [];
+
+  useEffect(() => {
+    setCourier(null);
+  }, [addressId]);
+
+  const shippingCost = courier
+    ? (rates.find((r) => r.courier_company === courier.company && r.courier_type === courier.type)?.price ?? 0)
+    : 0;
+
   async function handleSubmit() {
     if (!draft) return;
     if (!addressId) {
       setError(t("selectAddressError"));
+      return;
+    }
+    if (!courier) {
+      setError(t("selectCourierError"));
       return;
     }
     setError(null);
@@ -58,6 +83,8 @@ export default function BulkCheckoutPage() {
           product_variant_id: item.productVariantId,
           quantity: item.quantity,
         })),
+        courier_company: courier.company,
+        courier_type: courier.type,
         design_id: draft.designId ?? undefined,
         custom_design_file_path: draft.customDesignFilePath ?? undefined,
         notes: draft.notes || undefined,
@@ -108,6 +135,31 @@ export default function BulkCheckoutPage() {
               />
             ))}
           </section>
+
+          <section className="flex flex-col gap-3 rounded-md border border-border bg-surface p-5">
+            <p className="font-heading text-lg font-semibold text-text-primary">
+              {t("shippingCourier")}
+            </p>
+            {!addressId && (
+              <p className="font-body text-sm text-text-secondary">{t("selectAddressFirst")}</p>
+            )}
+            {addressId && ratesLoading && (
+              <p className="font-body text-sm text-text-secondary">{t("loadingRates")}</p>
+            )}
+            {addressId && !ratesLoading && rates.length === 0 && (
+              <p className="font-body text-sm text-text-secondary">{t("noRatesAvailable")}</p>
+            )}
+            {rates.map((rate) => (
+              <OptionRow
+                key={`${rate.courier_company}-${rate.courier_type}`}
+                selected={courier?.company === rate.courier_company && courier?.type === rate.courier_type}
+                onSelect={() => setCourier({ company: rate.courier_company, type: rate.courier_type })}
+                label={rate.courier_service_name}
+                sublabel={rate.duration ?? undefined}
+                price={new Intl.NumberFormat("id-ID").format(rate.price)}
+              />
+            ))}
+          </section>
         </div>
 
         <div className="flex w-full flex-col gap-4 rounded-md border border-border bg-surface p-5 md:w-[320px]">
@@ -141,8 +193,9 @@ export default function BulkCheckoutPage() {
           <div className="border-t border-border pt-3">
             <PriceSummaryRow label={t("pricePerUnit", { qty: totalQuantity })} amount={unitPrice} />
             <PriceSummaryRow label={t("subtotal")} amount={subtotal} />
+            <PriceSummaryRow label={t("shippingCost")} amount={shippingCost} />
           </div>
-          <PriceSummaryRow label={t("total")} amount={subtotal} emphasis />
+          <PriceSummaryRow label={t("total")} amount={subtotal + shippingCost} emphasis />
           {error && <p className="font-body text-xs text-danger">{error}</p>}
           <Button fullWidth loading={loading} onClick={handleSubmit}>
             {t("createBulkOrder")}

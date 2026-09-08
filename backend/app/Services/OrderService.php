@@ -198,8 +198,12 @@ class OrderService
      * request — the second transaction re-checks shipment existence to catch
      * a request that raced past the first check while the booking call was
      * in flight.
+     *
+     * $courierCompany/$courierType default to whatever the customer picked
+     * at checkout (stored on the order) — admin only needs to pass an
+     * override if that courier turns out to be unavailable at booking time.
      */
-    public function bookShipment(Order $order, User $admin, string $courier): Shipment
+    public function bookShipment(Order $order, User $admin, ?string $courierCompany = null, ?string $courierType = null): Shipment
     {
         $order = DB::transaction(function () use ($order) {
             $locked = $this->lockOrder($order);
@@ -219,11 +223,14 @@ class OrderService
             return $locked;
         });
 
+        $courierCompany ??= $order->courier_company;
+        $courierType ??= $order->courier_type;
+
         $booking = blank(config('services.biteship.api_key'))
             ? ['biteship_order_id' => null, 'tracking_number' => null]
-            : $this->biteship->createBooking($order, $courier);
+            : $this->biteship->createBooking($order, $courierCompany, $courierType);
 
-        return DB::transaction(function () use ($order, $admin, $courier, $booking) {
+        return DB::transaction(function () use ($order, $admin, $courierCompany, $courierType, $booking) {
             $locked = $this->lockOrder($order);
 
             if ($locked->shipment()->exists()) {
@@ -236,10 +243,11 @@ class OrderService
                 'order_id' => $locked->id,
                 'biteship_order_id' => $booking['biteship_order_id'],
                 'tracking_number' => $booking['tracking_number'],
-                'courier' => $courier,
+                'courier' => $courierCompany,
+                'courier_type' => $courierType,
                 'status' => 'menunggu_pickup',
             ]);
-            $this->auditLog->record($admin, 'order.shipment_book', $locked, "courier: {$courier}");
+            $this->auditLog->record($admin, 'order.shipment_book', $locked, "courier: {$courierCompany} {$courierType}");
 
             return $shipment;
         });
