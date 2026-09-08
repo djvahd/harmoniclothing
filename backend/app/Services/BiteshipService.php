@@ -43,8 +43,17 @@ class BiteshipService
                     'weight' => $totalWeightGrams,
                     'quantity' => 1,
                 ]],
-            ])
-            ->throw();
+            ]);
+
+        // A 4xx here is usually a legitimate business case (invalid/unrecognized
+        // postal code, no courier serves that route) rather than a system fault —
+        // surface it as "no rates available" instead of a raw 500. throw() still
+        // covers genuine outages (5xx, network failure, timeout).
+        if ($response->clientError()) {
+            return [];
+        }
+
+        $response->throw();
 
         return Collection::make($response->json('pricing', []))
             ->map(fn (array $option) => [
