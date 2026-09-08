@@ -169,16 +169,14 @@ proxy can't carry a WS upgrade.
   (proves Reverb websocket connectivity).
 - Confirm `php artisan migrate` ran cleanly — check Railway's `api` service deploy logs.
 
-## 4. Domain migration checklist (for later, swapping temp URLs for real domains)
+## 4. Domain migration — DONE (2026-09-08)
 
-Most of the following are env-var-driven, but two are NOT — both need a code change + redeploy:
+Real domain `harmoniclothing.com` is live (Hostinger registrar, Cloudflare DNS/nameservers, Netlify custom domain + SSL). All of the following were completed:
 
-- `FRONTEND_URL` (Railway `api`/`reverb`) — drives email link URLs (verify-email, reset-password).
-- `MAIL_FROM_ADDRESS` + verify the real domain in Mailtrap (currently using Mailtrap's shared
-  `demomailtrap.co` testing domain).
-- `backend/config/cors.php`'s `CORS_ALLOWED_ORIGINS` env var (Railway).
-- `SANCTUM_STATEFUL_DOMAINS` (Railway).
-- `NEXT_PUBLIC_API_URL` / `NEXT_PUBLIC_REVERB_*` (Netlify) — only if the backend URL also changes.
+- `FRONTEND_URL` — set to `https://harmoniclothing.com` on Railway `api`.
+- `MAIL_FROM_ADDRESS` — `hello@harmoniclothing.com`, domain verified in Mailtrap (SPF/DKIM/DMARC CNAMEs+TXT added in Cloudflare) — no longer on the shared `demomailtrap.co` testing domain, can now email any recipient, not just the Mailtrap account owner.
+- `CORS_ALLOWED_ORIGINS` / `SANCTUM_STATEFUL_DOMAINS` — both include `harmoniclothing.com` and `harmoniclothing.netlify.app` (kept as a fallback) on Railway.
+- `NEXT_PUBLIC_API_URL` / `NEXT_PUBLIC_REVERB_*` — unchanged (backend URL on Railway itself did not change, only the frontend-facing domain did).
 - **`netlify.toml`'s `[[redirects]]` targets** (code change) — the `/api/*`, `/sanctum/*`,
   `/broadcasting/*`, `/storage/*` rules hardcode the Railway `api` URL as their `to =` target; update
   if the backend URL changes.
