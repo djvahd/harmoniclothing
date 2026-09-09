@@ -9,11 +9,11 @@ const nextConfig = {
       // R2 bucket's public "Public Development URL" domain (pub-<id>.r2.dev)
       // — different from the r2.cloudflarestorage.com S3 API endpoint above.
       { protocol: "https", hostname: "**.r2.dev" },
-      // storageUrl() builds image URLs from NEXT_PUBLIC_API_URL, which in
-      // production is this same Netlify domain (proxied to Railway via
-      // netlify.toml's /storage/* redirect) — update this alongside
-      // NEXT_PUBLIC_API_URL if the temporary .netlify.app domain is ever
-      // swapped for a real custom domain (see DEPLOYMENT.md).
+      // storageUrl() builds local-disk image URLs from API_URL (the site's own
+      // origin, proxied to Railway via netlify.toml's /storage/* redirect).
+      // Prod images normally come from R2 (**.r2.dev above); these cover the
+      // local-disk fallback. Add any new public domain the site is served on.
+      { protocol: "https", hostname: "harmoniclothing.com" },
       { protocol: "https", hostname: "harmoniclothing.netlify.app" },
     ],
   },

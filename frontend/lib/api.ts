@@ -1,4 +1,15 @@
-export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+// In a deployed build the browser always talks to its own origin: netlify.toml
+// proxies /api, /sanctum, /broadcasting and /storage to the backend so the
+// Sanctum session/CSRF cookies stay first-party. NEXT_PUBLIC_API_URL is only for
+// local dev, where the frontend (:3000) and backend (:8000) are separate origins
+// with no proxy — set it in .env.local there. Baking it into a proxied deploy
+// pins every client request to one hostname and breaks them all after a domain
+// change (see DEPLOYMENT.md). SSR falls through to "" (relative) — server-only
+// metadata fetches degrade gracefully; set NEXT_PUBLIC_API_URL in the deploy if
+// server-rendered SEO metadata matters.
+export const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  (typeof window !== "undefined" ? window.location.origin : "");
 
 export class ApiError extends Error {
   status: number;

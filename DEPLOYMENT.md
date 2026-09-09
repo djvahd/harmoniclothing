@@ -139,7 +139,7 @@ project level) — Reverb needs `REDIS_*`/`DB_*` too since it shares the same La
 3. Env vars (Site settings → Environment variables):
 
 ```
-NEXT_PUBLIC_API_URL=https://<your-site>.netlify.app
+NEXT_PUBLIC_API_URL=https://<the site's own public domain, e.g. harmoniclothing.com>
 NEXT_PUBLIC_REVERB_APP_KEY=<same value as Railway's REVERB_APP_KEY>
 NEXT_PUBLIC_REVERB_HOST=<reverb-service>.up.railway.app
 NEXT_PUBLIC_REVERB_PORT=443
@@ -149,12 +149,18 @@ NEXT_PUBLIC_REVERB_SCHEME=https
 (Confirmed against `frontend/lib/api.ts` and `frontend/lib/echo.ts` — these are the exact env vars
 the frontend code reads.)
 
-**`NEXT_PUBLIC_API_URL` points at the Netlify site itself, not the Railway URL** — `netlify.toml`
-proxies `/api/*`, `/sanctum/*`, `/broadcasting/*`, and `/storage/*` through to the Railway `api`
-service so Sanctum's session cookie stays first-party (modern browsers increasingly block
-third-party cookies, which broke login with a CSRF token mismatch when this pointed straight at
-`.up.railway.app`). Reverb's websocket still points directly at Railway since an HTTP redirect
+**`NEXT_PUBLIC_API_URL` must be the site's *own current public domain*, never the Railway URL** —
+`netlify.toml` proxies `/api/*`, `/sanctum/*`, `/broadcasting/*`, and `/storage/*` through to the
+Railway `api` service so Sanctum's session cookie stays first-party (modern browsers increasingly
+block third-party cookies, which broke login with a CSRF token mismatch when this pointed straight
+at `.up.railway.app`). Reverb's websocket still points directly at Railway since an HTTP redirect
 proxy can't carry a WS upgrade.
+
+**If the site's domain changes, this value MUST change with it** (or be removed). As a safety net,
+`frontend/lib/api.ts` now falls back to `window.location.origin` in the browser when the var is
+unset — so leaving it blank makes client-side requests work on any domain automatically. Setting it
+is only still useful for local dev (`.env.local`, pointing at `http://localhost:8000` where there
+is no proxy) and, in a deploy, to keep server-rendered SEO metadata fetches working.
 
 4. Deploy. Netlify gives you a `https://<random-name>.netlify.app` URL (renameable in Site settings
    → Domain management → Site details, no cost).
@@ -176,7 +182,15 @@ Real domain `harmoniclothing.com` is live (Hostinger registrar, Cloudflare DNS/n
 - `FRONTEND_URL` — set to `https://harmoniclothing.com` on Railway `api`.
 - `MAIL_FROM_ADDRESS` — `hello@harmoniclothing.com`, domain verified in Mailtrap (SPF/DKIM/DMARC CNAMEs+TXT added in Cloudflare) — no longer on the shared `demomailtrap.co` testing domain, can now email any recipient, not just the Mailtrap account owner.
 - `CORS_ALLOWED_ORIGINS` / `SANCTUM_STATEFUL_DOMAINS` — both include `harmoniclothing.com` and `harmoniclothing.netlify.app` (kept as a fallback) on Railway.
-- `NEXT_PUBLIC_API_URL` / `NEXT_PUBLIC_REVERB_*` — unchanged (backend URL on Railway itself did not change, only the frontend-facing domain did).
+- `NEXT_PUBLIC_REVERB_*` — unchanged (the Reverb service URL on Railway did not change).
+- `NEXT_PUBLIC_API_URL` on Netlify — **was NOT updated during the migration and this was a mistake.**
+  Because `netlify.toml` proxies the API same-origin, this var is the *frontend's own domain*, not the
+  backend's — it was still `https://harmoniclothing.netlify.app`, so after the switch every
+  client-side request from `harmoniclothing.com` went cross-origin to a redirect-only domain and
+  failed (CORS preflight can't follow the redirect) — login showed "CSRF token mismatch", cart /
+  wishlist / the homepage "popular" rows silently broke; only server-rendered pages worked. Fix: set
+  it to `https://harmoniclothing.com` (or remove it — `frontend/lib/api.ts` now falls back to
+  `window.location.origin` in the browser), then redeploy.
 - **`netlify.toml`'s `[[redirects]]` targets** (code change) — the `/api/*`, `/sanctum/*`,
   `/broadcasting/*`, `/storage/*` rules hardcode the Railway `api` URL as their `to =` target; update
   if the backend URL changes.
