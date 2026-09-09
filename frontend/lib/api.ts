@@ -18,8 +18,8 @@ export function readCookie(name: string): string | null {
   return match ? decodeURIComponent(match.split("=").slice(1).join("=")) : null;
 }
 
-export async function ensureCsrfCookie() {
-  if (readCookie("XSRF-TOKEN")) return;
+export async function ensureCsrfCookie(force = false) {
+  if (!force && readCookie("XSRF-TOKEN")) return;
   await fetch(`${API_URL}/sanctum/csrf-cookie`, { credentials: "include" });
 }
 
@@ -37,22 +37,36 @@ export async function apiFetch<T>(
     await ensureCsrfCookie();
   }
 
-  const headers: Record<string, string> = {
-    Accept: "application/json",
-    // Backend's ResolvesLocale trait picks name_id/name_en etc. from this
-    // when no `?lang=` query param is given (5.3_API_Specification.md §8).
-    "Accept-Language": readCookie("NEXT_LOCALE") === "en" ? "en" : "id",
-  };
-  if (!isFormData) headers["Content-Type"] = "application/json";
-  const xsrfToken = readCookie("XSRF-TOKEN");
-  if (xsrfToken) headers["X-XSRF-TOKEN"] = xsrfToken;
+  const send = () => {
+    const headers: Record<string, string> = {
+      Accept: "application/json",
+      // Backend's ResolvesLocale trait picks name_id/name_en etc. from this
+      // when no `?lang=` query param is given (5.3_API_Specification.md §8).
+      "Accept-Language": readCookie("NEXT_LOCALE") === "en" ? "en" : "id",
+    };
+    if (!isFormData) headers["Content-Type"] = "application/json";
+    const xsrfToken = readCookie("XSRF-TOKEN");
+    if (xsrfToken) headers["X-XSRF-TOKEN"] = xsrfToken;
 
-  const res = await fetch(`${API_URL}/api${path}`, {
-    method,
-    credentials: "include",
-    headers,
-    body: body === undefined ? undefined : isFormData ? (body as FormData) : JSON.stringify(body),
-  });
+    return fetch(`${API_URL}/api${path}`, {
+      method,
+      credentials: "include",
+      headers,
+      body: body === undefined ? undefined : isFormData ? (body as FormData) : JSON.stringify(body),
+    });
+  };
+
+  let res = await send();
+
+  // A 419 means the XSRF-TOKEN cookie we sent is stale — a server session that
+  // expired (or was swept), a previous deploy, or a token carried over from the
+  // old domain. ensureCsrfCookie() skips the refresh whenever any XSRF-TOKEN
+  // cookie exists, so a stale one would wedge every write until it's manually
+  // cleared. Force a fresh token and replay the request once.
+  if (res.status === 419) {
+    await ensureCsrfCookie(true);
+    res = await send();
+  }
 
   if (res.status === 204) return undefined as T;
 

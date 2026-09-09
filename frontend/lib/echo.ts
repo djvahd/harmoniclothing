@@ -37,17 +37,25 @@ export function getEcho(): Echo<"reverb"> {
         callback: (error: Error | null, authData: { auth: string; channel_data?: string } | null) => void,
       ) => {
         try {
+          const authFetch = () =>
+            fetch(`${API_URL}/broadcasting/auth`, {
+              method: "POST",
+              credentials: "include",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                "X-XSRF-TOKEN": readCookie("XSRF-TOKEN") ?? "",
+              },
+              body: JSON.stringify({ socket_id: socketId, channel_name: channel.name }),
+            });
+
           await ensureCsrfCookie();
-          const res = await fetch(`${API_URL}/broadcasting/auth`, {
-            method: "POST",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-              "X-XSRF-TOKEN": readCookie("XSRF-TOKEN") ?? "",
-            },
-            body: JSON.stringify({ socket_id: socketId, channel_name: channel.name }),
-          });
+          let res = await authFetch();
+          // Stale CSRF cookie — force a fresh one and retry once (see lib/api.ts).
+          if (res.status === 419) {
+            await ensureCsrfCookie(true);
+            res = await authFetch();
+          }
           if (!res.ok) throw new Error(`Channel auth failed (${res.status})`);
           callback(null, await res.json());
         } catch (err) {
