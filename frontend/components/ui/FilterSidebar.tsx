@@ -5,6 +5,7 @@ import { ChevronDown, ChevronUp, LayoutGrid, Tag as TagIcon } from "lucide-react
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import type { GenderSegment } from "@/types/product";
+import { swatchColor } from "@/lib/colors";
 
 export interface FilterSidebarOptions {
   categories: { slug: string; name: string }[];
@@ -30,35 +31,6 @@ export interface FilterSidebarValue {
 }
 
 const GENDER_ORDER: GenderSegment[] = ["pria", "wanita", "unisex", "anak"];
-
-/** Variant color is free text (admin-entered), so this only covers common
- * Indonesian names — anything else falls through as a raw CSS color value
- * (works for hex codes / English names, degrades gracefully otherwise). */
-const COLOR_SWATCH_MAP: Record<string, string> = {
-  hitam: "#111827",
-  putih: "#ffffff",
-  navy: "#1e2a4a",
-  merah: "#dc2626",
-  "abu-abu": "#9ca3af",
-  abu: "#9ca3af",
-  biru: "#2563eb",
-  hijau: "#16a34a",
-  kuning: "#eab308",
-  coklat: "#78350f",
-  cokelat: "#78350f",
-  krem: "#f5e9d3",
-  maroon: "#7f1d1d",
-  oranye: "#f97316",
-  ungu: "#7c3aed",
-  pink: "#ec4899",
-  "merah muda": "#ec4899",
-  emas: "#d4af37",
-  perak: "#c0c0c0",
-};
-
-function swatchColor(name: string): string {
-  return COLOR_SWATCH_MAP[name.trim().toLowerCase()] ?? name;
-}
 
 /** Debounce before auto-applying a typed price, mirroring the search bar's
  * live-as-you-type feel without firing a request on every keystroke. */

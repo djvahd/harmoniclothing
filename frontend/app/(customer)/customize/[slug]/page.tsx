@@ -16,6 +16,7 @@ import { useProduct } from "@/hooks/useProducts";
 import { useDesign } from "@/hooks/useDesigns";
 import { storageUrl } from "@/lib/storage";
 import { getErrorMessage } from "@/lib/api";
+import { swatchColor } from "@/lib/colors";
 import LoadingState from "@/components/ui/LoadingState";
 import { toast } from "@/store/toast-store";
 
@@ -149,7 +150,7 @@ function ProductEditorForm() {
                     ? "size-7 rounded-full border-2 border-accent"
                     : "size-7 rounded-full border border-border"
                 }
-                style={{ backgroundColor: c }}
+                style={{ backgroundColor: swatchColor(c) }}
               />
             ))}
           </div>

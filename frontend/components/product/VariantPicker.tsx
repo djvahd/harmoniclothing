@@ -5,6 +5,7 @@ import { Ruler } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Tag from "@/components/ui/Tag";
 import SizeChartTable from "@/components/product/SizeChartTable";
+import { swatchColor } from "@/lib/colors";
 
 export default function VariantPicker({
   colors,
@@ -45,7 +46,7 @@ export default function VariantPicker({
                   "size-8 rounded-full border-2 transition-colors",
                   activeColor === c ? "border-accent" : "border-border hover:border-primary/50",
                 )}
-                style={{ backgroundColor: c }}
+                style={{ backgroundColor: swatchColor(c) }}
               />
             ))}
           </div>
