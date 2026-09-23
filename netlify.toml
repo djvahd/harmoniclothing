@@ -14,21 +14,31 @@
 # increasingly block third-party cookies outright, which SameSite=None
 # alone can't work around. Update the target host here (and in Railway's
 # `api` service's Networking settings) if the backend domain ever changes.
+#
+# TEMPORARY (2026-09-23): Railway's trial expired and the `api` service is
+# down; rather than pay for a new host immediately, these 4 redirects point at
+# a Cloudflare quick tunnel (`cloudflared tunnel --url http://localhost:8000`)
+# into a local dev machine's backend. A quick tunnel's hostname is random and
+# changes every time the tunnel process restarts — if the site goes down
+# again, check whether the tunnel is still running before assuming a new bug,
+# and update the 4 URLs below to match. Revert all 4 back to
+# `https://api-production-a4d61.up.railway.app` (or a real replacement host)
+# once real hosting is sorted — see DEPLOYMENT.md.
 [[redirects]]
   from = "/api/*"
-  to = "https://api-production-a4d61.up.railway.app/api/:splat"
+  to = "https://sympathy-bloomberg-stock-matched.trycloudflare.com/api/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/sanctum/*"
-  to = "https://api-production-a4d61.up.railway.app/sanctum/:splat"
+  to = "https://sympathy-bloomberg-stock-matched.trycloudflare.com/sanctum/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/broadcasting/*"
-  to = "https://api-production-a4d61.up.railway.app/broadcasting/:splat"
+  to = "https://sympathy-bloomberg-stock-matched.trycloudflare.com/broadcasting/:splat"
   status = 200
   force = true
 
@@ -39,6 +49,6 @@
 # image 404s since Netlify has no route for /storage/* on its own.
 [[redirects]]
   from = "/storage/*"
-  to = "https://api-production-a4d61.up.railway.app/storage/:splat"
+  to = "https://sympathy-bloomberg-stock-matched.trycloudflare.com/storage/:splat"
   status = 200
   force = true
