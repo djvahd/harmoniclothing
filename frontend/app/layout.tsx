@@ -19,11 +19,20 @@ const inter = Inter({
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("metadata");
   return {
+    metadataBase: new URL("https://harmoniclothing.com"),
     title: {
       default: "Harmoni Clothing",
       template: "%s | Harmoni Clothing",
     },
     description: t("siteDescription"),
+    openGraph: {
+      type: "website",
+      siteName: "Harmoni Clothing",
+      title: "Harmoni Clothing",
+      description: t("siteDescription"),
+      images: ["/logo.png"],
+    },
+    twitter: { card: "summary", title: "Harmoni Clothing", description: t("siteDescription") },
   };
 }
 

@@ -1,6 +1,8 @@
 import AdminHeader from "@/components/layout/AdminHeader";
 import AdminGuard from "@/components/auth/AdminGuard";
 
+export const metadata = { robots: { index: false, follow: false } };
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <AdminGuard>
