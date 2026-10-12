@@ -18,7 +18,7 @@ class CancelUnpaidOrders extends Command
     {
         $stale = Order::query()
             ->where('status', 'belum_dibayar')
-            ->where('created_at', '<', now()->subHours(24))
+            ->where('created_at', '<', now()->subHours(config('business.unpaid_order_cancel_hours')))
             ->get();
 
         foreach ($stale as $order) {

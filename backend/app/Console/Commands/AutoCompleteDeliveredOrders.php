@@ -28,8 +28,10 @@ class AutoCompleteDeliveredOrders extends Command
             ->with('shipment')
             ->get()
             ->each(function (Order $order) use ($orders, $notifications, &$completed) {
-                if (now()->lessThan($this->addBusinessDays($order->shipment->delivered_at, 3))) {
-                    return;
+                $deadline = $this->addBusinessDays($order->shipment->delivered_at, config('business.auto_complete_business_days'));
+
+                if (now()->lessThan($deadline)) {
+                    return; // masih dalam masa tunggu konfirmasi customer
                 }
 
                 $order->update(['status' => 'selesai', 'completed_at' => now()]);

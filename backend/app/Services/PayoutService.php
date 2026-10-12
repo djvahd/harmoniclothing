@@ -34,7 +34,7 @@ class PayoutService
         foreach ($eligible as $creatorId => $commissions) {
             $total = (float) $commissions->sum('amount');
 
-            if ($total < config('creator.payout_minimum_amount')) {
+            if ($total < config('business.creator_payout_minimum')) {
                 continue;
             }
 

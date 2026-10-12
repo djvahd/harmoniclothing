@@ -14,7 +14,7 @@ class PayoutTest extends TestCase
 
     public function test_commissions_below_the_minimum_are_not_paid(): void
     {
-        config(['creator.payout_minimum_amount' => 50000]);
+        config(['business.creator_payout_minimum' => 50000]);
         $profile = CreatorProfile::factory()->aktif()->create();
         $commission = Commission::factory()->for($profile->user, 'creator')->create([
             'status' => 'terhutang', 'amount' => 10000,
@@ -27,7 +27,7 @@ class PayoutTest extends TestCase
 
     public function test_eligible_commissions_stay_pending_without_a_payout_destination(): void
     {
-        config(['creator.payout_minimum_amount' => 50000]);
+        config(['business.creator_payout_minimum' => 50000]);
         $profile = CreatorProfile::factory()->create(); // no payout_method set
         $commission = Commission::factory()->for($profile->user, 'creator')->create([
             'status' => 'terhutang', 'amount' => 100000,
@@ -40,7 +40,7 @@ class PayoutTest extends TestCase
 
     public function test_eligible_commissions_stay_pending_without_a_disbursement_provider_configured(): void
     {
-        config(['creator.payout_minimum_amount' => 50000, 'services.disbursement.api_key' => null]);
+        config(['business.creator_payout_minimum' => 50000, 'services.disbursement.api_key' => null]);
         $profile = CreatorProfile::factory()->aktif()->create(); // has payout_method/account from the factory state
         $commission = Commission::factory()->for($profile->user, 'creator')->create([
             'status' => 'terhutang', 'amount' => 100000,
@@ -54,7 +54,7 @@ class PayoutTest extends TestCase
 
     public function test_eligible_commissions_are_paid_once_a_provider_is_configured(): void
     {
-        config(['creator.payout_minimum_amount' => 50000, 'services.disbursement.api_key' => 'test-key']);
+        config(['business.creator_payout_minimum' => 50000, 'services.disbursement.api_key' => 'test-key']);
         $profile = CreatorProfile::factory()->aktif()->create();
         $commission = Commission::factory()->for($profile->user, 'creator')->create([
             'status' => 'terhutang', 'amount' => 100000,

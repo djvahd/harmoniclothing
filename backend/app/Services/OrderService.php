@@ -191,8 +191,7 @@ class OrderService
      * transition order.status to "dikirim" here — that stays exclusively
      * webhook-driven (BiteshipWebhookService), since booking and "actually
      * shipped" are different moments.
-     */
-    /**
+     *
      * Split into two short transactions bookending the Biteship call rather
      * than one long one, so the row lock isn't held across an external HTTP
      * request — the second transaction re-checks shipment existence to catch

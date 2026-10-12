@@ -22,7 +22,7 @@ class CommissionService
         return Commission::create([
             'creator_id' => $item->design->creator_id,
             'order_item_id' => $item->id,
-            'amount' => bcmul((string) $item->subtotal, (string) config('creator.commission_rate'), 2),
+            'amount' => bcmul((string) $item->subtotal, (string) config('business.creator_commission_rate'), 2),
             'status' => 'terhutang',
         ]);
     }
