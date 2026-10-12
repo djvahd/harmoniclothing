@@ -106,6 +106,11 @@
       "faq": "FAQ",
       "helpCenter": "Pusat Bantuan",
       "contact": "Kontak",
+      "legalTitle": "KEBIJAKAN",
+      "terms": "Syarat & Ketentuan",
+      "privacy": "Kebijakan Privasi",
+      "returns": "Retur & Refund",
+      "shipping": "Pengiriman",
       "copyright": "© 2026 Harmoni Clothing. All rights reserved."
     }
   },
@@ -421,6 +426,71 @@
         "statTotalSold": "Total Terjual",
         "otherWorks": "Koleksi Lainnya",
         "viewAll": "Lihat Semua →"
+      }
+    },
+    "info": {
+      "updatedAt": "13 Oktober 2026",
+      "comingSoon": "Segera hadir.",
+      "meta": {
+        "faq": { "title": "FAQ", "description": "Jawaban atas pertanyaan yang sering diajukan tentang pemesanan, pembayaran, dan pengiriman di Harmoni Clothing." },
+        "contact": { "title": "Kontak", "description": "Hubungi tim Harmoni Clothing untuk pertanyaan seputar pesanan dan layanan." },
+        "helpCenter": { "title": "Pusat Bantuan", "description": "Temukan panduan, kebijakan, dan cara menghubungi Harmoni Clothing." },
+        "returns": { "title": "Kebijakan Retur & Refund", "description": "Ketentuan klaim, retur, dan pengembalian dana pesanan di Harmoni Clothing." },
+        "shipping": { "title": "Kebijakan Pengiriman", "description": "Informasi kurir, ongkos kirim, dan estimasi pengiriman di Harmoni Clothing." }
+      },
+      "faq": {
+        "title": "Pertanyaan yang Sering Diajukan",
+        "items": [
+          { "q": "Apakah ada minimum order?", "a": "Tidak. Kamu bisa memesan mulai dari 1 pcs. Untuk pesanan dalam jumlah besar tersedia harga bertingkat lewat fitur Bulk Order." },
+          { "q": "Format file desain apa yang diterima?", "a": "Kami menerima file PNG dan SVG. Gunakan resolusi setinggi mungkin dan latar transparan agar hasil cetak tajam." },
+          { "q": "Berapa lama proses produksi?", "a": "Produksi dimulai setelah pembayaran dikonfirmasi dan pesananmu disetujui admin. Status pesanan dapat dipantau kapan saja di halaman Pesanan Saya." },
+          { "q": "Metode pembayaran apa yang tersedia?", "a": "Pembayaran diproses melalui Midtrans, sehingga tersedia berbagai metode seperti transfer bank/virtual account, e-wallet, dan kartu." },
+          { "q": "Pesanan yang belum dibayar bagaimana?", "a": "Pesanan yang belum dibayar akan dibatalkan otomatis setelah 24 jam. Kamu bisa membuat pesanan baru kapan saja." },
+          { "q": "Kurir apa yang bisa dipilih?", "a": "Pilihan kurir dan ongkos kirim ditampilkan langsung di halaman checkout setelah kamu memilih alamat pengiriman." },
+          { "q": "Bagaimana cara melacak pesanan?", "a": "Setelah pesanan dikirim, nomor resi akan muncul di halaman detail pesananmu dan kamu menerima notifikasi." },
+          { "q": "Produk yang diterima rusak atau salah, apa yang harus dilakukan?", "a": "Ajukan klaim sesuai Kebijakan Retur & Refund, lengkap dengan foto atau video barang yang diterima, lalu hubungi kami lewat halaman Kontak." },
+          { "q": "Bagaimana cara menjadi kreator?", "a": "Daftar akun, lalu ajukan pendaftaran kreator dari halaman akunmu. Setelah disetujui, kamu bisa mengunggah desain untuk dijual di marketplace dan mendapat komisi dari tiap penjualan." }
+        ]
+      },
+      "contact": {
+        "title": "Hubungi Kami",
+        "sections": {
+          "whatsapp": "WhatsApp",
+          "email": "Email",
+          "address": "Alamat",
+          "hours": "Jam Operasional"
+        },
+        "intro": "Sertakan nomor pesanan saat menghubungi kami agar permintaanmu bisa ditangani lebih cepat."
+      },
+      "helpCenter": {
+        "title": "Pusat Bantuan",
+        "sections": {
+          "faq": { "title": "FAQ", "body": "Jawaban singkat untuk pertanyaan yang paling sering diajukan." },
+          "returns": { "title": "Retur & Refund", "body": "Cara mengajukan klaim jika produk rusak atau tidak sesuai." },
+          "shipping": { "title": "Pengiriman", "body": "Informasi kurir, ongkos kirim, dan estimasi pengiriman." },
+          "contact": { "title": "Kontak", "body": "Hubungi tim kami langsung untuk bantuan lebih lanjut." }
+        },
+        "open": "Buka halaman"
+      },
+      "returns": {
+        "title": "Kebijakan Retur & Refund",
+        "sections": [
+          { "title": "1. Produk Dibuat Sesuai Pesanan", "body": "Setiap produk dicetak khusus berdasarkan desain dan pilihan ukuran/warna dari pelanggan. Karena itu pesanan tidak dapat dikembalikan atau ditukar hanya karena berubah pikiran, salah memilih ukuran, atau perbedaan warna layar." },
+          { "title": "2. Klaim yang Dapat Diajukan", "body": "Klaim dapat diajukan jika produk cacat produksi (misalnya hasil cetak tidak sesuai file desain atau bahan cacat), produk yang diterima tidak sesuai pesanan, atau produk rusak selama pengiriman." },
+          { "title": "3. Cara Mengajukan Klaim", "body": "Hubungi kami lewat halaman Kontak maksimal 3 hari setelah pesanan diterima. Sertakan nomor pesanan serta foto atau video yang jelas menunjukkan kondisi produk dan kemasannya." },
+          { "title": "4. Penyelesaian", "body": "Setelah klaim diverifikasi, kami akan menawarkan cetak ulang atau pengembalian dana sesuai kondisi. Pengembalian dana dikirim ke metode pembayaran yang kamu gunakan." },
+          { "title": "5. Pembatalan Pesanan", "body": "Pesanan dapat dibatalkan selama berstatus menunggu approval. Setelah masuk tahap produksi, pesanan tidak dapat dibatalkan. Pesanan yang belum dibayar dibatalkan otomatis setelah 24 jam." }
+        ]
+      },
+      "shipping": {
+        "title": "Kebijakan Pengiriman",
+        "sections": [
+          { "title": "1. Kurir", "body": "Pengiriman dilakukan melalui mitra logistik. Pilihan kurir yang tersedia ditampilkan di halaman checkout sesuai alamat tujuanmu." },
+          { "title": "2. Ongkos Kirim", "body": "Ongkos kirim dihitung otomatis berdasarkan alamat tujuan, berat pesanan, dan kurir yang kamu pilih, lalu ditambahkan ke total pembayaran." },
+          { "title": "3. Waktu Proses & Pengiriman", "body": "Pesanan diproduksi setelah pembayaran dikonfirmasi dan disetujui admin. Estimasi lama perjalanan mengikuti layanan kurir yang dipilih dan dapat berbeda tiap wilayah." },
+          { "title": "4. Pelacakan", "body": "Nomor resi tersedia di halaman detail pesanan setelah paket diserahkan ke kurir." },
+          { "title": "5. Penerimaan Pesanan", "body": "Mohon periksa paket saat diterima. Jika kemasan rusak, dokumentasikan dengan foto atau video sebelum membuka paket. Pesanan akan otomatis dianggap selesai 3 hari kerja setelah paket tiba bila tidak dikonfirmasi." }
+        ]
       }
     },
     "legal": {

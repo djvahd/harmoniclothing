@@ -106,6 +106,11 @@
       "faq": "FAQ",
       "helpCenter": "Help Center",
       "contact": "Contact",
+      "legalTitle": "POLICIES",
+      "terms": "Terms & Conditions",
+      "privacy": "Privacy Policy",
+      "returns": "Returns & Refund",
+      "shipping": "Shipping",
       "copyright": "© 2026 Harmoni Clothing. All rights reserved."
     }
   },
@@ -421,6 +426,71 @@
         "statTotalSold": "Total Sold",
         "otherWorks": "More From This Creator",
         "viewAll": "View All →"
+      }
+    },
+    "info": {
+      "updatedAt": "October 13, 2026",
+      "comingSoon": "Coming soon.",
+      "meta": {
+        "faq": { "title": "FAQ", "description": "Answers to frequently asked questions about ordering, payment, and shipping at Harmoni Clothing." },
+        "contact": { "title": "Contact", "description": "Get in touch with the Harmoni Clothing team about your order or our services." },
+        "helpCenter": { "title": "Help Center", "description": "Find guides, policies, and ways to reach Harmoni Clothing." },
+        "returns": { "title": "Returns & Refund Policy", "description": "Rules for claims, returns, and refunds on Harmoni Clothing orders." },
+        "shipping": { "title": "Shipping Policy", "description": "Information about couriers, shipping costs, and delivery estimates at Harmoni Clothing." }
+      },
+      "faq": {
+        "title": "Frequently Asked Questions",
+        "items": [
+          { "q": "Is there a minimum order?", "a": "No. You can order from just 1 piece. Tiered pricing is available for larger quantities through Bulk Order." },
+          { "q": "Which design file formats are accepted?", "a": "We accept PNG and SVG files. Use the highest resolution possible with a transparent background for sharp prints." },
+          { "q": "How long does production take?", "a": "Production starts once payment is confirmed and an admin approves your order. You can follow the status anytime on your My Orders page." },
+          { "q": "Which payment methods are available?", "a": "Payments are processed through Midtrans, so options such as bank transfer/virtual account, e-wallets, and cards are available." },
+          { "q": "What happens to unpaid orders?", "a": "Unpaid orders are cancelled automatically after 24 hours. You can place a new order at any time." },
+          { "q": "Which couriers can I choose?", "a": "Courier options and shipping costs are shown at checkout once you select a delivery address." },
+          { "q": "How do I track my order?", "a": "Once your order ships, the tracking number appears on your order detail page and you receive a notification." },
+          { "q": "What if the product I received is damaged or wrong?", "a": "Submit a claim following our Returns & Refund Policy, with photos or video of what you received, then reach us through the Contact page." },
+          { "q": "How do I become a creator?", "a": "Sign up, then apply as a creator from your account page. Once approved, you can upload designs to sell on the marketplace and earn commission on each sale." }
+        ]
+      },
+      "contact": {
+        "title": "Contact Us",
+        "sections": {
+          "whatsapp": "WhatsApp",
+          "email": "Email",
+          "address": "Address",
+          "hours": "Operating Hours"
+        },
+        "intro": "Include your order number when contacting us so we can help you faster."
+      },
+      "helpCenter": {
+        "title": "Help Center",
+        "sections": {
+          "faq": { "title": "FAQ", "body": "Quick answers to the most frequently asked questions." },
+          "returns": { "title": "Returns & Refund", "body": "How to file a claim if a product is damaged or not as ordered." },
+          "shipping": { "title": "Shipping", "body": "Information about couriers, shipping costs, and delivery estimates." },
+          "contact": { "title": "Contact", "body": "Reach our team directly for further help." }
+        },
+        "open": "Open page"
+      },
+      "returns": {
+        "title": "Returns & Refund Policy",
+        "sections": [
+          { "title": "1. Products Are Made to Order", "body": "Every product is custom printed from the customer's design and size/color choices. Orders therefore cannot be returned or exchanged because of a change of mind, a wrongly chosen size, or screen color differences." },
+          { "title": "2. Eligible Claims", "body": "You may file a claim if the product has a production defect (for example the print does not match the design file or the material is faulty), the product received does not match the order, or the product was damaged during shipping." },
+          { "title": "3. How to File a Claim", "body": "Contact us through the Contact page within 3 days of receiving your order. Include your order number and clear photos or video showing the product and its packaging." },
+          { "title": "4. Resolution", "body": "Once the claim is verified, we will offer a reprint or a refund depending on the case. Refunds are sent back to the payment method you used." },
+          { "title": "5. Order Cancellation", "body": "Orders can be cancelled while awaiting approval. Once production begins, an order can no longer be cancelled. Unpaid orders are cancelled automatically after 24 hours." }
+        ]
+      },
+      "shipping": {
+        "title": "Shipping Policy",
+        "sections": [
+          { "title": "1. Couriers", "body": "Orders are shipped through logistics partners. Available couriers are shown at checkout based on your destination." },
+          { "title": "2. Shipping Cost", "body": "Shipping cost is calculated automatically from the destination, order weight, and the courier you choose, and is added to your total." },
+          { "title": "3. Processing & Delivery Time", "body": "Orders are produced after payment is confirmed and approved by an admin. Transit time follows the chosen courier service and varies by region." },
+          { "title": "4. Tracking", "body": "A tracking number is available on your order detail page once the parcel is handed to the courier." },
+          { "title": "5. Receiving Your Order", "body": "Please inspect the parcel on arrival. If the packaging is damaged, document it with photos or video before opening. An order is automatically marked complete 3 business days after arrival if not confirmed." }
+        ]
       }
     },
     "legal": {

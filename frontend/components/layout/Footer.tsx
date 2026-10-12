@@ -19,6 +19,15 @@ const FOOTER_COLUMNS = [
       { href: "/kontak", key: "contact" },
     ],
   },
+  {
+    titleKey: "legalTitle",
+    links: [
+      { href: "/legal/terms", key: "terms" },
+      { href: "/legal/privacy-policy", key: "privacy" },
+      { href: "/legal/returns", key: "returns" },
+      { href: "/legal/shipping", key: "shipping" },
+    ],
+  },
 ] as const;
 
 export default async function Footer() {
