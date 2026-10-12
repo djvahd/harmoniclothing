@@ -83,8 +83,9 @@ export function getEcho(): Echo<"reverb"> {
         authorizer,
       };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- laravel-echo's
-  // per-broadcaster option types don't unify cleanly; both shapes are valid at runtime.
+  // laravel-echo's per-broadcaster option types don't unify cleanly; both
+  // shapes are valid at runtime.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   echo = new Echo(options as any);
 
   return echo;

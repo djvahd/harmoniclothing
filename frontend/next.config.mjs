@@ -15,7 +15,20 @@ const nextConfig = {
       // local-disk fallback. Add any new public domain the site is served on.
       { protocol: "https", hostname: "harmoniclothing.com" },
       { protocol: "https", hostname: "harmoniclothing.netlify.app" },
+      { protocol: "https", hostname: "api.harmoniclothing.com" },
     ],
+  },
+  // Same-origin proxy to the Laravel backend so Sanctum's session/CSRF cookies
+  // stay first-party (replaces netlify.toml's redirects). Only active when
+  // BACKEND_ORIGIN is set at build time (.env.production); local `pnpm dev`
+  // talks to NEXT_PUBLIC_API_URL directly and needs none of this.
+  async rewrites() {
+    const origin = process.env.BACKEND_ORIGIN;
+    if (!origin) return [];
+    return ["api", "sanctum", "broadcasting", "storage"].map((p) => ({
+      source: `/${p}/:path*`,
+      destination: `${origin}/${p}/:path*`,
+    }));
   },
 };
 
