@@ -16,7 +16,9 @@ Satu perintah membuka backend (`:8000`) dan frontend (`:3000`) di dua jendela Po
 .\dev.ps1
 ```
 
-Prasyarat: MySQL (XAMPP) harus sudah menyala — jalankan `C:\xampp\mysql_start.bat` dulu, bila tidak backend akan *hang*.
+Prasyarat: [Laragon](https://laragon.org) (PHP 8.5 + MySQL 8.4). `dev.ps1` menyalakan MySQL Laragon bila belum jalan.
+
+Untuk **demo/testing lewat harmoniclothing.com** (backend di laptop + Cloudflare Tunnel), klik dua kali `start-demo.bat` (shortcut juga ada di Desktop). Ia menyalakan MySQL, `php artisan serve`, scheduler, tunnel `harmoni-api`, dan Reverb bila `BROADCAST_CONNECTION=reverb`, lalu mengecek kesehatannya. `stop-demo.bat` mematikan semuanya.
 
 Manual:
 

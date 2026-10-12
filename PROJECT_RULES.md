@@ -111,7 +111,7 @@ Alur status: `belum_dibayar → menunggu_approval → diproses_produksi → diki
 20. **Tidak ada tes frontend** (hanya type-check + lint). Tes backend luas (232) tetapi integrasi Midtrans/Biteship hanya diuji dengan `Http::fake`.
 21. **Tidak ada monitoring/alerting** (Sentry, UptimeRobot) dan backup database terjadwal.
 22. **`docker-compose.yml` hanya untuk dev**, belum pernah diuji di mesin ini, dan memakai `php:8.3` sementara Dockerfile produksi memakai PHP 8.4.
-23. **Local dev**: MySQL XAMPP harus dinyalakan manual (`mysql_start.bat`); bila lupa, backend *hang* (bukan error).
+23. **Local dev**: MySQL kini Laragon (XAMPP sudah ditinggalkan) dan dinyalakan oleh `start-demo.bat` / `dev.ps1`; bila MySQL mati, backend *hang* (bukan error).
 24. **SEO dasar sudah ada** (sitemap, robots, Open Graph) tetapi belum ada structured data produk dan gambar OG per halaman.
 
 > Hal yang sengaja ditunda pemilik (3D editor, pembayaran DP, multi-vendor, notifikasi email/SMS) hanya ditulis bila relevan di atas.

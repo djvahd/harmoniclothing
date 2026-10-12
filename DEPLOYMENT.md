@@ -9,7 +9,7 @@ browser ──► harmoniclothing.com (Cloudflare Worker, OpenNext)
                ▼
           api.harmoniclothing.com (Cloudflare named tunnel `harmoni-api`)
                ▼
-          developer laptop: php artisan serve :8000 + MySQL (XAMPP)
+          developer laptop: php artisan serve :8000 + MySQL (Laragon)
 ```
 
 Registrar is Hostinger (nameservers point at Cloudflare). DNS, SSL, Workers and the R2 buckets
@@ -32,12 +32,18 @@ live in the Cloudflare account `adrielharjanto@gmail.com`.
 
 Three processes must be alive, or the site returns 502/500 on every API call:
 
-1. MySQL: `C:\xampp\mysql_start.bat` (run from a normal terminal; it fails from background shells).
+1. MySQL: Laragon's `mysqld` on `127.0.0.1:3306`.
 2. `php artisan serve --port=8000` in `backend/`.
 3. `cloudflared tunnel run harmoni-api` (config in `~/.cloudflared/config.yml`, credentials JSON
    next to it — never commit either). The tunnel exposes `api.harmoniclothing.com` → `localhost:8000`.
 
-If the laptop sleeps, the tunnel drops; restart the three above. The hostname never changes.
+**One click:** double-click `start-demo.bat` (Desktop shortcut "Harmoni - Start Demo").
+It starts MySQL, `php artisan serve`, the scheduler (`schedule:work`: auto-cancel, auto-complete, payouts),
+the tunnel and, only if `BROADCAST_CONNECTION=reverb`, Reverb; then it health-checks `127.0.0.1:8000` and
+`https://api.harmoniclothing.com`. `stop-demo.bat` stops them. It refuses to start while XAMPP's MySQL still
+holds port 3306. PHP and MySQL are auto-detected under the Laragon `bin` folder.
+
+If the laptop sleeps, the tunnel drops; run `start-demo.bat` again (it skips whatever is already running). The hostname never changes.
 
 Backend env: start from `backend/.env.example`. Production-relevant keys: `FRONTEND_URL`,
 `SANCTUM_STATEFUL_DOMAINS`, `CORS_ALLOWED_ORIGINS` (all must include `harmoniclothing.com`),
