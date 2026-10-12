@@ -35,7 +35,7 @@ class MidtransService
     public function verifySignature(array $payload): bool
     {
         $expected = hash('sha512',
-            $payload['order_id'].$payload['status_code'].$payload['gross_amount'].config('services.midtrans.server_key')
+            ($payload['order_id'] ?? '').($payload['status_code'] ?? '').($payload['gross_amount'] ?? '').config('services.midtrans.server_key')
         );
 
         return hash_equals($expected, $payload['signature_key'] ?? '');

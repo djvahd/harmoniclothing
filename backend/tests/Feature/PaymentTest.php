@@ -69,6 +69,12 @@ class PaymentTest extends TestCase
         $this->postJson('/api/webhooks/midtrans', $payload)->assertForbidden();
     }
 
+    public function test_webhook_rejects_a_payload_missing_signed_fields_instead_of_erroring(): void
+    {
+        $this->postJson('/api/webhooks/midtrans', [])->assertForbidden();
+        $this->postJson('/api/webhooks/midtrans', ['signature_key' => 'x'])->assertForbidden();
+    }
+
     public function test_webhook_marks_order_paid_and_generates_invoice_on_settlement(): void
     {
         $user = User::factory()->create();

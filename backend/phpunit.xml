@@ -41,5 +41,9 @@
         <env name="AWS_ACCESS_KEY_ID" value=""/>
         <env name="AWS_SECRET_ACCESS_KEY" value=""/>
         <env name="MAILTRAP_API_TOKEN" value=""/>
+        <!-- Same reason for storage: a local .env that points uploads at R2 would make tests
+             hit the real bucket (or hang on credential lookup with the blank keys above). -->
+        <env name="FILESYSTEM_DISK_PUBLIC" value="public"/>
+        <env name="FILESYSTEM_DISK_PRIVATE" value="local"/>
     </php>
 </phpunit>
