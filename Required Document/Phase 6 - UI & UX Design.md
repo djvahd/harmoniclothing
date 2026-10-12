@@ -1,8 +1,8 @@
 # 6.0 Design Reference Brief — Harmoni Clothing
 
-**Output:** 6.0_Design_Reference_Brief.md
+**Output:** Bagian 6.0
 **Tujuan:** Titik awal referensi untuk pengerjaan Phase 6 (Moodboard, Design System, Wireframe, High Fidelity Design, Interactive Prototype, Responsive Design) di Figma.
-**Referensi:** `1.1_Project_Brief.md`, `1.3_User_Persona.md`, `1.4_Competitor_Research.md`, `2.1_Sitemap.md`, `2.4_Navigation_Structure.md`
+**Referensi:** Bagian 1.1, Bagian 1.3, Bagian 1.4, Bagian 2.1, Bagian 2.4
 
 **Catatan peran**: Sesuai protokol kerja (Phase 6 bertipe Design di Roadmap), dokumen ini murni referensi/arahan — bukan moodboard, wireframe, atau mockup jadi. Eksekusi desain aktual dikerjakan langsung di Figma oleh Product Owner.
 
@@ -28,7 +28,7 @@ Tiga persona (1.3) punya konteks pemakaian yang cukup berbeda — layak didesain
 
 ### 3. Referensi Kompetitor
 
-Riset lengkap sudah ada di `1.4_Competitor_Research.md` (5 direct: Printful, Printify, Redbubble, Threadless, Tees.co.id + 3 indirect). Saran pemakaian saat moodboard: buka lagi bagian diferensiasi di dokumen itu sebagai pengingat "apa yang TIDAK boleh disamakan" — jangan cuma meniru visual kompetitor tanpa mengacu gap analysis-nya.
+Riset lengkap sudah ada di Bagian 1.4 (5 direct: Printful, Printify, Redbubble, Threadless, Tees.co.id + 3 indirect). Saran pemakaian saat moodboard: buka lagi bagian diferensiasi di dokumen itu sebagai pengingat "apa yang TIDAK boleh disamakan" — jangan cuma meniru visual kompetitor tanpa mengacu gap analysis-nya.
 
 ---
 
