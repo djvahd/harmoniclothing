@@ -12,7 +12,7 @@ import Button from "@/components/ui/Button";
 import LoadingState from "@/components/ui/LoadingState";
 import EmptyState from "@/components/ui/EmptyState";
 import { toast } from "@/store/toast-store";
-import { createAddress, deleteAddress, getAddresses } from "@/services/account";
+import { createAddress, deleteAddress, getAddresses, updateAddress } from "@/services/account";
 import type { Address } from "@/types/user";
 
 const EMPTY_FORM = {
@@ -29,11 +29,13 @@ const EMPTY_FORM = {
 
 export default function AddressBookPage() {
   const t = useTranslations("customer.addresses");
+  const tCommon = useTranslations("common");
   const { data, isLoading } = useSWR("/account/addresses", getAddresses);
   const addresses = data?.data ?? [];
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState<Omit<Address, "id">>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null); // null = form menambah alamat baru
 
   function update<K extends keyof typeof form>(field: K, value: (typeof form)[K]) {
     setForm((f) => ({ ...f, [field]: value }));
@@ -43,14 +45,33 @@ export default function AddressBookPage() {
     e.preventDefault();
     setSaving(true);
     try {
-      await createAddress(form);
+      if (editingId === null) await createAddress(form);
+      else await updateAddress(editingId, form);
       await mutate("/account/addresses");
-      setForm(EMPTY_FORM);
-      setShowForm(false);
+      closeForm();
       toast(t("saveSuccess"), "success");
     } finally {
       setSaving(false);
     }
+  }
+
+  function openAddForm() {
+    setEditingId(null);
+    setForm(EMPTY_FORM);
+    setShowForm((open) => !(open && editingId === null));
+  }
+
+  function openEditForm(address: Address) {
+    const { id, ...fields } = address;
+    setEditingId(id);
+    setForm(fields);
+    setShowForm(true);
+  }
+
+  function closeForm() {
+    setEditingId(null);
+    setForm(EMPTY_FORM);
+    setShowForm(false);
   }
 
   async function handleDelete(id: number) {
@@ -64,7 +85,7 @@ export default function AddressBookPage() {
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between">
           <h1 className="font-heading text-h3 font-semibold text-text-primary">{t("title")}</h1>
-          <Button onClick={() => setShowForm((v) => !v)}>
+          <Button onClick={openAddForm}>
             <Plus className="size-4" /> {t("addAddress")}
           </Button>
         </div>
@@ -92,9 +113,16 @@ export default function AddressBookPage() {
               />
               {t("setAsDefault")}
             </label>
-            <Button type="submit" loading={saving}>
-              {t("saveAddress")}
-            </Button>
+            <div className="flex gap-3">
+              <Button type="submit" loading={saving}>
+                {t("saveAddress")}
+              </Button>
+              {editingId !== null && (
+                <Button type="button" variant="secondary" onClick={closeForm}>
+                  {tCommon("cancel")}
+                </Button>
+              )}
+            </div>
           </form>
         )}
 
@@ -118,12 +146,14 @@ export default function AddressBookPage() {
                   {address.postal_code}
                 </p>
               </div>
-              <button
-                onClick={() => handleDelete(address.id)}
-                className="font-body text-sm font-medium text-danger"
-              >
-                {t("delete")}
-              </button>
+              <div className="flex items-center gap-4">
+                <button onClick={() => openEditForm(address)} className="font-body text-sm font-medium text-primary">
+                  {t("edit")}
+                </button>
+                <button onClick={() => handleDelete(address.id)} className="font-body text-sm font-medium text-danger">
+                  {t("delete")}
+                </button>
+              </div>
             </div>
           ))}
         </div>

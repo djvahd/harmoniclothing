@@ -2,7 +2,7 @@
 import { API_URL, apiFetch } from "@/lib/api";
 import { buildQuery } from "@/lib/query";
 import type { User } from "@/types/user";
-import type { Design, PrintArea, Product, ProductVariant } from "@/types/product";
+import type { Category, Design, GenderSegment, PrintArea, ProductVariant } from "@/types/product";
 import type { Order } from "@/types/order";
 import type { Paginated } from "@/types/api";
 
@@ -82,6 +82,10 @@ export function getUsers(params?: { role?: string; status?: string; page?: numbe
   return apiFetch<Paginated<User>>(`/admin/users${buildQuery(params)}`);
 }
 
+export function getCreatorsByStatus(status: "aktif" | "banned") {
+  return apiFetch<{ data: AdminCreatorProfile[] }>(`/admin/creators?status=${status}`);
+}
+
 export function getPendingCreators() {
   return apiFetch<{ data: AdminCreatorProfile[] }>("/admin/creators/pending");
 }
@@ -126,6 +130,26 @@ export function rejectDesign(id: number, reason: string) {
   });
 }
 
+/** Admin CMS view of a product: both languages + is_active (the public Product type only has the active locale). */
+export interface AdminProduct {
+  id: number;
+  category_id: number | null;
+  category?: Category;
+  gender_segment: GenderSegment | null;
+  name_id: string;
+  name_en: string;
+  description_id: string | null;
+  description_en: string | null;
+  slug: string;
+  base_price: number;
+  is_active: boolean;
+  variants?: ProductVariant[];
+}
+
+export function getAdminProducts(params?: { per_page?: number; page?: number }) {
+  return apiFetch<Paginated<AdminProduct>>(`/admin/catalog/products${buildQuery(params)}`);
+}
+
 export function createProduct(payload: {
   category_id?: number;
   gender_segment?: "pria" | "wanita" | "unisex" | "anak";
@@ -136,14 +160,14 @@ export function createProduct(payload: {
   base_price: number;
   is_active?: boolean;
 }) {
-  return apiFetch<{ data: Product }>("/admin/catalog/products", {
+  return apiFetch<{ data: AdminProduct }>("/admin/catalog/products", {
     method: "POST",
     body: payload,
   });
 }
 
 export function updateProduct(id: number, payload: Partial<Parameters<typeof createProduct>[0]>) {
-  return apiFetch<{ data: Product }>(`/admin/catalog/products/${id}`, {
+  return apiFetch<{ data: AdminProduct }>(`/admin/catalog/products/${id}`, {
     method: "PATCH",
     body: payload,
   });

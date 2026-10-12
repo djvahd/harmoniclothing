@@ -186,8 +186,7 @@
       "hero": {
         "titlePrefix": "About",
         "subtitle": "A modern print-on-demand platform connecting brands, individuals, and local creators to make apparel that truly fits each person's style.",
-        "altTshirt": "Custom Harmoni Clothing t-shirt",
-        "altCap": "Custom Harmoni Clothing cap"
+        "altTshirt": "Custom Harmoni Clothing t-shirt"
       },
       "mission": {
         "eyebrow": "Vision & Mission",
@@ -649,8 +648,6 @@
       "cropTitle": "Adjust Photo",
       "cropSave": "Save Photo",
       "cropCancel": "Cancel",
-      "photoUpdated": "Profile photo updated successfully.",
-      "photoRemoved": "Profile photo removed successfully.",
       "photoUploadError": "Failed to upload photo. Make sure it's JPG/PNG/WebP and under 5MB."
     },
     "addresses": {
@@ -668,6 +665,7 @@
       },
       "setAsDefault": "Set as default address",
       "saveAddress": "Save Address",
+      "edit": "Edit",
       "empty": "No saved addresses yet.",
       "defaultBadge": "Default",
       "delete": "Delete",
@@ -900,6 +898,18 @@
       "accountHolderPrefix": "in the name of",
       "guardianLabel": "Guardian",
       "viewKtpPhoto": "View ID Card Photo",
+      "activeTitle": "Active Creators",
+      "activeEmpty": "No active creators yet.",
+      "ban": "Ban",
+      "banSuccess": "Creator banned.",
+      "banModal": {
+        "title": "Ban Creator {name}",
+        "label": "Reason for ban",
+        "minChars": "At least {count} characters.",
+        "copyrightLabel": "Proven copyright violation",
+        "copyrightHint": "The Customer account is also suspended and all unpaid commissions are held (BR-020/023).",
+        "confirm": "Ban"
+      },
       "reject": "Reject",
       "approve": "Approve",
       "approveSuccess": "Creator approved successfully.",
@@ -994,6 +1004,20 @@
       },
       "empty": "No products yet.",
       "productVariants": "Product Variants",
+      "inactive": "Inactive",
+      "productDetails": "Product Details",
+      "bulkTiers": {
+        "title": "Bulk Order Price Tiers",
+        "hint": "Applies globally to all products (BR-012). Ranges must not overlap; tiers cannot be edited or deleted once created.",
+        "minQty": "Minimum Qty",
+        "maxQty": "Maximum Qty",
+        "maxQtyOptional": "Maximum Qty (leave empty = unlimited)",
+        "unlimited": "Unlimited",
+        "pricePerUnit": "Price per Unit",
+        "empty": "No price tiers yet.",
+        "add": "Add Tier",
+        "saved": "Price tier added."
+      },
       "variantColumns": {
         "color": "Color",
         "size": "Size",
@@ -1013,6 +1037,11 @@
         "segmentWomen": "Women's",
         "segmentUnisex": "Unisex",
         "segmentKids": "Kids",
+        "descriptionId": "Description (ID)",
+        "descriptionEn": "Description (EN)",
+        "isActive": "Product active (visible in catalog)",
+        "update": "Save Changes",
+        "updated": "Product updated successfully.",
         "save": "Save Product"
       },
       "variantForm": {

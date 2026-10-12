@@ -18,6 +18,8 @@ export interface GetCreatorsParams {
  */
 export const swrKeys = {
   cart: () => "/cart" as const,
+  adminProducts: () => "/admin/catalog/products" as const,
+  adminCreators: (status: "aktif" | "banned") => ["/admin/creators", status] as const,
   wishlist: () => "/wishlist" as const,
   notifications: () => "/notifications" as const,
   orders: () => "/orders" as const,

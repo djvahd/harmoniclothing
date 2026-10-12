@@ -186,8 +186,7 @@
       "hero": {
         "titlePrefix": "Tentang",
         "subtitle": "Platform konveksi modern yang menghubungkan brand, individu, dan kreator lokal untuk menciptakan apparel yang benar-benar sesuai gaya masing-masing.",
-        "altTshirt": "Kaos custom Harmoni Clothing",
-        "altCap": "Topi custom Harmoni Clothing"
+        "altTshirt": "Kaos custom Harmoni Clothing"
       },
       "mission": {
         "eyebrow": "Visi & Misi",
@@ -649,8 +648,6 @@
       "cropTitle": "Sesuaikan Foto",
       "cropSave": "Simpan Foto",
       "cropCancel": "Batal",
-      "photoUpdated": "Foto profil berhasil diperbarui.",
-      "photoRemoved": "Foto profil berhasil dihapus.",
       "photoUploadError": "Gagal mengunggah foto. Pastikan format JPG/PNG/WebP dan ukuran di bawah 5MB."
     },
     "addresses": {
@@ -668,6 +665,7 @@
       },
       "setAsDefault": "Jadikan alamat utama",
       "saveAddress": "Simpan Alamat",
+      "edit": "Ubah",
       "empty": "Belum ada alamat tersimpan.",
       "defaultBadge": "Utama",
       "delete": "Hapus",
@@ -900,6 +898,18 @@
       "accountHolderPrefix": "a.n.",
       "guardianLabel": "Wali",
       "viewKtpPhoto": "Lihat Foto KTP",
+      "activeTitle": "Creator Aktif",
+      "activeEmpty": "Belum ada creator aktif.",
+      "ban": "Blokir",
+      "banSuccess": "Creator berhasil diblokir.",
+      "banModal": {
+        "title": "Blokir Creator {name}",
+        "label": "Alasan pemblokiran",
+        "minChars": "Minimal {count} karakter.",
+        "copyrightLabel": "Pelanggaran hak cipta terbukti",
+        "copyrightHint": "Akun Customer ikut disuspend dan seluruh komisi yang belum dibayar ditahan (BR-020/023).",
+        "confirm": "Blokir"
+      },
       "reject": "Tolak",
       "approve": "Setujui",
       "approveSuccess": "Creator berhasil disetujui.",
@@ -994,6 +1004,20 @@
       },
       "empty": "Belum ada produk.",
       "productVariants": "Varian Produk",
+      "inactive": "Nonaktif",
+      "productDetails": "Detail Produk",
+      "bulkTiers": {
+        "title": "Tier Harga Bulk Order",
+        "hint": "Berlaku global untuk semua produk (BR-012). Rentang tidak boleh tumpang tindih; tier tidak bisa diubah atau dihapus setelah dibuat.",
+        "minQty": "Qty Minimum",
+        "maxQty": "Qty Maksimum",
+        "maxQtyOptional": "Qty Maksimum (kosongkan = tanpa batas)",
+        "unlimited": "Tanpa batas",
+        "pricePerUnit": "Harga per Unit",
+        "empty": "Belum ada tier harga.",
+        "add": "Tambah Tier",
+        "saved": "Tier harga berhasil ditambahkan."
+      },
       "variantColumns": {
         "color": "Warna",
         "size": "Ukuran",
@@ -1013,6 +1037,11 @@
         "segmentWomen": "Women's",
         "segmentUnisex": "Unisex",
         "segmentKids": "Kids",
+        "descriptionId": "Deskripsi (ID)",
+        "descriptionEn": "Deskripsi (EN)",
+        "isActive": "Produk aktif (tampil di katalog)",
+        "update": "Simpan Perubahan",
+        "updated": "Produk berhasil diperbarui.",
         "save": "Simpan Produk"
       },
       "variantForm": {

@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, useState } from "react";
-import { mutate } from "swr";
+import useSWR, { mutate } from "swr";
 import { ChevronDown, ChevronRight, PackageSearch, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import AdminSidebar from "@/components/layout/AdminSidebar";
@@ -12,19 +12,20 @@ import { TableRowsSkeleton } from "@/components/ui/LoadingState";
 import ProductForm from "@/components/admin/catalog/ProductForm";
 import VariantRow from "@/components/admin/catalog/VariantRow";
 import VariantForm from "@/components/admin/catalog/VariantForm";
-import { useProducts } from "@/hooks/useProducts";
+import BulkPricingTiers from "@/components/admin/catalog/BulkPricingTiers";
+import Badge from "@/components/ui/Badge";
+import { getAdminProducts } from "@/services/admin";
 import { swrKeys } from "@/lib/swr-keys";
 import { formatCurrency } from "@/lib/format";
 
-const ADMIN_PRODUCTS_PARAMS = { per_page: 100 };
-
+/** Admin list comes from /admin/catalog/products (not the public one): includes inactive products and both languages. */
 function refreshAdminProducts() {
-  return mutate(swrKeys.products("admin", ADMIN_PRODUCTS_PARAMS));
+  return mutate(swrKeys.adminProducts());
 }
 
 export default function KelolaKatalogPage() {
   const t = useTranslations("admin.catalog");
-  const { data, isLoading } = useProducts("admin", ADMIN_PRODUCTS_PARAMS);
+  const { data, isLoading } = useSWR(swrKeys.adminProducts(), () => getAdminProducts({ per_page: 100 }));
   const products = data?.data ?? [];
 
   const [showForm, setShowForm] = useState(false);
@@ -48,12 +49,14 @@ export default function KelolaKatalogPage() {
 
         {showForm && (
           <ProductForm
-            onCreated={() => {
+            onSaved={() => {
               refreshAdminProducts();
               setShowForm(false);
             }}
           />
         )}
+
+        <BulkPricingTiers />
 
         <div className="overflow-x-auto rounded-md border border-border bg-surface">
           <table className="w-full text-left font-body text-sm">
@@ -87,7 +90,10 @@ export default function KelolaKatalogPage() {
                         <ChevronRight className="size-4" />
                       )}
                     </td>
-                    <td className="p-4 font-medium text-text-primary">{product.name}</td>
+                    <td className="p-4 font-medium text-text-primary">
+                      {product.name_id}
+                      {!product.is_active && <Badge variant="neutral" className="ml-2">{t("inactive")}</Badge>}
+                    </td>
                     <td className="p-4 text-text-secondary">{product.category?.name ?? "-"}</td>
                     <td className="p-4 text-text-secondary">{formatCurrency(product.base_price)}</td>
                   </tr>
@@ -95,6 +101,9 @@ export default function KelolaKatalogPage() {
                     <tr key={`${product.id}-variants`} className="border-b border-border bg-surface last:border-0">
                       <td colSpan={4} className="p-4">
                         <div className="flex flex-col gap-4">
+                          <h3 className="font-heading text-sm font-semibold text-text-primary">{t("productDetails")}</h3>
+                          <ProductForm product={product} onSaved={refreshAdminProducts} />
+
                           <h3 className="font-heading text-sm font-semibold text-text-primary">{t("productVariants")}</h3>
 
                           {!!product.variants?.length && (

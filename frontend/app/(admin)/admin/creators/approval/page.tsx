@@ -8,11 +8,21 @@ import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Button from "@/components/ui/Button";
 import PromptModal from "@/components/ui/PromptModal";
+import BanCreatorModal from "@/components/admin/BanCreatorModal";
+import { swrKeys } from "@/lib/swr-keys";
 import LoadingState from "@/components/ui/LoadingState";
 import EmptyState from "@/components/ui/EmptyState";
 import { toast } from "@/store/toast-store";
 import { formatDate } from "@/lib/format";
-import { approveCreator, getPendingCreators, kycDocumentUrl, rejectCreator } from "@/services/admin";
+import {
+  approveCreator,
+  banCreator,
+  getCreatorsByStatus,
+  getPendingCreators,
+  kycDocumentUrl,
+  rejectCreator,
+  type AdminCreatorProfile,
+} from "@/services/admin";
 
 export default function ApprovalCreatorPage() {
   const t = useTranslations("admin.creatorApproval");
@@ -20,6 +30,23 @@ export default function ApprovalCreatorPage() {
   const creators = data?.data ?? [];
   const [loadingId, setLoadingId] = useState<number | null>(null);
   const [rejectingId, setRejectingId] = useState<number | null>(null);
+  const { data: activeData } = useSWR(swrKeys.adminCreators("aktif"), () => getCreatorsByStatus("aktif"));
+  const activeCreators = activeData?.data ?? [];
+  const [banning, setBanning] = useState<AdminCreatorProfile | null>(null);
+
+  async function handleBan(reason: string, copyrightViolation: boolean) {
+    if (!banning) return;
+    const id = banning.id;
+    setBanning(null);
+    setLoadingId(id);
+    try {
+      await banCreator(id, reason, copyrightViolation);
+      mutate(swrKeys.adminCreators("aktif"));
+      toast(t("banSuccess"), "success");
+    } finally {
+      setLoadingId(null);
+    }
+  }
 
   async function handleApprove(id: number) {
     setLoadingId(id);
@@ -113,7 +140,29 @@ export default function ApprovalCreatorPage() {
             </div>
           ))}
         </div>
+
+        <h2 className="mt-4 font-heading text-lg font-semibold text-text-primary">{t("activeTitle")}</h2>
+        {activeCreators.length === 0 && <p className="font-body text-sm text-text-secondary">{t("activeEmpty")}</p>}
+        <div className="flex flex-col gap-3">
+          {activeCreators.map((creator) => (
+            <div key={creator.id} className="flex items-center justify-between gap-4 rounded-md border border-border bg-surface p-4">
+              <div className="flex flex-col gap-1">
+                <p className="font-body text-sm font-semibold text-text-primary">{creator.brand_name ?? creator.user.name}</p>
+                <p className="font-body text-xs text-text-secondary">{creator.user.email}</p>
+              </div>
+              <Button variant="danger" loading={loadingId === creator.id} onClick={() => setBanning(creator)}>
+                {t("ban")}
+              </Button>
+            </div>
+          ))}
+        </div>
       </div>
+      <BanCreatorModal
+        open={banning !== null}
+        creatorName={banning?.brand_name ?? banning?.user.name ?? ""}
+        onConfirm={handleBan}
+        onCancel={() => setBanning(null)}
+      />
       <PromptModal
         open={rejectingId !== null}
         title={t("rejectModal.title")}
