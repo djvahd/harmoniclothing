@@ -1,5 +1,5 @@
-// In a deployed build the browser always talks to its own origin: netlify.toml
-// proxies /api, /sanctum, /broadcasting and /storage to the backend so the
+// In a deployed build the browser always talks to its own origin: next.config.mjs
+// rewrites /api, /sanctum, /broadcasting and /storage to the backend so the
 // Sanctum session/CSRF cookies stay first-party. NEXT_PUBLIC_API_URL is only for
 // local dev, where the frontend (:3000) and backend (:8000) are separate origins
 // with no proxy — set it in .env.local there. Baking it into a proxied deploy
