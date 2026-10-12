@@ -18,6 +18,17 @@ const nextConfig = {
       { protocol: "https", hostname: "api.harmoniclothing.com" },
     ],
   },
+  // One canonical host: www -> apex (keeps path and query).
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.harmoniclothing.com" }],
+        destination: "https://harmoniclothing.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
   // Same-origin proxy to the Laravel backend so Sanctum's session/CSRF cookies
   // stay first-party (replaces netlify.toml's redirects). Only active when
   // BACKEND_ORIGIN is set at build time (.env.production); local `pnpm dev`
