@@ -26,19 +26,19 @@
 # once real hosting is sorted — see DEPLOYMENT.md.
 [[redirects]]
   from = "/api/*"
-  to = "https://strand-exec-psp-demonstrate.trycloudflare.com/api/:splat"
+  to = "https://paragraph-glasgow-incident-mass.trycloudflare.com/api/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/sanctum/*"
-  to = "https://strand-exec-psp-demonstrate.trycloudflare.com/sanctum/:splat"
+  to = "https://paragraph-glasgow-incident-mass.trycloudflare.com/sanctum/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/broadcasting/*"
-  to = "https://strand-exec-psp-demonstrate.trycloudflare.com/broadcasting/:splat"
+  to = "https://paragraph-glasgow-incident-mass.trycloudflare.com/broadcasting/:splat"
   status = 200
   force = true
 
@@ -49,6 +49,6 @@
 # image 404s since Netlify has no route for /storage/* on its own.
 [[redirects]]
   from = "/storage/*"
-  to = "https://strand-exec-psp-demonstrate.trycloudflare.com/storage/:splat"
+  to = "https://paragraph-glasgow-incident-mass.trycloudflare.com/storage/:splat"
   status = 200
   force = true
