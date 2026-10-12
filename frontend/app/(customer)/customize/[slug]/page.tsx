@@ -193,7 +193,7 @@ function ProductEditorForm() {
                     ? t("uploadStatusUploaded")
                     : t("uploadStatusIdle")}
               </span>
-              <input type="file" accept="image/png,image/jpeg" className="hidden" onChange={handleUpload} />
+              <input type="file" accept="image/png,image/svg+xml" className="hidden" onChange={handleUpload} />
             </label>
           </div>
         )}

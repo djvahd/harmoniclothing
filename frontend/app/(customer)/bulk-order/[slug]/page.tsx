@@ -159,7 +159,7 @@ function BulkOrderForm() {
               </span>
               <input
                 type="file"
-                accept="image/png,image/jpeg"
+                accept="image/png,image/svg+xml"
                 className="hidden"
                 onChange={handleUpload}
               />
