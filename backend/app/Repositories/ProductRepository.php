@@ -143,7 +143,7 @@ class ProductRepository
     public function paginateForAdmin(?string $categorySlug, int $perPage): LengthAwarePaginator
     {
         return Product::query()
-            ->with('category')
+            ->with(['category', 'variants'])
             ->when($categorySlug, fn ($query) => $query->whereHas(
                 'category',
                 fn ($q) => $q->where('slug', $categorySlug)

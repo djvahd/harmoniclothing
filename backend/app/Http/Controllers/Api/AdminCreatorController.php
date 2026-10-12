@@ -18,6 +18,14 @@ class AdminCreatorController extends Controller
 {
     public function __construct(private readonly CreatorService $creators) {}
 
+    /** GET /admin/creators?status=aktif|banned (default aktif) */
+    public function index(Request $request): JsonResponse
+    {
+        $status = $request->query('status') === 'banned' ? 'banned' : 'aktif';
+
+        return response()->json(['data' => AdminCreatorProfileResource::collection($this->creators->byStatus($status))]);
+    }
+
     /** GET /admin/creators/pending */
     public function pending(): JsonResponse
     {

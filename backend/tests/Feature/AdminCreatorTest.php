@@ -132,4 +132,27 @@ class AdminCreatorTest extends TestCase
         $this->assertSame(UserStatus::Banned, $profile->user->fresh()->status);
         $this->assertSame('ditahan', $commission->fresh()->status);
     }
+
+    public function test_admin_can_list_active_creators_and_banned_ones_separately(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $active = CreatorProfile::factory()->aktif()->create();
+        CreatorProfile::factory()->menungguApproval()->create();
+
+        $this->actingAs($admin)->getJson('/api/admin/creators')
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $active->id);
+
+        $active->update(['status' => 'banned']);
+
+        $this->actingAs($admin)->getJson('/api/admin/creators?status=banned')
+            ->assertOk()
+            ->assertJsonCount(1, 'data');
+    }
+
+    public function test_customer_cannot_list_creators(): void
+    {
+        $this->actingAs(User::factory()->create())->getJson('/api/admin/creators')->assertForbidden();
+    }
 }

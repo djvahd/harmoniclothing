@@ -27,6 +27,7 @@ class AdminProductResource extends JsonResource
             'description_id' => $this->description_id,
             'description_en' => $this->description_en,
             'slug' => $this->slug,
+            'category' => new CategoryResource($this->whenLoaded('category')),
             'base_price' => $this->base_price,
             'is_active' => $this->is_active,
             'variants' => ProductVariantResource::collection($this->whenLoaded('variants')),

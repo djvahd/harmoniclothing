@@ -93,6 +93,16 @@ class CreatorService
         ];
     }
 
+    /** GET /admin/creators?status=aktif|banned — daftar creator yang sudah diputuskan (untuk aksi Ban). */
+    public function byStatus(string $status): Collection
+    {
+        return CreatorProfile::query()
+            ->where('status', $status)
+            ->with('user')
+            ->latest()
+            ->get();
+    }
+
     /** GET /admin/creators/pending — Approval queue. */
     public function pending(): Collection
     {
