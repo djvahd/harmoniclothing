@@ -734,6 +734,14 @@
     }
   },
   "admin": {
+    "orderDesign": {
+      "alt": "Pratinjau file desain",
+      "position": "Posisi cetak",
+      "openFile": "Buka file asli",
+      "noDesign": "Tanpa desain kustom.",
+      "sourceCustom": "Unggahan pelanggan",
+      "sourceMarketplace": "Desain marketplace"
+    },
     "orders": {
       "title": "Kelola Pesanan",
       "columns": {

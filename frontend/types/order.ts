@@ -41,6 +41,9 @@ export interface OrderItem {
   unit_price: number;
   subtotal: number;
   custom_design_file_path: string | null;
+  custom_design_url: string | null;
+  /** Original file of a marketplace design (not its thumbnail) — what gets printed. */
+  design_file_url: string | null;
   design_position: Record<string, unknown> | null;
   product_variant: ProductVariant & { product?: { name: string; slug: string } };
   design: Design | null;

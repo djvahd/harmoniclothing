@@ -4,6 +4,7 @@ import { useState } from "react";
 import useSWR, { mutate } from "swr";
 import { Factory } from "lucide-react";
 import { useTranslations } from "next-intl";
+import OrderItemDesigns from "@/components/admin/OrderItemDesigns";
 import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Badge from "@/components/ui/Badge";
@@ -50,6 +51,7 @@ export default function KelolaAntrianProduksiPage() {
           getRowKey={(order) => order.id}
           emptyState={<EmptyState icon={Factory} title={t("empty")} />}
           renderRow={(order) => (
+            <>
             <tr className="border-b border-border last:border-0">
               <td className="p-4 font-medium text-text-primary">{order.order_number}</td>
               <td className="p-4 text-text-secondary">{formatCurrency(order.total)}</td>
@@ -66,6 +68,8 @@ export default function KelolaAntrianProduksiPage() {
                 )}
               </td>
             </tr>
+            <OrderItemDesigns order={order} colSpan={4} />
+            </>
           )}
         />
       </div>

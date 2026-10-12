@@ -124,7 +124,7 @@ class OrderService
     {
         return Order::query()
             ->whereIn('status', ['menunggu_approval', 'diproses_produksi'])
-            ->with('items')
+            ->with('items.productVariant.product', 'items.design')
             ->oldest()
             ->get();
     }

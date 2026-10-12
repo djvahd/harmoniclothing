@@ -734,6 +734,14 @@
     }
   },
   "admin": {
+    "orderDesign": {
+      "alt": "Design file preview",
+      "position": "Print position",
+      "openFile": "Open original file",
+      "noDesign": "No custom design.",
+      "sourceCustom": "Customer upload",
+      "sourceMarketplace": "Marketplace design"
+    },
     "orders": {
       "title": "Manage Orders",
       "columns": {
