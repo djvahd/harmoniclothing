@@ -15,6 +15,8 @@ const nextConfig = {
       // local-disk fallback. Add any new public domain the site is served on.
       { protocol: "https", hostname: "harmoniclothing.com" },
       { protocol: "https", hostname: "api.harmoniclothing.com" },
+      // Public R2 bucket (harmoni-public) served via its custom domain.
+      { protocol: "https", hostname: "cdn.harmoniclothing.com" },
     ],
   },
   // One canonical host: www -> apex (keeps path and query).
