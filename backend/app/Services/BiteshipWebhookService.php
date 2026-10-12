@@ -50,13 +50,19 @@ class BiteshipWebhookService
 
     public function handle(array $payload): void
     {
+        // Biteship's install-time verification ping POSTs an empty body and requires a 200,
+        // so a payload without an order id is ignored rather than treated as an error.
+        if (blank($payload['order_id'] ?? null)) {
+            return;
+        }
+
         $shipment = Shipment::query()->where('biteship_order_id', $payload['order_id'])->first();
 
         if (! $shipment) {
             return; // nothing to reconcile — respond 200 regardless (idempotent)
         }
 
-        $biteshipStatus = $payload['status'];
+        $biteshipStatus = $payload['status'] ?? null;
         $status = self::STATUS_MAP[$biteshipStatus] ?? null;
 
         if ($status === null) {

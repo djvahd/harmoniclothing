@@ -108,6 +108,16 @@ class ShippingTest extends TestCase
             ->assertOk();
     }
 
+    public function test_webhook_answers_ok_to_biteships_empty_install_verification_ping(): void
+    {
+        $this->postJson($this->webhookUrl(), [])->assertOk();
+
+        $order = $this->orderWithShipment('diproses_produksi', 'menunggu_pickup');
+
+        $this->postJson($this->webhookUrl(), ['order_id' => 'biteship-test-1'])->assertOk();
+        $this->assertSame('menunggu_pickup', $order->shipment()->first()->status);
+    }
+
     public function test_customer_can_confirm_received_while_menunggu_konfirmasi(): void
     {
         $order = $this->orderWithShipment('menunggu_konfirmasi', 'delivered');
