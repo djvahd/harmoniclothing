@@ -15,7 +15,7 @@
         "laravel/tinker": "^3.0",
         "league/flysystem-aws-s3-v3": "^3.35",
         "pusher/pusher-php-server": "^7.3",
-        "railsware/mailtrap-php": "^3.13"
+        "resend/resend-php": "^1.16"
     },
     "require-dev": {
         "laravel/pail": "^1.2.5",

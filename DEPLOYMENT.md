@@ -41,7 +41,7 @@ If the laptop sleeps, the tunnel drops; restart the three above. The hostname ne
 
 Backend env: start from `backend/.env.example`. Production-relevant keys: `FRONTEND_URL`,
 `SANCTUM_STATEFUL_DOMAINS`, `CORS_ALLOWED_ORIGINS` (all must include `harmoniclothing.com`),
-R2 (`FILESYSTEM_DISK_PUBLIC/PRIVATE=r2_*`, `AWS_*`), Midtrans, Biteship, Mailtrap.
+R2 (`FILESYSTEM_DISK_PUBLIC/PRIVATE=r2_*`, `AWS_*`), Midtrans, Biteship, Resend (`MAIL_MAILER=resend`, `RESEND_API_KEY`).
 
 ## Moving to real hosting (VPS)
 
