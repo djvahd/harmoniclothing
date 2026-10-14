@@ -447,7 +447,7 @@ Dokumen ini menentukan struktur folder repository sebagai acuan implementasi Bac
 ### 3. Directory Structure
 
 ```
-D:\Project\Harmoni Clothing/
+D:\Project\Harmoni-Clothing/
 ├── Required Document/       (dokumentasi Phase 1-11, sudah ada)
 ├── backend/                 (Laravel — lihat Bagian 4)
 ├── frontend/                (Next.js — lihat Bagian 5)
