@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /** 4.3_Table_Design.md — payments (transaksi Midtrans per order). */
 #[Fillable([
-    'order_id', 'midtrans_transaction_id', 'method', 'amount',
+    'order_id', 'midtrans_transaction_id', 'method', 'snap_redirect_url', 'amount',
     'status', 'paid_at', 'raw_response',
 ])]
 class Payment extends Model

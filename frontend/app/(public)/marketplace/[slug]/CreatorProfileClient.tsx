@@ -7,6 +7,8 @@ import useSWR from "swr";
 import { ExternalLink, LayoutGrid, PackageSearch, Star, UserRound } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import DesignCard, { DesignCardSkeleton } from "@/components/ui/DesignCard";
+import InlineError from "@/components/ui/InlineError";
+import { isNotFoundError } from "@/lib/api";
 import { getCreatorBySlug } from "@/services/marketplace";
 import { swrKeys } from "@/lib/swr-keys";
 import type { Design } from "@/types/product";
@@ -15,7 +17,7 @@ export default function ProfilPublikCreatorPage() {
   const t = useTranslations("public.creatorProfile");
   const locale = useLocale();
   const params = useParams<{ slug: string }>();
-  const { data, isLoading } = useSWR(swrKeys.creatorBySlug(params.slug), () =>
+  const { data, isLoading, error: loadError } = useSWR(swrKeys.creatorBySlug(params.slug), () =>
     getCreatorBySlug(params.slug),
   );
   const creator = data?.data;
@@ -37,6 +39,10 @@ export default function ProfilPublikCreatorPage() {
         </div>
       </div>
     );
+  }
+
+  if (loadError && !isNotFoundError(loadError)) {
+    return <InlineError />;
   }
 
   if (!creator) {

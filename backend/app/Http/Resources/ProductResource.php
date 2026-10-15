@@ -17,8 +17,9 @@ class ProductResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'name' => $this->{"name_{$lang}"},
-            'description' => $this->{"description_{$lang}"},
+            // An untranslated (blank) EN field falls back to Indonesian instead of rendering empty.
+            'name' => $this->{"name_{$lang}"} ?: $this->name_id,
+            'description' => $this->{"description_{$lang}"} ?: $this->description_id,
             'slug' => $this->slug,
             'base_price' => $this->base_price,
             'gender_segment' => $this->gender_segment,

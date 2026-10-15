@@ -118,6 +118,15 @@ class CreatorDesignService
     /** 5.3_API_Specification.md §8: precondition already checked by the caller. */
     public function submit(Design $design): Design
     {
+        // Only a draft or a rejected design can be (re)submitted; an active
+        // design must not be silently pulled back into the review queue, and
+        // a design already awaiting approval has nothing to resubmit.
+        if (! in_array($design->status, ['draft', 'ditolak'], true)) {
+            throw ValidationException::withMessages([
+                'status' => [__('messages.design.cannot_submit')],
+            ]);
+        }
+
         $design->update(['status' => 'menunggu_approval']);
 
         return $design;

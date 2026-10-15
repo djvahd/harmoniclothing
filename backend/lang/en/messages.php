@@ -9,6 +9,7 @@ return [
 
     'auth' => [
         'invalid_credentials' => 'The email or password is incorrect.',
+        'account_banned' => 'Your account has been banned. Please contact Harmoni Clothing support for more information.',
         'email_not_verified' => 'This account has not verified its email yet. Please check your email or resend the verification link.',
         'verification_link_expired' => 'The verification link is invalid or has expired.',
         'verification_link_invalid' => 'The verification link is invalid.',
@@ -35,7 +36,8 @@ return [
     ],
 
     'order' => [
-        'cancel_invalid_status' => 'This order can only be cancelled while its status is Awaiting Approval.',
+        'cancel_invalid_status' => 'This order can only be cancelled while its status is Unpaid or Awaiting Approval.',
+        'pay_invalid_status' => 'Payment can only be resumed for orders with Unpaid status.',
         'confirm_invalid_status' => 'This order can only be confirmed while its status is Awaiting Confirmation.',
         'production_invalid_status' => 'This order can only be moved to production while its status is Awaiting Approval.',
         'reject_invalid_status' => 'This order is no longer in the Awaiting Approval status.',
@@ -60,6 +62,7 @@ return [
         'revise_invalid_status' => 'A design can only be revised while its status is Rejected.',
         'not_pending_approval' => 'This design is not currently awaiting approval.',
         'unconfirmed_apparel' => 'There are still apparel types that have not been confirmed.',
+        'cannot_submit' => 'Only designs with Draft or Rejected status can be submitted for review.',
     ],
 
     'creator' => [

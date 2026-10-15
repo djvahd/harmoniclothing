@@ -59,9 +59,12 @@ export default function KelolaDesainPage() {
                     <Image src={thumbnail} alt={design.title} fill className="object-cover" />
                   )}
                 </div>
-                <p className="flex-1 font-body text-sm font-semibold text-text-primary">
-                  {design.title}
-                </p>
+                <div className="flex flex-1 flex-col gap-0.5">
+                  <p className="font-body text-sm font-semibold text-text-primary">{design.title}</p>
+                  {design.status === "ditolak" && design.rejection_reason && (
+                    <p className="font-body text-xs text-danger">{design.rejection_reason}</p>
+                  )}
+                </div>
                 <Badge variant={STATUS_VARIANT[design.status]}>
                   {tCommon(`designStatus.${design.status}`)}
                 </Badge>

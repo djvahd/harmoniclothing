@@ -43,7 +43,7 @@ Route::prefix('auth')->middleware('throttle:auth')->group(function () {
     Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 });
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'user.active'])->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
 
     // 5.2_API_List.md §2 — /account/* (User Management: profile & address book)
@@ -80,6 +80,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders', [OrderController::class, 'index']);
     Route::get('/orders/{order}', [OrderController::class, 'show']);
     Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel']);
+    Route::post('/orders/{order}/pay', [OrderController::class, 'pay']);
     Route::post('/orders/{order}/reorder', [OrderController::class, 'reorder']);
     Route::get('/orders/{order}/invoice', [OrderController::class, 'invoice']); // FR-018
     Route::post('/orders/{order}/confirm-received', [OrderController::class, 'confirmReceived']); // FR-042

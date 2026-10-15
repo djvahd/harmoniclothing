@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UserStatus;
 use Database\Factories\CartItemFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -41,6 +42,27 @@ class CartItem extends Model
     public function design(): BelongsTo
     {
         return $this->belongsTo(Design::class);
+    }
+
+    /**
+     * BR-024: an item can be bought only while its product is active and, for a
+     * marketplace design, while that design is live and its creator not banned.
+     */
+    public function isAvailable(): bool
+    {
+        if (! $this->productVariant->product->is_active) {
+            return false;
+        }
+
+        if ($this->design_id === null) {
+            return true;
+        }
+
+        $design = $this->design;
+
+        return $design !== null
+            && $design->status === 'aktif'
+            && $design->creator?->status !== UserStatus::Banned;
     }
 
     public function subtotal(): string

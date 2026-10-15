@@ -19,7 +19,7 @@ class CartItemResource extends JsonResource
             'subtotal' => $this->subtotal(),
             'design_position' => $this->design_position,
             'custom_design_file_path' => $this->custom_design_file_path,
-            'is_available' => $this->productVariant->product->is_active, // BR-024
+            'is_available' => $this->isAvailable(), // BR-024
             'product_variant' => new ProductVariantResource($this->whenLoaded('productVariant')),
             'design' => $this->design ? new DesignResource($this->design) : null,
         ];

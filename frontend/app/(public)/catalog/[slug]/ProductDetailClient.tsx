@@ -25,7 +25,8 @@ import { invalidateCart } from "@/hooks/useCart";
 import { useProduct, useProductReviews, useProducts } from "@/hooks/useProducts";
 import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
-import { getErrorMessage } from "@/lib/api";
+import InlineError from "@/components/ui/InlineError";
+import { getErrorMessage, isNotFoundError } from "@/lib/api";
 import { toast } from "@/store/toast-store";
 import { useAuthStore } from "@/store/auth-store";
 import { useAuthModalStore } from "@/store/auth-modal-store";
@@ -48,7 +49,7 @@ export default function DetailProdukPage() {
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const openAuthModal = useAuthModalStore((state) => state.open);
-  const { product, isLoading } = useProduct(params.slug);
+  const { product, isLoading, error: loadError } = useProduct(params.slug);
   const [reviewPage, setReviewPage] = useState(1);
   const { reviews, meta: reviewsMeta, isLoading: reviewsLoading } = useProductReviews(params.slug, reviewPage);
 
@@ -146,6 +147,10 @@ export default function DetailProdukPage() {
     return <DetailPageSkeleton />;
   }
 
+  if (loadError && !isNotFoundError(loadError)) {
+    return <InlineError />;
+  }
+
   if (!product) {
     return (
       <DetailNotFound
@@ -181,7 +186,7 @@ export default function DetailProdukPage() {
         <span className="line-clamp-1 text-text-primary">{product.name}</span>
       </nav>
 
-      <div className="flex flex-col gap-8 md:flex-row">
+      <div className="flex flex-col gap-8 lg:flex-row">
         <ProductGallery
           previewImage={previewImage}
           alt={product.name}

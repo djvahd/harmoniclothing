@@ -40,7 +40,7 @@ export default function HeaderNav({
   return (
     <nav
       className={clsx(
-        "hidden items-center gap-6 font-body text-sm md:flex md:justify-self-center",
+        "hidden items-center gap-6 font-body text-sm lg:flex lg:justify-self-center",
         className,
       )}
     >

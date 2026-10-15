@@ -50,7 +50,11 @@ class OrderService
         return DB::transaction(function () use ($order) {
             $order = $this->lockOrder($order);
 
-            if ($order->status !== 'menunggu_approval') {
+            // An unpaid order can also be dropped by the customer instead of
+            // waiting for the 24h auto-cancel (BR-017); nothing was paid yet.
+            $from = $order->status;
+
+            if (! in_array($from, ['menunggu_approval', 'belum_dibayar'], true)) {
                 throw ValidationException::withMessages([
                     'status' => [__('messages.order.cancel_invalid_status')],
                 ]);
@@ -62,7 +66,11 @@ class OrderService
                 'cancelled_by' => 'customer',
             ]);
 
-            $this->orders->recordStatusHistory($order, 'menunggu_approval', 'dibatalkan', 'customer', $order->user_id);
+            if ($from === 'belum_dibayar') {
+                $order->payment?->update(['status' => 'gagal']);
+            }
+
+            $this->orders->recordStatusHistory($order, $from, 'dibatalkan', 'customer', $order->user_id);
 
             return $order;
         });

@@ -2,13 +2,14 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import ProductCard, { ProductCardSkeleton } from "@/components/ui/ProductCard";
+import InlineError from "@/components/ui/InlineError";
 import Reveal from "@/components/ui/Reveal";
 import { useProducts } from "@/hooks/useProducts";
 
 /** The horizontally-scrolling "Produk Populer" teaser row, linking out to the full catalog. */
 export default function PopularProductsSection() {
   const t = useTranslations("home.popularProducts");
-  const { data, isLoading } = useProducts("home", { per_page: 8 });
+  const { data, isLoading, error } = useProducts("home", { per_page: 8 });
   const products = data?.data ?? [];
 
   return (
@@ -27,7 +28,8 @@ export default function PopularProductsSection() {
             {t("viewAll")}
           </Link>
         </div>
-        {(isLoading || products.length === 0) && (
+        {!isLoading && error && <InlineError />}
+        {(isLoading || (!error && products.length === 0)) && (
           <div className="relative overflow-hidden">
             <div className="flex items-center gap-6 overflow-x-hidden pb-2">
               {Array.from({ length: 8 }).map((_, i) => (

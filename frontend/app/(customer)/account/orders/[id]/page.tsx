@@ -11,7 +11,7 @@ import PriceSummaryRow from "@/components/ui/PriceSummaryRow";
 import Button from "@/components/ui/Button";
 import LoadingState from "@/components/ui/LoadingState";
 import OrderItemReview from "@/components/order/OrderItemReview";
-import { cancelOrder, confirmReceived, reorder } from "@/services/orders";
+import { cancelOrder, confirmReceived, payOrder, reorder } from "@/services/orders";
 import { useOrder, invalidateOrder } from "@/hooks/useOrders";
 import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
@@ -33,6 +33,7 @@ export default function DetailPesananPage() {
   const orderId = Number(params.id);
   const { order, isLoading } = useOrder(orderId);
   const [loading, setLoading] = useState(false);
+  const [payError, setPayError] = useState<string | null>(null);
 
   const currentStepIndex = order
     ? TIMELINE_STEPS.findIndex((s) => s.status === order.status)
@@ -43,6 +44,24 @@ export default function DetailPesananPage() {
     try {
       await cancelOrder(orderId);
       invalidateOrder(orderId);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handlePay() {
+    setLoading(true);
+    setPayError(null);
+    try {
+      const res = await payOrder(orderId);
+      const url = res.data.midtrans_redirect_url;
+      if (url) {
+        window.location.href = url;
+        return;
+      }
+      setPayError(t("payUnavailable"));
+    } catch {
+      setPayError(t("payFailed"));
     } finally {
       setLoading(false);
     }
@@ -151,7 +170,19 @@ export default function DetailPesananPage() {
         )}
 
         <div className="flex flex-col gap-2 pt-2">
-          {order.status === "menunggu_approval" && (
+          {order.status === "belum_dibayar" && (
+            <>
+              <Button loading={loading} onClick={handlePay}>
+                {t("payNow")}
+              </Button>
+              {payError && (
+                <p role="alert" className="font-body text-xs text-danger">
+                  {payError}
+                </p>
+              )}
+            </>
+          )}
+          {(order.status === "menunggu_approval" || order.status === "belum_dibayar") && (
             <Button variant="danger" loading={loading} onClick={handleCancel}>
               {t("cancelOrder")}
             </Button>
@@ -166,11 +197,14 @@ export default function DetailPesananPage() {
               {t("reorder")}
             </Button>
           )}
-          <Link href={`/account/orders/${order.id}/invoice`}>
-            <Button variant="secondary" fullWidth>
-              {t("viewInvoice")}
-            </Button>
-          </Link>
+          {/* An invoice exists only once payment succeeded (FR-018). */}
+          {order.status !== "belum_dibayar" && (
+            <Link href={`/account/orders/${order.id}/invoice`}>
+              <Button variant="secondary" fullWidth>
+                {t("viewInvoice")}
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
     </div>

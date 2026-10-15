@@ -2,13 +2,14 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import DesignCard, { DesignCardSkeleton } from "@/components/ui/DesignCard";
+import InlineError from "@/components/ui/InlineError";
 import Reveal from "@/components/ui/Reveal";
 import { useDesigns } from "@/hooks/useDesigns";
 
 /** The horizontally-scrolling "Desain Populer" teaser row, linking out to the full marketplace. */
 export default function PopularDesignsSection() {
   const t = useTranslations("home.popularDesigns");
-  const { data, isLoading } = useDesigns("home", { per_page: 8 });
+  const { data, isLoading, error } = useDesigns("home", { per_page: 8 });
   const designs = data?.data ?? [];
 
   return (
@@ -27,7 +28,8 @@ export default function PopularDesignsSection() {
             {t("viewAll")}
           </Link>
         </div>
-        {(isLoading || designs.length === 0) && (
+        {!isLoading && error && <InlineError />}
+        {(isLoading || (!error && designs.length === 0)) && (
           <div className="relative overflow-hidden">
             <div className="flex items-center gap-6 overflow-x-hidden pb-2">
               {Array.from({ length: 8 }).map((_, i) => (

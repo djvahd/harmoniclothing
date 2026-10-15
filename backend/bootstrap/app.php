@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnsureCreatorIsActive;
+use App\Http\Middleware\EnsureUserIsActive;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Middleware\SetLocaleFromRequest;
 use Illuminate\Foundation\Application;
@@ -21,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->api(prepend: [SetLocaleFromRequest::class]);
         $middleware->alias([
             'creator.active' => EnsureCreatorIsActive::class,
+            'user.active' => EnsureUserIsActive::class,
             // Not parameterized like throttle:60,1 — this only ever checks
             // for Admin, so the alias is a plain name, not "role:admin".
             'admin' => EnsureUserIsAdmin::class,

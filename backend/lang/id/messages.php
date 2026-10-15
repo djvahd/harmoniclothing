@@ -9,6 +9,7 @@ return [
 
     'auth' => [
         'invalid_credentials' => 'Email atau password salah.',
+        'account_banned' => 'Akun Anda telah diblokir. Hubungi admin Harmoni Clothing untuk informasi lebih lanjut.',
         'email_not_verified' => 'Akun belum verifikasi email. Silakan cek email Anda atau kirim ulang tautan verifikasi.',
         'verification_link_expired' => 'Tautan verifikasi tidak valid atau sudah kedaluwarsa.',
         'verification_link_invalid' => 'Tautan verifikasi tidak valid.',
@@ -35,7 +36,8 @@ return [
     ],
 
     'order' => [
-        'cancel_invalid_status' => 'Pesanan hanya dapat dibatalkan selama status Menunggu Approval.',
+        'cancel_invalid_status' => 'Pesanan hanya dapat dibatalkan selama status Belum Dibayar atau Menunggu Approval.',
+        'pay_invalid_status' => 'Pembayaran hanya dapat dilanjutkan untuk pesanan berstatus Belum Dibayar.',
         'confirm_invalid_status' => 'Pesanan hanya dapat dikonfirmasi selama status Menunggu Konfirmasi.',
         'production_invalid_status' => 'Pesanan hanya dapat dimasukkan ke produksi selama status Menunggu Approval.',
         'reject_invalid_status' => 'Pesanan sudah tidak dalam status Menunggu Approval.',
@@ -60,6 +62,7 @@ return [
         'revise_invalid_status' => 'Desain hanya dapat direvisi selama status Ditolak.',
         'not_pending_approval' => 'Desain ini tidak sedang menunggu approval.',
         'unconfirmed_apparel' => 'Masih ada jenis apparel yang belum dikonfirmasi.',
+        'cannot_submit' => 'Hanya desain berstatus Draft atau Ditolak yang dapat diajukan untuk review.',
     ],
 
     'creator' => [

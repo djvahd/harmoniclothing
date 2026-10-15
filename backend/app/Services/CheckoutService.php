@@ -197,11 +197,11 @@ class CheckoutService
     private function fetchAndValidateCartItems(User $user, array $cartItemIds)
     {
         $items = $user->cartItems()
-            ->with('productVariant.product')
+            ->with(['productVariant.product', 'design.creator'])
             ->whereIn('id', $cartItemIds)
             ->get();
 
-        $unavailable = $items->first(fn (CartItem $item) => ! $item->productVariant->product->is_active);
+        $unavailable = $items->first(fn (CartItem $item) => ! $item->isAvailable());
 
         if ($unavailable) {
             throw ValidationException::withMessages([

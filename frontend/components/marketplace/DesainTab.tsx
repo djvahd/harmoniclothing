@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import DesignCard, { DesignCardSkeleton } from "@/components/ui/DesignCard";
 import Button from "@/components/ui/Button";
 import FilterSidebar, { EMPTY_FILTER_VALUE, type FilterSidebarValue } from "@/components/ui/FilterSidebar";
+import InlineError from "@/components/ui/InlineError";
 import { type DesignSort } from "@/services/marketplace";
 import { useDesigns, useDesignFilters } from "@/hooks/useDesigns";
 import type { Design } from "@/types/product";
@@ -121,7 +122,7 @@ export default function DesainTab({
       />
 
       <div className="flex flex-1 flex-col gap-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex w-full max-w-[420px] shrink-0 items-center gap-2 rounded-sm border border-border bg-surface px-3 py-2.5 transition-colors hover:border-primary hover:bg-border/40 focus-within:border-primary focus-within:bg-surface">
             <Search className="size-4 shrink-0 text-text-secondary" />
             <input
@@ -180,7 +181,8 @@ export default function DesainTab({
         )}
 
         <div className="flex flex-wrap gap-6">
-          {(isLoadingInitial || error || (!hasActiveQuery && filtered.length === 0)) &&
+          {!isLoadingInitial && error && <InlineError />}
+          {(isLoadingInitial || (!error && !hasActiveQuery && filtered.length === 0)) &&
             Array.from({ length: 8 }).map((_, i) => <DesignCardSkeleton key={i} />)}
           {!isLoadingInitial && !error && hasActiveQuery && filtered.length === 0 && (
             <div className="flex w-full flex-col items-center gap-3 py-16 text-center">

@@ -39,7 +39,8 @@ class ProductVariantResource extends JsonResource
                 ? app(FileUploadService::class)->url($this->mockup_asset_path)
                 : null,
             'product' => $this->whenLoaded('product', fn () => [
-                'name' => $this->product->{'name_'.$this->locale($request)},
+                'id' => $this->product->id,
+                'name' => $this->product->{'name_'.$this->locale($request)} ?: $this->product->name_id,
                 'slug' => $this->product->slug,
             ]),
         ];

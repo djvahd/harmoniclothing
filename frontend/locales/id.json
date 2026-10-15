@@ -724,6 +724,9 @@
       "total": "Total",
       "trackingNumber": "Resi",
       "cancelOrder": "Batalkan Pesanan",
+      "payNow": "Bayar Sekarang",
+      "payUnavailable": "Tautan pembayaran belum tersedia. Silakan coba lagi nanti atau hubungi kami.",
+      "payFailed": "Gagal membuka pembayaran. Silakan coba lagi.",
       "confirmReceived": "Konfirmasi Diterima",
       "reorder": "Pesan Lagi",
       "viewInvoice": "Lihat Invoice",
@@ -1295,6 +1298,7 @@
     },
     "designPreview": {
       "notFound": "Desain tidak ditemukan.",
+      "rejectedTitle": "Alasan penolakan dari admin",
       "productLabel": "Produk ",
       "confirmed": "Terkonfirmasi",
       "confirmPreview": "Konfirmasi Preview",

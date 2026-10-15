@@ -724,6 +724,9 @@
       "total": "Total",
       "trackingNumber": "Tracking No.",
       "cancelOrder": "Cancel Order",
+      "payNow": "Pay Now",
+      "payUnavailable": "The payment link is not available yet. Please try again later or contact us.",
+      "payFailed": "Could not open the payment page. Please try again.",
       "confirmReceived": "Confirm Received",
       "reorder": "Reorder",
       "viewInvoice": "View Invoice",
@@ -1295,6 +1298,7 @@
     },
     "designPreview": {
       "notFound": "Design not found.",
+      "rejectedTitle": "Rejection reason from admin",
       "productLabel": "Product ",
       "confirmed": "Confirmed",
       "confirmPreview": "Confirm Preview",

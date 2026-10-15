@@ -7,6 +7,7 @@ import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import CreatorCard, { CreatorCardSkeleton } from "@/components/ui/CreatorCard";
 import Button from "@/components/ui/Button";
+import InlineError from "@/components/ui/InlineError";
 import { CategoryList, Section } from "@/components/ui/FilterSidebar";
 import { getCreators, type CreatorSort, type CreatorSummary } from "@/services/marketplace";
 import { useDesignFilters } from "@/hooks/useDesigns";
@@ -166,7 +167,7 @@ export default function CreatorTab() {
       )}
 
       <div className="flex flex-1 flex-col gap-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex w-full max-w-[420px] shrink-0 items-center gap-2 rounded-sm border border-border bg-surface px-3 py-2.5 transition-colors hover:border-primary hover:bg-border/40 focus-within:border-primary focus-within:bg-surface">
             <Search className="size-4 shrink-0 text-text-secondary" />
             <input
@@ -225,22 +226,25 @@ export default function CreatorTab() {
         )}
 
         <div className="flex flex-wrap gap-6">
-          {(isLoadingInitial || error || (!hasActiveQuery && accumulated.length === 0)) &&
+          {!isLoadingInitial && error && <InlineError />}
+          {(isLoadingInitial || (!error && !data)) &&
             Array.from({ length: 8 }).map((_, i) => <CreatorCardSkeleton key={i} />)}
-          {!isLoadingInitial && !error && hasActiveQuery && accumulated.length === 0 && (
+          {!isLoadingInitial && !error && !!data && data.data.length === 0 && accumulated.length === 0 && (
             <div className="flex w-full flex-col items-center gap-3 py-16 text-center">
               <UserSearch className="size-10 text-text-secondary" />
               <p className="font-body text-sm text-text-secondary">{t("noResults")}</p>
-              <button
-                onClick={() => {
-                  setSearch("");
-                  setCategory(null);
-                  setTags([]);
-                }}
-                className="font-body text-sm font-medium text-primary underline"
-              >
-                {t("resetFilters")}
-              </button>
+              {hasActiveQuery && (
+                <button
+                  onClick={() => {
+                    setSearch("");
+                    setCategory(null);
+                    setTags([]);
+                  }}
+                  className="font-body text-sm font-medium text-primary underline"
+                >
+                  {t("resetFilters")}
+                </button>
+              )}
             </div>
           )}
           {accumulated.map((creator) => (

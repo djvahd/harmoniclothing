@@ -62,6 +62,13 @@ export default function EditorPreviewMultiApparelPage() {
         <Badge variant="neutral">{tCommon(`designStatus.${design.status}`)}</Badge>
       </div>
 
+      {design.status === "ditolak" && design.rejection_reason && (
+        <div className="rounded-md border border-danger/20 bg-danger/5 p-4">
+          <p className="font-body text-sm font-semibold text-danger">{t("rejectedTitle")}</p>
+          <p className="font-body text-sm text-danger">{design.rejection_reason}</p>
+        </div>
+      )}
+
       <div className="flex flex-wrap justify-center gap-6">
         {(design.apparel ?? []).map((apparel) => (
           <div

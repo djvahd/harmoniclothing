@@ -30,7 +30,8 @@ import { useDesign, useDesignReviews, useDesigns } from "@/hooks/useDesigns";
 import { swrKeys } from "@/lib/swr-keys";
 import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
-import { getErrorMessage } from "@/lib/api";
+import InlineError from "@/components/ui/InlineError";
+import { getErrorMessage, isNotFoundError } from "@/lib/api";
 import { toast } from "@/store/toast-store";
 import { useAuthStore } from "@/store/auth-store";
 import { useAuthModalStore } from "@/store/auth-modal-store";
@@ -53,7 +54,7 @@ export default function DetailDesainPage() {
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const openAuthModal = useAuthModalStore((state) => state.open);
-  const { design, isLoading } = useDesign(params.slug);
+  const { design, isLoading, error: loadError } = useDesign(params.slug);
   const [reviewPage, setReviewPage] = useState(1);
   const { reviews, meta: reviewsMeta, isLoading: reviewsLoading } = useDesignReviews(params.slug, reviewPage);
   const products = useMemo(() => design?.products ?? [], [design]);
@@ -147,6 +148,10 @@ export default function DetailDesainPage() {
     return <DetailPageSkeleton />;
   }
 
+  if (loadError && !isNotFoundError(loadError)) {
+    return <InlineError />;
+  }
+
   if (!design) {
     return (
       <DetailNotFound
@@ -182,7 +187,7 @@ export default function DetailDesainPage() {
         <span className="line-clamp-1 text-text-primary">{design.title}</span>
       </nav>
 
-      <div className="flex flex-col gap-8 md:flex-row">
+      <div className="flex flex-col gap-8 lg:flex-row">
         <ProductGallery
           previewImage={previewImage}
           alt={design.title}

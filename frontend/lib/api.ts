@@ -90,6 +90,11 @@ export async function apiFetch<T>(
   return data as T;
 }
 
+/** True only for a definitive 404; network failures and 5xx are load errors, not "not found". */
+export function isNotFoundError(err: unknown): boolean {
+  return err instanceof ApiError && err.status === 404;
+}
+
 export function getErrorMessage(err: unknown, fallback: string): string {
   return err instanceof ApiError ? err.message : fallback;
 }

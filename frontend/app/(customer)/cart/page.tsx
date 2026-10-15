@@ -14,11 +14,13 @@ import { addToWishlist } from "@/services/wishlist";
 import { useCart, invalidateCart } from "@/hooks/useCart";
 import { invalidateWishlist } from "@/hooks/useWishlist";
 import { formatCurrency } from "@/lib/format";
+import { getErrorMessage } from "@/lib/api";
 import { toast } from "@/store/toast-store";
 import type { CartItem } from "@/types/product";
 
 export default function KeranjangPage() {
   const t = useTranslations("customer.cart");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const { items, isLoading } = useCart();
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
@@ -96,13 +98,17 @@ export default function KeranjangPage() {
   async function handleMoveToWishlist(id: number) {
     const item = items.find((i) => i.id === id);
     if (!item) return;
-    await addToWishlist({
-      product_id: item.design ? undefined : item.product_variant.product?.id,
-      design_id: item.design?.id,
-    });
-    await removeCartItem(id);
-    await Promise.all([invalidateCart(), invalidateWishlist()]);
-    toast(t("movedToWishlist"), "success");
+    try {
+      await addToWishlist({
+        product_id: item.design ? undefined : item.product_variant.product?.id,
+        design_id: item.design?.id,
+      });
+      await removeCartItem(id);
+      await Promise.all([invalidateCart(), invalidateWishlist()]);
+      toast(t("movedToWishlist"), "success");
+    } catch (err) {
+      toast(getErrorMessage(err, tCommon("errorGeneric")), "danger");
+    }
   }
 
   function handleBuy() {

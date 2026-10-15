@@ -308,6 +308,8 @@ export default function FilterSidebar({
                   <button
                     key={c}
                     title={c}
+                    aria-label={c}
+                    aria-pressed={value.colors.includes(c)}
                     onClick={() => onChange({ ...value, colors: toggle(value.colors, c) })}
                     className={clsx(
                       "size-7 shrink-0 rounded-full border-2 transition-all hover:scale-110 active:scale-[0.9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2",

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\UserStatus;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Illuminate\Auth\Events\Registered;
@@ -51,6 +52,14 @@ class AuthService
 
         /** @var User $user */
         $user = Auth::user();
+
+        if ($user->status === UserStatus::Banned) {
+            Auth::guard('web')->logout();
+
+            throw ValidationException::withMessages([
+                'email' => [__('messages.auth.account_banned')],
+            ]);
+        }
 
         if (! $user->hasVerifiedEmail()) {
             Auth::guard('web')->logout();

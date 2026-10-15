@@ -54,8 +54,8 @@ export default function SiteHeader() {
 
   return (
     <>
-    <header className="flex w-full items-center justify-between border-b border-border bg-surface px-4 py-4 md:grid md:h-[76px] md:grid-cols-[1fr_auto_1fr] md:gap-x-8 md:px-20 md:py-0">
-      <div className="md:justify-self-start">
+    <header className="flex w-full items-center justify-between border-b border-border bg-surface px-4 py-4 lg:grid lg:h-[76px] lg:grid-cols-[1fr_auto_1fr] lg:gap-x-8 lg:px-20 lg:py-0">
+      <div className="lg:justify-self-start">
         <Logo />
       </div>
 
@@ -63,7 +63,7 @@ export default function SiteHeader() {
         <>
       <HeaderNav variant="desktop" pathname={pathname} className="animate-fade-slide-in" />
 
-      <div className="hidden animate-fade-slide-in items-center gap-4 md:flex md:justify-self-end">
+      <div className="hidden animate-fade-slide-in items-center gap-4 lg:flex lg:justify-self-end">
         <LanguageSwitcher />
         {user ? (
           <>
@@ -122,7 +122,7 @@ export default function SiteHeader() {
       <button
         type="button"
         aria-label={t("openMenu")}
-        className="animate-fade-slide-in text-text-primary md:hidden"
+        className="animate-fade-slide-in text-text-primary lg:hidden"
         onClick={() => setDrawerOpen(true)}
       >
         <Menu className="size-6" />

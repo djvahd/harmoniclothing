@@ -9,6 +9,7 @@ use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\ReviewResource;
 use App\Services\OrderService;
+use App\Services\PaymentService;
 use App\Services\ReviewService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,6 +19,7 @@ class OrderController extends Controller
 {
     public function __construct(
         private readonly OrderService $orders,
+        private readonly PaymentService $payments,
         private readonly ReviewService $reviews,
     ) {}
 
@@ -53,6 +55,17 @@ class OrderController extends Controller
         return response()->json(['data' => new OrderResource($order)]);
     }
 
+    /**
+     * POST /orders/{order}/pay — resume paying an unpaid order. Returns the
+     * Snap URL saved at checkout (null while Midtrans credentials are unset).
+     */
+    public function pay(Request $request, int $order): JsonResponse
+    {
+        $order = $request->user()->orders()->with('payment')->findOrFail($order);
+
+        return response()->json(['data' => ['midtrans_redirect_url' => $this->payments->resume($order)]]);
+    }
+
     /** POST /orders/{order}/reorder — FR-019. */
     public function reorder(Request $request, int $order): JsonResponse
     {
@@ -66,7 +79,10 @@ class OrderController extends Controller
     public function invoice(Request $request, int $order): JsonResponse
     {
         $order = $request->user()->orders()->findOrFail($order);
-        $invoice = $order->invoice()->with('order')->firstOrFail();
+        // The invoice page lists the order lines, so items (and their product
+        // names) must be loaded; the bare 'order' relation left `items` out and
+        // crashed the page on order.items.map.
+        $invoice = $order->invoice()->with('order.items.productVariant.product')->firstOrFail();
 
         return response()->json(['data' => new InvoiceResource($invoice)]);
     }

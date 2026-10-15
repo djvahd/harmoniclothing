@@ -15,6 +15,11 @@ export function cancelOrder(id: number) {
   return apiFetch<{ data: Order }>(`/orders/${id}/cancel`, { method: "POST" });
 }
 
+/** Resume paying an unpaid order; returns the Snap URL saved at checkout (null until Midtrans is configured). */
+export function payOrder(id: number) {
+  return apiFetch<{ data: { midtrans_redirect_url: string | null } }>(`/orders/${id}/pay`, { method: "POST" });
+}
+
 export function reorder(id: number) {
   return apiFetch<{ data: null }>(`/orders/${id}/reorder`, { method: "POST" });
 }

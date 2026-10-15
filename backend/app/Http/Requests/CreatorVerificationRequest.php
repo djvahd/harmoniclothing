@@ -20,7 +20,13 @@ class CreatorVerificationRequest extends FormRequest
 
     public function rules(): array
     {
-        $isMinor = $this->filled('birth_date') && Carbon::parse($this->input('birth_date'))->age < 18;
+        // An unparseable birth_date must reach the 'date' rule below (422),
+        // not blow up here with an InvalidFormatException (HTTP 500).
+        try {
+            $isMinor = $this->filled('birth_date') && Carbon::parse($this->input('birth_date'))->age < 18;
+        } catch (\Throwable) {
+            $isMinor = false;
+        }
 
         $rules = [
             'kyc_full_name' => ['required', 'string', 'max:150'],
