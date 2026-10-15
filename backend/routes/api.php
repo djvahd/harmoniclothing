@@ -43,7 +43,7 @@ Route::prefix('auth')->middleware('throttle:auth')->group(function () {
     Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 });
 
-Route::middleware(['auth:sanctum', 'user.active'])->group(function () {
+Route::middleware(['auth:sanctum', 'auth.session', 'user.active'])->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
 
     // 5.2_API_List.md §2 — /account/* (User Management: profile & address book)
@@ -135,7 +135,7 @@ Route::get('/marketplace/creators/{slug}', [MarketplaceController::class, 'showC
 Route::get('/bulk-pricing-tiers', [BulkPricingController::class, 'index']);
 
 // 5.2_API_List.md §6 — Admin APIs, requires role:admin (scope all)
-Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth:sanctum', 'auth.session', 'user.active', 'admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index']); // FE-042
     Route::get('/users', [AdminUserController::class, 'index']); // FR-030
 

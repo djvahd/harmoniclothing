@@ -149,7 +149,7 @@ export default function CreatorTab() {
                         className={clsx(
                           "flex items-center gap-1 rounded-full border px-3 py-1.5 text-center font-body text-sm transition-colors active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
                           tags.includes(t.slug)
-                            ? "border-accent bg-accent text-text-on-accent"
+                            ? "border-accent bg-accent text-text-primary"
                             : "border-border text-text-secondary hover:border-primary hover:bg-border/40 hover:text-text-primary",
                         )}
                       >
@@ -207,7 +207,7 @@ export default function CreatorTab() {
                     className={clsx(
                       "block w-full rounded-sm px-3 py-2 text-left font-body text-sm transition-colors",
                       sort === opt.value
-                        ? "bg-accent text-text-on-accent"
+                        ? "bg-accent text-text-primary"
                         : "text-text-secondary hover:bg-border/50",
                     )}
                   >

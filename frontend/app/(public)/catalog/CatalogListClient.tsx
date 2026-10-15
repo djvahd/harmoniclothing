@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ArrowUpDown, PackageSearch, Search, X } from "lucide-react";
 import clsx from "clsx";
@@ -128,12 +127,8 @@ function KatalogPageContent() {
           </h1>
           <p className="font-body text-sm text-text-secondary md:text-base">{t("subtitle")}</p>
           <div className="flex gap-3">
-            <a href="#catalog-body">
-              <Button variant="primary">{t("ctaCustomDesign")}</Button>
-            </a>
-            <Link href="/marketplace">
-              <Button variant="secondary">{t("ctaViewDesigns")}</Button>
-            </Link>
+            <Button href="#catalog-body" variant="primary">{t("ctaCustomDesign")}</Button>
+            <Button href="/marketplace" variant="secondary">{t("ctaViewDesigns")}</Button>
           </div>
         </div>
       </section>
@@ -185,7 +180,7 @@ function KatalogPageContent() {
                       className={clsx(
                         "block w-full rounded-sm px-3 py-2 text-left font-body text-sm transition-colors",
                         sort === opt.value
-                          ? "bg-accent text-text-on-accent"
+                          ? "bg-accent text-text-primary"
                           : "text-text-secondary hover:bg-border/50",
                       )}
                     >

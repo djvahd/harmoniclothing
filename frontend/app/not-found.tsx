@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Home, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import SiteHeader from "@/components/layout/SiteHeader";
@@ -33,18 +32,14 @@ export default function NotFound() {
                 {t("description")}
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
-                <Link href="/">
-                  <Button variant="primary" className="gap-2">
+                <Button href="/" variant="primary" className="gap-2">
                     <Home className="size-4" />
                     {t("backHome")}
                   </Button>
-                </Link>
-                <Link href="/catalog">
-                  <Button variant="secondary" className="gap-2">
+                <Button href="/catalog" variant="secondary" className="gap-2">
                     <Search className="size-4" />
                     {t("viewCatalog")}
                   </Button>
-                </Link>
               </div>
             </div>
             <div className="relative hidden h-[260px] w-[300px] shrink-0 lg:block">

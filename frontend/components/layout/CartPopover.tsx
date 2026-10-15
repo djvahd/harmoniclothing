@@ -116,9 +116,9 @@ export default function CartPopover({
                     {formatCurrency(subtotal)}
                   </p>
                 </div>
-                <Link href="/checkout" onClick={onNavigate}>
-                  <Button fullWidth>{t("checkout")}</Button>
-                </Link>
+                <Button href="/checkout" onClick={onNavigate} fullWidth>
+                  {t("checkout")}
+                </Button>
               </div>
             </>
           )}

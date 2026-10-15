@@ -117,7 +117,7 @@ export function CategoryList({
           className={clsx(
             "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-left font-body text-sm transition-all duration-150 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
             selected.length === 0
-              ? "bg-accent text-text-on-accent"
+              ? "bg-accent text-text-primary"
               : "text-text-secondary hover:translate-x-0.5 hover:bg-border/50 hover:text-text-primary",
           )}
         >
@@ -132,7 +132,7 @@ export function CategoryList({
             className={clsx(
               "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-left font-body text-sm transition-all duration-150 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
               selected.includes(c.slug)
-                ? "bg-accent text-text-on-accent"
+                ? "bg-accent text-text-primary"
                 : "text-text-secondary hover:translate-x-0.5 hover:bg-border/50 hover:text-text-primary",
             )}
           >
@@ -290,7 +290,7 @@ export default function FilterSidebar({
                     className={clsx(
                       "rounded-sm border px-3 py-1.5 text-center font-body text-sm transition-colors active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
                       value.genders.includes(g)
-                        ? "border-accent bg-accent text-text-on-accent"
+                        ? "border-accent bg-accent text-text-primary"
                         : "border-border text-text-secondary hover:border-primary hover:bg-border/40 hover:text-text-primary",
                     )}
                   >
@@ -334,7 +334,7 @@ export default function FilterSidebar({
                     className={clsx(
                       "min-w-[40px] rounded-sm border px-2.5 py-1.5 text-center font-body text-sm transition-colors active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
                       value.sizes.includes(s)
-                        ? "border-accent bg-accent text-text-on-accent"
+                        ? "border-accent bg-accent text-text-primary"
                         : "border-border text-text-secondary hover:border-primary hover:bg-border/40 hover:text-text-primary",
                     )}
                   >
@@ -355,7 +355,7 @@ export default function FilterSidebar({
                     className={clsx(
                       "rounded-sm border px-3 py-1.5 text-center font-body text-sm transition-colors active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
                       value.materials.includes(m)
-                        ? "border-accent bg-accent text-text-on-accent"
+                        ? "border-accent bg-accent text-text-primary"
                         : "border-border text-text-secondary hover:border-primary hover:bg-border/40 hover:text-text-primary",
                     )}
                   >
@@ -376,7 +376,7 @@ export default function FilterSidebar({
                     className={clsx(
                       "flex items-center gap-1 rounded-full border px-3 py-1.5 text-center font-body text-sm transition-colors active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50",
                       value.tags.includes(t.slug)
-                        ? "border-accent bg-accent text-text-on-accent"
+                        ? "border-accent bg-accent text-text-primary"
                         : "border-border text-text-secondary hover:border-primary hover:bg-border/40 hover:text-text-primary",
                     )}
                   >

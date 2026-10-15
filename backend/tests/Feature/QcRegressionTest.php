@@ -3,11 +3,14 @@
 namespace Tests\Feature;
 
 use App\Enums\UserStatus;
+use App\Http\Middleware\EnsureSessionIsCurrent;
+use Illuminate\Http\Request;
 use App\Models\Address;
 use App\Models\CartItem;
 use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\OrderStatusHistory;
 use App\Models\Payment;
 use App\Models\CreatorProfile;
 use App\Models\Design;
@@ -113,6 +116,38 @@ class QcRegressionTest extends TestCase
         $this->actingAs($user)->getJson("/api/orders/{$order->id}/invoice")
             ->assertOk()
             ->assertJsonCount(2, 'data.order.items');
+    }
+
+    public function test_order_detail_exposes_the_status_history_for_the_timeline(): void
+    {
+        $user = User::factory()->create();
+        $order = Order::factory()->for($user)->for(Address::factory()->for($user), 'address')->create(['status' => 'menunggu_approval']);
+        OrderStatusHistory::factory()->for($order)->create(['from_status' => 'belum_dibayar', 'to_status' => 'menunggu_approval']);
+
+        $this->actingAs($user)->getJson("/api/orders/{$order->id}")
+            ->assertOk()
+            ->assertJsonPath('data.status_history.0.status', 'menunggu_approval')
+            ->assertJsonStructure(['data' => ['status_history' => [['status', 'at']]]]);
+    }
+
+    public function test_session_stays_valid_across_requests_but_ends_after_a_password_change(): void
+    {
+        $user = User::factory()->create();
+        $session = app('session')->driver('array');
+        $pass = fn () => (new EnsureSessionIsCurrent)->handle(
+            tap(Request::create('/api/me'), function (Request $r) use ($session, $user) {
+                $r->setLaravelSession($session);
+                $r->setUserResolver(fn () => $user);
+            }),
+            fn () => response('ok'),
+        );
+
+        $this->assertSame(200, $pass()->getStatusCode()); // first request stores the fingerprint
+        $this->assertSame(200, $pass()->getStatusCode()); // and later requests keep passing
+
+        $user->forceFill(['password' => 'password-baru-123'])->save();
+
+        $this->assertSame(401, $pass()->getStatusCode()); // password changed: session is ended
     }
 
     public function test_cart_item_with_design_of_banned_creator_is_unavailable(): void

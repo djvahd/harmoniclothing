@@ -81,7 +81,7 @@ export default function EditorPreviewMultiApparelPage() {
               )}
             </div>
             <p className="font-body text-sm font-semibold text-text-primary">
-              {t("productLabel")}#{apparel.product_id}
+              {apparel.name ?? `${t("productLabel")}#${apparel.product_id}`}
             </p>
             {apparel.confirmed_at ? (
               <div className="flex items-center gap-1.5 font-body text-xs text-accent">

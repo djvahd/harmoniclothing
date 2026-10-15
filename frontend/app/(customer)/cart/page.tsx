@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ShoppingCart } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -126,9 +125,7 @@ export default function KeranjangPage() {
           icon={ShoppingCart}
           title={t("empty")}
           action={
-            <Link href="/catalog">
-              <Button>{t("startShopping")}</Button>
-            </Link>
+            <Button href="/catalog">{t("startShopping")}</Button>
           }
         />
       )}

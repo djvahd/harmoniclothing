@@ -39,6 +39,7 @@
     "designStatus": {
       "draft": "Draft",
       "menunggu_approval": "Pending Review",
+      "aktif": "Active",
       "published": "Published",
       "ditolak": "Rejected"
     },
@@ -990,7 +991,20 @@
       "unitsSold": "{count} sold"
     },
     "notificationSettings": {
-      "title": "Notification Settings"
+      "title": "Notification Settings",
+      "toggleAria": "Enable notification: {label}",
+      "types": {
+        "chat_message": { "label": "New chat message", "description": "Sent when a new chat message arrives." },
+        "creator_approved": { "label": "Creator approved", "description": "Sent to the applicant when a creator application is approved." },
+        "creator_rejected": { "label": "Creator rejected", "description": "Sent to the applicant when a creator application is rejected." },
+        "creator_banned": { "label": "Creator banned", "description": "Sent to a creator when an admin bans their account." },
+        "design_approved": { "label": "Design approved", "description": "Sent to the creator when a design passes review and goes live." },
+        "design_rejected": { "label": "Design rejected", "description": "Sent to the creator when a design is rejected, with the reason." },
+        "order_paid": { "label": "Payment successful", "description": "Sent when an order payment succeeds." },
+        "order_rejected": { "label": "Order rejected", "description": "Sent to the customer when an admin rejects the order." },
+        "order_shipped": { "label": "Order shipped", "description": "Sent to the customer when the order is handed to the courier." },
+        "order_delivered": { "label": "Order delivered", "description": "Sent to the customer when the order arrives and awaits confirmation." }
+      }
     },
     "chat": {
       "title": "Chat Management",

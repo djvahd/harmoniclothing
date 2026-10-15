@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import Button from "@/components/ui/Button";
@@ -140,12 +139,8 @@ export default function HeroSection() {
           </Reveal>
           <Reveal delay={240}>
             <div className="flex flex-wrap gap-3">
-              <Link href="/catalog">
-                <Button variant="primary">{t("ctaCustomDesign")}</Button>
-              </Link>
-              <Link href="/catalog">
-                <Button variant="secondary">{t("ctaExploreProducts")}</Button>
-              </Link>
+              <Button href="/catalog" variant="primary">{t("ctaCustomDesign")}</Button>
+              <Button href="/catalog" variant="secondary">{t("ctaExploreProducts")}</Button>
             </div>
           </Reveal>
           <Reveal delay={360}>

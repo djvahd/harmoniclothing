@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
@@ -14,7 +13,7 @@ import OrderItemReview from "@/components/order/OrderItemReview";
 import { cancelOrder, confirmReceived, payOrder, reorder } from "@/services/orders";
 import { useOrder, invalidateOrder } from "@/hooks/useOrders";
 import { storageUrl } from "@/lib/storage";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatDateTime } from "@/lib/format";
 import { ORDER_STATUS_VARIANT } from "@/lib/order-status";
 
 const TIMELINE_STEPS: { status: string; tKey: string }[] = [
@@ -38,6 +37,16 @@ export default function DetailPesananPage() {
   const currentStepIndex = order
     ? TIMELINE_STEPS.findIndex((s) => s.status === order.status)
     : -1;
+
+  /** Real time the step was reached (status history); falls back to "Selesai"/"Menunggu" without one. */
+  function stepTimestamp(status: string, index: number): string {
+    if (index > currentStepIndex) return t("timelinePending");
+    const reached =
+      status === "belum_dibayar"
+        ? order?.created_at
+        : order?.status_history?.find((h) => h.status === status)?.at;
+    return reached ? formatDateTime(reached) : t("timelineDone");
+  }
 
   async function handleCancel() {
     setLoading(true);
@@ -114,7 +123,7 @@ export default function DetailPesananPage() {
               <OrderStatusItem
                 key={step.status}
                 title={t(`timeline.${step.tKey}`)}
-                timestamp={i <= currentStepIndex ? t("timelineDone") : t("timelinePending")}
+                timestamp={stepTimestamp(step.status, i)}
                 done={i <= currentStepIndex}
                 isLast={i === TIMELINE_STEPS.length - 1}
               />
@@ -199,11 +208,9 @@ export default function DetailPesananPage() {
           )}
           {/* An invoice exists only once payment succeeded (FR-018). */}
           {order.status !== "belum_dibayar" && (
-            <Link href={`/account/orders/${order.id}/invoice`}>
-              <Button variant="secondary" fullWidth>
+            <Button href={`/account/orders/${order.id}/invoice`} variant="secondary" fullWidth>
                 {t("viewInvoice")}
               </Button>
-            </Link>
           )}
         </div>
       </div>

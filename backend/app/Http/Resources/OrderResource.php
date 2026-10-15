@@ -25,6 +25,11 @@ class OrderResource extends JsonResource
             'total' => $this->total,
             'created_at' => $this->created_at,
             'items' => OrderItemResource::collection($this->whenLoaded('items')),
+            // Status timeline (order detail page): when each status was reached. Actor/reason stay internal.
+            'status_history' => $this->whenLoaded('statusHistories', fn () => $this->statusHistories->map(fn ($h) => [
+                'status' => $h->to_status,
+                'at' => $h->created_at,
+            ])->values()),
             'shipment' => $this->shipment ? new ShipmentResource($this->shipment) : null, // FE-036
             'user' => $this->whenLoaded('user', fn () => new UserResource($this->user)), // GET /admin/orders (gap-filled)
         ];

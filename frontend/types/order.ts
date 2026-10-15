@@ -65,5 +65,7 @@ export interface Order {
   created_at: string;
   items: OrderItem[];
   shipment: Shipment | null;
+  /** When each status was reached; only present on the order detail endpoint. */
+  status_history?: { status: OrderStatus; at: string }[];
   midtrans_redirect_url?: string | null;
 }

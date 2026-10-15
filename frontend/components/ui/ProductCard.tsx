@@ -32,9 +32,10 @@ export default function ProductCard({ product }: { product: Product }) {
   const hasSold = !!product.sold_count && product.sold_count > 0;
 
   return (
+    <div className="relative w-[196px] transition-transform duration-200 hover:-translate-y-0.5">
     <Link
       href={`/catalog/${product.slug}`}
-      className="group flex w-[196px] flex-col gap-[5px] rounded-md border border-border bg-surface p-[14px] transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
+      className="group flex w-full flex-col gap-[5px] rounded-md border border-border bg-surface p-[14px] transition-all duration-200 hover:border-primary/30 hover:shadow-md"
     >
       <div className="relative h-[155px] w-full shrink-0 overflow-hidden rounded-sm bg-border">
         {thumbnail && (
@@ -46,7 +47,6 @@ export default function ProductCard({ product }: { product: Product }) {
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
         )}
-        <WishlistButton productId={product.id} className="absolute right-2 top-2" />
       </div>
 
       <div className="flex min-h-[42px] flex-col justify-start">
@@ -76,5 +76,7 @@ export default function ProductCard({ product }: { product: Product }) {
         )}
       </div>
     </Link>
+    <WishlistButton productId={product.id} className="absolute right-[22px] top-[22px] z-10" />
+    </div>
   );
 }

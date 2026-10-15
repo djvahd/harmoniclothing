@@ -9,6 +9,7 @@ return [
 
     'auth' => [
         'invalid_credentials' => 'The email or password is incorrect.',
+        'session_expired' => 'Your session ended because the password was changed. Please sign in again.',
         'account_banned' => 'Your account has been banned. Please contact Harmoni Clothing support for more information.',
         'email_not_verified' => 'This account has not verified its email yet. Please check your email or resend the verification link.',
         'verification_link_expired' => 'The verification link is invalid or has expired.',

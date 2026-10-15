@@ -38,6 +38,7 @@ export type DesignStatus = "draft" | "menunggu_approval" | "published" | "ditola
 export interface DesignApparel {
   product_id: number;
   slug: string;
+  name?: string;
   confirmed_at: string | null;
 }
 

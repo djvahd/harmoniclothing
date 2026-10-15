@@ -47,6 +47,7 @@ class DesignResource extends JsonResource
             'apparel' => $this->whenLoaded('products', fn () => $this->products->map(fn ($product) => [
                 'product_id' => $product->id,
                 'slug' => $product->slug,
+                'name' => $product->{'name_'.app()->getLocale()} ?: $product->name_id,
                 'confirmed_at' => $product->pivot->preview_confirmed_at,
             ])),
         ];

@@ -44,9 +44,10 @@ export default function DesignCard({ design, startingPrice }: DesignCardProps) {
   const hasSold = !!design.sold_count && design.sold_count > 0;
 
   return (
+    <div className="relative w-[196px] transition-transform duration-200 hover:-translate-y-0.5">
     <Link
       href={`/marketplace/design/${design.slug}`}
-      className="group flex w-[196px] flex-col gap-[5px] rounded-md border border-border bg-surface p-[14px] transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
+      className="group flex w-full flex-col gap-[5px] rounded-md border border-border bg-surface p-[14px] transition-all duration-200 hover:border-primary/30 hover:shadow-md"
     >
       <div className="relative h-[155px] w-full shrink-0 overflow-hidden rounded-sm bg-border">
         {thumbnail && (
@@ -58,7 +59,6 @@ export default function DesignCard({ design, startingPrice }: DesignCardProps) {
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
         )}
-        <WishlistButton designId={design.id} className="absolute right-2 top-2" />
       </div>
 
       {/* Title and creator sit in one reserved-height block, close together —
@@ -93,5 +93,7 @@ export default function DesignCard({ design, startingPrice }: DesignCardProps) {
         )}
       </div>
     </Link>
+    <WishlistButton designId={design.id} className="absolute right-[22px] top-[22px] z-10" />
+    </div>
   );
 }

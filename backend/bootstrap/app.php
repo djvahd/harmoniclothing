@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnsureCreatorIsActive;
+use App\Http\Middleware\EnsureSessionIsCurrent;
 use App\Http\Middleware\EnsureUserIsActive;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Middleware\SetLocaleFromRequest;
@@ -23,6 +24,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'creator.active' => EnsureCreatorIsActive::class,
             'user.active' => EnsureUserIsActive::class,
+            // Ends every session whose stored password hash no longer matches
+            // (e.g. after a password reset), so a stolen session cannot outlive it.
+            'auth.session' => EnsureSessionIsCurrent::class,
             // Not parameterized like throttle:60,1 — this only ever checks
             // for Admin, so the alias is a plain name, not "role:admin".
             'admin' => EnsureUserIsAdmin::class,

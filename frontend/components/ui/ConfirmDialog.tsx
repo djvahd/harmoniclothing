@@ -45,6 +45,9 @@ export default function ConfirmDialog({
       onClick={onCancel}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
         className="flex w-full max-w-sm flex-col gap-4 rounded-md bg-surface p-6"
         onClick={(e) => e.stopPropagation()}
       >

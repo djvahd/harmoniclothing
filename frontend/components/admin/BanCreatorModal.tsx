@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
+import { useEscapeKey } from "@/hooks/useEscapeKey";
 
 interface BanCreatorModalProps {
   open: boolean;
@@ -27,12 +28,13 @@ export default function BanCreatorModal({ open, creatorName, onConfirm, onCancel
       setCopyright(false);
     }
   }, [open]);
+  useEscapeKey(open, onCancel);
 
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center bg-black/45 px-4">
-      <div className="flex w-full max-w-md flex-col gap-4 rounded-md bg-surface p-6">
+      <div role="dialog" aria-modal="true" aria-label={t("title", { name: creatorName })} className="flex w-full max-w-md flex-col gap-4 rounded-md bg-surface p-6">
         <p className="font-heading text-lg font-semibold text-text-primary">{t("title", { name: creatorName })}</p>
         <Input label={t("label")} value={reason} onChange={(e) => setReason(e.target.value)} autoFocus />
         <p className="-mt-2 font-body text-xs text-text-secondary">{t("minChars", { count: MIN_REASON_LENGTH })}</p>

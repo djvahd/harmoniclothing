@@ -39,6 +39,7 @@
     "designStatus": {
       "draft": "Draft",
       "menunggu_approval": "Menunggu Review",
+      "aktif": "Aktif",
       "published": "Published",
       "ditolak": "Ditolak"
     },
@@ -990,7 +991,20 @@
       "unitsSold": "{count} terjual"
     },
     "notificationSettings": {
-      "title": "Konfigurasi Notifikasi"
+      "title": "Konfigurasi Notifikasi",
+      "toggleAria": "Aktifkan notifikasi: {label}",
+      "types": {
+        "chat_message": { "label": "Pesan chat baru", "description": "Dikirim saat ada pesan chat baru." },
+        "creator_approved": { "label": "Creator disetujui", "description": "Dikirim ke pemohon saat pengajuan creator disetujui." },
+        "creator_rejected": { "label": "Creator ditolak", "description": "Dikirim ke pemohon saat pengajuan creator ditolak." },
+        "creator_banned": { "label": "Creator diblokir", "description": "Dikirim ke creator saat akunnya diblokir admin." },
+        "design_approved": { "label": "Desain disetujui", "description": "Dikirim ke creator saat desain lolos review dan tayang." },
+        "design_rejected": { "label": "Desain ditolak", "description": "Dikirim ke creator saat desain ditolak beserta alasannya." },
+        "order_paid": { "label": "Pembayaran berhasil", "description": "Dikirim saat pembayaran pesanan berhasil." },
+        "order_rejected": { "label": "Pesanan ditolak", "description": "Dikirim ke customer saat pesanan ditolak admin." },
+        "order_shipped": { "label": "Pesanan dikirim", "description": "Dikirim ke customer saat pesanan diserahkan ke kurir." },
+        "order_delivered": { "label": "Pesanan tiba", "description": "Dikirim ke customer saat pesanan sampai dan menunggu konfirmasi." }
+      }
     },
     "chat": {
       "title": "Chat Management",

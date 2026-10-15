@@ -162,7 +162,7 @@ export default function DesainTab({
                     className={clsx(
                       "block w-full rounded-sm px-3 py-2 text-left font-body text-sm transition-colors",
                       sort === opt.value
-                        ? "bg-accent text-text-on-accent"
+                        ? "bg-accent text-text-primary"
                         : "text-text-secondary hover:bg-border/50",
                     )}
                   >
