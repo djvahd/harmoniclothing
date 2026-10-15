@@ -37,6 +37,24 @@ const nextConfig = {
       },
     ];
   },
+  // Baseline security headers on every response (QC Keamanan #25/#26). Payment
+  // (Midtrans Snap) is a full-page redirect, so nothing legitimate frames this
+  // site; a full script CSP is left out on purpose (Snap/Pusher/Next inline scripts).
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "Content-Security-Policy", value: "frame-ancestors 'none'" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
+          { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" },
+        ],
+      },
+    ];
+  },
   // Same-origin proxy to the Laravel backend so Sanctum's session/CSRF cookies
   // stay first-party (replaces netlify.toml's redirects). Only active when
   // BACKEND_ORIGIN is set at build time (.env.production); local `pnpm dev`

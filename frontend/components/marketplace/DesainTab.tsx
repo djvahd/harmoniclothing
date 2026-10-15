@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { ArrowUpDown, PackageSearch, Search, X } from "lucide-react";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
@@ -11,6 +12,7 @@ import InlineError from "@/components/ui/InlineError";
 import { type DesignSort } from "@/services/marketplace";
 import { useDesigns, useDesignFilters } from "@/hooks/useDesigns";
 import type { Design } from "@/types/product";
+import { filtersFromParams, syncFiltersToUrl, SORT_KEY, SEARCH_KEY } from "@/lib/filter-url";
 
 const PER_PAGE = 40;
 
@@ -31,23 +33,30 @@ export default function DesainTab({
   defaultSort: DesignSort;
 }) {
   const t = useTranslations("public.marketplaceList.designTab");
-  const [search, setSearch] = useState("");
-  const [sort, setSort] = useState<DesignSort>(defaultSort);
-  const [filters, setFilters] = useState<FilterSidebarValue>(() =>
-    kategoriParam ? { ...EMPTY_FILTER_VALUE, categories: [kategoriParam] } : EMPTY_FILTER_VALUE,
-  );
+  const searchParams = useSearchParams();
+  const [search, setSearch] = useState(() => searchParams.get(SEARCH_KEY) ?? "");
+  const [sort, setSort] = useState<DesignSort>(() => {
+    const s = searchParams.get(SORT_KEY) as DesignSort | null;
+    return s && ["terbaru", "harga_asc", "harga_desc", "terlaris", "rating"].includes(s) ? s : defaultSort;
+  });
+  const [filters, setFilters] = useState<FilterSidebarValue>(() => filtersFromParams(searchParams));
   const [showSort, setShowSort] = useState(false);
   const [page, setPage] = useState(1);
   const [accumulated, setAccumulated] = useState<Design[]>([]);
   const sortRef = useRef<HTMLDivElement>(null);
 
+  // A link that arrives with ?kategori=... while this tab is open applies that category.
   useEffect(() => {
-    if (kategoriParam) {
-      setFilters((f) =>
-        f.categories.includes(kategoriParam) ? f : { ...f, categories: [kategoriParam] },
-      );
-    }
+    const fromUrl = kategoriParam ?? "";
+    setFilters((f) =>
+      f.categories.join(",") === fromUrl ? f : { ...f, categories: fromUrl ? fromUrl.split(",") : [] },
+    );
   }, [kategoriParam]);
+
+  // Mirror filters/sort/search into the URL (shareable, survives refresh).
+  useEffect(() => {
+    syncFiltersToUrl(filters, { [SORT_KEY]: sort === defaultSort ? undefined : sort, [SEARCH_KEY]: search || undefined });
+  }, [filters, sort, search, defaultSort]);
 
   useEffect(() => {
     setPage(1);

@@ -204,6 +204,25 @@ class QcRegressionTest extends TestCase
         $this->assertSame('https://app.example.test/reset-password?token=tok123&email=reset.link%40example.com', $mail->actionUrl);
     }
 
+    public function test_auth_endpoints_are_limited_to_20_requests_per_minute_per_ip(): void
+    {
+        for ($i = 1; $i <= 20; $i++) {
+            $this->postJson('/api/auth/forgot-password', ['email' => "rl{$i}@example.com"])->assertOk();
+        }
+
+        $this->postJson('/api/auth/forgot-password', ['email' => 'rl21@example.com'])
+            ->assertStatus(429)
+            ->assertJsonPath('message', __('messages.http.too_many_requests'));
+    }
+
+    public function test_missing_kyc_file_answers_404_not_500(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $profile = CreatorProfile::factory()->create(['ktp_photo_path' => 'kyc-uploads/not-there.jpg']);
+
+        $this->actingAs($admin)->getJson("/api/admin/creators/{$profile->id}/kyc-document")->assertNotFound();
+    }
+
     public function test_unknown_notification_type_cannot_be_configured(): void
     {
         $admin = User::factory()->admin()->create();

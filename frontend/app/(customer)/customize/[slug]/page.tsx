@@ -15,7 +15,9 @@ import { invalidateCart } from "@/hooks/useCart";
 import { useProduct } from "@/hooks/useProducts";
 import { useDesign } from "@/hooks/useDesigns";
 import { storageUrl } from "@/lib/storage";
-import { getErrorMessage } from "@/lib/api";
+import { getErrorMessage, isNotFoundError } from "@/lib/api";
+import InlineError from "@/components/ui/InlineError";
+import DetailNotFound from "@/components/product/DetailNotFound";
 import { isValidDesignFile } from "@/lib/design-file";
 import { swatchColor } from "@/lib/colors";
 import LoadingState from "@/components/ui/LoadingState";
@@ -28,7 +30,7 @@ function ProductEditorForm() {
   const router = useRouter();
   const designSlug = searchParams.get("design");
 
-  const { product } = useProduct(params.slug);
+  const { product, isLoading, error: loadError } = useProduct(params.slug);
   const { design } = useDesign(designSlug);
 
   const colors = useMemo(
@@ -110,8 +112,17 @@ function ProductEditorForm() {
     }
   }
 
+  if (loadError && !isNotFoundError(loadError)) {
+    return <InlineError />;
+  }
+
   if (!product) {
-    return <LoadingState variant="detail" />;
+    // Still loading: skeleton. Finished without a product (unknown slug): a clear message, not a skeleton forever.
+    return isLoading ? (
+      <LoadingState variant="detail" />
+    ) : (
+      <DetailNotFound message={t("productNotFound")} backHref="/catalog" backLabel={t("backToCatalog")} />
+    );
   }
 
   return (

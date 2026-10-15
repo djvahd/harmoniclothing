@@ -12,6 +12,7 @@ import FilterSidebar, { EMPTY_FILTER_VALUE, type FilterSidebarValue } from "@/co
 import type { ProductSort } from "@/services/catalog";
 import { useProducts, useProductFilters } from "@/hooks/useProducts";
 import type { Product } from "@/types/product";
+import { filtersFromParams, syncFiltersToUrl, SORT_KEY, SEARCH_KEY } from "@/lib/filter-url";
 
 const PER_PAGE = 40;
 
@@ -28,23 +29,29 @@ function KatalogPageContent() {
   const searchParams = useSearchParams();
   const kategoriParam = searchParams.get("kategori");
 
-  const [search, setSearch] = useState("");
-  const [sort, setSort] = useState<ProductSort>("terbaru");
-  const [filters, setFilters] = useState<FilterSidebarValue>(() =>
-    kategoriParam ? { ...EMPTY_FILTER_VALUE, categories: [kategoriParam] } : EMPTY_FILTER_VALUE,
-  );
+  // Filters, sort and search live in the URL too, so a refresh or a shared link shows the same list.
+  const [search, setSearch] = useState(() => searchParams.get(SEARCH_KEY) ?? "");
+  const [sort, setSort] = useState<ProductSort>(() => {
+    const s = searchParams.get(SORT_KEY) as ProductSort | null;
+    return s && ["terbaru", "harga_asc", "harga_desc", "terlaris", "rating"].includes(s) ? s : "terbaru";
+  });
+  const [filters, setFilters] = useState<FilterSidebarValue>(() => filtersFromParams(searchParams));
   const [showSort, setShowSort] = useState(false);
   const [page, setPage] = useState(1);
   const [accumulated, setAccumulated] = useState<Product[]>([]);
   const sortRef = useRef<HTMLDivElement>(null);
 
+  // A link that arrives with ?kategori=... (e.g. from the footer) while this page is open applies that category.
   useEffect(() => {
-    if (kategoriParam) {
-      setFilters((f) =>
-        f.categories.includes(kategoriParam) ? f : { ...f, categories: [kategoriParam] },
-      );
-    }
+    const fromUrl = kategoriParam ?? "";
+    setFilters((f) =>
+      f.categories.join(",") === fromUrl ? f : { ...f, categories: fromUrl ? fromUrl.split(",") : [] },
+    );
   }, [kategoriParam]);
+
+  useEffect(() => {
+    syncFiltersToUrl(filters, { [SORT_KEY]: sort === "terbaru" ? undefined : sort, [SEARCH_KEY]: search || undefined });
+  }, [filters, sort, search]);
 
   // A new filter/sort combination starts over from page 1.
   useEffect(() => {

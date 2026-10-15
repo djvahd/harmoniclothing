@@ -780,6 +780,8 @@
     },
     "customize": {
       "title": "Kustomisasi",
+      "productNotFound": "Produk tidak ditemukan.",
+      "backToCatalog": "Kembali ke Katalog Produk",
       "viewFront": "Depan",
       "viewBack": "Belakang",
       "viewSide": "Samping",

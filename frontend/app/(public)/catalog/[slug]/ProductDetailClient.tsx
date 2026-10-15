@@ -134,7 +134,7 @@ export default function DetailProdukPage() {
     setError(null);
     setPendingAction(destination);
     try {
-      await addToCart({
+      const { data: added } = await addToCart({
         product_variant_id: selectedVariant.id,
         quantity,
         notes: notes || undefined,
@@ -142,7 +142,8 @@ export default function DetailProdukPage() {
       });
       await invalidateCart();
       if (destination === "cart") toast(t("addToCartSuccess"), "success");
-      router.push(destination === "cart" ? "/cart" : "/checkout");
+      // "Beli Sekarang" buys just this item, not everything already in the cart.
+      router.push(destination === "cart" ? "/cart" : `/checkout?items=${added.id}`);
     } catch (err) {
       setError(getErrorMessage(err, tCommon("errorGeneric")));
     } finally {

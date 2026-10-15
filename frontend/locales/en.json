@@ -780,6 +780,8 @@
     },
     "customize": {
       "title": "Customize",
+      "productNotFound": "Product not found.",
+      "backToCatalog": "Back to Product Catalog",
       "viewFront": "Front",
       "viewBack": "Back",
       "viewSide": "Side",
