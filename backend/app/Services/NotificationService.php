@@ -40,7 +40,7 @@ class NotificationService
 
     public function listFor(User $user, int $perPage): LengthAwarePaginator
     {
-        return $user->notifications()->latest()->paginate($perPage);
+        return $user->notifications()->latest()->latest('id')->paginate($perPage);
     }
 
     public function markRead(Notification $notification): Notification

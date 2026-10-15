@@ -28,6 +28,13 @@ const nextConfig = {
         destination: "https://harmoniclothing.com/:path*",
         permanent: true,
       },
+      // Plain-http requests (Cloudflare sets x-forwarded-proto) go to https; local dev sends no such header.
+      {
+        source: "/:path*",
+        has: [{ type: "header", key: "x-forwarded-proto", value: "http" }],
+        destination: "https://harmoniclothing.com/:path*",
+        permanent: true,
+      },
     ];
   },
   // Same-origin proxy to the Laravel backend so Sanctum's session/CSRF cookies

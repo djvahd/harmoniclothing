@@ -32,7 +32,13 @@ return [
         ],
     ],
 
+    'http' => [
+        'too_many_requests' => 'Terlalu banyak percobaan. Silakan tunggu sebentar lalu coba lagi.',
+        'invalid_signature' => 'Tautan tidak valid atau sudah kedaluwarsa.',
+    ],
+
     'catalog' => [
+        'tier_overlap' => 'Rentang kuantitas tumpang tindih dengan tier harga Bulk Order yang sudah ada.',
         'variant_combination_exists' => 'Kombinasi warna/ukuran/potongan ini sudah ada untuk produk ini.',
     ],
 

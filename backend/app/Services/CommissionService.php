@@ -33,7 +33,7 @@ class CommissionService
         return Commission::query()
             ->where('creator_id', $creator->id)
             ->with('orderItem.productVariant.product')
-            ->latest()
+            ->latest()->latest('id')
             ->get();
     }
 

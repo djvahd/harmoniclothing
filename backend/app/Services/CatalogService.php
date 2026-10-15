@@ -108,6 +108,22 @@ class CatalogService
     /** POST /admin/catalog/bulk-pricing-tiers — BR-012. 2.5_Permission_Matrix.md §10: Bulk Order tier changes are audited. */
     public function createBulkPricingTier(array $data, User $admin): BulkPricingTier
     {
+        // BR-012: ranges must not overlap (a null max_qty means "no upper limit"),
+        // otherwise one quantity would match several tiers and the price is ambiguous.
+        $min = (int) $data['min_qty'];
+        $max = isset($data['max_qty']) ? (int) $data['max_qty'] : null;
+
+        $overlaps = BulkPricingTier::query()
+            ->when($max !== null, fn ($q) => $q->where('min_qty', '<=', $max))
+            ->where(fn ($q) => $q->whereNull('max_qty')->orWhere('max_qty', '>=', $min))
+            ->exists();
+
+        if ($overlaps) {
+            throw ValidationException::withMessages([
+                'min_qty' => [__('messages.catalog.tier_overlap')],
+            ]);
+        }
+
         $tier = BulkPricingTier::create($data);
         $this->auditLog->record($admin, 'bulk_pricing_tier.create', $tier);
 

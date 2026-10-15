@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { fetchPublic } from "@/lib/server-fetch";
+import { notFound } from "next/navigation";
+import { fetchPublic, isMissing } from "@/lib/server-fetch";
 import type { Design } from "@/types/product";
 import DesignDetailClient from "./DesignDetailClient";
 
@@ -24,6 +25,12 @@ export async function generateMetadata({
   };
 }
 
-export default function DesignDetailPage() {
+export default async function DesignDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  if (await isMissing(`/marketplace/designs/${slug}`)) notFound();
   return <DesignDetailClient />;
 }

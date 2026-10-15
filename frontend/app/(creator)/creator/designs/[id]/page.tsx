@@ -54,6 +54,8 @@ export default function EditorPreviewMultiApparelPage() {
   if (!design) return <p className="p-8 font-body text-sm text-text-secondary">{t("notFound")}</p>;
 
   const thumbnail = storageUrl(design.thumbnail_path);
+  // Submitting needs every chosen apparel preview confirmed (the API answers 422 otherwise).
+  const allConfirmed = (design.apparel ?? []).length > 0 && (design.apparel ?? []).every((a) => !!a.confirmed_at);
 
   return (
     <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-8 md:px-20">
@@ -102,7 +104,12 @@ export default function EditorPreviewMultiApparelPage() {
 
       {error && <p className="font-body text-xs text-danger">{error}</p>}
       {design.status === "draft" && (
-        <Button loading={loading} onClick={handleSubmit} className="self-start">
+        <Button
+          loading={loading}
+          disabled={!allConfirmed}
+          onClick={handleSubmit}
+          className="self-start"
+        >
           {t("submitForApproval")}
         </Button>
       )}

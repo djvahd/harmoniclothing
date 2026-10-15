@@ -21,6 +21,10 @@ class AdminNotificationSettingController extends Controller
 
     public function update(NotificationSettingRequest $request, string $type): JsonResponse
     {
+        // Only the known (seeded) types can be toggled; an unknown type used to
+        // answer 200 and silently create a junk row.
+        abort_unless(in_array($type, NotificationSetting::TYPES, true), 404);
+
         $setting = $this->settings->update($type, $request->boolean('is_enabled'), $request->user());
 
         return response()->json(['data' => new NotificationSettingResource($setting)]);

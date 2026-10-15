@@ -148,7 +148,7 @@ class ProductRepository
                 'category',
                 fn ($q) => $q->where('slug', $categorySlug)
             ))
-            ->latest()
+            ->latest()->latest('id')
             ->paginate($perPage);
     }
 

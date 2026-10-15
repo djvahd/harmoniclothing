@@ -99,7 +99,7 @@ class CreatorService
         return CreatorProfile::query()
             ->where('status', $status)
             ->with('user')
-            ->latest()
+            ->latest()->latest('id')
             ->get();
     }
 
@@ -109,7 +109,7 @@ class CreatorService
         return CreatorProfile::query()
             ->where('status', 'menunggu_approval')
             ->with('user')
-            ->latest()
+            ->latest()->latest('id')
             ->get();
     }
 

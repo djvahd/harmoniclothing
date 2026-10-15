@@ -20,6 +20,7 @@ import { useBulkOrderStore } from "@/store/bulk-order-store";
 import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
 import { getErrorMessage } from "@/lib/api";
+import { isValidDesignFile } from "@/lib/design-file";
 
 /** Flow 7 — Pemesanan Bulk Order: pick a design + quantity per size across every variant of one product, priced by ONE tier from the combined total (BR-012). */
 function BulkOrderForm() {
@@ -56,6 +57,12 @@ function BulkOrderForm() {
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (!isValidDesignFile(file)) {
+      setError(t("uploadInvalid"));
+      e.target.value = "";
+      return;
+    }
+    setError(null);
     setUploading(true);
     try {
       const { data } = await uploadDesignFile(file);

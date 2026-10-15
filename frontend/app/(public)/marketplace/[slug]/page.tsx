@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { fetchPublic } from "@/lib/server-fetch";
+import { notFound } from "next/navigation";
+import { fetchPublic, isMissing } from "@/lib/server-fetch";
 import type { CreatorProfile } from "@/services/marketplace";
 import CreatorProfileClient from "./CreatorProfileClient";
 
@@ -24,6 +25,12 @@ export async function generateMetadata({
   };
 }
 
-export default function CreatorProfilePage() {
+export default async function CreatorProfilePage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  if (await isMissing(`/marketplace/creators/${slug}`)) notFound();
   return <CreatorProfileClient />;
 }

@@ -16,6 +16,14 @@ class RegisterRequest extends FormRequest
         return true;
     }
 
+    /** Emails are case-insensitive; store one canonical form so "ABC@x" and "abc@x" cannot become two accounts. */
+    protected function prepareForValidation(): void
+    {
+        if (is_string($this->input('email'))) {
+            $this->merge(['email' => mb_strtolower(trim($this->input('email')))]);
+        }
+    }
+
     public function rules(): array
     {
         return [

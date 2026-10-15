@@ -124,7 +124,12 @@ export default function VariantRow({
             </div>
           </div>
         ) : (
-          <button onClick={() => setEditing(true)} className="text-text-secondary hover:text-primary">
+          <button
+            type="button"
+            aria-label={tCommon("edit")}
+            onClick={() => setEditing(true)}
+            className="text-text-secondary hover:text-primary"
+          >
             <Pencil className="size-4" />
           </button>
         )}

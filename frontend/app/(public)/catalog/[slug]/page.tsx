@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { fetchPublic } from "@/lib/server-fetch";
+import { notFound } from "next/navigation";
+import { fetchPublic, isMissing } from "@/lib/server-fetch";
 import type { Product } from "@/types/product";
 import ProductDetailClient from "./ProductDetailClient";
 
@@ -24,6 +25,13 @@ export async function generateMetadata({
   };
 }
 
-export default function ProductDetailPage() {
+export default async function ProductDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  // Real HTTP 404 for an unknown slug (it used to be a 200 page with a "not found" message).
+  if (await isMissing(`/catalog/products/${slug}`)) notFound();
   return <ProductDetailClient />;
 }

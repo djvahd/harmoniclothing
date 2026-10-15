@@ -15,7 +15,11 @@ class SalesReportService
         $from = $from ? Carbon::parse($from)->startOfDay() : now()->subDays(30)->startOfDay();
         $to = $to ? Carbon::parse($to)->endOfDay() : now()->endOfDay();
 
-        $paidPayments = Payment::query()->where('status', 'berhasil')->whereBetween('paid_at', [$from, $to]);
+        // Net revenue: payments of rejected/cancelled orders are refunded (manually, BR-006) and are not income.
+        $paidPayments = Payment::query()
+            ->where('status', 'berhasil')
+            ->whereHas('order', fn ($q) => $q->whereNotIn('status', ['ditolak', 'dibatalkan']))
+            ->whereBetween('paid_at', [$from, $to]);
         $revenueTotal = (float) (clone $paidPayments)->sum('amount');
         $paidCount = (clone $paidPayments)->count();
 

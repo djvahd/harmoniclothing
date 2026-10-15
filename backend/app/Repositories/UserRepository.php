@@ -23,7 +23,7 @@ class UserRepository
         return User::query()
             ->when($filters['role'] ?? null, fn ($query, $role) => $query->where('role', $role))
             ->when($filters['status'] ?? null, fn ($query, $status) => $query->where('status', $status))
-            ->latest()
+            ->latest()->latest('id')
             ->paginate($perPage);
     }
 }

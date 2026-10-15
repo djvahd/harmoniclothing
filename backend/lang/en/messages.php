@@ -32,7 +32,13 @@ return [
         ],
     ],
 
+    'http' => [
+        'too_many_requests' => 'Too many attempts. Please wait a moment and try again.',
+        'invalid_signature' => 'This link is invalid or has expired.',
+    ],
+
     'catalog' => [
+        'tier_overlap' => 'This quantity range overlaps an existing Bulk Order price tier.',
         'variant_combination_exists' => 'This color/size/cut combination already exists for this product.',
     ],
 

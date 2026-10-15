@@ -136,6 +136,24 @@ class PaymentTest extends TestCase
         $this->assertNotSame('berhasil', $order->payment()->first()->status);
     }
 
+    public function test_webhook_treats_accepted_capture_as_paid(): void
+    {
+        $user = User::factory()->create();
+        $address = Address::factory()->for($user)->create();
+        $order = Order::factory()->for($user)->for($address, 'address')->create([
+            'order_number' => 'HC-20260101-0001',
+            'total' => 100000,
+        ]);
+        Payment::factory()->for($order)->create(['amount' => 100000]);
+
+        $this->fakeMidtransStatus(['transaction_status' => 'capture', 'fraud_status' => 'accept']);
+
+        $this->postJson('/api/webhooks/midtrans', $this->signedPayload())->assertOk();
+
+        $this->assertSame('menunggu_approval', $order->fresh()->status);
+        $this->assertSame('berhasil', $order->payment()->first()->status);
+    }
+
     public function test_webhook_is_idempotent_for_an_unknown_order(): void
     {
         $this->fakeMidtransStatus(['order_id' => 'HC-NOPE']);

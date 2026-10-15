@@ -79,14 +79,27 @@ class AppServiceProvider extends ServiceProvider
             ->action(__('messages.auth.mail.verify_action'), $url)
             ->line(__('messages.auth.mail.verify_line2')));
 
-        ResetPassword::toMailUsing(fn ($notifiable, string $url) => (new MailMessage)
-            ->subject(__('messages.auth.mail.reset_subject'))
-            ->line(__('messages.auth.mail.reset_line1'))
-            ->action(__('messages.auth.mail.reset_action'), $url)
-            ->line(__('messages.auth.mail.reset_line2', [
-                'count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire'),
-            ]))
-            ->line(__('messages.auth.mail.reset_line3')));
+        // NB: unlike VerifyEmail, ResetPassword::toMailUsing() receives the raw
+        // TOKEN as its second argument, not a URL (createUrlUsing() above is
+        // not applied on this path) - so the link is built here. Passing the
+        // token straight to action() made the button point at the bare token.
+        ResetPassword::toMailUsing(function ($notifiable, string $token) {
+            $url = sprintf(
+                '%s/reset-password?token=%s&email=%s',
+                rtrim(config('app.frontend_url'), '/'),
+                $token,
+                urlencode($notifiable->getEmailForPasswordReset())
+            );
+
+            return (new MailMessage)
+                ->subject(__('messages.auth.mail.reset_subject'))
+                ->line(__('messages.auth.mail.reset_line1'))
+                ->action(__('messages.auth.mail.reset_action'), $url)
+                ->line(__('messages.auth.mail.reset_line2', [
+                    'count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire'),
+                ]))
+                ->line(__('messages.auth.mail.reset_line3'));
+        });
 
         // 5.6_Security_Planning.md §7: 5 attempts/min/IP+email, then cooldown.
         RateLimiter::for('login', function (Request $request) {

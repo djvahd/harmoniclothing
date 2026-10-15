@@ -31,7 +31,11 @@ class AdminDashboardService
             ],
             'revenue' => [
                 // Builder::sum() bypasses the Payment model's decimal cast — format explicitly.
-                'total' => number_format((float) Payment::query()->where('status', 'berhasil')->sum('amount'), 2, '.', ''),
+                // Net revenue, same rule as SalesReportService: rejected/cancelled orders are refunded.
+                'total' => number_format((float) Payment::query()
+                    ->where('status', 'berhasil')
+                    ->whereHas('order', fn ($q) => $q->whereNotIn('status', ['ditolak', 'dibatalkan']))
+                    ->sum('amount'), 2, '.', ''),
             ],
         ];
     }

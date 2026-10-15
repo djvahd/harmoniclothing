@@ -4,14 +4,17 @@ namespace Tests\Feature;
 
 use App\Enums\UserStatus;
 use App\Http\Middleware\EnsureSessionIsCurrent;
+use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
 use Illuminate\Http\Request;
 use App\Models\Address;
+use App\Models\BulkPricingTier;
 use App\Models\CartItem;
 use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\OrderStatusHistory;
 use App\Models\Payment;
+use App\Models\Product;
 use App\Models\CreatorProfile;
 use App\Models\Design;
 use App\Models\User;
@@ -148,6 +151,82 @@ class QcRegressionTest extends TestCase
         $user->forceFill(['password' => 'password-baru-123'])->save();
 
         $this->assertSame(401, $pass()->getStatusCode()); // password changed: session is ended
+    }
+
+    public function test_overlapping_bulk_pricing_tier_is_rejected(): void
+    {
+        $admin = User::factory()->admin()->create();
+        BulkPricingTier::factory()->create(['min_qty' => 10, 'max_qty' => 49, 'price_per_unit' => 80000]);
+        BulkPricingTier::factory()->create(['min_qty' => 50, 'max_qty' => null, 'price_per_unit' => 70000]);
+
+        foreach ([[1, 10], [20, 30], [5, 60], [100, null]] as [$min, $max]) {
+            $this->actingAs($admin)->postJson('/api/admin/catalog/bulk-pricing-tiers', [
+                'min_qty' => $min, 'max_qty' => $max, 'price_per_unit' => 60000,
+            ])->assertUnprocessable()->assertJsonValidationErrors('min_qty');
+        }
+
+        $this->actingAs($admin)->postJson('/api/admin/catalog/bulk-pricing-tiers', [
+            'min_qty' => 1, 'max_qty' => 9, 'price_per_unit' => 90000,
+        ])->assertCreated();
+    }
+
+    public function test_revenue_excludes_payments_of_rejected_and_cancelled_orders(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $user = User::factory()->create();
+        foreach ([['selesai', 100000], ['ditolak', 50000], ['dibatalkan', 30000]] as [$status, $amount]) {
+            $order = Order::factory()->for($user)->for(Address::factory()->for($user), 'address')->create(['status' => $status, 'total' => $amount]);
+            Payment::factory()->for($order)->create(['status' => 'berhasil', 'amount' => $amount, 'paid_at' => now()]);
+        }
+
+        $this->actingAs($admin)->getJson('/api/admin/dashboard')->assertOk()->assertJsonPath('data.revenue.total', '100000.00');
+        $this->actingAs($admin)->getJson('/api/admin/reports/sales')->assertOk()->assertJsonPath('data.revenue.total', '100000.00');
+    }
+
+    public function test_adding_the_same_wishlist_item_twice_creates_one_row(): void
+    {
+        $user = User::factory()->create();
+        $product = Product::factory()->create();
+
+        $this->actingAs($user)->postJson('/api/wishlist', ['product_id' => $product->id])->assertSuccessful();
+        $this->actingAs($user)->postJson('/api/wishlist', ['product_id' => $product->id])->assertSuccessful();
+
+        $this->assertSame(1, $user->wishlists()->count());
+    }
+
+    public function test_password_reset_email_links_to_the_frontend_reset_page(): void
+    {
+        $user = User::factory()->create(['email' => 'reset.link@example.com']);
+        config(['app.frontend_url' => 'https://app.example.test']);
+
+        $mail = (new ResetPasswordNotification('tok123'))->toMail($user);
+
+        $this->assertSame('https://app.example.test/reset-password?token=tok123&email=reset.link%40example.com', $mail->actionUrl);
+    }
+
+    public function test_unknown_notification_type_cannot_be_configured(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)->patchJson('/api/admin/notification-settings/not.a.type', ['is_enabled' => false])->assertNotFound();
+        $this->assertDatabaseMissing('notification_settings', ['notification_type' => 'not.a.type']);
+    }
+
+    public function test_email_is_case_insensitive_at_registration_and_login(): void
+    {
+        $this->withHeader('Origin', 'http://localhost:3000')->postJson('/api/auth/register', [
+            'name' => 'Case Test', 'email' => 'Mixed.Case@Example.com',
+            'password' => 'password123', 'password_confirmation' => 'password123',
+            'privacy_accepted' => true, 'terms_accepted' => true,
+        ])->assertSuccessful();
+
+        $this->assertDatabaseHas('users', ['email' => 'mixed.case@example.com']);
+
+        $this->postJson('/api/auth/register', [
+            'name' => 'Case Dup', 'email' => 'MIXED.CASE@example.com',
+            'password' => 'password123', 'password_confirmation' => 'password123',
+            'privacy_accepted' => true, 'terms_accepted' => true,
+        ])->assertUnprocessable()->assertJsonValidationErrors('email');
     }
 
     public function test_cart_item_with_design_of_banned_creator_is_unavailable(): void

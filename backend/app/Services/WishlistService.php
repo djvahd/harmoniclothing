@@ -19,7 +19,11 @@ class WishlistService
 
     public function add(User $user, array $data): Wishlist
     {
-        return $this->wishlists->create([...$data, 'user_id' => $user->id]);
+        // Idempotent: adding the same product/design twice must not create a second row.
+        return $user->wishlists()->firstOrCreate([
+            'product_id' => $data['product_id'] ?? null,
+            'design_id' => $data['design_id'] ?? null,
+        ]);
     }
 
     public function remove(Wishlist $wishlist): void

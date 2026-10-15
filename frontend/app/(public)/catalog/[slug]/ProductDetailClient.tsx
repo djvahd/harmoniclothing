@@ -27,6 +27,7 @@ import { storageUrl } from "@/lib/storage";
 import { formatCurrency } from "@/lib/format";
 import InlineError from "@/components/ui/InlineError";
 import { getErrorMessage, isNotFoundError } from "@/lib/api";
+import { isValidDesignFile } from "@/lib/design-file";
 import { toast } from "@/store/toast-store";
 import { useAuthStore } from "@/store/auth-store";
 import { useAuthModalStore } from "@/store/auth-modal-store";
@@ -104,6 +105,12 @@ export default function DetailProdukPage() {
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (!isValidDesignFile(file)) {
+      setError(t("uploadInvalid"));
+      e.target.value = "";
+      return;
+    }
+    setError(null);
     setUploading(true);
     try {
       const { data } = await uploadDesignFile(file);

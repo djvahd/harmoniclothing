@@ -16,7 +16,7 @@ class AdminPaymentController extends Controller
         $payments = Payment::query()
             ->with('order.user')
             ->when($request->query('status'), fn ($query, $status) => $query->where('status', $status))
-            ->latest()
+            ->latest()->latest('id')
             ->paginate((int) $request->query('per_page', 20));
 
         return response()->json([

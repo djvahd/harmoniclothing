@@ -21,7 +21,7 @@ class OrderRepository
     {
         return $user->orders()
             ->with(['items.productVariant.product', 'items.design', 'shipment'])
-            ->latest()
+            ->latest()->latest('id')
             ->paginate($perPage);
     }
 
@@ -36,7 +36,7 @@ class OrderRepository
         return Order::query()
             ->when($status, fn ($query, $status) => $query->where('status', $status))
             ->with(['items.productVariant.product', 'items.design', 'shipment', 'user'])
-            ->latest()
+            ->latest()->latest('id')
             ->paginate($perPage);
     }
 

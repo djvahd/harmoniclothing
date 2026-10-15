@@ -9,6 +9,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Exceptions\InvalidSignatureException;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -36,4 +38,17 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*'),
         );
+
+        // The framework's own messages for these two are hard-coded English
+        // ("Too Many Attempts.", "Invalid signature."); render them localized.
+        $exceptions->render(function (ThrottleRequestsException $e, Request $request) {
+            if ($request->is('api/*')) {
+                return response()->json(['message' => __('messages.http.too_many_requests')], 429, $e->getHeaders());
+            }
+        });
+        $exceptions->render(function (InvalidSignatureException $e, Request $request) {
+            if ($request->is('api/*')) {
+                return response()->json(['message' => __('messages.http.invalid_signature')], 403);
+            }
+        });
     })->create();

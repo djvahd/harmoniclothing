@@ -16,7 +16,7 @@ class AdminAuditLogController extends Controller
         $logs = AuditLog::query()
             ->with('actor')
             ->when($request->query('action'), fn ($query, $action) => $query->where('action', $action))
-            ->latest()
+            ->latest()->latest('id')
             ->paginate((int) $request->query('per_page', 20));
 
         return response()->json([

@@ -18,7 +18,7 @@ trait SortsListings
             'harga_desc' => $query->orderByDesc($priceColumn),
             'terlaris' => $query->orderByDesc('sold_count'),
             'rating' => $query->orderByDesc('avg_rating'),
-            default => $query->latest(),
+            default => $query->latest()->latest('id'),
         };
     }
 }
