@@ -709,6 +709,8 @@
       "viewDetail": "Lihat Detail"
     },
     "orderDetail": {
+      "designPreviewLabel": "Desain kamu",
+      "designPreviewAlt": "Pratinjau desain yang kamu unggah",
       "notFound": "Pesanan tidak ditemukan.",
       "rejectedTitle": "Pesanan Ditolak",
       "timeline": {
@@ -1295,6 +1297,15 @@
       "title": "Verifikasi Data Diri",
       "statusLabel": "Status:",
       "statusPendingReview": "Menunggu Review",
+      "status": { "menunggu_approval": "Menunggu Review", "aktif": "Disetujui", "ditolak": "Ditolak", "nonaktif": "Nonaktif", "banned": "Diblokir" },
+      "lockedNote": {
+        "menunggu_approval": "Data verifikasimu sedang ditinjau admin. Formulir dikunci sampai ada keputusan.",
+        "aktif": "Verifikasi disetujui. Akun Kreatormu sudah aktif.",
+        "nonaktif": "Akun Kreator sedang nonaktif. Hubungi admin lewat Chat.",
+        "banned": "Akun Kreator diblokir. Hubungi admin lewat Chat bila ada keberatan."
+      },
+      "rejectionReason": "Alasan penolakan: {reason}",
+      "resubmitNote": "Perbaiki data sesuai alasan di atas, lalu kirim ulang.",
       "fields": {
         "fullName": "Nama Lengkap (sesuai KTP)",
         "idNumber": "Nomor KTP",
@@ -1322,6 +1333,7 @@
       "uploadKtpError": "Unggah foto KTP terlebih dahulu."
     },
     "uploadDesign": {
+      "previewAlt": "Pratinjau file desain",
       "title": "Upload Desain",
       "fields": {
         "title": "Judul Desain",

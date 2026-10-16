@@ -101,6 +101,7 @@ Route::middleware(['auth:sanctum', 'auth.session', 'user.active'])->group(functi
 
     // 5.2_API_List.md §5 — Creator upgrade (FR-041/035)
     Route::post('/account/become-creator', [CreatorController::class, 'becomeCreator']);
+    Route::get('/creator/verification', [CreatorController::class, 'verificationStatus']);
     Route::post('/creator/verification', [CreatorController::class, 'verification']);
 
     // 5.2_API_List.md §5 — /creator/* proper, requires role:creator (status Aktif)

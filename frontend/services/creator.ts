@@ -49,6 +49,17 @@ export interface VerificationPayload {
   guardian_consent?: boolean;
 }
 
+export interface VerificationStatus {
+  applied: boolean;
+  status: "menunggu_approval" | "aktif" | "ditolak" | "nonaktif" | "banned" | null;
+  rejection_reason: string | null;
+}
+
+/** The signed-in user's own creator application state (what to show on /creator/verification). */
+export function getVerificationStatus() {
+  return apiFetch<{ data: VerificationStatus }>("/creator/verification");
+}
+
 export function submitVerification(payload: VerificationPayload) {
   const formData = new FormData();
   formData.append("kyc_full_name", payload.kyc_full_name);

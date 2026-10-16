@@ -151,6 +151,12 @@ export default function DetailPesananPage() {
                   {formatCurrency(item.subtotal)}
                 </p>
               </div>
+              {item.custom_design_url && (
+                <div className="flex items-center gap-3 pl-1">
+                  <ProductThumbnail src={item.custom_design_url} alt={t("designPreviewAlt")} size={48} />
+                  <p className="font-body text-xs text-text-secondary">{t("designPreviewLabel")}</p>
+                </div>
+              )}
               {order.status === "selesai" && (
                 <OrderItemReview
                   orderId={order.id}

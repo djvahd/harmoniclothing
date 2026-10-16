@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Upload } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -23,6 +23,18 @@ export default function UploadDesainPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  // Preview of the chosen file; the object URL is released when the file changes or the page closes.
+  useEffect(() => {
+    if (!file) {
+      setPreviewUrl(null);
+      return;
+    }
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -80,6 +92,10 @@ export default function UploadDesainPage() {
 
           <label className="flex cursor-pointer flex-col items-center gap-2 rounded-sm border border-dashed border-border py-6 text-center">
             <Upload className="size-5 text-text-secondary" />
+            {previewUrl && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={previewUrl} alt={t("previewAlt")} className="max-h-40 rounded-sm bg-white object-contain" />
+            )}
             <span className="font-body text-xs text-text-secondary">
               {file ? file.name : t("fileDropzone")}
             </span>

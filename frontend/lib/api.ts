@@ -112,6 +112,9 @@ export async function apiFetch<T>(
     if (res.status === 401 && path !== "/me" && !path.startsWith("/auth/") && typeof window !== "undefined") {
       window.dispatchEvent(new CustomEvent("api:unauthorized"));
     }
+    // A conflict (the record changed under you, e.g. an order another admin already moved on) must be
+    // visible even on screens that only handle validation errors.
+    if (res.status === 409 && method !== "GET") toast(data?.message ?? genericError, "danger");
     throw new ApiError(res.status, data?.message ?? genericError, data?.errors);
   }
 

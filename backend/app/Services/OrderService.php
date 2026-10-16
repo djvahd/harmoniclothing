@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Facades\Log;
 use App\Models\Order;
 use App\Models\Shipment;
 use App\Models\User;
@@ -234,9 +237,19 @@ class OrderService
         $courierCompany ??= $order->courier_company;
         $courierType ??= $order->courier_type;
 
-        $booking = blank(config('services.biteship.api_key'))
-            ? ['biteship_order_id' => null, 'tracking_number' => null]
-            : $this->biteship->createBooking($order, $courierCompany, $courierType);
+        // A failing courier API (bad key, outage) must not leave a half-made shipment or a raw 500:
+        // nothing has been written yet, so report a clear error and let the admin retry.
+        try {
+            $booking = blank(config('services.biteship.api_key'))
+                ? ['biteship_order_id' => null, 'tracking_number' => null]
+                : $this->biteship->createBooking($order, $courierCompany, $courierType);
+        } catch (RequestException|ConnectionException $e) {
+            Log::warning("Biteship booking failed for order {$order->order_number}: ".$e->getMessage());
+
+            throw ValidationException::withMessages([
+                'courier' => [__('messages.order.shipment_courier_failed')],
+            ]);
+        }
 
         return DB::transaction(function () use ($order, $admin, $courierCompany, $courierType, $booking) {
             $locked = $this->lockOrder($order);

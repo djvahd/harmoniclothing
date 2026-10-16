@@ -193,4 +193,28 @@ class CreatorTest extends TestCase
 
         $this->getJson('/api/marketplace/designs')->assertJsonCount(0, 'data');
     }
+
+    public function test_verification_status_endpoint_reports_the_applicants_own_state(): void
+    {
+        $fresh = User::factory()->create();
+        $this->actingAs($fresh)->getJson('/api/creator/verification')
+            ->assertOk()->assertJsonPath('data.applied', false)->assertJsonPath('data.status', null);
+
+        $rejected = CreatorProfile::factory()->create(['status' => 'ditolak', 'rejection_reason' => 'Foto KTP buram']);
+        $this->actingAs($rejected->user)->getJson('/api/creator/verification')
+            ->assertOk()->assertJsonPath('data.status', 'ditolak')->assertJsonPath('data.rejection_reason', 'Foto KTP buram');
+    }
+
+    public function test_pending_active_and_banned_applications_cannot_be_resubmitted_but_rejected_can(): void
+    {
+        foreach (['menunggu_approval', 'aktif', 'banned'] as $status) {
+            $profile = CreatorProfile::factory()->create(['status' => $status]);
+            $this->actingAs($profile->user)->postJson('/api/creator/verification', $this->adultVerificationPayload())
+                ->assertUnprocessable()->assertJsonValidationErrors('status');
+        }
+
+        $rejected = CreatorProfile::factory()->create(['status' => 'ditolak', 'rejection_reason' => 'Foto KTP buram']);
+        $this->actingAs($rejected->user)->postJson('/api/creator/verification', $this->adultVerificationPayload())->assertOk();
+        $this->assertSame('menunggu_approval', $rejected->fresh()->status);
+    }
 }

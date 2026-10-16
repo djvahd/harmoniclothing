@@ -25,7 +25,7 @@ class DesignResource extends JsonResource
                 : null,
             'status' => $this->status,
             'rejection_reason' => $this->rejection_reason,
-            'starting_price' => $this->starting_price !== null ? (float) $this->starting_price : null,
+            'starting_price' => $this->starting_price !== null ? number_format((float) $this->starting_price, 2, '.', '') : null,
             'sold_count' => (int) ($this->sold_count ?? 0),
             'rating_average' => $this->avg_rating !== null ? round((float) $this->avg_rating, 1) : null,
             'review_count' => (int) ($this->review_count ?? 0),

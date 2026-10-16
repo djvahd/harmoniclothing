@@ -129,4 +129,33 @@ class BulkCheckoutTest extends TestCase
             ],
         ])->assertUnprocessable()->assertJsonValidationErrors('address_id');
     }
+
+    public function test_bulk_checkout_saves_the_design_file_and_the_order_note(): void
+    {
+        config(['services.biteship.api_key' => 'test-key']);
+        Http::fake(['api.biteship.com/v1/rates/couriers' => Http::response($this->fakeBiteshipRatesResponse())]);
+        BulkPricingTier::factory()->create(['min_qty' => 1, 'max_qty' => null, 'price_per_unit' => 70000]);
+        $user = User::factory()->create();
+        $address = Address::factory()->for($user)->create();
+        $variant = ProductVariant::factory()->for(Product::factory()->create())->create();
+        $design = \App\Models\Design::factory()->create(['status' => 'aktif']);
+
+        $upload = $this->actingAs($user)->postJson('/api/checkout/bulk', [
+            'address_id' => $address->id,
+            'items' => [['product_variant_id' => $variant->id, 'quantity' => 10]],
+            'courier_company' => 'jne', 'courier_type' => 'reg',
+            'custom_design_file_path' => 'design-uploads/logo-komunitas.png',
+            'notes' => 'Sablon dada kiri, ukuran A5',
+        ])->assertCreated();
+        $marketplace = $this->actingAs($user)->postJson('/api/checkout/bulk', [
+            'address_id' => $address->id,
+            'items' => [['product_variant_id' => $variant->id, 'quantity' => 10]],
+            'courier_company' => 'jne', 'courier_type' => 'reg',
+            'design_id' => $design->id,
+        ])->assertCreated();
+
+        $this->assertDatabaseHas('order_items', ['order_id' => $upload->json('data.id'), 'custom_design_file_path' => 'design-uploads/logo-komunitas.png']);
+        $this->assertDatabaseHas('orders', ['id' => $upload->json('data.id'), 'notes' => 'Sablon dada kiri, ukuran A5']);
+        $this->assertDatabaseHas('order_items', ['order_id' => $marketplace->json('data.id'), 'design_id' => $design->id]);
+    }
 }

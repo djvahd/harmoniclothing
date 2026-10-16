@@ -49,6 +49,7 @@ return [
         'production_invalid_status' => 'This order can only be moved to production while its status is Awaiting Approval.',
         'reject_invalid_status' => 'This order is no longer in the Awaiting Approval status.',
         'shipment_invalid_status' => 'A shipment can only be created while the order status is In Production.',
+        'shipment_courier_failed' => 'The courier service (Biteship) could not be reached or rejected the request. No shipment was created, please try again.',
         'shipment_already_exists' => 'This order already has shipment data.',
     ],
 
@@ -82,6 +83,7 @@ return [
         'already_applied' => 'This account has already applied to become a Creator.',
         'not_applied_yet' => 'Please apply to become a Creator first.',
         'not_pending_approval' => 'This Creator application is not currently awaiting approval.',
+        'verification_locked' => 'Your verification is under review, already approved, or the account is blocked, so it cannot be resubmitted.',
         'kyc_incomplete' => 'Verification data (ID card, birth date, payout account) is incomplete, so the Creator cannot be approved yet.',
         'terms_required' => 'You must agree to the Creator Terms & Conditions.',
         'guardian_name_required' => 'Guardian name is required for Creators under 18 years old.',

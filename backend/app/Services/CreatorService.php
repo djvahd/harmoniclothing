@@ -63,6 +63,13 @@ class CreatorService
             ]);
         }
 
+        // Only a first submission or a rejected one may be (re)submitted; pending, active and banned profiles are locked.
+        if ($profile->status !== null && $profile->status !== 'ditolak') {
+            throw ValidationException::withMessages([
+                'status' => [__('messages.creator.verification_locked')],
+            ]);
+        }
+
         $isMinor = Carbon::parse($data['birth_date'])->age < 18;
 
         $profile->update([
@@ -81,6 +88,18 @@ class CreatorService
         ]);
 
         return $profile;
+    }
+
+    /** GET /creator/verification — where the user's own application stands (null status = not submitted yet). */
+    public function verificationStatus(User $user): array
+    {
+        $profile = $user->creatorProfile;
+
+        return [
+            'applied' => $profile !== null,
+            'status' => $profile?->status,
+            'rejection_reason' => $profile?->status === 'ditolak' ? $profile->rejection_reason : null,
+        ];
     }
 
     /** GET /creator/dashboard — FE-020. */

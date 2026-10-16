@@ -49,6 +49,7 @@ return [
         'production_invalid_status' => 'Pesanan hanya dapat dimasukkan ke produksi selama status Menunggu Approval.',
         'reject_invalid_status' => 'Pesanan sudah tidak dalam status Menunggu Approval.',
         'shipment_invalid_status' => 'Pengiriman hanya dapat dibuat selama status Diproses Produksi.',
+        'shipment_courier_failed' => 'Layanan kurir (Biteship) tidak dapat dihubungi atau menolak permintaan. Pengiriman belum dibuat, silakan coba lagi.',
         'shipment_already_exists' => 'Pesanan ini sudah memiliki data pengiriman.',
     ],
 
@@ -82,6 +83,7 @@ return [
         'already_applied' => 'Akun ini sudah mengajukan diri sebagai Creator.',
         'not_applied_yet' => 'Ajukan diri sebagai Creator terlebih dahulu.',
         'not_pending_approval' => 'Pengajuan Creator ini tidak sedang menunggu approval.',
+        'verification_locked' => 'Data verifikasi sedang ditinjau, sudah disetujui, atau akun diblokir, sehingga tidak dapat dikirim ulang.',
         'kyc_incomplete' => 'Data verifikasi (KTP, tanggal lahir, rekening) belum lengkap, Creator belum dapat disetujui.',
         'terms_required' => 'Anda harus menyetujui Syarat & Ketentuan Creator.',
         'guardian_name_required' => 'Nama wali wajib diisi untuk Creator di bawah 18 tahun.',

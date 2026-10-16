@@ -709,6 +709,8 @@
       "viewDetail": "View Details"
     },
     "orderDetail": {
+      "designPreviewLabel": "Your design",
+      "designPreviewAlt": "Preview of the design you uploaded",
       "notFound": "Order not found.",
       "rejectedTitle": "Order Rejected",
       "timeline": {
@@ -1295,6 +1297,15 @@
       "title": "Identity Verification",
       "statusLabel": "Status:",
       "statusPendingReview": "Pending Review",
+      "status": { "menunggu_approval": "Pending Review", "aktif": "Approved", "ditolak": "Rejected", "nonaktif": "Inactive", "banned": "Blocked" },
+      "lockedNote": {
+        "menunggu_approval": "Your verification data is being reviewed by an admin. The form is locked until a decision is made.",
+        "aktif": "Verification approved. Your Creator account is active.",
+        "nonaktif": "Your Creator account is inactive. Contact the admin through Chat.",
+        "banned": "Your Creator account is blocked. Contact the admin through Chat if you disagree."
+      },
+      "rejectionReason": "Reason for rejection: {reason}",
+      "resubmitNote": "Fix the data according to the reason above, then submit again.",
       "fields": {
         "fullName": "Full Name (as on ID card)",
         "idNumber": "ID Card Number",
@@ -1322,6 +1333,7 @@
       "uploadKtpError": "Please upload your ID card photo first."
     },
     "uploadDesign": {
+      "previewAlt": "Design file preview",
       "title": "Upload Design",
       "fields": {
         "title": "Design Title",

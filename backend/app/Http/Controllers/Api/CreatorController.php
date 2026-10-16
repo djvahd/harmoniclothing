@@ -27,6 +27,12 @@ class CreatorController extends Controller
         return response()->json(['data' => ['slug' => $profile->slug, 'status' => $profile->status]], 201);
     }
 
+    /** GET /creator/verification */
+    public function verificationStatus(Request $request): JsonResponse
+    {
+        return response()->json(['data' => $this->creators->verificationStatus($request->user())]);
+    }
+
     /** POST /creator/verification */
     public function verification(CreatorVerificationRequest $request): JsonResponse
     {

@@ -50,7 +50,7 @@ export interface Design {
   thumbnail_path: string | null;
   status: DesignStatus;
   rejection_reason: string | null;
-  starting_price?: number | null;
+  starting_price?: string | null;
   sold_count?: number;
   rating_average?: number | null;
   review_count?: number;

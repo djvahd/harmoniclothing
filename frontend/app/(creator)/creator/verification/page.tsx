@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import useSWR from "swr";
 import { Upload } from "lucide-react";
 import { useTranslations } from "next-intl";
 import CreatorSidebar from "@/components/layout/CreatorSidebar";
@@ -8,7 +9,9 @@ import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
-import { submitVerification } from "@/services/creator";
+import { getVerificationStatus, submitVerification } from "@/services/creator";
+import InlineError from "@/components/ui/InlineError";
+import LoadingState from "@/components/ui/LoadingState";
 import { getErrorMessage } from "@/lib/api";
 
 const PAYOUT_METHODS = [
@@ -43,7 +46,11 @@ export default function VerifikasiDataDiriPage() {
   const [guardianName, setGuardianName] = useState("");
   const [guardianIdNumber, setGuardianIdNumber] = useState("");
   const [guardianConsent, setGuardianConsent] = useState(false);
-  const [status, setStatus] = useState<string | null>(null);
+  const { data: statusData, error: statusError, mutate: refreshStatus } = useSWR("/creator/verification", getVerificationStatus);
+  const status = statusData?.data.status ?? null;
+  const rejectionReason = statusData?.data.rejection_reason ?? null;
+  // Only a first submission or a rejected one can be (re)submitted; the server enforces the same rule.
+  const canSubmit = !!statusData && (status === null || status === "ditolak");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -72,7 +79,7 @@ export default function VerifikasiDataDiriPage() {
           ? { guardian_name: guardianName, guardian_id_number: guardianIdNumber, guardian_consent: guardianConsent }
           : {}),
       });
-      setStatus(data.status);
+      await refreshStatus({ data: { applied: true, status: data.status as "menunggu_approval", rejection_reason: null } }, { revalidate: true });
     } catch (err) {
       setError(getErrorMessage(err, tCommon("errorGeneric")));
     } finally {
@@ -86,14 +93,26 @@ export default function VerifikasiDataDiriPage() {
         <h1 className="font-heading text-h3 font-semibold text-text-primary">
           {t("title")}
         </h1>
+        {statusError && !statusData && <InlineError />}
+        {!statusData && !statusError && <LoadingState rows={3} />}
         {status && (
-          <div className="flex items-center gap-2">
-            <span className="font-body text-sm text-text-secondary">{t("statusLabel")}</span>
-            <Badge variant={status === "aktif" ? "success" : "warning"}>
-              {status === "menunggu_approval" ? t("statusPendingReview") : status}
-            </Badge>
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <span className="font-body text-sm text-text-secondary">{t("statusLabel")}</span>
+              <Badge variant={status === "aktif" ? "success" : status === "ditolak" || status === "banned" ? "danger" : "warning"}>
+                {t(`status.${status}`)}
+              </Badge>
+            </div>
+            {status === "ditolak" && rejectionReason && (
+              <p className="rounded-sm border border-danger bg-danger/5 px-3 py-2 font-body text-sm text-text-primary">
+                {t("rejectionReason", { reason: rejectionReason })}
+              </p>
+            )}
+            {!canSubmit && <p className="font-body text-sm text-text-secondary">{t(`lockedNote.${status}`)}</p>}
+            {status === "ditolak" && <p className="font-body text-sm text-text-secondary">{t("resubmitNote")}</p>}
           </div>
         )}
+        {canSubmit && (
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-md border border-border bg-surface p-5">
           <Input label={t("fields.fullName")} value={fullName} onChange={(e) => setFullName(e.target.value)} required />
           <Input label={t("fields.idNumber")} value={idNumber} onChange={(e) => setIdNumber(e.target.value)} required />
@@ -188,6 +207,7 @@ export default function VerifikasiDataDiriPage() {
             {t("submit")}
           </Button>
         </form>
+        )}
         <p className="font-body text-xs text-text-secondary">{t("footerNote")}</p>
       </div>
     </SidebarPageShell>

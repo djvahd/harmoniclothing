@@ -458,4 +458,83 @@ class QcRegressionTest extends TestCase
         $this->assertSame('Pesanan HC-1 telah dibayar dan menunggu approval Admin.', $byBody($id, 'HC-1')['body']);
         $this->assertSame('Isi lama tanpa params', $byBody($en, 'Isi lama')['body']); // legacy rows keep stored text
     }
+
+    public function test_biteship_failure_returns_a_clear_error_and_creates_no_shipment(): void
+    {
+        config(['services.biteship.api_key' => 'test-key']);
+        Http::fake(['api.biteship.com/*' => Http::sequence()->pushStatus(401)->push(['id' => 'bs-9', 'courier' => ['waybill_id' => 'WB9']], 200)]);
+        $admin = User::factory()->admin()->create();
+        $order = Order::factory()->diprosesProduksi()->create();
+
+        $this->actingAs($admin)->postJson("/api/admin/orders/{$order->id}/shipment", ['courier_company' => 'jne', 'courier_type' => 'reg'])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('courier');
+
+        $this->assertSame(0, Shipment::where('order_id', $order->id)->count());
+        $this->assertSame('diproses_produksi', $order->fresh()->status);
+
+        // The admin retries once the courier API works again (second queued response).
+        $this->actingAs($admin)->postJson("/api/admin/orders/{$order->id}/shipment", ['courier_company' => 'jne', 'courier_type' => 'reg'])->assertCreated();
+    }
+
+    public function test_courier_override_books_the_other_courier(): void
+    {
+        config(['services.biteship.api_key' => 'test-key']);
+        Http::fake(['api.biteship.com/*' => Http::response(['id' => 'bs-10', 'courier' => ['waybill_id' => 'WB10']], 200)]);
+        $admin = User::factory()->admin()->create();
+        $order = Order::factory()->diprosesProduksi()->create(['courier_company' => 'jne', 'courier_type' => 'reg']);
+
+        $this->actingAs($admin)->postJson("/api/admin/orders/{$order->id}/shipment", ['courier_company' => 'gojek', 'courier_type' => 'instant'])
+            ->assertCreated()->assertJsonPath('data.courier', 'gojek')->assertJsonPath('data.courier_type', 'instant');
+
+        Http::assertSent(fn ($r) => str_contains($r->url(), 'api.biteship.com/v1/orders')
+            && $r['courier_company'] === 'gojek' && $r['courier_type'] === 'instant');
+        $this->assertSame('bs-10', Shipment::where('order_id', $order->id)->first()->biteship_order_id);
+    }
+
+    public function test_private_channels_are_authorized_only_for_their_participants(): void
+    {
+        config([
+            'broadcasting.default' => 'pusher',
+            'broadcasting.connections.pusher.key' => 'test-key',
+            'broadcasting.connections.pusher.secret' => 'test-secret',
+            'broadcasting.connections.pusher.app_id' => '1',
+        ]);
+        // Channels were registered on the default driver at boot; register them on the pusher driver set above.
+        require base_path('routes/channels.php');
+        $owner = User::factory()->create();
+        $other = User::factory()->create();
+        $admin = User::factory()->admin()->create();
+        $thread = \App\Models\ChatThread::factory()->create(['customer_id' => $owner->id]);
+        $auth = fn (User $u, string $channel) => $this->actingAs($u)->post('/broadcasting/auth', ['channel_name' => $channel, 'socket_id' => '1234.5678'], ['Accept' => 'application/json']);
+
+        $status = fn (User $u, string $channel) => $auth($u, $channel)->getStatusCode();
+
+        $this->assertSame(
+            ['owner chat' => 200, 'other chat' => 403, 'admin chat' => 200, 'admin channel' => 200, 'owner admin channel' => 403, 'own user channel' => 200, 'other user channel' => 403],
+            [
+                'owner chat' => $status($owner, "private-chat.{$thread->id}"),
+                'other chat' => $status($other, "private-chat.{$thread->id}"),
+                'admin chat' => $status($admin, "private-chat.{$thread->id}"),
+                'admin channel' => $status($admin, 'private-admin.chat'),
+                'owner admin channel' => $status($owner, 'private-admin.chat'),
+                'own user channel' => $status($owner, "private-App.Models.User.{$owner->id}"),
+                'other user channel' => $status($other, "private-App.Models.User.{$owner->id}"),
+            ],
+        );
+    }
+
+    public function test_auth_emails_follow_the_request_language(): void
+    {
+        $user = User::factory()->create();
+        app()->setLocale('en');
+        $reset = (new ResetPasswordNotification('tok'))->toMail($user);
+        $verify = (new \Illuminate\Auth\Notifications\VerifyEmail)->toMail($user);
+        $this->assertSame(__('messages.auth.mail.reset_subject', [], 'en'), $reset->subject);
+        $this->assertSame(__('messages.auth.mail.verify_subject', [], 'en'), $verify->subject);
+        $this->assertNotSame(__('messages.auth.mail.reset_subject', [], 'id'), $reset->subject);
+
+        app()->setLocale('id');
+        $this->assertSame(__('messages.auth.mail.reset_subject', [], 'id'), (new ResetPasswordNotification('tok'))->toMail($user)->subject);
+    }
 }
