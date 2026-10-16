@@ -18,7 +18,7 @@ class NotificationService
      * call site) defaults to enabled, so this is additive, not a behavior
      * change for anything already firing.
      */
-    public function notify(User $user, string $type, string $title, string $body, ?Model $related = null): ?Notification
+    public function notify(User $user, string $type, string $title, string $body, ?Model $related = null, ?array $params = null): ?Notification
     {
         if (NotificationSetting::query()->where('notification_type', $type)->where('is_enabled', false)->exists()) {
             return null;
@@ -29,6 +29,7 @@ class NotificationService
             'type' => $type,
             'title' => $title,
             'body' => $body,
+            'params' => $params,
             'related_type' => $related ? $related::class : null,
             'related_id' => $related?->getKey(),
         ]);

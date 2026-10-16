@@ -42,6 +42,7 @@ class AutoCompleteDeliveredOrders extends Command
                     'Pesanan selesai',
                     "Pesanan {$order->order_number} otomatis diselesaikan. Anda tetap dapat memberi rating lewat Riwayat Pesanan.",
                     $order,
+                    ['order' => $order->order_number],
                 );
                 $completed++;
             });

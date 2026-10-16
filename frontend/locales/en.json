@@ -444,7 +444,7 @@
         "items": [
           { "q": "Is there a minimum order?", "a": "No. You can order from just 1 piece. Tiered pricing is available for larger quantities through Bulk Order." },
           { "q": "Which design file formats are accepted?", "a": "We accept PNG and SVG files. Use the highest resolution possible with a transparent background for sharp prints." },
-          { "q": "How long does production take?", "a": "Production starts once payment is confirmed and an admin approves your order. You can follow the status anytime on your My Orders page." },
+          { "q": "How long does production take?", "a": "Production takes about 5-7 business days after payment is confirmed and an admin approves your order. You can follow the status anytime on your My Orders page." },
           { "q": "Which payment methods are available?", "a": "Payments are processed through Midtrans, so options such as bank transfer/virtual account, e-wallets, and cards are available." },
           { "q": "What happens to unpaid orders?", "a": "Unpaid orders are cancelled automatically after 24 hours. You can place a new order at any time." },
           { "q": "Which couriers can I choose?", "a": "Courier options and shipping costs are shown at checkout once you select a delivery address." },
@@ -863,6 +863,7 @@
         "production": "Manage Production Queue",
         "orders": "Manage Orders",
         "payments": "Manage Payments & Invoices",
+        "payouts": "Commission Payouts",
         "shipments": "Manage Shipments",
         "chat": "Chat Management",
         "notificationSettings": "Notification Settings",
@@ -886,6 +887,20 @@
         "completed": "Completed",
         "activeCreators": "Active Creators"
       }
+    },
+    "payouts": {
+      "title": "Commission Payouts",
+      "intro": "Transfer the commission to the creator's account outside the app, then record the reference number here. Payout minimum {minimum}.",
+      "columns": { "creator": "Creator", "destination": "Destination Account", "count": "Commissions", "total": "Total Owed", "actions": "Actions" },
+      "empty": "No commissions to pay out yet.",
+      "noDestination": "Payout account not set",
+      "belowMinimum": "Below minimum",
+      "markPaid": "Mark as Transferred",
+      "modalTitle": "Record payout for {name}",
+      "referenceLabel": "Transfer reference number",
+      "confirm": "Save",
+      "success": "{name}'s commission marked as paid.",
+      "error": "Could not record the payout."
     },
     "auditLog": {
       "title": "Audit Log",

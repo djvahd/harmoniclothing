@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\AdminDashboardController;
 use App\Http\Controllers\Api\AdminDesignController;
 use App\Http\Controllers\Api\AdminNotificationSettingController;
 use App\Http\Controllers\Api\AdminOrderController;
+use App\Http\Controllers\Api\AdminPayoutController;
 use App\Http\Controllers\Api\AdminPaymentController;
 use App\Http\Controllers\Api\AdminReportController;
 use App\Http\Controllers\Api\AdminUserController;
@@ -177,5 +178,7 @@ Route::middleware(['auth:sanctum', 'auth.session', 'user.active', 'admin'])->pre
     Route::patch('/notification-settings/{type}', [AdminNotificationSettingController::class, 'update']);
 
     Route::get('/reports/sales', [AdminReportController::class, 'sales']); // FR-033
+    Route::get('/payouts', [AdminPayoutController::class, 'index']); // BR-007: manual commission payout
+    Route::post('/payouts/{creator}', [AdminPayoutController::class, 'pay']);
     Route::get('/audit-logs', [AdminAuditLogController::class, 'index']); // 2.5_Permission_Matrix.md §10
 });

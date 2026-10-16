@@ -249,6 +249,31 @@ export function bookShipment(id: number, override?: { courier_company: string; c
   });
 }
 
+export interface PayoutRow {
+  creator_id: number;
+  name: string | null;
+  brand_name: string | null;
+  payout_method: string | null;
+  payout_account_number: string | null;
+  payout_account_holder: string | null;
+  commission_count: number;
+  total_owed: string;
+  meets_minimum: boolean;
+  has_destination: boolean;
+}
+
+/** BR-007: unpaid creator commissions grouped per creator; payout is manual. */
+export function getPayouts() {
+  return apiFetch<{ data: PayoutRow[]; meta: { minimum: string } }>("/admin/payouts");
+}
+
+export function payCreator(creatorId: number, reference: string) {
+  return apiFetch<{ data: { count: number; total: string } }>(`/admin/payouts/${creatorId}`, {
+    method: "POST",
+    body: { reference },
+  });
+}
+
 export function getPayments(params?: { status?: string; page?: number }) {
   return apiFetch<Paginated<Payment>>(`/admin/payments${buildQuery(params)}`);
 }

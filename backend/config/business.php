@@ -30,19 +30,18 @@ return [
 
     /*
     | BR-007 — Komisi Creator dihitung otomatis per transaksi yang memakai
-    | desainnya. Persentasenya TIDAK ditentukan di dokumen perencanaan mana
-    | pun: 20% ini placeholder (acuan margin default Redbubble di riset
-    | kompetitor), BUKAN keputusan bisnis. Set CREATOR_COMMISSION_RATE
-    | sebelum launch. Dipakai oleh: CommissionService.
+    | desainnya. Keputusan pemilik (2026-10-16): 20% dari subtotal item.
+    | Besarnya hanya diketahui admin dan creator yang bersangkutan (tidak
+    | ditampilkan sebagai baris harga). Ubah lewat CREATOR_COMMISSION_RATE.
+    | Dipakai oleh: CommissionService.
     */
     'creator_commission_rate' => (float) env('CREATOR_COMMISSION_RATE', 0.20),
 
     /*
-    | BR-007 (revisi 2026-07-22) — Pencairan komisi otomatis, batch mingguan.
-    | Total komisi "terhutang" seorang Creator harus mencapai nominal ini
-    | sebelum dicairkan (menghindari transfer receh tiap minggu). Juga
-    | placeholder — atur lewat CREATOR_PAYOUT_MINIMUM sebelum launch.
-    | Dipakai oleh: PayoutService.
+    | BR-007 (revisi 2026-10-16) — Pencairan komisi MANUAL oleh admin
+    | (halaman /admin/payouts). Total komisi "terhutang" seorang Creator harus
+    | mencapai nominal ini sebelum dapat dicairkan; keputusan pemilik: Rp 50.000.
+    | Atur lewat CREATOR_PAYOUT_MINIMUM. Dipakai oleh: PayoutService.
     */
     'creator_payout_minimum' => (float) env('CREATOR_PAYOUT_MINIMUM', 50000),
 

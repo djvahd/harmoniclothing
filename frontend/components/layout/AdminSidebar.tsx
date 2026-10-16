@@ -28,6 +28,7 @@ export default function AdminSidebar({
         { href: "/admin/production", label: t("items.production") },
         { href: "/admin/orders", label: t("items.orders") },
         { href: "/admin/payments", label: t("items.payments") },
+        { href: "/admin/payouts", label: t("items.payouts") },
         { href: "/admin/shipments", label: t("items.shipments") },
       ],
     },

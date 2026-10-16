@@ -184,6 +184,7 @@ class OrderService
                 'Pesanan ditolak',
                 "Pesanan {$order->order_number} ditolak: {$reason}",
                 $order,
+                ['order' => $order->order_number, 'reason' => $reason],
             );
             $this->auditLog->record($admin, 'order.reject', $order, $reason);
 

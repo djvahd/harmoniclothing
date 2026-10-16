@@ -91,6 +91,7 @@ class BiteshipWebhookService
                     'Pesanan dikirim',
                     "Pesanan {$order->order_number} sedang dalam perjalanan.",
                     $order,
+                    ['order' => $order->order_number],
                 );
             } elseif ($status === 'delivered' && $order->status === 'dikirim') {
                 $order->update(['status' => 'menunggu_konfirmasi']);
@@ -101,6 +102,7 @@ class BiteshipWebhookService
                     'Pesanan sampai',
                     "Pesanan {$order->order_number} telah sampai. Konfirmasi penerimaan sekarang.",
                     $order,
+                    ['order' => $order->order_number],
                 );
             } elseif ($status === 'bermasalah' && ! $wasAlreadyProblem) {
                 $this->notifyAdmins($order, $biteshipStatus);
@@ -118,6 +120,7 @@ class BiteshipWebhookService
                 'Pengiriman bermasalah',
                 "Pengiriman pesanan {$order->order_number} bermasalah: {$biteshipStatus}. Perlu dicek manual.",
                 $order,
+                ['order' => $order->order_number, 'status' => $biteshipStatus],
             )
         );
     }

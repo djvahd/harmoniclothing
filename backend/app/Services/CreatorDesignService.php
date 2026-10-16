@@ -160,6 +160,7 @@ class CreatorDesignService
             'Desain disetujui',
             "Desain \"{$design->title}\" telah disetujui dan tayang di marketplace.",
             $design,
+            ['design' => $design->title],
         );
         $this->auditLog->record($admin, 'design.approve', $design);
 
@@ -186,6 +187,7 @@ class CreatorDesignService
             'Desain ditolak',
             "Desain \"{$design->title}\" ditolak: {$reason}",
             $design,
+            ['design' => $design->title, 'reason' => $reason],
         );
         $this->auditLog->record($admin, 'design.reject', $design, $reason);
 

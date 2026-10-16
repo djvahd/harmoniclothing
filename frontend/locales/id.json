@@ -444,7 +444,7 @@
         "items": [
           { "q": "Apakah ada minimum order?", "a": "Tidak. Kamu bisa memesan mulai dari 1 pcs. Untuk pesanan dalam jumlah besar tersedia harga bertingkat lewat fitur Bulk Order." },
           { "q": "Format file desain apa yang diterima?", "a": "Kami menerima file PNG dan SVG. Gunakan resolusi setinggi mungkin dan latar transparan agar hasil cetak tajam." },
-          { "q": "Berapa lama proses produksi?", "a": "Produksi dimulai setelah pembayaran dikonfirmasi dan pesananmu disetujui admin. Status pesanan dapat dipantau kapan saja di halaman Pesanan Saya." },
+          { "q": "Berapa lama proses produksi?", "a": "Produksi memakan waktu sekitar 5-7 hari kerja setelah pembayaran dikonfirmasi dan pesananmu disetujui admin. Status pesanan dapat dipantau kapan saja di halaman Pesanan Saya." },
           { "q": "Metode pembayaran apa yang tersedia?", "a": "Pembayaran diproses melalui Midtrans, sehingga tersedia berbagai metode seperti transfer bank/virtual account, e-wallet, dan kartu." },
           { "q": "Pesanan yang belum dibayar bagaimana?", "a": "Pesanan yang belum dibayar akan dibatalkan otomatis setelah 24 jam. Kamu bisa membuat pesanan baru kapan saja." },
           { "q": "Kurir apa yang bisa dipilih?", "a": "Pilihan kurir dan ongkos kirim ditampilkan langsung di halaman checkout setelah kamu memilih alamat pengiriman." },
@@ -863,6 +863,7 @@
         "production": "Kelola Antrian Produksi",
         "orders": "Kelola Pesanan",
         "payments": "Kelola Pembayaran & Invoice",
+        "payouts": "Pencairan Komisi",
         "shipments": "Kelola Pengiriman",
         "chat": "Chat Management",
         "notificationSettings": "Konfigurasi Notifikasi",
@@ -886,6 +887,20 @@
         "completed": "Selesai",
         "activeCreators": "Creator Aktif"
       }
+    },
+    "payouts": {
+      "title": "Pencairan Komisi",
+      "intro": "Transfer komisi ke rekening creator di luar aplikasi, lalu catat nomor referensinya di sini. Minimum pencairan {minimum}.",
+      "columns": { "creator": "Creator", "destination": "Rekening Tujuan", "count": "Jumlah Komisi", "total": "Total Terhutang", "actions": "Aksi" },
+      "empty": "Belum ada komisi yang perlu dicairkan.",
+      "noDestination": "Rekening tujuan belum diisi",
+      "belowMinimum": "Belum mencapai minimum",
+      "markPaid": "Tandai Sudah Ditransfer",
+      "modalTitle": "Catat pencairan untuk {name}",
+      "referenceLabel": "Nomor referensi transfer",
+      "confirm": "Simpan",
+      "success": "Komisi {name} ditandai sudah dibayar.",
+      "error": "Gagal mencatat pencairan."
     },
     "auditLog": {
       "title": "Audit Log",

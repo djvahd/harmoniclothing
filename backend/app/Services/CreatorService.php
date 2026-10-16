@@ -143,6 +143,7 @@ class CreatorService
             'Pengajuan Creator disetujui',
             'Selamat! Pengajuan Anda sebagai Creator telah disetujui.',
             $profile,
+            [],
         );
         $this->auditLog->record($admin, 'creator.approve', $profile);
 
@@ -169,6 +170,7 @@ class CreatorService
             'Pengajuan Creator ditolak',
             "Pengajuan Anda sebagai Creator ditolak: {$reason}",
             $profile,
+            ['reason' => $reason],
         );
         $this->auditLog->record($admin, 'creator.reject', $profile, $reason);
 
@@ -203,6 +205,7 @@ class CreatorService
             'Akun Creator diblokir',
             "Akun Creator Anda telah diblokir: {$reason}",
             $profile,
+            ['reason' => $reason],
         );
         $this->auditLog->record($admin, 'creator.ban', $profile, $reason);
 

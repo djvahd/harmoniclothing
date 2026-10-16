@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * 4.3_Table_Design.md — notifications (notifikasi in-app per user).
  * Custom domain model, not Laravel's built-in notification system.
  */
-#[Fillable(['user_id', 'type', 'title', 'body', 'related_type', 'related_id', 'is_read'])]
+#[Fillable(['user_id', 'type', 'title', 'body', 'params', 'related_type', 'related_id', 'is_read'])]
 class Notification extends Model
 {
     /** @use HasFactory<NotificationFactory> */
@@ -22,6 +22,7 @@ class Notification extends Model
     {
         return [
             'is_read' => 'boolean',
+            'params' => 'array',
         ];
     }
 

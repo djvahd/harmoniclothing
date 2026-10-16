@@ -72,6 +72,12 @@ return [
         'cannot_submit' => 'Hanya desain berstatus Draft atau Ditolak yang dapat diajukan untuk review.',
     ],
 
+    'payout' => [
+        'nothing_owed' => 'Creator ini tidak memiliki komisi yang perlu dibayar.',
+        'below_minimum' => 'Total komisi belum mencapai minimum pencairan.',
+        'no_destination' => 'Creator belum mengisi rekening/e-wallet tujuan pencairan.',
+    ],
+
     'creator' => [
         'already_applied' => 'Akun ini sudah mengajukan diri sebagai Creator.',
         'not_applied_yet' => 'Ajukan diri sebagai Creator terlebih dahulu.',

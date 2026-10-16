@@ -92,6 +92,7 @@ class MidtransWebhookService
                 'Pembayaran berhasil',
                 "Pesanan {$order->order_number} telah dibayar dan menunggu approval Admin.",
                 $order,
+                ['order' => $order->order_number],
             );
         }
     }

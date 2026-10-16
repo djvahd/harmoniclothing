@@ -30,6 +30,7 @@ class CancelUnpaidOrders extends Command
                 'Pesanan dibatalkan',
                 "Pesanan {$order->order_number} dibatalkan otomatis karena belum dibayar dalam 24 jam.",
                 $order,
+                ['order' => $order->order_number],
             );
         }
 

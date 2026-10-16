@@ -437,4 +437,25 @@ class QcRegressionTest extends TestCase
 
         $this->assertSame('menunggu_approval', $profile->fresh()->status);
     }
+
+    public function test_notification_text_follows_the_reader_language(): void
+    {
+        $user = User::factory()->create();
+        Notification::factory()->for($user)->create([
+            'type' => 'order.paid', 'title' => 'Pembayaran berhasil',
+            'body' => 'Pesanan HC-1 telah dibayar dan menunggu approval Admin.', 'params' => ['order' => 'HC-1'],
+        ]);
+        Notification::factory()->for($user)->create([
+            'type' => 'order.paid', 'title' => 'Judul lama', 'body' => 'Isi lama tanpa params', 'params' => null,
+        ]);
+
+        $en = $this->actingAs($user)->getJson('/api/notifications?lang=en')->assertOk()->json('data');
+        $id = $this->actingAs($user)->getJson('/api/notifications?lang=id')->assertOk()->json('data');
+
+        $byBody = fn (array $rows, string $needle) => collect($rows)->first(fn ($r) => str_contains($r['body'], $needle));
+        $this->assertSame('Payment successful', $byBody($en, 'HC-1')['title']);
+        $this->assertSame('Order HC-1 has been paid and is waiting for Admin approval.', $byBody($en, 'HC-1')['body']);
+        $this->assertSame('Pesanan HC-1 telah dibayar dan menunggu approval Admin.', $byBody($id, 'HC-1')['body']);
+        $this->assertSame('Isi lama tanpa params', $byBody($en, 'Isi lama')['body']); // legacy rows keep stored text
+    }
 }

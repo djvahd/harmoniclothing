@@ -67,6 +67,7 @@ class ChatService
                 'Pesan baru',
                 "Pesan baru dari {$sender->name}.",
                 $thread,
+                ['name' => $sender->name],
             );
         } elseif ($senderRole === 'admin') {
             $this->notifications->notify(
@@ -75,6 +76,7 @@ class ChatService
                 'Pesan baru dari Admin',
                 'Anda menerima balasan baru di chat support.',
                 $thread,
+                ['tkey' => 'chat.admin_reply'],
             );
         }
 

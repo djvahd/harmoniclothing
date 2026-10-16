@@ -72,6 +72,12 @@ return [
         'cannot_submit' => 'Only designs with Draft or Rejected status can be submitted for review.',
     ],
 
+    'payout' => [
+        'nothing_owed' => 'This creator has no commission to pay out.',
+        'below_minimum' => 'The total commission has not reached the payout minimum yet.',
+        'no_destination' => 'The creator has not set a payout bank/e-wallet account.',
+    ],
+
     'creator' => [
         'already_applied' => 'This account has already applied to become a Creator.',
         'not_applied_yet' => 'Please apply to become a Creator first.',
