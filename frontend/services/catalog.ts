@@ -20,6 +20,9 @@ export interface GetProductsParams {
   sort?: ProductSort;
 }
 
+/** Page size of the public catalog; shared by the server-rendered first page and the client list. */
+export const CATALOG_PER_PAGE = 40;
+
 export function getProducts(params?: GetProductsParams) {
   return apiFetch<Paginated<Product>>(`/catalog/products${buildQuery(params)}`);
 }

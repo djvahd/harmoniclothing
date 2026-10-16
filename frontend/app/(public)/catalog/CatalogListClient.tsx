@@ -9,12 +9,13 @@ import InlineError from "@/components/ui/InlineError";
 import ProductCard, { ProductCardSkeleton } from "@/components/ui/ProductCard";
 import Button from "@/components/ui/Button";
 import FilterSidebar, { EMPTY_FILTER_VALUE, type FilterSidebarValue } from "@/components/ui/FilterSidebar";
-import type { ProductSort } from "@/services/catalog";
+import { CATALOG_PER_PAGE, type ProductSort } from "@/services/catalog";
 import { useProducts, useProductFilters } from "@/hooks/useProducts";
 import type { Product } from "@/types/product";
+import type { Paginated } from "@/types/api";
 import { filtersFromParams, syncFiltersToUrl, SORT_KEY, SEARCH_KEY } from "@/lib/filter-url";
 
-const PER_PAGE = 40;
+const PER_PAGE = CATALOG_PER_PAGE;
 
 const SORT_OPTIONS: { value: ProductSort; key: string }[] = [
   { value: "terbaru", key: "newest" },
@@ -24,7 +25,7 @@ const SORT_OPTIONS: { value: ProductSort; key: string }[] = [
   { value: "rating", key: "topRated" },
 ];
 
-function KatalogPageContent() {
+function KatalogPageContent({ initial }: { initial?: Paginated<Product> }) {
   const t = useTranslations("public.catalogList");
   const searchParams = useSearchParams();
   const kategoriParam = searchParams.get("kategori");
@@ -38,7 +39,8 @@ function KatalogPageContent() {
   const [filters, setFilters] = useState<FilterSidebarValue>(() => filtersFromParams(searchParams));
   const [showSort, setShowSort] = useState(false);
   const [page, setPage] = useState(1);
-  const [accumulated, setAccumulated] = useState<Product[]>([]);
+  // Server-rendered first page (default view only) so the grid exists in the initial HTML.
+  const [accumulated, setAccumulated] = useState<Product[]>(initial?.data ?? []);
   const sortRef = useRef<HTMLDivElement>(null);
 
   // A link that arrives with ?kategori=... (e.g. from the footer) while this page is open applies that category.
@@ -77,6 +79,9 @@ function KatalogPageContent() {
   const { data: totalData } = useProducts("total", { per_page: 1 });
   const grandTotal = totalData?.meta.total;
 
+  const isDefaultView =
+    page === 1 && sort === "terbaru" && !search && !filters.categories.length && !filters.genders.length &&
+    !filters.sizes.length && !filters.colors.length && !filters.materials.length && !filters.priceMin && !filters.priceMax;
   const { data, error, isLoading } = useProducts("public", {
     page,
     per_page: PER_PAGE,
@@ -88,7 +93,7 @@ function KatalogPageContent() {
     materials: filters.materials.length ? filters.materials : undefined,
     price_min: filters.priceMin ? Number(filters.priceMin) : undefined,
     price_max: filters.priceMax ? Number(filters.priceMax) : undefined,
-  });
+  }, isDefaultView ? initial : undefined);
 
   // Page 1 of a (possibly new) filter/sort combination replaces the
   // accumulated list; "Muat Lebih Banyak" appends subsequent pages onto it.
@@ -242,6 +247,6 @@ function KatalogPageContent() {
   );
 }
 
-export default function KatalogPage() {
-  return <KatalogPageContent />;
+export default function KatalogPage({ initial }: { initial?: Paginated<Product> }) {
+  return <KatalogPageContent initial={initial} />;
 }

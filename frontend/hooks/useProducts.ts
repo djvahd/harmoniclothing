@@ -7,10 +7,12 @@ import {
   type GetProductsParams,
 } from "@/services/catalog";
 import { swrKeys } from "@/lib/swr-keys";
+import type { Paginated } from "@/types/api";
+import type { Product } from "@/types/product";
 
 /** A product list for a given usage site — pass a stable `tag` (e.g. "public", "admin", "home") so unrelated lists don't share a cache entry. */
-export function useProducts(tag: string, params?: GetProductsParams) {
-  const { data, isLoading, error } = useSWR(swrKeys.products(tag, params), () => getProducts(params));
+export function useProducts(tag: string, params?: GetProductsParams, fallbackData?: Paginated<Product>) {
+  const { data, isLoading, error } = useSWR(swrKeys.products(tag, params), () => getProducts(params), { fallbackData });
   return { data, isLoading, error };
 }
 
