@@ -58,23 +58,26 @@ Route::middleware(['auth:sanctum', 'auth.session', 'user.active'])->group(functi
     // FR-010 / FE-015 — Product Customization own-design upload (not
     // enumerated in 5.2_API_List.md, filled per the "not all ~62 endpoints
     // are enumerated" scope note in 5.3_API_Specification.md §intro)
-    Route::post('/customization/uploads', [CustomizationController::class, 'uploadDesign']);
+    // 2.5_Permission_Matrix: Admin is operational only - no cart, wishlist or checkout.
+    Route::middleware('not.admin')->group(function () {
+        Route::post('/customization/uploads', [CustomizationController::class, 'uploadDesign']);
 
-    // 5.2_API_List.md §3 — /cart (FE-025), scope own
-    Route::get('/cart', [CartController::class, 'index']);
-    Route::post('/cart', [CartController::class, 'store']);
-    Route::patch('/cart/{item}', [CartController::class, 'update']);
-    Route::delete('/cart/{item}', [CartController::class, 'destroy']);
+        // 5.2_API_List.md §3 — /cart (FE-025), scope own
+        Route::get('/cart', [CartController::class, 'index']);
+        Route::post('/cart', [CartController::class, 'store']);
+        Route::patch('/cart/{item}', [CartController::class, 'update']);
+        Route::delete('/cart/{item}', [CartController::class, 'destroy']);
 
-    // 5.2_API_List.md §3 — /wishlist (FE-030), scope own
-    Route::get('/wishlist', [WishlistController::class, 'index']);
-    Route::post('/wishlist', [WishlistController::class, 'store']);
-    Route::delete('/wishlist/{item}', [WishlistController::class, 'destroy']);
+        // 5.2_API_List.md §3 — /wishlist (FE-030), scope own
+        Route::get('/wishlist', [WishlistController::class, 'index']);
+        Route::post('/wishlist', [WishlistController::class, 'store']);
+        Route::delete('/wishlist/{item}', [WishlistController::class, 'destroy']);
 
-    // 5.2_API_List.md §4 — /checkout (FE-027) and /checkout/bulk (FE-052/056, BR-026: separate flow, never mixed)
-    Route::post('/checkout/shipping-rates', [CheckoutController::class, 'shippingRates']);
-    Route::post('/checkout', [CheckoutController::class, 'store']);
-    Route::post('/checkout/bulk', [CheckoutController::class, 'storeBulk']);
+        // 5.2_API_List.md §4 — /checkout (FE-027) and /checkout/bulk (FE-052/056, BR-026: separate flow, never mixed)
+        Route::post('/checkout/shipping-rates', [CheckoutController::class, 'shippingRates']);
+        Route::post('/checkout', [CheckoutController::class, 'store']);
+        Route::post('/checkout/bulk', [CheckoutController::class, 'storeBulk']);
+    });
 
     // 5.2_API_List.md §4 — /orders (FE-028/029/031), scope own
     Route::get('/orders', [OrderController::class, 'index']);

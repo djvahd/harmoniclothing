@@ -67,21 +67,26 @@ export default function SiteHeader() {
         <LanguageSwitcher />
         {user ? (
           <>
-            <CartPopover
-              open={openPanel === "cart"}
-              onOpen={() => openPanelNow("cart")}
-              onScheduleClose={() => scheduleClosePanel("cart")}
-              onCancelClose={cancelPendingClose}
-              onNavigate={() => setOpenPanel(null)}
-            />
-            <NotificationPopover
-              open={openPanel === "notif"}
-              onOpen={() => openPanelNow("notif")}
-              onScheduleClose={() => scheduleClosePanel("notif")}
-              onCancelClose={cancelPendingClose}
-              onNavigate={() => setOpenPanel(null)}
-            />
+            {user.role !== "admin" && (
+              <CartPopover
+                open={openPanel === "cart"}
+                onOpen={() => openPanelNow("cart")}
+                onScheduleClose={() => scheduleClosePanel("cart")}
+                onCancelClose={cancelPendingClose}
+                onNavigate={() => setOpenPanel(null)}
+              />
+            )}
+            {user.role !== "admin" && (
+              <NotificationPopover
+                open={openPanel === "notif"}
+                onOpen={() => openPanelNow("notif")}
+                onScheduleClose={() => scheduleClosePanel("notif")}
+                onCancelClose={cancelPendingClose}
+                onNavigate={() => setOpenPanel(null)}
+              />
+            )}
             <span className="h-6 w-px bg-border" />
+            {user.role !== "admin" && (
             <Link
               href="/creator/dashboard"
               className={clsx(
@@ -94,6 +99,7 @@ export default function SiteHeader() {
               <Palette className="size-4" />
               <span className="font-body text-sm font-medium">{t("creator")}</span>
             </Link>
+            )}
             <AccountMenu
               user={user}
               open={openPanel === "account"}

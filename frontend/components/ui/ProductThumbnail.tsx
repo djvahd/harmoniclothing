@@ -1,4 +1,4 @@
-import Image from "next/image";
+import SafeImage from "@/components/ui/SafeImage";
 import clsx from "clsx";
 
 interface ProductThumbnailProps {
@@ -21,7 +21,7 @@ export default function ProductThumbnail({
       style={{ width: size, height: size }}
     >
       {src && (
-        <Image src={src} alt={alt} fill sizes={`${size}px`} className="object-cover" />
+        <SafeImage src={src} alt={alt} fill sizes={`${size}px`} className="object-cover" />
       )}
     </div>
   );

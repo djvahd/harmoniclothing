@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Award, Palette, Wallet } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -64,8 +65,8 @@ export default function AjukanUpgradeCreatorPage() {
             onChange={(e) => setBrandName(e.target.value)}
           />
           <div className="flex flex-col gap-1.5">
-            <label className="font-body text-xs font-medium text-text-secondary">{t("fields.bio")}</label>
-            <textarea
+            <label htmlFor="creator-bio" className="font-body text-xs font-medium text-text-secondary">{t("fields.bio")}</label>
+            <textarea id="creator-bio"
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               rows={3}
@@ -90,7 +91,12 @@ export default function AjukanUpgradeCreatorPage() {
               className="mt-0.5 shrink-0"
               required
             />
-            {t("termsCheckbox")}
+            <span>
+              {t("termsCheckbox")}{" "}
+              <Link href="/legal/terms" target="_blank" className="font-medium text-primary underline">
+                {t("termsLink")}
+              </Link>
+            </span>
           </label>
 
           {error && <p className="font-body text-xs text-danger">{error}</p>}

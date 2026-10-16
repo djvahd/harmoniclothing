@@ -83,8 +83,8 @@ export default function ProductForm({ product, onSaved }: { product?: AdminProdu
         <Input label={t("nameEn")} value={form.name_en} onChange={(e) => update("name_en", e.target.value)} required />
         <Input label={t("basePrice")} type="number" value={form.base_price} onChange={(e) => update("base_price", e.target.value)} required />
         <div className="flex flex-col gap-1.5">
-          <label className="font-body text-xs font-medium text-text-secondary">{t("segment")}</label>
-          <select
+          <label htmlFor="product-segment" className="font-body text-xs font-medium text-text-secondary">{t("segment")}</label>
+          <select id="product-segment"
             value={form.gender_segment}
             onChange={(e) => update("gender_segment", e.target.value)}
             className="rounded-sm border border-border bg-surface px-3 py-2.5 font-body text-sm text-text-primary outline-none"
@@ -97,12 +97,12 @@ export default function ProductForm({ product, onSaved }: { product?: AdminProdu
           </select>
         </div>
         <div className="flex flex-col gap-1.5">
-          <label className="font-body text-xs font-medium text-text-secondary">{t("descriptionId")}</label>
-          <textarea rows={3} value={form.description_id} onChange={(e) => update("description_id", e.target.value)} className={textareaClass} />
+          <label htmlFor="product-description-id" className="font-body text-xs font-medium text-text-secondary">{t("descriptionId")}</label>
+          <textarea id="product-description-id" rows={3} value={form.description_id} onChange={(e) => update("description_id", e.target.value)} className={textareaClass} />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label className="font-body text-xs font-medium text-text-secondary">{t("descriptionEn")}</label>
-          <textarea rows={3} value={form.description_en} onChange={(e) => update("description_en", e.target.value)} className={textareaClass} />
+          <label htmlFor="product-description-en" className="font-body text-xs font-medium text-text-secondary">{t("descriptionEn")}</label>
+          <textarea id="product-description-en" rows={3} value={form.description_en} onChange={(e) => update("description_en", e.target.value)} className={textareaClass} />
         </div>
       </div>
       <label className="flex items-center gap-2 font-body text-sm text-text-secondary">

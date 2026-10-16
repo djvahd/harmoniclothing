@@ -76,6 +76,7 @@ return [
         'already_applied' => 'Akun ini sudah mengajukan diri sebagai Creator.',
         'not_applied_yet' => 'Ajukan diri sebagai Creator terlebih dahulu.',
         'not_pending_approval' => 'Pengajuan Creator ini tidak sedang menunggu approval.',
+        'kyc_incomplete' => 'Data verifikasi (KTP, tanggal lahir, rekening) belum lengkap, Creator belum dapat disetujui.',
         'terms_required' => 'Anda harus menyetujui Syarat & Ketentuan Creator.',
         'guardian_name_required' => 'Nama wali wajib diisi untuk Creator di bawah 18 tahun.',
         'guardian_id_required' => 'Nomor KTP wali wajib diisi untuk Creator di bawah 18 tahun.',

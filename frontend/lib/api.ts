@@ -1,3 +1,5 @@
+import { toast } from "@/store/toast-store";
+
 // In a deployed build the browser always talks to its own origin: next.config.mjs
 // rewrites /api, /sanctum, /broadcasting and /storage to the backend so the
 // Sanctum session/CSRF cookies stay first-party. NEXT_PUBLIC_API_URL is only for
@@ -67,7 +69,23 @@ export async function apiFetch<T>(
     });
   };
 
-  let res = await send();
+  const isEn = readCookie("NEXT_LOCALE") === "en";
+  const genericError = isEn ? "Something went wrong, please try again." : "Terjadi kesalahan, coba lagi.";
+  const networkError = isEn ? "Cannot reach the server. Check your connection and try again." : "Tidak dapat terhubung ke server. Periksa koneksi Anda lalu coba lagi.";
+  // Writes that fail for a reason the user cannot fix by editing the form (server error,
+  // dropped connection) get a toast here so no screen can fail silently; validation
+  // errors (4xx) stay with the form that shows them.
+  const fail = (status: number, message: string): never => {
+    if (method !== "GET") toast(message, "danger");
+    throw new ApiError(status, message);
+  };
+
+  let res: Response;
+  try {
+    res = await send();
+  } catch {
+    return fail(0, networkError);
+  }
 
   // A 419 means the XSRF-TOKEN cookie we sent is stale — a server session that
   // expired (or was swept), a previous deploy, or a token carried over from the
@@ -76,7 +94,11 @@ export async function apiFetch<T>(
   // cleared. Force a fresh token and replay the request once.
   if (res.status === 419) {
     await ensureCsrfCookie(true);
-    res = await send();
+    try {
+      res = await send();
+    } catch {
+      return fail(0, networkError);
+    }
   }
 
   if (res.status === 204) return undefined as T;
@@ -84,7 +106,13 @@ export async function apiFetch<T>(
   const data = await res.json().catch(() => null);
 
   if (!res.ok) {
-    throw new ApiError(res.status, data?.message ?? "Terjadi kesalahan", data?.errors);
+    if (res.status >= 500) return fail(res.status, genericError);
+    // The server ended our session (expired, password changed, signed out in another tab):
+    // let the app drop the stale user and ask for a fresh login instead of failing quietly.
+    if (res.status === 401 && path !== "/me" && !path.startsWith("/auth/") && typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("api:unauthorized"));
+    }
+    throw new ApiError(res.status, data?.message ?? genericError, data?.errors);
   }
 
   return data as T;

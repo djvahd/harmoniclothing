@@ -52,7 +52,7 @@ class PayoutTest extends TestCase
         $this->assertNull($commission->fresh()->payout_reference);
     }
 
-    public function test_eligible_commissions_are_paid_once_a_provider_is_configured(): void
+    public function test_a_disbursement_key_alone_never_marks_commissions_paid_without_a_real_transfer(): void
     {
         config(['business.creator_payout_minimum' => 50000, 'services.disbursement.api_key' => 'test-key']);
         $profile = CreatorProfile::factory()->aktif()->create();
@@ -63,8 +63,8 @@ class PayoutTest extends TestCase
         $this->artisan('commissions:payout');
 
         $fresh = $commission->fresh();
-        $this->assertSame('dibayar', $fresh->status);
-        $this->assertNotNull($fresh->paid_at);
-        $this->assertNotNull($fresh->payout_reference);
+        $this->assertSame('terhutang', $fresh->status);
+        $this->assertNull($fresh->paid_at);
+        $this->assertNull($fresh->payout_reference);
     }
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Upload } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -128,11 +129,6 @@ function ProductEditorForm() {
   return (
     <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-8 md:flex-row md:px-20">
       <div className="flex flex-1 flex-col gap-3">
-        <div className="flex gap-4 font-body text-sm font-medium text-text-secondary">
-          <span>{t("viewFront")}</span>
-          <span>{t("viewBack")}</span>
-          <span>{t("viewSide")}</span>
-        </div>
         <div
           className="relative h-[500px] w-full overflow-hidden rounded-md"
           style={{
@@ -198,6 +194,9 @@ function ProductEditorForm() {
                 {t("byCreator", { name: design.creator.name })}
               </p>
             </div>
+            <Link href="/marketplace" className="ml-auto font-body text-xs font-medium text-primary underline">
+              {t("changeDesign")}
+            </Link>
           </div>
         ) : (
           <div className="flex flex-col gap-2">

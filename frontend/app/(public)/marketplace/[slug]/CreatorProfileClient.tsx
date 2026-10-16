@@ -32,7 +32,7 @@ export default function ProfilPublikCreatorPage() {
             <div className="h-4 w-32 rounded-sm bg-border" />
           </div>
         </div>
-        <div className="flex flex-wrap gap-6">
+        <div className="grid grid-cols-2 justify-items-center gap-3 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4 xl:grid-cols-5">
           {Array.from({ length: 6 }).map((_, i) => (
             <DesignCardSkeleton key={i} />
           ))}
@@ -112,7 +112,7 @@ export default function ProfilPublikCreatorPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-6">
+        <div className="grid grid-cols-2 justify-items-center gap-3 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4 xl:grid-cols-5">
           <div className="flex flex-col items-center gap-1">
             <LayoutGrid className="size-4 text-text-secondary" />
             <p className="font-heading text-lg font-semibold text-text-primary">
@@ -147,7 +147,7 @@ export default function ProfilPublikCreatorPage() {
             <p className="font-body text-sm text-text-secondary">{t("noDesigns")}</p>
           </div>
         ) : (
-          <div className="flex flex-wrap gap-6">
+          <div className="grid grid-cols-2 justify-items-center gap-3 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4 xl:grid-cols-5">
             {creator.designs.map((design) => (
               <DesignCard key={design.id} design={design} />
             ))}

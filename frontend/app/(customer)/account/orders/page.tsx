@@ -13,7 +13,7 @@ import LoadingState from "@/components/ui/LoadingState";
 import EmptyState from "@/components/ui/EmptyState";
 import { useOrders } from "@/hooks/useOrders";
 import { storageUrl } from "@/lib/storage";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatDate } from "@/lib/format";
 import { ORDER_STATUS_VARIANT } from "@/lib/order-status";
 import type { OrderStatus } from "@/types/order";
 
@@ -70,9 +70,12 @@ export default function RiwayatPesananPage() {
           {orders.map((order) => (
             <div key={order.id} className="flex flex-col gap-3 rounded-md border border-border bg-surface p-4">
               <div className="flex items-center justify-between">
-                <p className="font-body text-sm font-semibold text-text-primary">
-                  {order.order_number}
-                </p>
+                <div className="flex flex-col">
+                  <p className="font-body text-sm font-semibold text-text-primary">
+                    {order.order_number}
+                  </p>
+                  <p className="font-body text-xs text-text-secondary">{formatDate(order.created_at)}</p>
+                </div>
                 <Badge variant={ORDER_STATUS_VARIANT[order.status]}>
                   {tCommon(`orderStatus.${order.status}`)}
                 </Badge>

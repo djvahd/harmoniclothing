@@ -54,7 +54,8 @@ export default function ChatWidget() {
     mutate();
   }
 
-  if (!user) return null;
+  // Admin answers chats from /admin/chat; the customer-side widget is not for them.
+  if (!user || user.role === "admin") return null;
 
   return (
     <div className="fixed bottom-10 right-10 z-40">

@@ -37,7 +37,7 @@ export default function RelatedGrid<T>({
           {t("viewAll")}
         </Link>
       </div>
-      <div className="flex flex-wrap gap-6">
+      <div className="grid grid-cols-2 justify-items-center gap-3 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4 xl:grid-cols-5">
         {isLoading
           ? Array.from({ length: skeletonCount }).map((_, i) => renderSkeleton(i))
           : items.map((item) => renderItem(item))}

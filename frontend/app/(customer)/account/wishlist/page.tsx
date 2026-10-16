@@ -31,7 +31,7 @@ export default function WishlistPage() {
           <EmptyState icon={Heart} title={t("empty")} />
         )}
 
-        <div className="flex flex-wrap gap-6">
+        <div className="grid grid-cols-2 justify-items-center gap-3 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4 xl:grid-cols-5">
           {items.map((item) => (
             <div key={item.id} className="relative">
               <button

@@ -25,7 +25,10 @@ export default function Reveal({ children, className, delay = 0 }: RevealProps) 
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setVisible(entry.isIntersecting);
+        if (!entry.isIntersecting) return;
+        // Reveal once: content that has been shown must not hide again when scrolled out of view.
+        setVisible(true);
+        observer.disconnect();
       },
       { threshold: 0.15 },
     );

@@ -430,7 +430,7 @@
       }
     },
     "info": {
-      "updatedAt": "October 13, 2026",
+      "updatedAt": "October 16, 2026",
       "comingSoon": "Coming soon.",
       "meta": {
         "faq": { "title": "FAQ", "description": "Answers to frequently asked questions about ordering, payment, and shipping at Harmoni Clothing." },
@@ -449,7 +449,7 @@
           { "q": "What happens to unpaid orders?", "a": "Unpaid orders are cancelled automatically after 24 hours. You can place a new order at any time." },
           { "q": "Which couriers can I choose?", "a": "Courier options and shipping costs are shown at checkout once you select a delivery address." },
           { "q": "How do I track my order?", "a": "Once your order ships, the tracking number appears on your order detail page and you receive a notification." },
-          { "q": "What if the product I received is damaged or wrong?", "a": "Submit a claim following our Returns & Refund Policy, with photos or video of what you received, then reach us through the Contact page." },
+          { "q": "What if the product I received is damaged or wrong?", "a": "Submit a claim following our Returns & Refund Policy, with photos or video of what you received, then contact the admin through Chat." },
           { "q": "How do I become a creator?", "a": "Sign up, then apply as a creator from your account page. Once approved, you can upload designs to sell on the marketplace and earn commission on each sale." }
         ]
       },
@@ -478,7 +478,7 @@
         "sections": [
           { "title": "1. Products Are Made to Order", "body": "Every product is custom printed from the customer's design and size/color choices. Orders therefore cannot be returned or exchanged because of a change of mind, a wrongly chosen size, or screen color differences." },
           { "title": "2. Eligible Claims", "body": "You may file a claim if the product has a production defect (for example the print does not match the design file or the material is faulty), the product received does not match the order, or the product was damaged during shipping." },
-          { "title": "3. How to File a Claim", "body": "Contact us through the Contact page within 3 days of receiving your order. Include your order number and clear photos or video showing the product and its packaging." },
+          { "title": "3. How to File a Claim", "body": "Contact the admin through Chat within 7 calendar days after the order status becomes Completed. Include your order number and clear photos or video showing the product and its packaging." },
           { "title": "4. Resolution", "body": "Once the claim is verified, we will offer a reprint or a refund depending on the case. Refunds are sent back to the payment method you used." },
           { "title": "5. Order Cancellation", "body": "Orders can be cancelled while awaiting approval. Once production begins, an order can no longer be cancelled. Unpaid orders are cancelled automatically after 24 hours." }
         ]
@@ -490,7 +490,7 @@
           { "title": "2. Shipping Cost", "body": "Shipping cost is calculated automatically from the destination, order weight, and the courier you choose, and is added to your total." },
           { "title": "3. Processing & Delivery Time", "body": "Orders are produced after payment is confirmed and approved by an admin. Transit time follows the chosen courier service and varies by region." },
           { "title": "4. Tracking", "body": "A tracking number is available on your order detail page once the parcel is handed to the courier." },
-          { "title": "5. Receiving Your Order", "body": "Please inspect the parcel on arrival. If the packaging is damaged, document it with photos or video before opening. An order is automatically marked complete 3 business days after arrival if not confirmed." }
+          { "title": "5. Receiving Your Order", "body": "Please inspect the parcel on arrival. If the packaging is damaged, document it with photos or video before opening. An order is automatically marked complete 3 business days after arrival if not confirmed. If a parcel is late, lost, or has a problem in transit, contact the admin through Chat with your order number." }
         ]
       }
     },
@@ -542,7 +542,7 @@
       },
       "terms": {
         "title": "Terms & Conditions",
-        "updatedAt": "July 1, 2026",
+        "updatedAt": "October 16, 2026",
         "sections": {
           "definitions": {
             "title": "1. Definitions",
@@ -562,7 +562,7 @@
           },
           "cancellationRefund": {
             "title": "5. Cancellation & Refunds",
-            "body": "Orders can be cancelled while still pending approval. Once production has begun, cancellation follows the applicable return policy based on the product's condition."
+            "body": "Orders can be cancelled while still pending approval. Once production has begun, the order can no longer be cancelled; quality claims follow our Returns & Refund Policy."
           },
           "liability": {
             "title": "6. Limitation of Liability",
@@ -698,6 +698,7 @@
         "portfolioUrlPlaceholder": "https://instagram.com/yourname"
       },
       "termsCheckbox": "I agree to the Creator Terms & Conditions (commission and design content policy).",
+      "termsLink": "Read the Terms & Conditions",
       "submit": "Apply Now",
       "footerNote": "After applying, you'll be guided through identity verification before your Creator account is activated by our team."
     },
@@ -785,10 +786,11 @@
       "viewFront": "Front",
       "viewBack": "Back",
       "viewSide": "Side",
-      "previewNote": "Real-time 3D preview — updates automatically when color/design changes (not available yet, currently showing a photo mockup matching the selected color).",
+      "previewNote": "The preview is a photo mockup in the selected color. A real-time 3D preview is not available yet.",
       "chooseColor": "Choose Color",
       "chooseSize": "Choose Size",
       "byCreator": "by {name}",
+      "changeDesign": "Change Design",
       "uploadLabel": "Upload Your Own Design",
       "uploadStatusUploading": "Uploading...",
       "uploadStatusUploaded": "File uploaded - click to change",

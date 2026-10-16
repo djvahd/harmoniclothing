@@ -6,16 +6,22 @@ import { UserRound } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { User } from "@/types/user";
 
-const ACCOUNT_LINKS = (isAdmin: boolean) => [
-  ...(isAdmin ? [{ href: "/admin/dashboard", key: "adminDashboard" }] : []),
-  { href: "/account/profile", key: "profile" },
-  { href: "/account/addresses", key: "addresses" },
-  { href: "/account/wishlist", key: "wishlist" },
-  { href: "/cart", key: "cart" },
-  { href: "/account/orders", key: "orders" },
-  { href: "/account/become-creator", key: "becomeCreator" },
-  { href: "/notifications", key: "notifications" },
-] as const;
+const ACCOUNT_LINKS = (isAdmin: boolean) =>
+  isAdmin
+    ? // Admin is operational only (2.5_Permission_Matrix): no shopping, creator or notification-inbox entries.
+      ([
+        { href: "/admin/dashboard", key: "adminDashboard" },
+        { href: "/account/profile", key: "profile" },
+      ] as const)
+    : ([
+        { href: "/account/profile", key: "profile" },
+        { href: "/account/addresses", key: "addresses" },
+        { href: "/account/wishlist", key: "wishlist" },
+        { href: "/cart", key: "cart" },
+        { href: "/account/orders", key: "orders" },
+        { href: "/account/become-creator", key: "becomeCreator" },
+        { href: "/notifications", key: "notifications" },
+      ] as const);
 
 /** The account links reused by both the desktop dropdown and the mobile drawer. */
 export function AccountMenuLinks({ user, onNavigate }: { user: User | null; onNavigate: () => void }) {

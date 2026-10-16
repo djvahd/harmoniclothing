@@ -6,12 +6,13 @@ import { useTranslations } from "next-intl";
 import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import StatCard from "@/components/ui/StatCard";
+import InlineError from "@/components/ui/InlineError";
 import { getDashboardSummary } from "@/services/admin";
 import { formatCurrency } from "@/lib/format";
 
 export default function AdminDashboardPage() {
   const t = useTranslations("admin.dashboard");
-  const { data } = useSWR("/admin/dashboard", getDashboardSummary);
+  const { data, error } = useSWR("/admin/dashboard", getDashboardSummary);
   const summary = data?.data;
   const needsAttention =
     (summary?.orders.menunggu_approval ?? 0) + (summary?.users.creators_pending ?? 0);
@@ -22,6 +23,8 @@ export default function AdminDashboardPage() {
         <h1 className="font-heading text-h3 font-semibold text-text-primary">
           {t("title")}
         </h1>
+
+        {error && !data && <InlineError />}
 
         {needsAttention > 0 && (
           <div className="flex items-center gap-2 rounded-md border border-primary bg-primary/5 px-4 py-3">

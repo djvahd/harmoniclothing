@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import SafeImage from "@/components/ui/SafeImage";
 import Link from "next/link";
 import { Star, UserRound } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -8,7 +8,7 @@ import type { CreatorSummary } from "@/services/marketplace";
 
 export function CreatorCardSkeleton() {
   return (
-    <div className="flex w-[196px] animate-pulse flex-col items-center gap-2 rounded-md border border-border bg-surface p-4">
+    <div className="flex w-full max-w-[196px] animate-pulse flex-col items-center gap-2 rounded-md border border-border bg-surface p-4">
       <div className="size-16 shrink-0 rounded-full bg-border" />
       <div className="h-3.5 w-4/5 rounded-sm bg-border" />
       <div className="h-2.5 w-full rounded-sm bg-border" />
@@ -26,10 +26,10 @@ export default function CreatorCard({ creator }: { creator: CreatorSummary }) {
   return (
     <Link
       href={`/marketplace/${creator.slug}`}
-      className="group flex w-[196px] flex-col items-center gap-2 rounded-md border border-border bg-surface p-4 text-center transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
+      className="group flex w-full max-w-[196px] flex-col items-center gap-2 rounded-md border border-border bg-surface p-4 text-center transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
     >
       {creator.photo_url ? (
-        <Image
+        <SafeImage
           src={creator.photo_url}
           alt={creator.name}
           width={64}

@@ -6,7 +6,6 @@ use App\Models\Commission;
 use App\Models\CreatorProfile;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 /**
  * BR-007 (2026-07-22 revision): commission payout is automatic, batched
@@ -77,6 +76,9 @@ class PayoutService
         }
 
         // Real Midtrans Iris/Xendit/etc disbursement call goes here once an account exists.
-        return (string) Str::uuid();
+        // Until then a key alone must never mark commissions as paid without a transfer.
+        Log::warning('Disbursement api_key is set but no provider integration exists; commission not paid.');
+
+        return null;
     }
 }

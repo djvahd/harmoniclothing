@@ -43,17 +43,17 @@ export default function CartItemRow({
         className="mt-6 size-4 shrink-0"
       />
       <ProductThumbnail src={thumbnail} alt={product?.name ?? tCommon("productFallback")} />
-      <div className="flex flex-1 flex-col gap-1 pt-1">
+      <div className="flex min-w-0 flex-1 flex-col gap-1 pt-1">
         <p className="font-body text-sm font-semibold text-text-primary">{product?.name}</p>
         <p className="font-body text-xs text-text-secondary">
           {item.product_variant.size} · {item.product_variant.color}
         </p>
       </div>
-      <div className="flex flex-col items-end gap-2 pt-1">
+      <div className="flex shrink-0 flex-col items-end gap-2 pt-1">
         <p className="font-body text-sm font-semibold text-text-primary">
           {formatCurrency(item.subtotal)}
         </p>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center justify-end gap-3">
           <button
             type="button"
             aria-label={t("moveToWishlistAria")}

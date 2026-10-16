@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import SafeImage from "@/components/ui/SafeImage";
 import { Star } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { storageUrl } from "@/lib/storage";
@@ -11,7 +11,7 @@ import WishlistButton from "./WishlistButton";
 
 export function ProductCardSkeleton() {
   return (
-    <div className="flex w-[196px] animate-pulse flex-col gap-[5px] rounded-md border border-border bg-surface p-[14px]">
+    <div className="flex w-full max-w-[196px] animate-pulse flex-col gap-[5px] rounded-md border border-border bg-surface p-[14px]">
       <div className="h-[155px] w-full shrink-0 rounded-sm bg-border" />
       <div className="flex min-h-[42px] flex-col justify-start gap-1.5">
         <div className="h-3 w-4/5 rounded-sm bg-border" />
@@ -32,14 +32,14 @@ export default function ProductCard({ product }: { product: Product }) {
   const hasSold = !!product.sold_count && product.sold_count > 0;
 
   return (
-    <div className="relative w-[196px] transition-transform duration-200 hover:-translate-y-0.5">
+    <div className="relative w-full max-w-[196px] transition-transform duration-200 hover:-translate-y-0.5">
     <Link
       href={`/catalog/${product.slug}`}
       className="group flex w-full flex-col gap-[5px] rounded-md border border-border bg-surface p-[14px] transition-all duration-200 hover:border-primary/30 hover:shadow-md"
     >
       <div className="relative h-[155px] w-full shrink-0 overflow-hidden rounded-sm bg-border">
         {thumbnail && (
-          <Image
+          <SafeImage
             src={thumbnail}
             alt={product.name}
             fill

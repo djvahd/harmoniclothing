@@ -4,6 +4,7 @@ use App\Http\Middleware\EnsureCreatorIsActive;
 use App\Http\Middleware\EnsureSessionIsCurrent;
 use App\Http\Middleware\EnsureUserIsActive;
 use App\Http\Middleware\EnsureUserIsAdmin;
+use App\Http\Middleware\EnsureUserIsNotAdmin;
 use App\Http\Middleware\SetLocaleFromRequest;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -32,6 +33,7 @@ return Application::configure(basePath: dirname(__DIR__))
             // Not parameterized like throttle:60,1 — this only ever checks
             // for Admin, so the alias is a plain name, not "role:admin".
             'admin' => EnsureUserIsAdmin::class,
+            'not.admin' => EnsureUserIsNotAdmin::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

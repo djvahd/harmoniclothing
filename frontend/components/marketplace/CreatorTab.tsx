@@ -225,12 +225,12 @@ export default function CreatorTab() {
           </p>
         )}
 
-        <div className="flex flex-wrap gap-6">
-          {!isLoadingInitial && error && <InlineError />}
+        <div className="grid grid-cols-2 justify-items-center gap-3 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
+          {!isLoadingInitial && error && <div className="col-span-full"><InlineError /></div>}
           {(isLoadingInitial || (!error && !data)) &&
             Array.from({ length: 8 }).map((_, i) => <CreatorCardSkeleton key={i} />)}
           {!isLoadingInitial && !error && !!data && data.data.length === 0 && accumulated.length === 0 && (
-            <div className="flex w-full flex-col items-center gap-3 py-16 text-center">
+            <div className="col-span-full flex w-full flex-col items-center gap-3 py-16 text-center">
               <UserSearch className="size-10 text-text-secondary" />
               <p className="font-body text-sm text-text-secondary">{t("noResults")}</p>
               {hasActiveQuery && (

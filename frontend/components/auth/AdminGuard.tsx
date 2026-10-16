@@ -16,7 +16,7 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
 
   useEffect(() => {
     if (status !== "ready" || user) return;
-    openAuthModal("login");
+    if (!useAuthModalStore.getState().view) openAuthModal("login");
   }, [status, user, openAuthModal, t]);
 
   if (status !== "ready" || !user) {

@@ -8,12 +8,13 @@ import CreatorSidebar from "@/components/layout/CreatorSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import StatCard from "@/components/ui/StatCard";
 import DesignCard from "@/components/ui/DesignCard";
+import InlineError from "@/components/ui/InlineError";
 import { getCreatorDashboard } from "@/services/creator";
 import { getMyDesigns } from "@/services/creator";
 
 export default function CreatorDashboardPage() {
   const t = useTranslations("creator.dashboard");
-  const { data: dashboardData } = useSWR("/creator/dashboard", getCreatorDashboard);
+  const { data: dashboardData, error } = useSWR("/creator/dashboard", getCreatorDashboard);
   const { data: designsData } = useSWR("/creator/designs", getMyDesigns);
   const dashboard = dashboardData?.data;
   const designs = (designsData?.data ?? []).slice(0, 5);
@@ -24,6 +25,8 @@ export default function CreatorDashboardPage() {
         <h1 className="font-heading text-h3 font-semibold text-text-primary">
           {t("title")}
         </h1>
+
+        {error && !dashboardData && <InlineError />}
 
         <div className="flex flex-wrap gap-4">
           <StatCard icon={Palette} label={t("totalDesigns")} value={String(dashboard?.total_designs ?? 0)} />

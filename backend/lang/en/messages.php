@@ -76,6 +76,7 @@ return [
         'already_applied' => 'This account has already applied to become a Creator.',
         'not_applied_yet' => 'Please apply to become a Creator first.',
         'not_pending_approval' => 'This Creator application is not currently awaiting approval.',
+        'kyc_incomplete' => 'Verification data (ID card, birth date, payout account) is incomplete, so the Creator cannot be approved yet.',
         'terms_required' => 'You must agree to the Creator Terms & Conditions.',
         'guardian_name_required' => 'Guardian name is required for Creators under 18 years old.',
         'guardian_id_required' => "Guardian's ID number is required for Creators under 18 years old.",

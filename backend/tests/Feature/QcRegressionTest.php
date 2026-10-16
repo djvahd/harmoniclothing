@@ -16,7 +16,12 @@ use App\Models\OrderStatusHistory;
 use App\Models\Payment;
 use App\Models\Product;
 use App\Models\CreatorProfile;
+use App\Models\Commission;
 use App\Models\Design;
+use App\Models\Notification;
+use App\Models\Shipment;
+use Illuminate\Support\Facades\Http;
+use PHPUnit\Framework\Attributes\DataProvider;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -259,5 +264,177 @@ class QcRegressionTest extends TestCase
         $creator->forceFill(['status' => UserStatus::Banned])->save();
 
         $this->assertFalse($item->fresh()->isAvailable());
+    }
+
+    public function test_admin_cannot_use_cart_wishlist_or_checkout(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $product = Product::factory()->create();
+
+        $this->actingAs($admin)->postJson('/api/cart', ['product_id' => $product->id])->assertForbidden();
+        $this->actingAs($admin)->getJson('/api/cart')->assertForbidden();
+        $this->actingAs($admin)->postJson('/api/wishlist', ['product_id' => $product->id])->assertForbidden();
+        $this->actingAs($admin)->postJson('/api/checkout', [])->assertForbidden();
+        $this->actingAs($admin)->getJson('/api/admin/dashboard')->assertOk();
+    }
+
+    public function test_replayed_settlement_webhook_creates_one_commission_one_invoice_and_one_notification(): void
+    {
+        config(['services.midtrans.server_key' => 'test-server-key']);
+        $creator = CreatorProfile::factory()->aktif()->create()->user;
+        $design = Design::factory()->for($creator, 'creator')->create();
+        $customer = User::factory()->create();
+        $order = Order::factory()->for($customer)->for(Address::factory()->for($customer), 'address')
+            ->create(['order_number' => 'HC-REPLAY-0001', 'total' => 100000]);
+        Payment::factory()->for($order)->create(['amount' => 100000]);
+        OrderItem::factory()->for($order)->create(['design_id' => $design->id, 'subtotal' => 100000]);
+
+        Http::fake([
+            'api.sandbox.midtrans.com/v2/*/status' => Http::response([
+                'order_id' => 'HC-REPLAY-0001', 'status_code' => '200', 'gross_amount' => '100000.00',
+                'transaction_status' => 'settlement', 'fraud_status' => 'accept',
+            ], 200),
+        ]);
+        $payload = ['order_id' => 'HC-REPLAY-0001', 'status_code' => '200', 'gross_amount' => '100000.00'];
+        $payload['signature_key'] = hash('sha512', 'HC-REPLAY-0001'.'200'.'100000.00'.'test-server-key');
+
+        $this->postJson('/api/webhooks/midtrans', $payload)->assertOk();
+        $this->postJson('/api/webhooks/midtrans', $payload)->assertOk();
+
+        $this->assertSame(1, Commission::where('creator_id', $creator->id)->count());
+        $this->assertSame(1, Invoice::where('order_id', $order->id)->count());
+        $this->assertSame(1, Notification::where('user_id', $customer->id)->where('type', 'order.paid')->count());
+        $this->assertSame(1, OrderStatusHistory::where('order_id', $order->id)->where('to_status', 'menunggu_approval')->count());
+    }
+
+    #[DataProvider('biteshipStatuses')]
+    public function test_biteship_status_maps_to_the_shipment_status(string $biteship, string $expected): void
+    {
+        config(['services.biteship.webhook_token' => 't']);
+        $user = User::factory()->create();
+        $order = Order::factory()->for($user)->for(Address::factory()->for($user), 'address')->create(['status' => 'diproses_produksi']);
+        Shipment::factory()->for($order)->create(['biteship_order_id' => 'bs-1', 'status' => 'menunggu_pickup']);
+
+        $this->postJson('/api/webhooks/biteship?token=t', ['order_id' => 'bs-1', 'status' => $biteship])->assertOk();
+
+        $this->assertSame($expected, $order->shipment()->first()->status);
+    }
+
+    public static function biteshipStatuses(): array
+    {
+        $map = [
+            'confirmed' => 'menunggu_pickup', 'allocated' => 'menunggu_pickup', 'pickingUp' => 'menunggu_pickup', 'picked' => 'menunggu_pickup',
+            'inTransit' => 'dikirim', 'droppingOff' => 'dikirim', 'delivered' => 'delivered',
+            'returnInTransit' => 'bermasalah', 'onHold' => 'bermasalah', 'rejected' => 'bermasalah', 'courierNotFound' => 'bermasalah',
+            'returned' => 'bermasalah', 'cancelled' => 'bermasalah', 'disposed' => 'bermasalah',
+        ];
+
+        return array_map(null, array_keys($map), array_values($map));
+    }
+
+    public function test_repeated_or_backward_biteship_webhooks_do_not_break_the_order_status(): void
+    {
+        config(['services.biteship.webhook_token' => 't']);
+        $user = User::factory()->create();
+        $order = Order::factory()->for($user)->for(Address::factory()->for($user), 'address')->create(['status' => 'diproses_produksi']);
+        Shipment::factory()->for($order)->create(['biteship_order_id' => 'bs-2', 'status' => 'menunggu_pickup']);
+        $hit = fn (string $status) => $this->postJson('/api/webhooks/biteship?token=t', ['order_id' => 'bs-2', 'status' => $status])->assertOk();
+
+        $hit('inTransit');
+        $hit('inTransit'); // duplicate
+        $this->assertSame('dikirim', $order->fresh()->status);
+        $this->assertSame(1, OrderStatusHistory::where('order_id', $order->id)->where('to_status', 'dikirim')->count());
+
+        $hit('delivered');
+        $hit('inTransit'); // late, out-of-order event
+        $this->assertSame('menunggu_konfirmasi', $order->fresh()->status);
+        $this->assertSame(1, OrderStatusHistory::where('order_id', $order->id)->where('to_status', 'menunggu_konfirmasi')->count());
+    }
+
+    #[DataProvider('midtransStatuses')]
+    public function test_midtrans_status_maps_to_the_payment_status(string $transaction, ?string $fraud, string $payment, string $order): void
+    {
+        config(['services.midtrans.server_key' => 'test-server-key']);
+        $user = User::factory()->create();
+        $o = Order::factory()->for($user)->for(Address::factory()->for($user), 'address')->create(['order_number' => 'HC-MAP-0001', 'total' => 100000]);
+        Payment::factory()->for($o)->create(['amount' => 100000]);
+        Http::fake([
+            'api.sandbox.midtrans.com/v2/*/status' => Http::response([
+                'order_id' => 'HC-MAP-0001', 'status_code' => '200', 'gross_amount' => '100000.00',
+                'transaction_status' => $transaction, 'fraud_status' => $fraud,
+            ], 200),
+        ]);
+        $payload = ['order_id' => 'HC-MAP-0001', 'status_code' => '200', 'gross_amount' => '100000.00'];
+        $payload['signature_key'] = hash('sha512', 'HC-MAP-0001'.'200'.'100000.00'.'test-server-key');
+
+        $this->postJson('/api/webhooks/midtrans', $payload)->assertOk();
+
+        $this->assertSame($payment, $o->payment()->first()->status);
+        $this->assertSame($order, $o->fresh()->status);
+    }
+
+    public static function midtransStatuses(): array
+    {
+        return [
+            'settlement' => ['settlement', 'accept', 'berhasil', 'menunggu_approval'],
+            'capture accept' => ['capture', 'accept', 'berhasil', 'menunggu_approval'],
+            'pending' => ['pending', null, 'belum_dibayar', 'belum_dibayar'],
+            'deny' => ['deny', null, 'gagal', 'belum_dibayar'],
+            'cancel' => ['cancel', null, 'gagal', 'belum_dibayar'],
+            'expire' => ['expire', null, 'gagal', 'belum_dibayar'],
+        ];
+    }
+
+    #[DataProvider('bulkBoundaries')]
+    public function test_bulk_tier_price_at_every_boundary(int $qty, ?string $price): void
+    {
+        BulkPricingTier::factory()->create(['min_qty' => 1, 'max_qty' => 49, 'price_per_unit' => 80000]);
+        BulkPricingTier::factory()->create(['min_qty' => 50, 'max_qty' => 99, 'price_per_unit' => 70000]);
+        BulkPricingTier::factory()->create(['min_qty' => 100, 'max_qty' => 249, 'price_per_unit' => 60000]);
+        BulkPricingTier::factory()->create(['min_qty' => 250, 'max_qty' => null, 'price_per_unit' => 50000]);
+
+        $this->assertSame($price, (new \App\Services\PricingService)->bulkUnitPriceFor($qty));
+    }
+
+    public static function bulkBoundaries(): array
+    {
+        return [
+            [1, '80000.00'], [49, '80000.00'], [50, '70000.00'], [99, '70000.00'],
+            [100, '60000.00'], [249, '60000.00'], [250, '50000.00'], [100000, '50000.00'],
+        ];
+    }
+
+    public function test_auto_complete_counts_only_business_days_and_skips_the_weekend(): void
+    {
+        $user = User::factory()->create();
+        $order = Order::factory()->for($user)->for(Address::factory()->for($user), 'address')->create(['status' => 'menunggu_konfirmasi']);
+        // Delivered Friday 2026-10-16 10:00 -> 3 business days later is Wednesday 2026-10-21 10:00.
+        Shipment::factory()->for($order)->create(['status' => 'delivered', 'delivered_at' => '2026-10-16 10:00:00']);
+
+        $this->travelTo(\Illuminate\Support\Carbon::parse('2026-10-18 12:00:00')); // Sunday
+        $this->artisan('orders:auto-complete-deliveries')->assertExitCode(0);
+        $this->assertSame('menunggu_konfirmasi', $order->fresh()->status);
+
+        $this->travelTo(\Illuminate\Support\Carbon::parse('2026-10-20 23:59:00')); // Tuesday night: only 2 business days
+        $this->artisan('orders:auto-complete-deliveries')->assertExitCode(0);
+        $this->assertSame('menunggu_konfirmasi', $order->fresh()->status);
+
+        $this->travelTo(\Illuminate\Support\Carbon::parse('2026-10-21 10:00:00')); // Wednesday
+        $this->artisan('orders:auto-complete-deliveries')->assertExitCode(0);
+        $this->assertSame('selesai', $order->fresh()->status);
+    }
+
+    public function test_creator_without_complete_kyc_cannot_be_approved(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $profile = CreatorProfile::factory()->menungguApproval()->create([
+            'kyc_full_name' => null, 'ktp_photo_path' => null, 'birth_date' => null, 'payout_account_number' => null,
+        ]);
+
+        $this->actingAs($admin)->postJson("/api/admin/creators/{$profile->id}/approve")
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('kyc');
+
+        $this->assertSame('menunggu_approval', $profile->fresh()->status);
     }
 }

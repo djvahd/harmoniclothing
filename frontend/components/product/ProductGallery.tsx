@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import Image from "next/image";
+import SafeImage from "@/components/ui/SafeImage";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import { storageUrl } from "@/lib/storage";
@@ -33,7 +33,7 @@ export default function ProductGallery({
     <div className="flex w-full shrink-0 flex-col gap-3 md:w-[480px]">
       <div className="relative h-[420px] w-full overflow-hidden rounded-md bg-border">
         {previewImage && (
-          <Image
+          <SafeImage
             src={previewImage}
             alt={alt}
             fill
@@ -65,7 +65,7 @@ export default function ProductGallery({
                     : "border-transparent hover:border-primary/40",
                 )}
               >
-                {thumb && <Image src={thumb} alt="" fill sizes="64px" className="object-cover" />}
+                {thumb && <SafeImage src={thumb} alt="" fill sizes="64px" className="object-cover" />}
               </button>
             );
           })}

@@ -189,12 +189,12 @@ export default function DesainTab({
           </p>
         )}
 
-        <div className="flex flex-wrap gap-6">
-          {!isLoadingInitial && error && <InlineError />}
+        <div className="grid grid-cols-2 justify-items-center gap-3 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
+          {!isLoadingInitial && error && <div className="col-span-full"><InlineError /></div>}
           {(isLoadingInitial || (!error && !hasActiveQuery && filtered.length === 0)) &&
             Array.from({ length: 8 }).map((_, i) => <DesignCardSkeleton key={i} />)}
           {!isLoadingInitial && !error && hasActiveQuery && filtered.length === 0 && (
-            <div className="flex w-full flex-col items-center gap-3 py-16 text-center">
+            <div className="col-span-full flex w-full flex-col items-center gap-3 py-16 text-center">
               <PackageSearch className="size-10 text-text-secondary" />
               <p className="font-body text-sm text-text-secondary">{t("noResults")}</p>
               <button

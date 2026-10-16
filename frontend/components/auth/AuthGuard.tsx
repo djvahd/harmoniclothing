@@ -14,7 +14,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     if (status !== "ready") return;
 
     if (!user) {
-      openAuthModal("login");
+      if (!useAuthModalStore.getState().view) openAuthModal("login");
     }
   }, [status, user, openAuthModal]);
 

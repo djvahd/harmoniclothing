@@ -122,6 +122,14 @@ class CreatorService
             ]);
         }
 
+        // BR-001/008: a creator is never activated without complete identity and payout data.
+        if (collect(['kyc_full_name', 'kyc_id_number', 'birth_date', 'ktp_photo_path', 'payout_account_number'])
+            ->contains(fn (string $field) => blank($profile->{$field}))) {
+            throw ValidationException::withMessages([
+                'kyc' => [__('messages.creator.kyc_incomplete')],
+            ]);
+        }
+
         $profile->update([
             'status' => 'aktif',
             'approved_by' => $admin->id,

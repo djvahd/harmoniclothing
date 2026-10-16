@@ -7,6 +7,7 @@ import { Loader2 } from "lucide-react";
 import { useAuthStore } from "@/store/auth-store";
 import { useAuthModalStore } from "@/store/auth-modal-store";
 import { getCreatorDashboard } from "@/services/creator";
+import { ApiError } from "@/lib/api";
 
 /**
  * /creator/verification submits the KYC that *makes* a creator active — it
@@ -30,14 +31,15 @@ export default function CreatorGuard({ children }: { children: React.ReactNode }
   // exposes, so probing a creator.active-gated endpoint is the only way to
   // know from the client.
   const { data, error } = useSWR(!exempt && authReady ? "/creator/dashboard" : null, getCreatorDashboard);
-  const isForbidden = Boolean(error);
-  const checked = exempt || Boolean(data) || isForbidden;
+  // Only an explicit 403 means "not an active creator"; a 5xx/network failure must not bounce a creator away.
+  const isForbidden = error instanceof ApiError && error.status === 403;
+  const checked = exempt || Boolean(data) || Boolean(error);
 
   useEffect(() => {
     if (authStatus !== "ready") return;
 
     if (!user) {
-      openAuthModal("login");
+      if (!useAuthModalStore.getState().view) openAuthModal("login");
       return;
     }
 

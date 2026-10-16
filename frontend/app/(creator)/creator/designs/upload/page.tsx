@@ -69,8 +69,8 @@ export default function UploadDesainPage() {
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-md border border-border bg-surface p-5">
           <Input label={t("fields.title")} value={title} onChange={(e) => setTitle(e.target.value)} required />
           <div className="flex flex-col gap-1.5">
-            <label className="font-body text-xs font-medium text-text-secondary">{t("fields.description")}</label>
-            <textarea
+            <label htmlFor="design-description" className="font-body text-xs font-medium text-text-secondary">{t("fields.description")}</label>
+            <textarea id="design-description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}

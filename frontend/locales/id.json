@@ -430,7 +430,7 @@
       }
     },
     "info": {
-      "updatedAt": "13 Oktober 2026",
+      "updatedAt": "16 Oktober 2026",
       "comingSoon": "Segera hadir.",
       "meta": {
         "faq": { "title": "FAQ", "description": "Jawaban atas pertanyaan yang sering diajukan tentang pemesanan, pembayaran, dan pengiriman di Harmoni Clothing." },
@@ -449,7 +449,7 @@
           { "q": "Pesanan yang belum dibayar bagaimana?", "a": "Pesanan yang belum dibayar akan dibatalkan otomatis setelah 24 jam. Kamu bisa membuat pesanan baru kapan saja." },
           { "q": "Kurir apa yang bisa dipilih?", "a": "Pilihan kurir dan ongkos kirim ditampilkan langsung di halaman checkout setelah kamu memilih alamat pengiriman." },
           { "q": "Bagaimana cara melacak pesanan?", "a": "Setelah pesanan dikirim, nomor resi akan muncul di halaman detail pesananmu dan kamu menerima notifikasi." },
-          { "q": "Produk yang diterima rusak atau salah, apa yang harus dilakukan?", "a": "Ajukan klaim sesuai Kebijakan Retur & Refund, lengkap dengan foto atau video barang yang diterima, lalu hubungi kami lewat halaman Kontak." },
+          { "q": "Produk yang diterima rusak atau salah, apa yang harus dilakukan?", "a": "Ajukan klaim sesuai Kebijakan Retur & Refund, lengkap dengan foto atau video barang yang diterima, lalu hubungi admin lewat fitur Chat." },
           { "q": "Bagaimana cara menjadi kreator?", "a": "Daftar akun, lalu ajukan pendaftaran kreator dari halaman akunmu. Setelah disetujui, kamu bisa mengunggah desain untuk dijual di marketplace dan mendapat komisi dari tiap penjualan." }
         ]
       },
@@ -478,7 +478,7 @@
         "sections": [
           { "title": "1. Produk Dibuat Sesuai Pesanan", "body": "Setiap produk dicetak khusus berdasarkan desain dan pilihan ukuran/warna dari pelanggan. Karena itu pesanan tidak dapat dikembalikan atau ditukar hanya karena berubah pikiran, salah memilih ukuran, atau perbedaan warna layar." },
           { "title": "2. Klaim yang Dapat Diajukan", "body": "Klaim dapat diajukan jika produk cacat produksi (misalnya hasil cetak tidak sesuai file desain atau bahan cacat), produk yang diterima tidak sesuai pesanan, atau produk rusak selama pengiriman." },
-          { "title": "3. Cara Mengajukan Klaim", "body": "Hubungi kami lewat halaman Kontak maksimal 3 hari setelah pesanan diterima. Sertakan nomor pesanan serta foto atau video yang jelas menunjukkan kondisi produk dan kemasannya." },
+          { "title": "3. Cara Mengajukan Klaim", "body": "Hubungi admin lewat fitur Chat maksimal 7 hari kalender setelah status pesanan Selesai. Sertakan nomor pesanan serta foto atau video yang jelas menunjukkan kondisi produk dan kemasannya." },
           { "title": "4. Penyelesaian", "body": "Setelah klaim diverifikasi, kami akan menawarkan cetak ulang atau pengembalian dana sesuai kondisi. Pengembalian dana dikirim ke metode pembayaran yang kamu gunakan." },
           { "title": "5. Pembatalan Pesanan", "body": "Pesanan dapat dibatalkan selama berstatus menunggu approval. Setelah masuk tahap produksi, pesanan tidak dapat dibatalkan. Pesanan yang belum dibayar dibatalkan otomatis setelah 24 jam." }
         ]
@@ -490,7 +490,7 @@
           { "title": "2. Ongkos Kirim", "body": "Ongkos kirim dihitung otomatis berdasarkan alamat tujuan, berat pesanan, dan kurir yang kamu pilih, lalu ditambahkan ke total pembayaran." },
           { "title": "3. Waktu Proses & Pengiriman", "body": "Pesanan diproduksi setelah pembayaran dikonfirmasi dan disetujui admin. Estimasi lama perjalanan mengikuti layanan kurir yang dipilih dan dapat berbeda tiap wilayah." },
           { "title": "4. Pelacakan", "body": "Nomor resi tersedia di halaman detail pesanan setelah paket diserahkan ke kurir." },
-          { "title": "5. Penerimaan Pesanan", "body": "Mohon periksa paket saat diterima. Jika kemasan rusak, dokumentasikan dengan foto atau video sebelum membuka paket. Pesanan akan otomatis dianggap selesai 3 hari kerja setelah paket tiba bila tidak dikonfirmasi." }
+          { "title": "5. Penerimaan Pesanan", "body": "Mohon periksa paket saat diterima. Jika kemasan rusak, dokumentasikan dengan foto atau video sebelum membuka paket. Pesanan akan otomatis dianggap selesai 3 hari kerja setelah paket tiba bila tidak dikonfirmasi. Jika paket terlambat, hilang, atau bermasalah di jalan, hubungi admin lewat fitur Chat dengan menyertakan nomor pesanan." }
         ]
       }
     },
@@ -542,7 +542,7 @@
       },
       "terms": {
         "title": "Syarat & Ketentuan",
-        "updatedAt": "1 Juli 2026",
+        "updatedAt": "16 Oktober 2026",
         "sections": {
           "definitions": {
             "title": "1. Definisi",
@@ -562,7 +562,7 @@
           },
           "cancellationRefund": {
             "title": "5. Pembatalan & Pengembalian",
-            "body": "Pesanan dapat dibatalkan selama masih berstatus menunggu approval. Setelah memasuki tahap produksi, pembatalan mengikuti kebijakan retur yang berlaku sesuai kondisi produk."
+            "body": "Pesanan dapat dibatalkan selama masih berstatus menunggu approval. Setelah memasuki tahap produksi, pesanan tidak dapat dibatalkan; klaim kualitas mengikuti Kebijakan Retur & Refund."
           },
           "liability": {
             "title": "6. Batasan Tanggung Jawab",
@@ -698,6 +698,7 @@
         "portfolioUrlPlaceholder": "https://instagram.com/namamu"
       },
       "termsCheckbox": "Saya menyetujui Syarat & Ketentuan Creator (komisi dan kebijakan konten desain).",
+      "termsLink": "Baca Syarat & Ketentuan",
       "submit": "Ajukan Sekarang",
       "footerNote": "Setelah pengajuan, kamu akan diarahkan untuk melengkapi verifikasi identitas sebelum akun Kreator diaktifkan oleh tim kami."
     },
@@ -785,10 +786,11 @@
       "viewFront": "Depan",
       "viewBack": "Belakang",
       "viewSide": "Samping",
-      "previewNote": "Preview 3D real-time — update otomatis saat warna/desain diubah (belum tersedia, menampilkan mockup foto sesuai warna terpilih).",
+      "previewNote": "Pratinjau berupa foto mockup sesuai warna terpilih. Pratinjau 3D real-time belum tersedia.",
       "chooseColor": "Pilih Warna",
       "chooseSize": "Pilih Ukuran",
       "byCreator": "by {name}",
+      "changeDesign": "Ganti Desain",
       "uploadLabel": "Upload Desain Sendiri",
       "uploadStatusUploading": "Mengunggah...",
       "uploadStatusUploaded": "File terunggah - klik untuk ganti",

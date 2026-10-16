@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import SafeImage from "@/components/ui/SafeImage";
 import useSWR from "swr";
 import { Palette, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -54,7 +54,7 @@ export default function KelolaDesainPage() {
               >
                 <div className="relative size-14 shrink-0 overflow-hidden rounded-sm bg-border">
                   {thumbnail && (
-                    <Image src={thumbnail} alt={design.title} fill className="object-cover" />
+                    <SafeImage src={thumbnail} alt={design.title} fill className="object-cover" />
                   )}
                 </div>
                 <div className="flex flex-1 flex-col gap-0.5">

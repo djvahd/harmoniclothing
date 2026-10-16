@@ -105,8 +105,8 @@ export default function VerifikasiDataDiriPage() {
             required
           />
           <div className="flex flex-col gap-1.5">
-            <label className="font-body text-xs font-medium text-text-secondary">{t("fields.address")}</label>
-            <textarea
+            <label htmlFor="kyc-address" className="font-body text-xs font-medium text-text-secondary">{t("fields.address")}</label>
+            <textarea id="kyc-address"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               rows={2}
@@ -129,8 +129,8 @@ export default function VerifikasiDataDiriPage() {
           </label>
 
           <div className="flex flex-col gap-1.5">
-            <label className="font-body text-xs font-medium text-text-secondary">{t("fields.payoutMethod")}</label>
-            <select
+            <label htmlFor="kyc-payout-method" className="font-body text-xs font-medium text-text-secondary">{t("fields.payoutMethod")}</label>
+            <select id="kyc-payout-method"
               value={payoutMethod}
               onChange={(e) => setPayoutMethod(e.target.value as typeof payoutMethod)}
               className="w-full rounded-sm border border-border bg-surface px-3 py-2.5 font-body text-sm text-text-primary outline-none"

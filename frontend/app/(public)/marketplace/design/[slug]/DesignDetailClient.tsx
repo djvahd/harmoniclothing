@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
+import SafeImage from "@/components/ui/SafeImage";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import useSWR from "swr";
@@ -460,7 +460,7 @@ function CreatorSummaryCard({
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-6">
+        <div className="grid grid-cols-2 justify-items-center gap-3 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4 xl:grid-cols-5">
           <div className="flex flex-col items-center gap-1">
             <LayoutGrid className="size-4 text-text-secondary" />
             <p className="font-heading text-lg font-semibold text-text-primary">{designs.length}</p>
@@ -503,7 +503,7 @@ function CreatorSummaryCard({
                   href={`/marketplace/design/${d.slug}`}
                   className="relative size-16 shrink-0 overflow-hidden rounded-sm bg-border transition-opacity hover:opacity-80"
                 >
-                  {thumb && <Image src={thumb} alt={d.title} fill sizes="64px" className="object-cover" />}
+                  {thumb && <SafeImage src={thumb} alt={d.title} fill sizes="64px" className="object-cover" />}
                 </Link>
               );
             })}

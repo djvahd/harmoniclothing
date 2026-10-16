@@ -51,6 +51,7 @@ export default function WishlistButton({ productId, designId, className }: Wishl
     <button
       type="button"
       aria-label={existing ? t("removeAria") : t("addAria")}
+      aria-pressed={!!existing}
       onClick={handleClick}
       disabled={pending}
       className={clsx(
