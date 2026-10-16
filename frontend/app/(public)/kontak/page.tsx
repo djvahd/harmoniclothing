@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import LegalPageLayout from "@/components/layout/LegalPageLayout";
 import { CONTACT } from "@/lib/contact";
 
@@ -10,6 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ContactPage() {
   const t = await getTranslations("public.info");
+  const locale = await getLocale();
   const comingSoon = t("comingSoon");
   const link = "text-accent hover:underline";
 
@@ -53,7 +54,7 @@ export default async function ContactPage() {
         {
           id: "jam-operasional",
           title: t("contact.sections.hours"),
-          body: <p>{CONTACT.hours || comingSoon}</p>,
+          body: <p>{CONTACT.hours[locale === "en" ? "en" : "id"] || comingSoon}</p>,
         },
       ]}
     />
