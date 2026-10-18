@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
+import Portal from "@/components/ui/Portal";
 import { useEscapeKey } from "@/hooks/useEscapeKey";
 
 interface BanCreatorModalProps {
@@ -33,6 +34,7 @@ export default function BanCreatorModal({ open, creatorName, onConfirm, onCancel
   if (!open) return null;
 
   return (
+    <Portal>
     <div className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center bg-black/45 px-4">
       <div role="dialog" aria-modal="true" aria-label={t("title", { name: creatorName })} className="flex w-full max-w-md flex-col gap-4 rounded-md bg-surface p-6">
         <p className="font-heading text-lg font-semibold text-text-primary">{t("title", { name: creatorName })}</p>
@@ -53,5 +55,6 @@ export default function BanCreatorModal({ open, creatorName, onConfirm, onCancel
         </div>
       </div>
     </div>
+    </Portal>
   );
 }

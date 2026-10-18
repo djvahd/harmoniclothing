@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Button from "./Button";
+import Portal from "./Portal";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -40,6 +41,7 @@ export default function ConfirmDialog({
   if (!open) return null;
 
   return (
+    <Portal>
     <div
       className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center bg-black/45 px-4"
       onClick={onCancel}
@@ -61,5 +63,6 @@ export default function ConfirmDialog({
         </div>
       </div>
     </div>
+    </Portal>
   );
 }

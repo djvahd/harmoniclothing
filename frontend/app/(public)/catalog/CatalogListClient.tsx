@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ArrowUpDown, PackageSearch, Search, X } from "lucide-react";
+import MobileCollapse from "@/components/ui/MobileCollapse";
 import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import InlineError from "@/components/ui/InlineError";
@@ -27,6 +28,7 @@ const SORT_OPTIONS: { value: ProductSort; key: string }[] = [
 
 function KatalogPageContent({ initial }: { initial?: Paginated<Product> }) {
   const t = useTranslations("public.catalogList");
+  const tFilter = useTranslations("ui.filterSidebar");
   const searchParams = useSearchParams();
   const kategoriParam = searchParams.get("kategori");
 
@@ -149,7 +151,9 @@ function KatalogPageContent({ initial }: { initial?: Paginated<Product> }) {
         id="catalog-body"
         className="mx-auto flex w-full max-w-[1440px] scroll-mt-6 flex-col gap-6 px-4 py-8 md:flex-row md:px-20"
       >
-        <FilterSidebar options={filterOptions} value={filters} onChange={setFilters} skeletonFacetCount={5} />
+        <MobileCollapse label={tFilter("filter")}>
+          <FilterSidebar options={filterOptions} value={filters} onChange={setFilters} skeletonFacetCount={5} />
+        </MobileCollapse>
 
         <div className="flex flex-1 flex-col gap-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">

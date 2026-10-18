@@ -33,9 +33,9 @@ export default function KonfigurasiNotifikasiPage() {
           {settings.map((setting) => (
             <div
               key={setting.notification_type}
-              className="flex items-center justify-between rounded-sm px-4 py-3"
+              className="flex items-center justify-between gap-4 rounded-sm px-4 py-3"
             >
-              <div className="flex flex-col">
+              <div className="flex min-w-0 flex-col">
                 <p className="font-body text-sm font-medium text-text-primary">
                   {typeLabel(setting.notification_type)}
                 </p>
@@ -53,8 +53,8 @@ export default function KonfigurasiNotifikasiPage() {
                 onClick={() => handleToggle(setting.notification_type, setting.is_enabled)}
                 className={
                   setting.is_enabled
-                    ? "flex h-6 w-11 items-center rounded-full bg-accent p-0.5"
-                    : "flex h-6 w-11 items-center rounded-full bg-border p-0.5"
+                    ? "flex h-6 w-11 shrink-0 items-center rounded-full bg-accent p-0.5"
+                    : "flex h-6 w-11 shrink-0 items-center rounded-full bg-border p-0.5"
                 }
               >
                 <span

@@ -56,8 +56,8 @@ export default function AdminChatManagementPage() {
         <h1 className="font-heading text-h3 font-semibold text-text-primary">
           {t("title")}
         </h1>
-        <div className="flex gap-4">
-          <div className="flex w-64 shrink-0 flex-col gap-1 rounded-md border border-border bg-surface p-2">
+        <div className="flex flex-col gap-4 md:flex-row">
+          <div className="flex w-full shrink-0 flex-col md:w-64 gap-1 rounded-md border border-border bg-surface p-2">
             {threads.map((thread) => (
               <button
                 key={thread.id}
@@ -76,7 +76,7 @@ export default function AdminChatManagementPage() {
             )}
           </div>
 
-          <div className="flex flex-1 flex-col gap-2 rounded-md border border-border bg-surface p-4">
+          <div className="flex min-w-0 flex-1 flex-col gap-2 rounded-md border border-border bg-surface p-4">
             <div className="flex flex-1 flex-col gap-2 overflow-y-auto" style={{ minHeight: 300 }}>
               {messages.map((m) => (
                 <div

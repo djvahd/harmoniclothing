@@ -86,8 +86,8 @@ export default function ApprovalCreatorPage() {
         <div className="flex flex-col gap-3">
           {creators.map((creator) => (
             <div key={creator.id} className="flex flex-col gap-3 rounded-md border border-border bg-surface p-4">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex flex-col gap-1">
+              <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">
+                <div className="flex min-w-0 flex-col gap-1">
                   <p className="font-body text-sm font-semibold text-text-primary">
                     {creator.brand_name ?? creator.user.name}
                     {creator.is_minor && (
@@ -145,7 +145,7 @@ export default function ApprovalCreatorPage() {
         {activeCreators.length === 0 && <p className="font-body text-sm text-text-secondary">{t("activeEmpty")}</p>}
         <div className="flex flex-col gap-3">
           {activeCreators.map((creator) => (
-            <div key={creator.id} className="flex items-center justify-between gap-4 rounded-md border border-border bg-surface p-4">
+            <div key={creator.id} className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-border bg-surface p-4">
               <div className="flex flex-col gap-1">
                 <p className="font-body text-sm font-semibold text-text-primary">{creator.brand_name ?? creator.user.name}</p>
                 <p className="font-body text-xs text-text-secondary">{creator.user.email}</p>
