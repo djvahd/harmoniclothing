@@ -13,6 +13,7 @@ import OrderItemReview from "@/components/order/OrderItemReview";
 import { cancelOrder, confirmReceived, payOrder, reorder } from "@/services/orders";
 import { useOrder, invalidateOrder } from "@/hooks/useOrders";
 import { storageUrl } from "@/lib/storage";
+import { payWithSnap } from "@/lib/snap";
 import { formatCurrency, formatDateTime } from "@/lib/format";
 import { ORDER_STATUS_VARIANT } from "@/lib/order-status";
 
@@ -65,7 +66,7 @@ export default function DetailPesananPage() {
       const res = await payOrder(orderId);
       const url = res.data.midtrans_redirect_url;
       if (url) {
-        window.location.href = url;
+        await payWithSnap(url, () => invalidateOrder(orderId));
         return;
       }
       setPayError(t("payUnavailable"));

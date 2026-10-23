@@ -11,6 +11,7 @@ import Button from "@/components/ui/Button";
 import DetailNotFound from "@/components/product/DetailNotFound";
 import { getAddresses } from "@/services/account";
 import { checkoutBulk, getShippingRates } from "@/services/checkout";
+import { payWithSnap } from "@/lib/snap";
 import { getErrorMessage } from "@/lib/api";
 import { formatCurrency } from "@/lib/format";
 import { useBulkPricingTiers, findBulkTier } from "@/hooks/useBulkPricing";
@@ -91,7 +92,7 @@ export default function BulkCheckoutPage() {
       });
       clearDraft();
       if (order.midtrans_redirect_url) {
-        window.location.href = order.midtrans_redirect_url;
+        await payWithSnap(order.midtrans_redirect_url, () => router.push(`/account/orders/${order.id}`));
       } else {
         router.push(`/account/orders/${order.id}`);
       }
