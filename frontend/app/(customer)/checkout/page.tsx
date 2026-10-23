@@ -10,6 +10,7 @@ import PriceSummaryRow from "@/components/ui/PriceSummaryRow";
 import Button from "@/components/ui/Button";
 import { getAddresses } from "@/services/account";
 import { checkout, getShippingRates } from "@/services/checkout";
+import { payWithSnap } from "@/lib/snap";
 import { getErrorMessage } from "@/lib/api";
 import { useCart } from "@/hooks/useCart";
 
@@ -81,7 +82,7 @@ function CheckoutPageContent() {
         courier_type: courier.type,
       });
       if (order.midtrans_redirect_url) {
-        window.location.href = order.midtrans_redirect_url;
+        await payWithSnap(order.midtrans_redirect_url, () => router.push(`/account/orders/${order.id}?paying=1`));
       } else {
         router.push(`/account/orders/${order.id}`);
       }
