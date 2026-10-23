@@ -7,6 +7,7 @@ import clsx from "clsx";
 import { useTranslations } from "next-intl";
 import DesignCard, { DesignCardSkeleton } from "@/components/ui/DesignCard";
 import Button from "@/components/ui/Button";
+import MobileCollapse from "@/components/ui/MobileCollapse";
 import FilterSidebar, { EMPTY_FILTER_VALUE, type FilterSidebarValue } from "@/components/ui/FilterSidebar";
 import InlineError from "@/components/ui/InlineError";
 import { type DesignSort } from "@/services/marketplace";
@@ -33,6 +34,7 @@ export default function DesainTab({
   defaultSort: DesignSort;
 }) {
   const t = useTranslations("public.marketplaceList.designTab");
+  const tFilter = useTranslations("ui.filterSidebar");
   const searchParams = useSearchParams();
   const [search, setSearch] = useState(() => searchParams.get(SEARCH_KEY) ?? "");
   const [sort, setSort] = useState<DesignSort>(() => {
@@ -123,12 +125,14 @@ export default function DesainTab({
 
   return (
     <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-8 md:flex-row md:px-20">
-      <FilterSidebar
-        options={filterOptions}
-        value={filters}
-        onChange={setFilters}
-        skeletonFacetCount={2}
-      />
+      <MobileCollapse label={tFilter("filter")}>
+        <FilterSidebar
+          options={filterOptions}
+          value={filters}
+          onChange={setFilters}
+          skeletonFacetCount={2}
+        />
+      </MobileCollapse>
 
       <div className="flex flex-1 flex-col gap-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">

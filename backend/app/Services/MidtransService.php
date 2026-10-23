@@ -16,15 +16,74 @@ class MidtransService
     public function createSnapTransaction(Order $order): string
     {
         $response = Http::withBasicAuth(config('services.midtrans.server_key'), '')
-            ->post($this->snapUrl(), [
-                'transaction_details' => [
-                    'order_id' => $order->order_number,
-                    'gross_amount' => (int) $order->total,
-                ],
-            ])
+            ->post($this->snapUrl(), $this->snapPayload($order))
             ->throw();
 
         return $response->json('redirect_url');
+    }
+
+    private function snapPayload(Order $order): array
+    {
+        $order->loadMissing(['user', 'items.productVariant.product']);
+
+        $payload = [
+            'transaction_details' => [
+                'order_id' => $order->order_number,
+                'gross_amount' => (int) $order->total,
+            ],
+            'callbacks' => [
+                'finish' => rtrim(config('app.frontend_url'), '/').'/account/orders/'.$order->id,
+            ],
+            // Same window the orders:cancel-unpaid command uses, so Snap never
+            // accepts a payment for an order we have already cancelled.
+            'expiry' => [
+                'unit' => 'hours',
+                'duration' => (int) config('business.unpaid_order_cancel_hours'),
+            ],
+        ];
+
+        if ($order->user !== null) {
+            $payload['customer_details'] = array_filter([
+                'first_name' => $order->user->name,
+                'email' => $order->user->email,
+                'phone' => $order->user->phone,
+            ]);
+        }
+
+        $items = $this->itemDetails($order);
+        if ($items !== null) {
+            $payload['item_details'] = $items;
+        }
+
+        return $payload;
+    }
+
+    /**
+     * Midtrans rejects the request when item_details do not add up to
+     * gross_amount, so a mismatch (e.g. rounding) drops the list rather than
+     * failing checkout.
+     *
+     * @return list<array<string, mixed>>|null
+     */
+    private function itemDetails(Order $order): ?array
+    {
+        $items = [];
+        foreach ($order->items as $item) {
+            $items[] = [
+                'id' => 'item-'.$item->id,
+                'price' => (int) $item->unit_price,
+                'quantity' => (int) $item->quantity,
+                'name' => mb_substr($item->productVariant?->product?->name_id ?? 'Produk', 0, 50),
+            ];
+        }
+
+        if ((int) $order->shipping_cost > 0) {
+            $items[] = ['id' => 'shipping', 'price' => (int) $order->shipping_cost, 'quantity' => 1, 'name' => 'Ongkos kirim'];
+        }
+
+        $sum = array_sum(array_map(fn ($i) => $i['price'] * $i['quantity'], $items));
+
+        return $items !== [] && $sum === (int) $order->total ? $items : null;
     }
 
     /**

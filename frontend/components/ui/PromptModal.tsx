@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import Button from "./Button";
 import Input from "./Input";
+import Portal from "./Portal";
 import { useEscapeKey } from "@/hooks/useEscapeKey";
 
 interface PromptModalProps {
@@ -42,6 +43,7 @@ export default function PromptModal({
   const invalid = value.trim().length < minLength;
 
   return (
+    <Portal>
     <div className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center bg-black/45 px-4">
       <div role="dialog" aria-modal="true" aria-label={title} className="flex w-full max-w-sm flex-col gap-4 rounded-md bg-surface p-6">
         <p className="font-heading text-lg font-semibold text-text-primary">{title}</p>
@@ -66,5 +68,6 @@ export default function PromptModal({
         </div>
       </div>
     </div>
+    </Portal>
   );
 }

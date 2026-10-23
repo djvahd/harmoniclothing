@@ -18,6 +18,10 @@ export default function KelolaPembayaranPage() {
   const [page, setPage] = useState(1);
   const { data, isLoading } = useSWR(["/admin/payments", page], () => getPayments({ page }));
   const payments = data?.data ?? [];
+  const label = (group: "statuses" | "methods", value: string | null) => {
+    if (!value) return "-";
+    return t.has(`${group}.${value}`) ? t(`${group}.${value}`) : value.replace(/_/g, " ");
+  };
 
   return (
     <SidebarPageShell sidebar={<AdminSidebar />}>
@@ -41,11 +45,11 @@ export default function KelolaPembayaranPage() {
             <tr className="border-b border-border last:border-0">
               <td className="p-4 font-medium text-text-primary">{payment.order.order_number}</td>
               <td className="p-4 text-text-secondary">{payment.order.user.name}</td>
-              <td className="p-4 text-text-secondary">{payment.method}</td>
+              <td className="p-4 text-text-secondary">{label("methods", payment.method)}</td>
               <td className="p-4 text-text-secondary">{formatCurrency(payment.amount)}</td>
               <td className="p-4">
                 <Badge variant={payment.status === "berhasil" ? "success" : "warning"}>
-                  {payment.status}
+                  {label("statuses", payment.status)}
                 </Badge>
               </td>
             </tr>

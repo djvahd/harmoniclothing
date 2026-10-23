@@ -61,7 +61,7 @@ export default function ApprovalDesainPage() {
           {designs.map((design) => {
             const thumbnail = storageUrl(design.thumbnail_path);
             return (
-              <div key={design.id} className="flex items-center justify-between rounded-md border border-border bg-surface p-4">
+              <div key={design.id} className="flex flex-col gap-3 rounded-md border border-border bg-surface p-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3">
                   <div className="relative size-14 shrink-0 overflow-hidden rounded-sm bg-border">
                     {thumbnail && (
@@ -75,7 +75,7 @@ export default function ApprovalDesainPage() {
                     </p>
                   </div>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex shrink-0 gap-2">
                   <Button variant="secondary" loading={loadingId === design.id} onClick={() => setRejectingId(design.id)}>
                     {t("reject")}
                   </Button>

@@ -222,7 +222,7 @@ export default function FilterSidebar({
   // rest of the facets are still loading.
   if (!options) {
     return (
-      <aside className="flex w-[220px] shrink-0 animate-pulse flex-col gap-6">
+      <aside className="flex w-full shrink-0 animate-pulse flex-col gap-6 md:w-[220px]">
         <div className="flex flex-col gap-2">
           <div className="h-3 w-16 rounded-sm bg-border" />
           <div className="flex flex-col gap-1.5">
@@ -248,7 +248,7 @@ export default function FilterSidebar({
   }
 
   return (
-    <aside className="flex w-[220px] shrink-0 flex-col gap-6">
+    <aside className="flex w-full shrink-0 flex-col gap-6 md:w-[220px]">
       {!!options?.categories.length && (
         <CategoryList
           label={t("category")}

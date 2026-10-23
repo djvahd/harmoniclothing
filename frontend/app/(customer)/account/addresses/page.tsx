@@ -83,7 +83,7 @@ export default function AddressBookPage() {
   return (
     <SidebarPageShell sidebar={<AccountSidebar />}>
       <div className="flex flex-col gap-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <h1 className="font-heading text-h3 font-semibold text-text-primary">{t("title")}</h1>
           <Button onClick={openAddForm}>
             <Plus className="size-4" /> {t("addAddress")}
@@ -132,7 +132,7 @@ export default function AddressBookPage() {
         )}
         <div className="flex flex-col gap-3">
           {addresses.map((address) => (
-            <div key={address.id} className="flex items-center justify-between rounded-md border border-border bg-surface p-4">
+            <div key={address.id} className="flex flex-col gap-3 rounded-md border border-border bg-surface p-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2">
                   <p className="font-body text-sm font-semibold text-text-primary">{address.label}</p>

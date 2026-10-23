@@ -39,14 +39,14 @@ export default function AdminDashboardPage() {
           </div>
         )}
 
-        <div className="flex flex-wrap gap-4">
+        <div className="grid grid-cols-2 gap-4 xl:grid-cols-4 [&>*]:w-full">
           <StatCard icon={ShoppingBag} label={t("stats.pendingOrders")} value={String(summary?.orders.menunggu_approval ?? 0)} />
           <StatCard icon={DollarSign} label={t("stats.totalRevenue")} value={formatCurrency(Number(summary?.revenue.total ?? 0))} />
           <StatCard icon={Users} label={t("stats.totalCustomers")} value={String(summary?.users.customers_total ?? 0)} />
           <StatCard icon={Palette} label={t("stats.pendingDesigns")} value={String(summary?.designs.pending ?? 0)} />
         </div>
 
-        <div className="flex flex-wrap gap-4">
+        <div className="grid grid-cols-2 gap-4 xl:grid-cols-4 [&>*]:w-full">
           <StatCard icon={ShoppingBag} label={t("stats.inProduction")} value={String(summary?.orders.diproses_produksi ?? 0)} />
           <StatCard icon={ShoppingBag} label={t("stats.shipped")} value={String(summary?.orders.dikirim ?? 0)} />
           <StatCard icon={ShoppingBag} label={t("stats.completed")} value={String(summary?.orders.selesai ?? 0)} />

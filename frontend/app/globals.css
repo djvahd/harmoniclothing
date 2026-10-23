@@ -44,3 +44,42 @@ body::-webkit-scrollbar {
     font-family: var(--font-montserrat), sans-serif;
   }
 }
+
+/* DataTable: below md each row becomes a stacked card, cells labelled via data-label. */
+@media (max-width: 767px) {
+  .data-table-stack,
+  .data-table-stack tbody {
+    display: block;
+  }
+  .data-table-stack thead {
+    display: none;
+  }
+  .data-table-stack tr {
+    display: block;
+    padding: 0.5rem 1rem;
+  }
+  .data-table-stack td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    text-align: right;
+  }
+  .data-table-stack td[data-label]::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    text-align: left;
+    font-weight: 600;
+    color: rgb(var(--color-text-secondary));
+  }
+  .data-table-stack td[colspan] {
+    display: block;
+    text-align: left;
+  }
+}
+@media (max-width: 767px) {
+  .data-table-stack td:empty {
+    display: none;
+  }
+}

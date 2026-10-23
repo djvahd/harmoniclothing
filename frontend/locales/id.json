@@ -979,6 +979,19 @@
         "amount": "Jumlah",
         "status": "Status"
       },
+      "statuses": {
+        "belum_dibayar": "Belum dibayar",
+        "berhasil": "Berhasil",
+        "gagal": "Gagal",
+        "kedaluwarsa": "Kedaluwarsa"
+      },
+      "methods": {
+        "bank_transfer": "Transfer bank",
+        "credit_card": "Kartu kredit",
+        "gopay": "GoPay",
+        "qris": "QRIS",
+        "echannel": "Mandiri Bill"
+      },
       "empty": "Belum ada pembayaran."
     },
     "shipments": {

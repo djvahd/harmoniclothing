@@ -43,7 +43,7 @@ export default function CartPopover({
       {open && (
           <div
             onMouseEnter={onCancelClose}
-            className="absolute left-0 top-full z-40 mt-2 w-[340px] rounded-md border border-border bg-surface shadow-lg"
+            className="absolute left-0 top-full z-40 mt-2 w-[340px] max-w-[calc(100vw-2rem)] rounded-md border border-border bg-surface shadow-lg"
           >
           <div className="flex items-center justify-between px-5 py-3">
             <p className="font-body text-sm font-semibold text-text-primary">

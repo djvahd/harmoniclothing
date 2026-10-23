@@ -34,7 +34,7 @@ export default function CartItemRow({
   );
 
   return (
-    <div className="flex items-start gap-3">
+    <div className="flex flex-wrap items-start gap-3 sm:flex-nowrap">
       <input
         type="checkbox"
         checked={selected}
@@ -49,7 +49,7 @@ export default function CartItemRow({
           {item.product_variant.size} · {item.product_variant.color}
         </p>
       </div>
-      <div className="flex shrink-0 flex-col items-end gap-2 pt-1">
+      <div className="flex w-full shrink-0 items-center justify-between gap-2 pl-7 pt-1 sm:w-auto sm:flex-col sm:items-end sm:pl-0">
         <p className="font-body text-sm font-semibold text-text-primary">
           {formatCurrency(item.subtotal)}
         </p>

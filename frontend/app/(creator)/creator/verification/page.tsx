@@ -208,7 +208,9 @@ export default function VerifikasiDataDiriPage() {
           </Button>
         </form>
         )}
-        <p className="font-body text-xs text-text-secondary">{t("footerNote")}</p>
+        {status !== "aktif" && status !== "banned" && (
+          <p className="font-body text-xs text-text-secondary">{t("footerNote")}</p>
+        )}
       </div>
     </SidebarPageShell>
   );

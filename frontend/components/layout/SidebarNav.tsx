@@ -29,7 +29,7 @@ export default function SidebarNav({ groups, className, onNavigate }: SidebarNav
     <>
     <nav
       className={clsx(
-        "flex w-[260px] flex-col gap-0.5 rounded-md border border-border bg-surface p-3",
+        "flex w-full flex-col md:w-[260px] gap-0.5 rounded-md border border-border bg-surface p-3",
         className,
       )}
     >
