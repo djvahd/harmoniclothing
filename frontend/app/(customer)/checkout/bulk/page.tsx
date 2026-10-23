@@ -92,7 +92,7 @@ export default function BulkCheckoutPage() {
       });
       clearDraft();
       if (order.midtrans_redirect_url) {
-        await payWithSnap(order.midtrans_redirect_url, () => router.push(`/account/orders/${order.id}`));
+        await payWithSnap(order.midtrans_redirect_url, () => router.push(`/account/orders/${order.id}?paying=1`));
       } else {
         router.push(`/account/orders/${order.id}`);
       }

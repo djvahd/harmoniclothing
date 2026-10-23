@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import Badge from "@/components/ui/Badge";
 import OrderStatusItem from "@/components/ui/OrderStatusItem";
@@ -11,7 +11,7 @@ import Button from "@/components/ui/Button";
 import LoadingState from "@/components/ui/LoadingState";
 import OrderItemReview from "@/components/order/OrderItemReview";
 import { cancelOrder, confirmReceived, payOrder, reorder } from "@/services/orders";
-import { useOrder, invalidateOrder } from "@/hooks/useOrders";
+import { useOrder, invalidateOrder, refreshAfterPayment } from "@/hooks/useOrders";
 import { storageUrl } from "@/lib/storage";
 import { payWithSnap } from "@/lib/snap";
 import { formatCurrency, formatDateTime } from "@/lib/format";
@@ -34,6 +34,11 @@ export default function DetailPesananPage() {
   const { order, isLoading } = useOrder(orderId);
   const [loading, setLoading] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
+
+  // Arriving from checkout right after the Snap popup: wait for the webhook.
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).has("paying")) void refreshAfterPayment(orderId);
+  }, [orderId]);
 
   const currentStepIndex = order
     ? TIMELINE_STEPS.findIndex((s) => s.status === order.status)
@@ -66,7 +71,7 @@ export default function DetailPesananPage() {
       const res = await payOrder(orderId);
       const url = res.data.midtrans_redirect_url;
       if (url) {
-        await payWithSnap(url, () => invalidateOrder(orderId));
+        await payWithSnap(url, () => void refreshAfterPayment(orderId));
         return;
       }
       setPayError(t("payUnavailable"));
