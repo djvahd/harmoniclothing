@@ -4,8 +4,10 @@ namespace Tests\Feature;
 
 use App\Models\Address;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\User;
+use App\Services\MidtransService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
@@ -181,5 +183,48 @@ class PaymentTest extends TestCase
         $this->actingAs($user)->getJson("/api/orders/{$order->id}/invoice")
             ->assertOk()
             ->assertJsonStructure(['data' => ['invoice_number', 'issued_at']]);
+    }
+
+    public function test_snap_request_carries_customer_items_callback_and_expiry(): void
+    {
+        config(['app.frontend_url' => 'https://app.example.test']);
+        Http::fake(['app.sandbox.midtrans.com/*' => Http::response(['redirect_url' => 'https://pay.test/x'], 201)]);
+
+        $user = User::factory()->create();
+        $address = Address::factory()->for($user)->create();
+        $order = Order::factory()->for($user)->for($address, 'address')->create([
+            'order_number' => 'HC-20260101-0002',
+            'subtotal' => 90000,
+            'shipping_cost' => 10000,
+            'total' => 100000,
+        ]);
+        OrderItem::factory()->for($order)->create(['quantity' => 2, 'unit_price' => 45000, 'subtotal' => 90000]);
+
+        $url = app(MidtransService::class)->createSnapTransaction($order);
+
+        $this->assertSame('https://pay.test/x', $url);
+        Http::assertSent(function ($request) use ($order, $user) {
+            $d = $request->data();
+
+            return $d['callbacks']['finish'] === "https://app.example.test/account/orders/{$order->id}"
+                && $d['expiry']['duration'] === 24
+                && $d['customer_details']['email'] === $user->email
+                && count($d['item_details']) === 2
+                && $d['transaction_details']['gross_amount'] === 100000;
+        });
+    }
+
+    public function test_snap_request_omits_item_details_that_do_not_add_up(): void
+    {
+        Http::fake(['app.sandbox.midtrans.com/*' => Http::response(['redirect_url' => 'https://pay.test/y'], 201)]);
+
+        $user = User::factory()->create();
+        $address = Address::factory()->for($user)->create();
+        $order = Order::factory()->for($user)->for($address, 'address')->create(['total' => 99999, 'shipping_cost' => 0]);
+        OrderItem::factory()->for($order)->create(['quantity' => 1, 'unit_price' => 50000]);
+
+        app(MidtransService::class)->createSnapTransaction($order);
+
+        Http::assertSent(fn ($request) => ! array_key_exists('item_details', $request->data()));
     }
 }
