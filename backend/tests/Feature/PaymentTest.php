@@ -164,6 +164,26 @@ class PaymentTest extends TestCase
             ->assertOk();
     }
 
+    public function test_a_duplicate_settlement_notification_does_not_create_a_second_invoice(): void
+    {
+        $user = User::factory()->create();
+        $address = Address::factory()->for($user)->create();
+        $order = Order::factory()->for($user)->for($address, 'address')->create([
+            'order_number' => 'HC-20260101-0001',
+            'total' => 100000,
+        ]);
+        Payment::factory()->for($order)->create(['amount' => 100000]);
+
+        $this->fakeMidtransStatus();
+
+        $this->postJson('/api/webhooks/midtrans', $this->signedPayload())->assertOk();
+        $this->postJson('/api/webhooks/midtrans', $this->signedPayload())->assertOk();
+
+        $this->assertSame('menunggu_approval', $order->fresh()->status);
+        $this->assertSame(1, $order->invoice()->count());
+        $this->assertDatabaseCount('order_status_histories', 1);
+    }
+
     public function test_invoice_endpoint_404s_until_paid(): void
     {
         $user = User::factory()->create();
