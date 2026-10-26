@@ -34,7 +34,14 @@ export default function SidebarPageShell({
         </button>
         <div className={clsx(!open && "hidden", "md:block")}>{sidebar}</div>
       </aside>
-      <div className="min-w-0 flex-1">{children}</div>
+      {/* Skip-link target for the admin area: lands focus on the content, past the sidebar. */}
+      <div
+        id={pathname?.startsWith("/admin") ? "admin-main" : undefined}
+        tabIndex={pathname?.startsWith("/admin") ? -1 : undefined}
+        className="min-w-0 flex-1 outline-none"
+      >
+        {children}
+      </div>
     </div>
   );
 }
