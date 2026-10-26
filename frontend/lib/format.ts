@@ -22,6 +22,14 @@ function dateLocale(): string {
   return en ? "en-US" : "id-ID";
 }
 
+/** Tiered "sold" figure for product cards ("10+", "100+", "1rb+") so small numbers read as momentum, not as a count to scrutinise. */
+export function formatSoldCount(count: number): string {
+  if (count < 10) return String(count);
+  const tier = [100000, 50000, 10000, 5000, 1000, 500, 100, 50, 10].find((t) => count >= t) ?? 10;
+  if (tier < 1000) return `${tier}+`;
+  return `${tier / 1000}${dateLocale() === "en-US" ? "k" : "rb"}+`;
+}
+
 export function formatDate(date: string | number | Date): string {
   return new Date(date).toLocaleDateString(dateLocale(), {
     day: "numeric",

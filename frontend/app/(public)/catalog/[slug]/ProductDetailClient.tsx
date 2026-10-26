@@ -357,6 +357,7 @@ export default function DetailProdukPage() {
               reviews={reviews}
               reviewsLoading={reviewsLoading}
               meta={reviewsMeta}
+              distribution={reviewsMeta?.rating_distribution}
               onPageChange={setReviewPage}
             />
           )}
