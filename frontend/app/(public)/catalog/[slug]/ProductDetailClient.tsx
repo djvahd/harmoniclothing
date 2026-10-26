@@ -176,7 +176,7 @@ export default function DetailProdukPage() {
   return (
     <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 px-4 py-10 md:px-20">
       <nav className="flex flex-wrap items-center gap-1.5 font-body text-sm text-text-secondary">
-        <Link href="/catalog" className="transition-colors hover:text-primary">
+        <Link href="/catalog" className="inline-flex min-h-11 items-center transition-colors hover:text-primary">
           {t("breadcrumbCatalog")}
         </Link>
         {product.category && (
@@ -184,7 +184,7 @@ export default function DetailProdukPage() {
             <ChevronRight className="size-3.5" />
             <Link
               href={`/catalog?kategori=${product.category.slug}`}
-              className="transition-colors hover:text-primary"
+              className="inline-flex min-h-11 items-center transition-colors hover:text-primary"
             >
               {product.category.name}
             </Link>
@@ -256,7 +256,7 @@ export default function DetailProdukPage() {
             </label>
             <Link
               href="/marketplace"
-              className="font-body text-sm font-medium text-primary transition-colors hover:underline"
+              className="inline-flex min-h-11 items-center font-body text-sm font-medium text-primary transition-colors hover:underline"
             >
               {t("marketplaceLink")}
             </Link>
