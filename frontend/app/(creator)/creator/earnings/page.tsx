@@ -1,7 +1,8 @@
 "use client";
 
 import useSWR from "swr";
-import { Clock, Wallet, CheckCircle2 } from "lucide-react";
+import Link from "next/link";
+import { Clock, Wallet, CheckCircle2, PauseCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import CreatorSidebar from "@/components/layout/CreatorSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
@@ -35,11 +36,20 @@ export default function StatistikKomisiPage() {
           <StatCard icon={Wallet} label={t("totalCommission")} value={formatCurrency(Number(summary?.total ?? 0))} />
           <StatCard icon={Clock} label={t("unpaid")} value={formatCurrency(Number(summary?.terhutang ?? 0))} />
           <StatCard icon={CheckCircle2} label={t("paid")} value={formatCurrency(Number(summary?.dibayar ?? 0))} />
+          <StatCard icon={PauseCircle} label={t("held")} value={formatCurrency(Number(summary?.ditahan ?? 0))} />
+        </div>
+
+        <div className="flex flex-col gap-1 rounded-md border border-border bg-surface p-4">
+          <p className="font-body text-sm font-semibold text-text-primary">{t("payoutInfo.title")}</p>
+          <p className="font-body text-xs text-text-secondary">{t("payoutInfo.body")}</p>
+          <Link href="/creator/profile" className="font-body text-xs font-medium text-primary underline">
+            {t("payoutInfo.viewDetail")}
+          </Link>
         </div>
 
         <div className="flex flex-col gap-3">
           <p className="font-heading text-lg font-semibold text-text-primary">
-            {t("payoutHistory")}
+            {t("commissionHistory")}
           </p>
           {isLoading && <LoadingState rows={3} />}
           {!isLoading && commissions.length === 0 && (
@@ -52,7 +62,9 @@ export default function StatistikKomisiPage() {
                   {formatCurrency(Number(c.amount))}
                 </p>
                 <p className="font-body text-xs text-text-secondary">
-                  {formatDate(c.created_at)}
+                  {c.status === "dibayar" && c.paid_at
+                    ? t("paidOn", { date: formatDate(c.paid_at) })
+                    : t("createdOn", { date: formatDate(c.created_at) })}
                 </p>
               </div>
               <Badge variant={STATUS_VARIANT[c.status]}>{t(`commissionStatus.${c.status}`)}</Badge>
