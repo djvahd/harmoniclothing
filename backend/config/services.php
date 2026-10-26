@@ -39,6 +39,22 @@ return [
         'server_key' => env('MIDTRANS_SERVER_KEY'),
         'client_key' => env('MIDTRANS_CLIENT_KEY'),
         'is_production' => env('MIDTRANS_IS_PRODUCTION', false),
+        // Methods the customer can pick at checkout (GET /checkout/payment-methods).
+        // `snap` is the Midtrans enabled_payments value(s) the choice maps to; every channel
+        // must also be switched on in the Midtrans dashboard or Snap will not show it.
+        // The first entry is the checkout default.
+        'payment_methods' => [
+            'bca_va' => ['label' => 'BCA Virtual Account', 'group' => 'virtual_account', 'snap' => ['bca_va']],
+            'bni_va' => ['label' => 'BNI Virtual Account', 'group' => 'virtual_account', 'snap' => ['bni_va']],
+            'bri_va' => ['label' => 'BRI Virtual Account', 'group' => 'virtual_account', 'snap' => ['bri_va']],
+            'mandiri_va' => ['label' => 'Mandiri Virtual Account', 'group' => 'virtual_account', 'snap' => ['echannel']],
+            'permata_va' => ['label' => 'Permata Virtual Account', 'group' => 'virtual_account', 'snap' => ['permata_va']],
+            'qris' => ['label' => 'QRIS', 'group' => 'ewallet', 'snap' => ['qris']],
+            'gopay' => ['label' => 'GoPay', 'group' => 'ewallet', 'snap' => ['gopay']],
+            'shopeepay' => ['label' => 'ShopeePay', 'group' => 'ewallet', 'snap' => ['shopeepay']],
+            'alfamart' => ['label' => 'Alfamart', 'group' => 'store', 'snap' => ['alfamart']],
+            'indomaret' => ['label' => 'Indomaret', 'group' => 'store', 'snap' => ['indomaret']],
+        ],
     ],
 
     'biteship' => [

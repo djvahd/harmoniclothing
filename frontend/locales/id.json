@@ -612,6 +612,15 @@
       "securePayment": "Pembayaran aman & terenkripsi",
       "selectAddressError": "Pilih alamat pengiriman terlebih dahulu.",
       "selectCourierError": "Pilih kurir pengiriman terlebih dahulu.",
+      "paymentMethod": "Metode Pembayaran",
+      "paymentMethodHint": "Pilih sekarang, pembayaran dilakukan di langkah berikutnya.",
+      "paymentGroup": {
+        "virtual_account": "Virtual Account",
+        "ewallet": "Dompet Digital & QRIS",
+        "store": "Minimarket"
+      },
+      "orderNotes": "Catatan Pesanan (opsional)",
+      "orderNotesPlaceholder": "Mis. kirim sebelum hari Jumat",
       "emptyCart": "Tidak ada item untuk di-checkout.",
       "backToCart": "Kembali ke Keranjang"
     },

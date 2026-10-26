@@ -16,7 +16,7 @@ class PaymentService
 {
     public function __construct(private readonly MidtransService $midtrans) {}
 
-    public function initiate(Order $order): ?string
+    public function initiate(Order $order, ?string $paymentMethod = null): ?string
     {
         $payment = Payment::create([
             'order_id' => $order->id,
@@ -28,7 +28,7 @@ class PaymentService
             return null;
         }
 
-        $url = $this->midtrans->createSnapTransaction($order);
+        $url = $this->midtrans->createSnapTransaction($order, $paymentMethod);
         $payment->update(['snap_redirect_url' => $url]);
 
         return $url;

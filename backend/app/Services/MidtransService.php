@@ -13,16 +13,17 @@ use Illuminate\Support\Facades\Http;
  */
 class MidtransService
 {
-    public function createSnapTransaction(Order $order): string
+    /** @param  string|null  $paymentMethod  key of services.midtrans.payment_methods; null leaves every channel open in Snap */
+    public function createSnapTransaction(Order $order, ?string $paymentMethod = null): string
     {
         $response = Http::withBasicAuth(config('services.midtrans.server_key'), '')
-            ->post($this->snapUrl(), $this->snapPayload($order))
+            ->post($this->snapUrl(), $this->snapPayload($order, $paymentMethod))
             ->throw();
 
         return $response->json('redirect_url');
     }
 
-    private function snapPayload(Order $order): array
+    private function snapPayload(Order $order, ?string $paymentMethod = null): array
     {
         $order->loadMissing(['user', 'items.productVariant.product']);
 
@@ -41,6 +42,13 @@ class MidtransService
                 'duration' => (int) config('business.unpaid_order_cancel_hours'),
             ],
         ];
+
+        $enabledPayments = $paymentMethod !== null
+            ? config("services.midtrans.payment_methods.{$paymentMethod}.snap")
+            : null;
+        if ($enabledPayments !== null) {
+            $payload['enabled_payments'] = $enabledPayments;
+        }
 
         if ($order->user !== null) {
             $payload['customer_details'] = array_filter([

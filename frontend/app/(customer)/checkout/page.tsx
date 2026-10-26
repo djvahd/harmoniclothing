@@ -12,7 +12,7 @@ import Button from "@/components/ui/Button";
 import EmptyState from "@/components/ui/EmptyState";
 import LoadingState from "@/components/ui/LoadingState";
 import { getAddresses } from "@/services/account";
-import { checkout, getShippingRates } from "@/services/checkout";
+import { checkout, getPaymentMethods, getShippingRates } from "@/services/checkout";
 import { payWithSnap } from "@/lib/snap";
 import { getErrorMessage } from "@/lib/api";
 import { useCart } from "@/hooks/useCart";
@@ -39,6 +39,8 @@ function CheckoutPageContent() {
 
   const [addressId, setAddressId] = useState<number | null>(null);
   const [courier, setCourier] = useState<{ company: string; type: string } | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
+  const [orderNotes, setOrderNotes] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -55,6 +57,13 @@ function CheckoutPageContent() {
     getShippingRates({ address_id: addressId!, cart_item_ids: cartItemIds }),
   );
   const rates = ratesData?.data ?? [];
+
+  // Like the courier, the first method is preselected until the customer picks one. If the list
+  // fails to load nothing is sent and Snap offers every channel, so checkout never blocks on it.
+  const { data: methodsData } = useSWR("/checkout/payment-methods", getPaymentMethods);
+  const paymentMethods = methodsData?.data ?? [];
+  const selectedPayment = paymentMethod ?? paymentMethods[0]?.code;
+  const paymentGroups = [...new Set(paymentMethods.map((m) => m.group))];
 
   // Re-select automatically when the address (and so the rate list) changes, so a stale
   // courier from a previous address is never silently kept.
@@ -90,6 +99,8 @@ function CheckoutPageContent() {
         cart_item_ids: cartItemIds,
         courier_company: selectedCourier.company,
         courier_type: selectedCourier.type,
+        payment_method: selectedPayment,
+        notes: orderNotes.trim() || undefined,
       });
       if (order.midtrans_redirect_url) {
         await payWithSnap(order.midtrans_redirect_url, () => router.push(`/account/orders/${order.id}?paying=1`));
@@ -177,6 +188,47 @@ function CheckoutPageContent() {
                 price={new Intl.NumberFormat("id-ID").format(rate.price)}
               />
             ))}
+          </section>
+
+          {paymentMethods.length > 0 && (
+            <section className="flex flex-col gap-3 rounded-md border border-border bg-surface p-5">
+              <div>
+                <p className="font-heading text-lg font-semibold text-text-primary">{t("paymentMethod")}</p>
+                <p className="font-body text-xs text-text-secondary">{t("paymentMethodHint")}</p>
+              </div>
+              {paymentGroups.map((group) => (
+                <div key={group} className="flex flex-col gap-2">
+                  <p className="font-body text-xs font-semibold uppercase tracking-wide text-text-secondary">
+                    {t(`paymentGroup.${group}`)}
+                  </p>
+                  {paymentMethods
+                    .filter((m) => m.group === group)
+                    .map((method) => (
+                      <OptionRow
+                        key={method.code}
+                        selected={selectedPayment === method.code}
+                        onSelect={() => setPaymentMethod(method.code)}
+                        label={method.label}
+                      />
+                    ))}
+                </div>
+              ))}
+            </section>
+          )}
+
+          <section className="flex flex-col gap-3 rounded-md border border-border bg-surface p-5">
+            <label htmlFor="order-notes" className="font-heading text-lg font-semibold text-text-primary">
+              {t("orderNotes")}
+            </label>
+            <textarea
+              id="order-notes"
+              value={orderNotes}
+              onChange={(e) => setOrderNotes(e.target.value)}
+              placeholder={t("orderNotesPlaceholder")}
+              rows={3}
+              maxLength={500}
+              className="w-full rounded-sm border border-border bg-surface px-3 py-2.5 font-body text-sm text-text-primary outline-none transition-colors hover:border-primary focus:border-primary"
+            />
           </section>
         </div>
 
