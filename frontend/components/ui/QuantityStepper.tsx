@@ -10,7 +10,7 @@ interface QuantityStepperProps {
   max?: number;
 }
 
-/** Numeric +/- stepper, clamped to [min, max]. */
+/** Numeric +/- stepper with a typeable value, clamped to [min, max]. */
 export default function QuantityStepper({
   value,
   onChange,
@@ -29,9 +29,20 @@ export default function QuantityStepper({
       >
         <Minus className="size-4" />
       </button>
-      <span className="flex h-9 w-10 items-center justify-center font-body text-sm font-medium text-text-primary">
-        {value}
-      </span>
+      <input
+        type="number"
+        inputMode="numeric"
+        aria-label={t("quantityLabel")}
+        min={min}
+        max={max}
+        value={value}
+        onFocus={(e) => e.target.select()}
+        onChange={(e) => {
+          const n = Math.trunc(Number(e.target.value));
+          onChange(Number.isNaN(n) ? min : Math.min(max, Math.max(min, n)));
+        }}
+        className="h-9 w-12 border-none bg-transparent text-center font-body text-sm font-medium text-text-primary outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+      />
       <button
         type="button"
         aria-label={t("increase")}
