@@ -28,6 +28,8 @@ class AdminCatalogController extends Controller
     /** GET /admin/catalog/products — admin management list (gap-filled); shows inactive products too, unlike the public list. */
     public function index(Request $request): JsonResponse
     {
+        $request->validate(['per_page' => ['sometimes', 'integer', 'min:1', 'max:100']]);
+
         $products = $this->catalog->listProductsForAdmin(
             $request->query('category'),
             (int) $request->query('per_page', 20),

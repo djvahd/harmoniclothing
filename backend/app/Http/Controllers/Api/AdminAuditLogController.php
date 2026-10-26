@@ -13,6 +13,8 @@ class AdminAuditLogController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
+        $request->validate(['per_page' => ['sometimes', 'integer', 'min:1', 'max:100']]);
+
         $logs = AuditLog::query()
             ->with('actor')
             ->when($request->query('action'), fn ($query, $action) => $query->where('action', $action))

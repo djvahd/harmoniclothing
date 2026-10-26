@@ -21,6 +21,8 @@ class AdminOrderController extends Controller
     /** GET /admin/orders — admin management list (gap-filled); all 8 statuses, unlike production-queue's 2. */
     public function index(Request $request): JsonResponse
     {
+        $request->validate(['per_page' => ['sometimes', 'integer', 'min:1', 'max:100']]);
+
         $orders = $this->orders->listAllOrders(
             $request->query('status'),
             (int) $request->query('per_page', 20),
