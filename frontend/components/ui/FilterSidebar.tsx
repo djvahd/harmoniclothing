@@ -395,6 +395,7 @@ export default function FilterSidebar({
                 <input
                   type="text"
                   inputMode="numeric"
+                  aria-label={`${t("price")} ${t("minimum")}`}
                   placeholder={t("minimum")}
                   value={formatPriceDigits(priceDraft.min)}
                   onChange={(e) => handlePriceInput("min", e.target.value)}
@@ -426,6 +427,7 @@ export default function FilterSidebar({
                 <input
                   type="text"
                   inputMode="numeric"
+                  aria-label={`${t("price")} ${t("maximum")}`}
                   placeholder={t("maximum")}
                   value={formatPriceDigits(priceDraft.max)}
                   onChange={(e) => handlePriceInput("max", e.target.value)}

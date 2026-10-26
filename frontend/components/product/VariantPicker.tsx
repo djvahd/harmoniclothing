@@ -68,7 +68,7 @@ export default function VariantPicker({
           </div>
           <div className="flex flex-wrap gap-2">
             {sizes.map((s) => (
-              <button key={s} type="button" onClick={() => onSelectSize(s)}>
+              <button key={s} type="button" onClick={() => onSelectSize(s)} aria-pressed={activeSize === s}>
                 <Tag active={activeSize === s} size="sm">
                   {s}
                 </Tag>

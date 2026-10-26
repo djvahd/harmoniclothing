@@ -20,6 +20,13 @@ function list(sp: URLSearchParams, key: string): string[] {
   return raw ? raw.split(",").map((s) => s.trim()).filter(Boolean) : [];
 }
 
+/** Numeric price bounds for the API; a reversed range (min > max) is swapped so the request never 422s. */
+export function normalizePriceRange(min: string, max: string): { min?: number; max?: number } {
+  const lo = min ? Number(min) : undefined;
+  const hi = max ? Number(max) : undefined;
+  return lo !== undefined && hi !== undefined && lo > hi ? { min: hi, max: lo } : { min: lo, max: hi };
+}
+
 export function filtersFromParams(sp: URLSearchParams): FilterSidebarValue {
   return {
     ...EMPTY_FILTER_VALUE,

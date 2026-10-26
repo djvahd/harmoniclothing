@@ -51,13 +51,15 @@ export default function ProductGallery({
       </div>
       {items.length > 1 && (
         <div className="flex gap-2 overflow-x-auto">
-          {items.map((item) => {
+          {items.map((item, index) => {
             const thumb = storageUrl(item.path);
             return (
               <button
                 key={item.key}
                 type="button"
                 onClick={() => onSelectItem(item.key)}
+                aria-label={t("viewImage", { number: index + 1 })}
+                aria-pressed={(activeKey ?? items[0].key) === item.key}
                 className={clsx(
                   "relative size-16 shrink-0 overflow-hidden rounded-sm border-2 bg-border transition-colors",
                   (activeKey ?? items[0].key) === item.key
