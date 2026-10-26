@@ -1023,7 +1023,11 @@
     },
     "reports": {
       "title": "Sales Report",
-      "period": "Period: {from} - {to} (last 30 days)",
+      "period": "Period: {from} - {to}",
+      "scopeNote": "Unlike the dashboard Total Revenue, which covers all time. Without a date range the report uses the last 30 days.",
+      "filter": { "from": "From date", "to": "To date", "reset": "Reset", "invalid": "The start date cannot be after the end date." },
+      "exportCsv": "Export CSV",
+      "csv": { "period": "Period", "quantity": "Units sold", "revenue": "Revenue" },
       "stats": {
         "totalRevenue": "Total Revenue",
         "avgOrderValue": "Average Order Value",
