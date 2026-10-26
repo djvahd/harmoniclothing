@@ -878,7 +878,13 @@
     },
     "dashboard": {
       "title": "Dashboard Admin",
-      "attentionNotice": "{count} item perlu perhatian: {pendingOrders} pesanan menunggu approval, {pendingCreators} creator menunggu approval.",
+      "attentionNotice": "{count} item perlu perhatian:",
+      "attentionLink": "{count} {label}",
+      "attentionLinks": {
+        "orders": "pesanan menunggu approval",
+        "creators": "creator menunggu approval",
+        "designs": "desain menunggu approval"
+      },
       "stats": {
         "pendingOrders": "Pesanan Menunggu Approval",
         "totalRevenue": "Total Pendapatan",

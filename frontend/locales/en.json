@@ -878,7 +878,13 @@
     },
     "dashboard": {
       "title": "Admin Dashboard",
-      "attentionNotice": "{count} items need attention: {pendingOrders} orders awaiting approval, {pendingCreators} creators awaiting approval.",
+      "attentionNotice": "{count} items need attention:",
+      "attentionLink": "{count} {label}",
+      "attentionLinks": {
+        "orders": "orders awaiting approval",
+        "creators": "creators awaiting approval",
+        "designs": "designs awaiting approval"
+      },
       "stats": {
         "pendingOrders": "Orders Awaiting Approval",
         "totalRevenue": "Total Revenue",

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import useSWR from "swr";
 import { AlertTriangle, DollarSign, Palette, ShoppingBag, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -14,8 +15,15 @@ export default function AdminDashboardPage() {
   const t = useTranslations("admin.dashboard");
   const { data, error } = useSWR("/admin/dashboard", getDashboardSummary);
   const summary = data?.data;
-  const needsAttention =
-    (summary?.orders.menunggu_approval ?? 0) + (summary?.users.creators_pending ?? 0);
+  const pendingOrders = summary?.orders.menunggu_approval ?? 0;
+  const pendingCreators = summary?.users.creators_pending ?? 0;
+  const pendingDesigns = summary?.designs.pending ?? 0;
+  const needsAttention = pendingOrders + pendingCreators + pendingDesigns;
+  const attentionLinks = [
+    { href: "/admin/orders", count: pendingOrders, label: t("attentionLinks.orders") },
+    { href: "/admin/creators/approval", count: pendingCreators, label: t("attentionLinks.creators") },
+    { href: "/admin/designs/approval", count: pendingDesigns, label: t("attentionLinks.designs") },
+  ].filter((item) => item.count > 0);
 
   return (
     <SidebarPageShell sidebar={<AdminSidebar />}>
@@ -27,23 +35,28 @@ export default function AdminDashboardPage() {
         {error && !data && <InlineError />}
 
         {needsAttention > 0 && (
-          <div className="flex items-center gap-2 rounded-md border border-primary bg-primary/5 px-4 py-3">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 rounded-md border border-primary bg-primary/5 px-4 py-3">
             <AlertTriangle className="size-4 text-primary" />
             <p className="font-body text-sm text-text-primary">
-              {t("attentionNotice", {
-                count: needsAttention,
-                pendingOrders: summary?.orders.menunggu_approval ?? 0,
-                pendingCreators: summary?.users.creators_pending ?? 0,
-              })}
+              {t("attentionNotice", { count: needsAttention })}
             </p>
+            {attentionLinks.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="font-body text-sm font-medium text-primary underline"
+              >
+                {t("attentionLink", { count: item.count, label: item.label })}
+              </Link>
+            ))}
           </div>
         )}
 
         <div className="grid grid-cols-2 gap-4 xl:grid-cols-4 [&>*]:w-full">
-          <StatCard icon={ShoppingBag} label={t("stats.pendingOrders")} value={String(summary?.orders.menunggu_approval ?? 0)} />
+          <StatCard icon={ShoppingBag} label={t("stats.pendingOrders")} value={String(summary?.orders.menunggu_approval ?? 0)} href="/admin/orders" />
           <StatCard icon={DollarSign} label={t("stats.totalRevenue")} value={formatCurrency(Number(summary?.revenue.total ?? 0))} />
           <StatCard icon={Users} label={t("stats.totalCustomers")} value={String(summary?.users.customers_total ?? 0)} />
-          <StatCard icon={Palette} label={t("stats.pendingDesigns")} value={String(summary?.designs.pending ?? 0)} />
+          <StatCard icon={Palette} label={t("stats.pendingDesigns")} value={String(summary?.designs.pending ?? 0)} href="/admin/designs/approval" />
         </div>
 
         <div className="grid grid-cols-2 gap-4 xl:grid-cols-4 [&>*]:w-full">
