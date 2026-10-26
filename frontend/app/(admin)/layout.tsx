@@ -16,7 +16,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           {t("skipToContent")}
         </a>
         <AdminHeader />
-        <main id="admin-main" className="flex-1">{children}</main>
+        <main className="flex-1">{children}</main>
       </div>
     </AdminGuard>
   );

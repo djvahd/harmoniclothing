@@ -653,6 +653,7 @@
       "title": "Kelola Profil",
       "fullName": "Nama Lengkap",
       "phoneNumber": "Nomor Telepon",
+      "phoneInvalid": "Nomor telepon harus 9-20 karakter berisi angka, spasi, atau tanda +.",
       "email": "Email",
       "saveSuccess": "Perubahan berhasil disimpan.",
       "saveChanges": "Simpan Perubahan",
@@ -675,6 +676,8 @@
         "city": "Kota/Kabupaten",
         "district": "Kecamatan",
         "postalCode": "Kode Pos",
+        "phoneInvalid": "Nomor telepon harus 9-20 karakter berisi angka, spasi, atau tanda +.",
+        "postalCodeInvalid": "Kode pos harus terdiri dari 5 angka.",
         "addressLine": "Alamat Lengkap"
       },
       "setAsDefault": "Jadikan alamat utama",

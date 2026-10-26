@@ -19,7 +19,7 @@ export default function WishlistButton({ productId, designId, className }: Wishl
   const t = useTranslations("ui.wishlistButton");
   const user = useAuthStore((state) => state.user);
   const openAuthModal = useAuthModalStore((state) => state.open);
-  const { items } = useWishlist(!!user);
+  const { items } = useWishlist(user?.role === "customer");
   const [pending, setPending] = useState(false);
 
   const existing = items.find((item) =>
