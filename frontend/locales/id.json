@@ -596,6 +596,8 @@
       "shippingCourier": "Kurir Pengiriman",
       "loadingRates": "Menghitung ongkir...",
       "noRatesAvailable": "Kurir tidak tersedia untuk alamat ini.",
+      "changeAddress": "Ubah alamat",
+      "shippingPending": "Pilih kurir",
       "selectAddressFirst": "Pilih alamat pengiriman untuk melihat pilihan kurir.",
       "orderSummary": "Ringkasan Pesanan",
       "notesPrefix": "Catatan:",
@@ -605,7 +607,9 @@
       "createOrder": "Buat Pesanan",
       "securePayment": "Pembayaran aman & terenkripsi",
       "selectAddressError": "Pilih alamat pengiriman terlebih dahulu.",
-      "selectCourierError": "Pilih kurir pengiriman terlebih dahulu."
+      "selectCourierError": "Pilih kurir pengiriman terlebih dahulu.",
+      "emptyCart": "Tidak ada item untuk di-checkout.",
+      "backToCart": "Kembali ke Keranjang"
     },
     "checkoutBulk": {
       "title": "Checkout Bulk Order",
@@ -614,6 +618,8 @@
       "shippingCourier": "Kurir Pengiriman",
       "loadingRates": "Menghitung ongkir...",
       "noRatesAvailable": "Kurir tidak tersedia untuk alamat ini.",
+      "changeAddress": "Ubah alamat",
+      "shippingPending": "Pilih kurir",
       "selectAddressFirst": "Pilih alamat pengiriman untuk melihat pilihan kurir.",
       "orderSummary": "Ringkasan Bulk Order",
       "designPrefix": "Desain:",
@@ -770,7 +776,7 @@
     },
     "bulkOrder": {
       "title": "Bulk Order",
-      "subtitle": "Isi kuantitas untuk tiap kombinasi warna/ukuran. Harga per-unit ditentukan dari TOTAL kuantitas seluruh kombinasi (BR-012), bukan per-ukuran.",
+      "subtitle": "Isi kuantitas untuk tiap kombinasi warna/ukuran. Harga per-unit ditentukan dari TOTAL kuantitas seluruh kombinasi, bukan per-ukuran.",
       "byCreator": "by {name}",
       "uploadLabel": "Upload Desain Sendiri (opsional)",
       "uploadStatusUploading": "Mengunggah...",
@@ -1286,6 +1292,7 @@
       "designCount": "{count} desain"
     },
     "quantityStepper": {
+      "quantityLabel": "Jumlah",
       "decrease": "Kurangi jumlah",
       "increase": "Tambah jumlah"
     }
