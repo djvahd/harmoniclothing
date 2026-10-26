@@ -22,7 +22,7 @@ export default function CtaSection() {
           <p className="font-body text-body-sm text-text-on-accent">{t("subtitle")}</p>
         </div>
         <div className="flex shrink-0 gap-3">
-          <Button href="/catalog" variant="primary" className="!bg-white !text-primary hover:!bg-white/90">
+          <Button href="/produk" variant="primary" className="!bg-white !text-primary hover:!bg-white/90">
               {t("ctaCustomDesign")}
             </Button>
           {!user && (

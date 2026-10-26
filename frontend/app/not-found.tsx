@@ -36,7 +36,7 @@ export default function NotFound() {
                     <Home className="size-4" />
                     {t("backHome")}
                   </Button>
-                <Button href="/catalog" variant="secondary" className="gap-2">
+                <Button href="/produk" variant="secondary" className="gap-2">
                     <Search className="size-4" />
                     {t("viewCatalog")}
                   </Button>

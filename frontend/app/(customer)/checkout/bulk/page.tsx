@@ -108,7 +108,7 @@ export default function BulkCheckoutPage() {
     return (
       <DetailNotFound
         message={t("noDraft")}
-        backHref="/catalog"
+        backHref="/produk"
         backLabel={t("backToCatalog")}
       />
     );

@@ -122,7 +122,7 @@ function ProductEditorForm() {
     return isLoading ? (
       <LoadingState variant="detail" />
     ) : (
-      <DetailNotFound message={t("productNotFound")} backHref="/catalog" backLabel={t("backToCatalog")} />
+      <DetailNotFound message={t("productNotFound")} backHref="/produk" backLabel={t("backToCatalog")} />
     );
   }
 
