@@ -7,24 +7,15 @@ import { Palette, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import CreatorSidebar from "@/components/layout/CreatorSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
-import Badge from "@/components/ui/Badge";
+import DesignStatusBadge from "@/components/creator/DesignStatusBadge";
 import Button from "@/components/ui/Button";
 import LoadingState from "@/components/ui/LoadingState";
 import EmptyState from "@/components/ui/EmptyState";
 import { getMyDesigns } from "@/services/creator";
 import { storageUrl } from "@/lib/storage";
-import type { DesignStatus } from "@/types/product";
-
-const STATUS_VARIANT: Record<DesignStatus, "success" | "warning" | "danger" | "neutral"> = {
-  draft: "neutral",
-  menunggu_approval: "warning",
-  published: "success",
-  ditolak: "danger",
-};
 
 export default function KelolaDesainPage() {
   const t = useTranslations("creator.designs");
-  const tCommon = useTranslations("common");
   const { data, isLoading } = useSWR("/creator/designs", getMyDesigns);
   const designs = data?.data ?? [];
 
@@ -63,9 +54,7 @@ export default function KelolaDesainPage() {
                     <p className="font-body text-xs text-danger">{design.rejection_reason}</p>
                   )}
                 </div>
-                <Badge variant={STATUS_VARIANT[design.status]}>
-                  {tCommon(`designStatus.${design.status}`)}
-                </Badge>
+                <DesignStatusBadge status={design.status} />
               </Link>
             );
           })}

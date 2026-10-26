@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Upload } from "lucide-react";
 import { useTranslations } from "next-intl";
 import CreatorSidebar from "@/components/layout/CreatorSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import TagInput from "@/components/ui/TagInput";
+import DesignFileDropzone from "@/components/creator/DesignFileDropzone";
+import { toast } from "@/store/toast-store";
 import { createDesign } from "@/services/creator";
 import { getErrorMessage } from "@/lib/api";
 import { useProducts } from "@/hooks/useProducts";
@@ -23,18 +24,7 @@ export default function UploadDesainPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  // Preview of the chosen file; the object URL is released when the file changes or the page closes.
-  useEffect(() => {
-    if (!file) {
-      setPreviewUrl(null);
-      return;
-    }
-    const url = URL.createObjectURL(file);
-    setPreviewUrl(url);
-    return () => URL.revokeObjectURL(url);
-  }, [file]);
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -66,6 +56,7 @@ export default function UploadDesainPage() {
         product_ids: selectedProducts,
         tags,
       });
+      toast(t("uploadSuccess"), "success");
       router.push(`/creator/designs/${design.id}`);
     } catch (err) {
       setError(getErrorMessage(err, tCommon("errorGeneric")));
@@ -79,7 +70,7 @@ export default function UploadDesainPage() {
       <div className="flex max-w-2xl flex-col gap-6">
         <h1 className="font-heading text-h3 font-semibold text-text-primary">{t("title")}</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-md border border-border bg-surface p-5">
-          <Input label={t("fields.title")} value={title} onChange={(e) => setTitle(e.target.value)} required />
+          <Input label={t("fields.title")} value={title} onChange={(e) => setTitle(e.target.value)} maxLength={150} required />
           <div className="flex flex-col gap-1.5">
             <label htmlFor="design-description" className="font-body text-xs font-medium text-text-secondary">{t("fields.description")}</label>
             <textarea id="design-description"
@@ -90,22 +81,7 @@ export default function UploadDesainPage() {
             />
           </div>
 
-          <label className="flex cursor-pointer flex-col items-center gap-2 rounded-sm border border-dashed border-border py-6 text-center">
-            <Upload className="size-5 text-text-secondary" />
-            {previewUrl && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={previewUrl} alt={t("previewAlt")} className="max-h-40 rounded-sm bg-white object-contain" />
-            )}
-            <span className="font-body text-xs text-text-secondary">
-              {file ? file.name : t("fileDropzone")}
-            </span>
-            <input
-              type="file"
-              accept="image/png,image/svg+xml"
-              className="hidden"
-              onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-            />
-          </label>
+          <DesignFileDropzone file={file} onChange={setFile} />
 
           <div className="flex flex-col gap-2">
             <p className="font-body text-sm font-medium text-text-primary">{t("chooseApparel")}</p>
@@ -114,6 +90,7 @@ export default function UploadDesainPage() {
                 <button
                   key={product.id}
                   type="button"
+                  aria-pressed={selectedProducts.includes(product.id)}
                   onClick={() => toggleProduct(product.id)}
                   className={
                     selectedProducts.includes(product.id)

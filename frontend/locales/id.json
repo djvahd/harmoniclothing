@@ -1355,7 +1355,10 @@
       "fileDropzone": "Klik atau drag file di sini (PNG/SVG, maks 20MB)",
       "chooseApparel": "Pilih Jenis Apparel",
       "noFileError": "Pilih file desain terlebih dahulu.",
-      "noApparelError": "Pilih minimal satu jenis apparel."
+      "noApparelError": "Pilih minimal satu jenis apparel.",
+      "fileTypeError": "File harus berformat PNG atau SVG.",
+      "fileSizeError": "Ukuran file terlalu besar, maksimal 20 MB.",
+      "uploadSuccess": "Desain berhasil diunggah. Konfirmasi preview apparel, lalu kirim untuk review."
     },
     "designPreview": {
       "notFound": "Desain tidak ditemukan.",
@@ -1363,7 +1366,17 @@
       "productLabel": "Produk ",
       "confirmed": "Terkonfirmasi",
       "confirmPreview": "Konfirmasi Preview",
-      "submitForApproval": "Submit untuk Approval"
+      "submitForApproval": "Submit untuk Approval",
+      "resubmitForApproval": "Submit Ulang untuk Approval",
+      "submitHint": "Konfirmasi preview semua apparel dulu agar tombol submit aktif.",
+      "pendingInfo": "Desain kamu sedang menunggu review (1-3 hari). Kamu akan diberi tahu setelah diproses.",
+      "activeInfo": "Desain kamu sudah tayang di marketplace.",
+      "submitSuccess": "Desain dikirim, menunggu review 1-3 hari.",
+      "reviseTitle": "Revisi desain",
+      "reviseHint": "Perbaiki desain sesuai alasan di atas lalu simpan. Preview apparel perlu dikonfirmasi ulang.",
+      "keepFileHint": "Kosongkan untuk memakai file saat ini.",
+      "saveRevision": "Simpan Revisi",
+      "reviseSuccess": "Revisi tersimpan. Konfirmasi preview apparel, lalu submit ulang."
     }
   }
 }

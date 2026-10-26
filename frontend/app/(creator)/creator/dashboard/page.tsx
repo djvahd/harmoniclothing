@@ -7,7 +7,9 @@ import { useTranslations } from "next-intl";
 import CreatorSidebar from "@/components/layout/CreatorSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import StatCard from "@/components/ui/StatCard";
-import DesignCard from "@/components/ui/DesignCard";
+import DesignStatusBadge from "@/components/creator/DesignStatusBadge";
+import SafeImage from "@/components/ui/SafeImage";
+import { storageUrl } from "@/lib/storage";
 import InlineError from "@/components/ui/InlineError";
 import { getCreatorDashboard } from "@/services/creator";
 import { getMyDesigns } from "@/services/creator";
@@ -41,10 +43,23 @@ export default function CreatorDashboardPage() {
               {t("viewAll")}
             </Link>
           </div>
-          <div className="flex flex-wrap gap-6">
-            {designs.map((design) => (
-              <DesignCard key={design.id} design={design} />
-            ))}
+          <div className="flex flex-col gap-3">
+            {designs.map((design) => {
+              const thumbnail = storageUrl(design.thumbnail_path);
+              return (
+                <Link
+                  key={design.id}
+                  href={`/creator/designs/${design.id}`}
+                  className="flex items-center gap-4 rounded-md border border-border bg-surface p-4"
+                >
+                  <div className="relative size-14 shrink-0 overflow-hidden rounded-sm bg-border">
+                    {thumbnail && <SafeImage src={thumbnail} alt={design.title} fill className="object-cover" />}
+                  </div>
+                  <p className="flex-1 font-body text-sm font-semibold text-text-primary">{design.title}</p>
+                  <DesignStatusBadge status={design.status} />
+                </Link>
+              );
+            })}
             {designs.length === 0 && (
               <p className="font-body text-sm text-text-secondary">{t("empty")}</p>
             )}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -16,6 +16,7 @@ export default function TagInput({
   onChange: (tags: string[]) => void;
 }) {
   const t = useTranslations("ui.tagInput");
+  const inputId = useId();
   const [draft, setDraft] = useState("");
 
   function addTag(raw: string) {
@@ -44,7 +45,7 @@ export default function TagInput({
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="font-body text-xs font-medium text-text-secondary">
+      <label htmlFor={inputId} className="font-body text-xs font-medium text-text-secondary">
         {t("label", { count: value.length, max: MAX_TAGS })}
       </label>
       <div className="flex flex-wrap items-center gap-2 rounded-sm border border-border bg-surface px-3 py-2.5">
