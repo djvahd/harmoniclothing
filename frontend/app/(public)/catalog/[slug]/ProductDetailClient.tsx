@@ -128,7 +128,7 @@ export default function DetailProdukPage() {
       return;
     }
     if (!user) {
-      openAuthModal("login");
+      openAuthModal("login", tCommon("loginRequired"));
       return;
     }
     setError(null);
@@ -308,7 +308,7 @@ export default function DetailProdukPage() {
             onClick={(e) => {
               if (!user) {
                 e.preventDefault();
-                openAuthModal("login");
+                openAuthModal("login", tCommon("loginRequired"));
               }
             }}
           >

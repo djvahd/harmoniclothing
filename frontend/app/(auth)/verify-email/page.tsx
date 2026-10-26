@@ -9,7 +9,7 @@ import { verifyEmail } from "@/services/auth";
 import { useAuthModalStore } from "@/store/auth-modal-store";
 import { getErrorMessage } from "@/lib/api";
 
-type Status = "verifying" | "success" | "error";
+type Status = "verifying" | "success" | "error" | "invalid";
 
 function VerifyEmailContent() {
   const t = useTranslations("auth.verifyEmail");
@@ -27,8 +27,7 @@ function VerifyEmailContent() {
     const signature = params.get("signature");
 
     if (!id || !hash || !expires || !signature) {
-      setStatus("error");
-      setError(tCommon("errorGeneric"));
+      setStatus("invalid");
       return;
     }
 
@@ -47,7 +46,15 @@ function VerifyEmailContent() {
   }
 
   return (
-    <AuthCard title={t("title")}>
+    <AuthCard title={status === "invalid" ? t("invalidTitle") : t("title")}>
+      {status === "invalid" && (
+        <div className="flex flex-col gap-4">
+          <p className="font-body text-sm text-text-secondary">{t("invalidDescription")}</p>
+          <Button onClick={() => { openAuthModal("login"); router.push("/"); }} fullWidth>
+            {t("invalidAction")}
+          </Button>
+        </div>
+      )}
       {status === "verifying" && <p className="font-body text-sm text-text-secondary">{t("verifying")}</p>}
       {status === "success" && (
         <div className="flex flex-col gap-4">

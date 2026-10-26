@@ -25,6 +25,8 @@
     "viewAll": "Lihat Semua",
     "emptyGeneric": "Belum ada data.",
     "errorGeneric": "Terjadi kesalahan, coba lagi.",
+    "loginRequired": "Masuk dulu untuk melanjutkan. Pilihan Anda tetap tersimpan di halaman ini.",
+    "skipToContent": "Lewati ke konten",
     "productFallback": "Produk",
     "orderStatus": {
       "belum_dibayar": "Belum Dibayar",
@@ -1171,6 +1173,9 @@
       "loginLink": "Masuk"
     },
     "resetPassword": {
+      "invalidTitle": "Tautan reset tidak valid",
+      "invalidDescription": "Tautan reset password ini tidak lengkap atau sudah kedaluwarsa. Minta tautan baru.",
+      "invalidAction": "Minta tautan baru",
       "title": "Buat Password Baru",
       "newPassword": "Password Baru",
       "confirmNewPassword": "Konfirmasi Password Baru",
@@ -1178,12 +1183,21 @@
       "success": "Password berhasil diperbarui. Silakan masuk."
     },
     "verifyEmail": {
+      "invalidTitle": "Tautan verifikasi tidak valid",
+      "invalidDescription": "Tautan verifikasi email ini tidak lengkap atau sudah kedaluwarsa. Masuk ke akun Anda untuk meminta tautan baru.",
+      "invalidAction": "Masuk",
       "title": "Verifikasi Email",
       "verifying": "Memverifikasi email Anda...",
       "success": "Email berhasil diverifikasi. Silakan masuk.",
       "continue": "Masuk"
     },
     "guards": {
+      "guestTitle": "Masuk untuk melanjutkan",
+      "guestDescription": "Halaman ini hanya untuk pengguna yang sudah masuk. Masuk atau daftar untuk melihat dan mengelola akunmu.",
+      "guestLogin": "Masuk",
+      "guestRegister": "Daftar",
+      "guestCatalog": "Lihat Katalog",
+      "guestMessage": "Masuk untuk membuka halaman ini.",
       "adminAccessDenied": "Anda tidak memiliki akses ke halaman admin ini."
     }
   },

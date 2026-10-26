@@ -25,6 +25,8 @@
     "viewAll": "View All",
     "emptyGeneric": "No data yet.",
     "errorGeneric": "Something went wrong, please try again.",
+    "loginRequired": "Please log in to continue. Your selection stays on this page.",
+    "skipToContent": "Skip to content",
     "productFallback": "Product",
     "orderStatus": {
       "belum_dibayar": "Unpaid",
@@ -1171,6 +1173,9 @@
       "loginLink": "Log In"
     },
     "resetPassword": {
+      "invalidTitle": "Invalid reset link",
+      "invalidDescription": "This password reset link is incomplete or has expired. Request a new one.",
+      "invalidAction": "Request a new link",
       "title": "Create a New Password",
       "newPassword": "New Password",
       "confirmNewPassword": "Confirm New Password",
@@ -1178,12 +1183,21 @@
       "success": "Password updated successfully. Please log in."
     },
     "verifyEmail": {
+      "invalidTitle": "Invalid verification link",
+      "invalidDescription": "This email verification link is incomplete or has expired. Log in to your account to request a new one.",
+      "invalidAction": "Log In",
       "title": "Verify Email",
       "verifying": "Verifying your email...",
       "success": "Email verified successfully. Please log in.",
       "continue": "Log In"
     },
     "guards": {
+      "guestTitle": "Log in to continue",
+      "guestDescription": "This page is for signed-in users. Log in or sign up to view and manage your account.",
+      "guestLogin": "Log In",
+      "guestRegister": "Sign Up",
+      "guestCatalog": "Browse Catalog",
+      "guestMessage": "Log in to open this page.",
       "adminAccessDenied": "You don't have access to this admin page."
     }
   },

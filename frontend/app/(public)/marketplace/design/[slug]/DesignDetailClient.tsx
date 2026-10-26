@@ -123,7 +123,7 @@ export default function DetailDesainPage() {
       return;
     }
     if (!user) {
-      openAuthModal("login");
+      openAuthModal("login", tCommon("loginRequired"));
       return;
     }
     setError(null);
