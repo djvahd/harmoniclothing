@@ -610,6 +610,15 @@
       "securePayment": "Secure & encrypted payment",
       "selectAddressError": "Please select a shipping address first.",
       "selectCourierError": "Please select a shipping courier first.",
+      "paymentMethod": "Payment Method",
+      "paymentMethodHint": "Choose now; you pay in the next step.",
+      "paymentGroup": {
+        "virtual_account": "Virtual Account",
+        "ewallet": "E-wallet & QRIS",
+        "store": "Convenience Store"
+      },
+      "orderNotes": "Order Notes (optional)",
+      "orderNotesPlaceholder": "E.g. please ship before Friday",
       "emptyCart": "There are no items to check out.",
       "backToCart": "Back to Cart"
     },

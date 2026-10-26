@@ -36,6 +36,13 @@ export interface ShippingRate {
   duration: string | null;
 }
 
+/** Options returned by GET /checkout/payment-methods; `code` is sent back as `payment_method`. */
+export interface PaymentMethod {
+  code: string;
+  label: string;
+  group: "virtual_account" | "ewallet" | "store";
+}
+
 export interface OrderItem {
   id: number;
   quantity: number;
