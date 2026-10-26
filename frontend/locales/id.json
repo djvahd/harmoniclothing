@@ -964,6 +964,8 @@
         "design_reject": "Menolak desain",
         "creator_approve": "Menyetujui creator",
         "creator_reject": "Menolak creator",
+        "user_deactivate": "Menonaktifkan user",
+        "user_activate": "Mengaktifkan user",
         "creator_ban": "Memblokir creator",
         "order_status_update": "Mengubah status pesanan",
         "order_reject": "Menolak pesanan",
@@ -1044,8 +1046,15 @@
         "name": "Nama",
         "email": "Email",
         "role": "Role",
-        "status": "Status"
+        "status": "Status",
+        "actions": "Aksi"
       },
+      "deactivate": "Nonaktifkan",
+      "activate": "Aktifkan",
+      "deactivateConfirmTitle": "Nonaktifkan akun?",
+      "deactivateConfirmMessage": "Nonaktifkan {name}? User tidak akan bisa masuk sampai diaktifkan kembali.",
+      "activateConfirmTitle": "Aktifkan akun?",
+      "activateConfirmMessage": "Aktifkan kembali {name}?",
       "empty": "Belum ada pengguna.",
       "searchPlaceholder": "Cari nama atau email",
       "roleAll": "Semua peran",
@@ -1109,9 +1118,8 @@
       "overrideCourier": "Ganti Kurir",
       "overrideModal": {
         "title": "Ganti Kurir",
-        "label": "Format perusahaan:tipe (mis. jne:reg)",
-        "confirm": "Booking",
-        "invalidFormat": "Format harus perusahaan:tipe, contoh jne:reg."
+        "label": "Pilih kurir",
+        "confirm": "Booking"
       }
     },
     "reports": {

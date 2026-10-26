@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { Search, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
 import AdminSidebar from "@/components/layout/AdminSidebar";
@@ -11,7 +11,9 @@ import DataTable from "@/components/ui/DataTable";
 import EmptyState from "@/components/ui/EmptyState";
 import Input from "@/components/ui/Input";
 import Pagination from "@/components/ui/Pagination";
-import { getUsers } from "@/services/admin";
+import Button from "@/components/ui/Button";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
+import { getUsers, setUserStatus } from "@/services/admin";
 import type { User, UserListRole, UserStatus } from "@/types/user";
 
 const ROLES: UserListRole[] = ["customer", "creator", "admin"];
@@ -26,6 +28,8 @@ function effectiveRole(user: User): UserListRole {
 
 export default function KelolaPenggunaPage() {
   const t = useTranslations("admin.users");
+  const tCommon = useTranslations("common");
+  const [target, setTarget] = useState<User | null>(null);
   const [page, setPage] = useState(1);
   const [roleFilter, setRoleFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
@@ -35,6 +39,14 @@ export default function KelolaPenggunaPage() {
     getUsers({ page, role: roleFilter || undefined, status: statusFilter || undefined, search: search || undefined }),
   );
   const users = data?.data ?? [];
+
+  async function handleToggle() {
+    if (!target) return;
+    const user = target;
+    setTarget(null);
+    await setUserStatus(user.id, user.status === "aktif" ? "nonaktif" : "aktif");
+    mutate((key) => Array.isArray(key) && key[0] === "/admin/users");
+  }
 
   return (
     <SidebarPageShell sidebar={<AdminSidebar />}>
@@ -95,6 +107,7 @@ export default function KelolaPenggunaPage() {
             { key: "email", header: t("columns.email") },
             { key: "role", header: t("columns.role") },
             { key: "status", header: t("columns.status") },
+            { key: "actions", header: t("columns.actions") },
           ]}
           data={users}
           isLoading={isLoading}
@@ -112,11 +125,27 @@ export default function KelolaPenggunaPage() {
                   {t(`statuses.${user.status}`)}
                 </Badge>
               </td>
+              <td className="p-4">
+                {user.role !== "admin" && user.status !== "banned" && (
+                  <Button variant="secondary" onClick={() => setTarget(user)}>
+                    {user.status === "aktif" ? t("deactivate") : t("activate")}
+                  </Button>
+                )}
+              </td>
             </tr>
           )}
         />
         {data?.meta && <Pagination meta={data.meta} onPageChange={setPage} />}
       </div>
+      <ConfirmDialog
+        open={target !== null}
+        title={target?.status === "aktif" ? t("deactivateConfirmTitle") : t("activateConfirmTitle")}
+        message={t(target?.status === "aktif" ? "deactivateConfirmMessage" : "activateConfirmMessage", { name: target?.name ?? "" })}
+        confirmLabel={target?.status === "aktif" ? t("deactivate") : t("activate")}
+        cancelLabel={tCommon("cancel")}
+        onConfirm={handleToggle}
+        onCancel={() => setTarget(null)}
+      />
     </SidebarPageShell>
   );
 }

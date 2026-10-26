@@ -82,6 +82,10 @@ export function getUsers(params?: { role?: string; status?: string; search?: str
   return apiFetch<Paginated<User>>(`/admin/users${buildQuery(params)}`);
 }
 
+export function setUserStatus(id: number, status: "aktif" | "nonaktif") {
+  return apiFetch<{ data: User }>(`/admin/users/${id}/status`, { method: "PATCH", body: { status } });
+}
+
 export function getCreatorsByStatus(status: "aktif" | "banned") {
   return apiFetch<{ data: AdminCreatorProfile[] }>(`/admin/creators?status=${status}`);
 }
@@ -251,6 +255,16 @@ export function bookShipment(id: number, override?: { courier_company: string; c
     method: "POST",
     body: override ?? {},
   });
+}
+
+export interface CourierOption {
+  company: string;
+  types: string[];
+}
+
+/** Valid courier/service pairs for the "Ganti Kurir" dropdown. */
+export function getCouriers() {
+  return apiFetch<{ data: CourierOption[] }>("/admin/shipping/couriers");
 }
 
 export interface PayoutRow {

@@ -61,6 +61,14 @@ class AuthService
             ]);
         }
 
+        if ($user->status === UserStatus::Nonaktif) {
+            Auth::guard('web')->logout();
+
+            throw ValidationException::withMessages([
+                'email' => [__('messages.auth.account_inactive')],
+            ]);
+        }
+
         if (! $user->hasVerifiedEmail()) {
             Auth::guard('web')->logout();
 

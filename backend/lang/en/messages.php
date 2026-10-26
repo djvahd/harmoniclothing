@@ -11,6 +11,7 @@ return [
         'invalid_credentials' => 'The email or password is incorrect.',
         'session_expired' => 'Your session ended because the password was changed. Please sign in again.',
         'account_banned' => 'Your account has been banned. Please contact Harmoni Clothing support for more information.',
+        'account_inactive' => 'Your account has been deactivated by an admin. Please contact Harmoni Clothing support for more information.',
         'email_not_verified' => 'This account has not verified its email yet. Please check your email or resend the verification link.',
         'verification_link_expired' => 'The verification link is invalid or has expired.',
         'verification_link_invalid' => 'The verification link is invalid.',
@@ -77,6 +78,11 @@ return [
         'nothing_owed' => 'This creator has no commission to pay out.',
         'below_minimum' => 'The total commission has not reached the payout minimum yet.',
         'no_destination' => 'The creator has not set a payout bank/e-wallet account.',
+    ],
+
+    'admin_user' => [
+        'cannot_change_admin' => 'Admin accounts cannot be deactivated.',
+        'banned' => 'A banned account cannot have its status changed here.',
     ],
 
     'creator' => [
