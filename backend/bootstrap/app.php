@@ -23,6 +23,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->statefulApi();
+        // API-only app: there is no 'login' route to redirect guests to, so an
+        // unauthenticated /api/* request must yield 401 JSON, not a 500.
+        $middleware->redirectGuestsTo(fn () => null);
         $middleware->api(prepend: [SetLocaleFromRequest::class]);
         $middleware->alias([
             'creator.active' => EnsureCreatorIsActive::class,

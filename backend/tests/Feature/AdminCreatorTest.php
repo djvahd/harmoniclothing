@@ -16,6 +16,14 @@ class AdminCreatorTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_guest_without_json_accept_header_gets_401_not_500(): void
+    {
+        // Browser navigation (e.g. the KTP link) sends no Accept: application/json.
+        $this->get('/api/admin/creators/1/kyc-document')
+            ->assertUnauthorized()
+            ->assertJsonStructure(['message']);
+    }
+
     public function test_customer_cannot_access_creator_queue(): void
     {
         $user = User::factory()->create();
