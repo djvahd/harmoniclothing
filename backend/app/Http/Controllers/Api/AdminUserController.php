@@ -15,6 +15,8 @@ class AdminUserController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        $request->validate(['per_page' => ['sometimes', 'integer', 'min:1', 'max:100']]);
+
         $users = $this->users->paginate(
             $request->only(['role', 'status']),
             (int) $request->query('per_page', 20),

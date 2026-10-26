@@ -169,4 +169,18 @@ class AccountTest extends TestCase
 
         $response->assertOk()->assertJsonCount(2, 'data');
     }
+
+    public function test_profile_and_address_reject_malformed_phone_and_postal_code(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->patchJson('/api/account/profile', ['name' => 'X', 'phone' => 'telepon-abc!!'])
+            ->assertUnprocessable()->assertJsonValidationErrors('phone');
+
+        $this->actingAs($user)->postJson('/api/account/addresses', [
+            'label' => 'Rumah', 'recipient_name' => 'A', 'phone' => 'abc',
+            'province' => 'P', 'city' => 'C', 'district' => 'D',
+            'postal_code' => '12', 'address_line' => 'Jl. X',
+        ])->assertUnprocessable()->assertJsonValidationErrors(['phone', 'postal_code']);
+    }
 }

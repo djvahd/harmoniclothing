@@ -49,6 +49,8 @@ class SalesReportService
             ->join('product_variants', 'order_items.product_variant_id', '=', 'product_variants.id')
             ->join('products', 'product_variants.product_id', '=', 'products.id')
             ->whereBetween('orders.created_at', [$from, $to])
+            // Only sold orders: unpaid/rejected/cancelled ones are not sales (consistent with net revenue above).
+            ->whereNotIn('orders.status', ['belum_dibayar', 'ditolak', 'dibatalkan'])
             ->selectRaw('products.id as product_id, products.name_id, SUM(order_items.quantity) as quantity_sold, SUM(order_items.subtotal) as revenue')
             ->groupBy('products.id', 'products.name_id')
             ->orderByDesc('quantity_sold')

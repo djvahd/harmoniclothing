@@ -13,6 +13,8 @@ class AdminPaymentController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
+        $request->validate(['per_page' => ['sometimes', 'integer', 'min:1', 'max:100']]);
+
         $payments = Payment::query()
             ->with('order.user')
             ->when($request->query('status'), fn ($query, $status) => $query->where('status', $status))

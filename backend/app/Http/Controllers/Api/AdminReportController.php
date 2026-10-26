@@ -14,9 +14,11 @@ class AdminReportController extends Controller
 
     public function sales(Request $request): JsonResponse
     {
-        return response()->json(['data' => $this->reports->generate(
-            $request->query('from'),
-            $request->query('to'),
-        )]);
+        $data = $request->validate([
+            'from' => ['sometimes', 'date'],
+            'to' => ['sometimes', 'date', 'after_or_equal:from'],
+        ]);
+
+        return response()->json(['data' => $this->reports->generate($data['from'] ?? null, $data['to'] ?? null)]);
     }
 }
