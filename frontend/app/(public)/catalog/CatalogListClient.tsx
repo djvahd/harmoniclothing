@@ -14,7 +14,7 @@ import { CATALOG_PER_PAGE, type ProductSort } from "@/services/catalog";
 import { useProducts, useProductFilters } from "@/hooks/useProducts";
 import type { Product } from "@/types/product";
 import type { Paginated } from "@/types/api";
-import { filtersFromParams, syncFiltersToUrl, SORT_KEY, SEARCH_KEY } from "@/lib/filter-url";
+import { filtersFromParams, normalizePriceRange, syncFiltersToUrl, SORT_KEY, SEARCH_KEY } from "@/lib/filter-url";
 
 const PER_PAGE = CATALOG_PER_PAGE;
 
@@ -84,6 +84,8 @@ function KatalogPageContent({ initial }: { initial?: Paginated<Product> }) {
   const isDefaultView =
     page === 1 && sort === "terbaru" && !search && !filters.categories.length && !filters.genders.length &&
     !filters.sizes.length && !filters.colors.length && !filters.materials.length && !filters.priceMin && !filters.priceMax;
+  // A reversed range (min > max) is swapped instead of sent, since the API rejects it with a 422.
+  const priceBounds = normalizePriceRange(filters.priceMin, filters.priceMax);
   const { data, error, isLoading } = useProducts("public", {
     page,
     per_page: PER_PAGE,
@@ -93,8 +95,8 @@ function KatalogPageContent({ initial }: { initial?: Paginated<Product> }) {
     sizes: filters.sizes.length ? filters.sizes : undefined,
     colors: filters.colors.length ? filters.colors : undefined,
     materials: filters.materials.length ? filters.materials : undefined,
-    price_min: filters.priceMin ? Number(filters.priceMin) : undefined,
-    price_max: filters.priceMax ? Number(filters.priceMax) : undefined,
+    price_min: priceBounds.min,
+    price_max: priceBounds.max,
   }, isDefaultView ? initial : undefined);
 
   // Page 1 of a (possibly new) filter/sort combination replaces the
@@ -162,6 +164,7 @@ function KatalogPageContent({ initial }: { initial?: Paginated<Product> }) {
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                aria-label={t("searchPlaceholder")}
                 placeholder={t("searchPlaceholder")}
                 className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
               />
@@ -208,7 +211,7 @@ function KatalogPageContent({ initial }: { initial?: Paginated<Product> }) {
             </div>
           </div>
 
-          {!isLoadingInitial && !error && (
+          {!isLoadingInitial && !error && filtered.length > 0 && (
             <p className="font-body text-sm text-text-secondary">
               {t("resultCount", { shown: filtered.length, total: grandTotal ?? filtered.length })}
             </p>

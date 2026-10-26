@@ -13,7 +13,7 @@ import InlineError from "@/components/ui/InlineError";
 import { type DesignSort } from "@/services/marketplace";
 import { useDesigns, useDesignFilters } from "@/hooks/useDesigns";
 import type { Design } from "@/types/product";
-import { filtersFromParams, syncFiltersToUrl, SORT_KEY, SEARCH_KEY } from "@/lib/filter-url";
+import { filtersFromParams, normalizePriceRange, syncFiltersToUrl, SORT_KEY, SEARCH_KEY } from "@/lib/filter-url";
 
 const PER_PAGE = 40;
 
@@ -89,14 +89,16 @@ export default function DesainTab({
   const { data: totalData } = useDesigns("total", { per_page: 1 });
   const grandTotal = totalData?.meta.total;
 
+  // A reversed range (min > max) is swapped instead of sent, since the API rejects it with a 422.
+  const priceBounds = normalizePriceRange(filters.priceMin, filters.priceMax);
   const { data, error, isLoading } = useDesigns("public", {
     page,
     per_page: PER_PAGE,
     sort,
     categories: filters.categories.length ? filters.categories : undefined,
     tags: filters.tags.length ? filters.tags : undefined,
-    price_min: filters.priceMin ? Number(filters.priceMin) : undefined,
-    price_max: filters.priceMax ? Number(filters.priceMax) : undefined,
+    price_min: priceBounds.min,
+    price_max: priceBounds.max,
   });
 
   useEffect(() => {
@@ -141,6 +143,7 @@ export default function DesainTab({
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              aria-label={t("searchPlaceholder")}
               placeholder={t("searchPlaceholder")}
               className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
             />
@@ -187,7 +190,7 @@ export default function DesainTab({
           </div>
         </div>
 
-        {!isLoadingInitial && !error && (
+        {!isLoadingInitial && !error && filtered.length > 0 && (
           <p className="font-body text-sm text-text-secondary">
             {t("resultCount", { shown: filtered.length, total: grandTotal ?? filtered.length })}
           </p>

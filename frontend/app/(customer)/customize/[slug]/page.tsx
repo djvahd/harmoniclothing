@@ -226,6 +226,7 @@ function ProductEditorForm() {
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
+            aria-label={t("notesLabel")}
             className="w-full rounded-sm border border-border bg-surface px-3 py-2.5 font-body text-sm text-text-primary outline-none"
             placeholder={t("notesPlaceholder")}
           />

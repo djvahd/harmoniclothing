@@ -173,6 +173,7 @@ export default function CreatorTab() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              aria-label={t("searchPlaceholder")}
               placeholder={t("searchPlaceholder")}
               className="w-full min-w-0 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-text-secondary"
             />
