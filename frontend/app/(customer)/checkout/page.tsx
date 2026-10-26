@@ -62,8 +62,14 @@ function CheckoutPageContent() {
     setCourier(null);
   }, [addressId]);
 
-  const shippingCost = courier
-    ? (rates.find((r) => r.courier_company === courier.company && r.courier_type === courier.type)?.price ?? 0)
+  // Until the customer picks one, the cheapest rate is selected so the total never shows without shipping.
+  const cheapestRate = rates.length > 0 ? rates.reduce((min, r) => (r.price < min.price ? r : min)) : null;
+  const selectedCourier =
+    courier ?? (cheapestRate ? { company: cheapestRate.courier_company, type: cheapestRate.courier_type } : null);
+
+  const shippingCost = selectedCourier
+    ? (rates.find((r) => r.courier_company === selectedCourier.company && r.courier_type === selectedCourier.type)
+        ?.price ?? 0)
     : 0;
 
   async function handleSubmit() {
@@ -72,7 +78,7 @@ function CheckoutPageContent() {
       setError(t("selectAddressError"));
       return;
     }
-    if (!courier) {
+    if (!selectedCourier) {
       setError(t("selectCourierError"));
       return;
     }
@@ -82,8 +88,8 @@ function CheckoutPageContent() {
       const { data: order } = await checkout({
         address_id: addressId,
         cart_item_ids: cartItemIds,
-        courier_company: courier.company,
-        courier_type: courier.type,
+        courier_company: selectedCourier.company,
+        courier_type: selectedCourier.type,
       });
       if (order.midtrans_redirect_url) {
         await payWithSnap(order.midtrans_redirect_url, () => router.push(`/account/orders/${order.id}?paying=1`));
@@ -159,7 +165,9 @@ function CheckoutPageContent() {
             {rates.map((rate) => (
               <OptionRow
                 key={`${rate.courier_company}-${rate.courier_type}`}
-                selected={courier?.company === rate.courier_company && courier?.type === rate.courier_type}
+                selected={
+                  selectedCourier?.company === rate.courier_company && selectedCourier?.type === rate.courier_type
+                }
                 onSelect={() => {
                   setCourier({ company: rate.courier_company, type: rate.courier_type });
                   setError(null);
@@ -195,7 +203,7 @@ function CheckoutPageContent() {
           ))}
           <div className="border-t border-border pt-3">
             <PriceSummaryRow label={t("subtotal")} amount={subtotal} />
-            {courier ? (
+            {selectedCourier ? (
               <PriceSummaryRow label={t("shippingCost")} amount={shippingCost} />
             ) : (
               <div className="flex items-center justify-between font-body text-sm">
