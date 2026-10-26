@@ -34,6 +34,30 @@ class CartTest extends TestCase
             ->assertJsonPath('data.subtotal', '230000.00');
     }
 
+    public function test_adding_the_same_variant_again_merges_the_quantity(): void
+    {
+        $user = User::factory()->create();
+        $variant = ProductVariant::factory()->create();
+        $payload = ['product_variant_id' => $variant->id, 'quantity' => 2];
+
+        $this->actingAs($user)->postJson('/api/cart', $payload)->assertCreated();
+        $this->actingAs($user)->postJson('/api/cart', $payload)->assertCreated()
+            ->assertJsonPath('data.quantity', 4);
+
+        $this->actingAs($user)->getJson('/api/cart')->assertJsonCount(1, 'data');
+    }
+
+    public function test_adding_the_same_variant_with_different_notes_keeps_separate_lines(): void
+    {
+        $user = User::factory()->create();
+        $variant = ProductVariant::factory()->create();
+
+        $this->actingAs($user)->postJson('/api/cart', ['product_variant_id' => $variant->id, 'quantity' => 1]);
+        $this->actingAs($user)->postJson('/api/cart', ['product_variant_id' => $variant->id, 'quantity' => 1, 'notes' => 'Bungkus kado']);
+
+        $this->actingAs($user)->getJson('/api/cart')->assertJsonCount(2, 'data');
+    }
+
     public function test_price_change_after_adding_does_not_affect_existing_cart_item(): void
     {
         $user = User::factory()->create();

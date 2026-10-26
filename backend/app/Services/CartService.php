@@ -26,6 +26,19 @@ class CartService
     {
         $variant = ProductVariant::query()->findOrFail($data['product_variant_id']);
 
+        // Same variant + design + position + notes is one line: bump its quantity instead of duplicating the row.
+        $existing = $user->cartItems()
+            ->where('product_variant_id', $variant->id)
+            ->where('design_id', $data['design_id'] ?? null)
+            ->where('custom_design_file_path', $data['custom_design_file_path'] ?? null)
+            ->where('notes', $data['notes'] ?? null)
+            ->get()
+            ->first(fn (CartItem $row) => json_encode($row->design_position) === json_encode($data['design_position'] ?? null));
+
+        if ($existing) {
+            return $this->cart->update($existing, ['quantity' => $existing->quantity + $data['quantity']]);
+        }
+
         return $this->cart->create([
             ...$data,
             'user_id' => $user->id,
