@@ -749,6 +749,7 @@
       "actionFailed": "Aksi gagal. Silakan coba lagi.",
       "reorderSuccess": "Item ditambahkan ke keranjang.",
       "courier": "Kurir",
+      "shippingAddress": "Alamat Pengiriman",
       "payBefore": "Selesaikan pembayaran sebelum {date}, atau pesanan dibatalkan otomatis.",
       "cancelOrder": "Batalkan Pesanan",
       "payNow": "Bayar Sekarang",
@@ -1127,6 +1128,7 @@
       },
       "ordersByStatus": "Pesanan per Status",
       "topProducts": "Top 5 Produk",
+      "topProductsNote": "Hanya menghitung pesanan yang sudah dibayar.",
       "unitsSold": "{count} terjual"
     },
     "notificationSettings": {

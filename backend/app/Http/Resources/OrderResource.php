@@ -30,6 +30,16 @@ class OrderResource extends JsonResource
                 'status' => $h->to_status,
                 'at' => $h->created_at,
             ])->values()),
+            // Shipping address (order detail only; the order keeps no snapshot, so this is the current address row).
+            'address' => $this->whenLoaded('address', fn () => $this->address ? [
+                'recipient_name' => $this->address->recipient_name,
+                'phone' => $this->address->phone,
+                'address_line' => $this->address->address_line,
+                'district' => $this->address->district,
+                'city' => $this->address->city,
+                'province' => $this->address->province,
+                'postal_code' => $this->address->postal_code,
+            ] : null),
             'shipment' => $this->shipment ? new ShipmentResource($this->shipment) : null, // FE-036
             'user' => $this->whenLoaded('user', fn () => new UserResource($this->user)), // GET /admin/orders (gap-filled)
         ];

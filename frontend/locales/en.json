@@ -745,6 +745,7 @@
       "actionFailed": "Action failed. Please try again.",
       "reorderSuccess": "Items added to your cart.",
       "courier": "Courier",
+      "shippingAddress": "Shipping Address",
       "payBefore": "Complete payment before {date}, or the order is cancelled automatically.",
       "cancelOrder": "Cancel Order",
       "payNow": "Pay Now",
@@ -1123,6 +1124,7 @@
       },
       "ordersByStatus": "Orders by Status",
       "topProducts": "Top 5 Products",
+      "topProductsNote": "Counts paid orders only.",
       "unitsSold": "{count} sold"
     },
     "notificationSettings": {

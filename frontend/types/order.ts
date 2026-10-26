@@ -1,4 +1,5 @@
 import type { Design, ProductVariant, Review } from "./product";
+import type { Address } from "./user";
 
 /** BR-012 tiered pricing for Bulk Order — total quantity across all variants of one product picks a single tier. */
 export interface BulkPricingTier {
@@ -69,5 +70,7 @@ export interface Order {
   shipment: Shipment | null;
   /** When each status was reached; only present on the order detail endpoint. */
   status_history?: { status: OrderStatus; at: string }[];
+  /** Only on the order detail endpoint. */
+  address?: Pick<Address, "recipient_name" | "phone" | "address_line" | "district" | "city" | "province" | "postal_code"> | null;
   midtrans_redirect_url?: string | null;
 }
