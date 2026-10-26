@@ -41,6 +41,25 @@ function ResetPasswordForm() {
     }
   }
 
+  if (!params.get("token") || !params.get("email")) {
+    return (
+      <AuthCard title={t("invalidTitle")}>
+        <div className="flex flex-col gap-4">
+          <p className="font-body text-sm text-text-secondary">{t("invalidDescription")}</p>
+          <Button
+            onClick={() => {
+              openAuthModal("lupa-password");
+              router.push("/");
+            }}
+            fullWidth
+          >
+            {t("invalidAction")}
+          </Button>
+        </div>
+      </AuthCard>
+    );
+  }
+
   return (
     <AuthCard title={t("title")}>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">

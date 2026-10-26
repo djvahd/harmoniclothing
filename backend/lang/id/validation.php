@@ -157,7 +157,9 @@ return [
     'uuid' => 'Kolom :attribute harus berupa UUID yang valid.',
 
     'custom' => [
-        //
+        'email' => [
+            'unique' => 'Email sudah digunakan.',
+        ],
     ],
 
     'attributes' => [

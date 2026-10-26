@@ -127,5 +127,9 @@ export function isNotFoundError(err: unknown): boolean {
 }
 
 export function getErrorMessage(err: unknown, fallback: string): string {
-  return err instanceof ApiError ? err.message : fallback;
+  if (!(err instanceof ApiError)) return fallback;
+  // For validation failures Laravel's top-level message is the first error plus an English
+  // "(and N more errors)" suffix; show the field messages themselves instead.
+  const first = err.errors ? Object.values(err.errors).flat()[0] : undefined;
+  return first ?? err.message;
 }
