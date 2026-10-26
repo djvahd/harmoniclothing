@@ -125,3 +125,31 @@ export function confirmApparel(designId: number, productId: number) {
 export function submitDesign(designId: number) {
   return apiFetch<{ data: Design }>(`/creator/designs/${designId}/submit`, { method: "POST" });
 }
+
+/** BR-028: revise a rejected design. PHP can't parse multipart on a real PATCH, so it is POSTed with method spoofing. */
+export function updateDesign(
+  designId: number,
+  payload: {
+    title: string;
+    description?: string;
+    category_id?: number;
+    file?: File | null;
+    product_ids: number[];
+    tags?: string[];
+  },
+) {
+  const formData = new FormData();
+  formData.append("_method", "PATCH");
+  formData.append("title", payload.title);
+  if (payload.description) formData.append("description", payload.description);
+  if (payload.category_id) formData.append("category_id", String(payload.category_id));
+  if (payload.file) formData.append("file", payload.file);
+  payload.product_ids.forEach((id) => formData.append("product_ids[]", String(id)));
+  payload.tags?.forEach((tag) => formData.append("tags[]", tag));
+
+  return apiFetch<{ data: Design }>(`/creator/designs/${designId}`, {
+    method: "POST",
+    body: formData,
+    isFormData: true,
+  });
+}

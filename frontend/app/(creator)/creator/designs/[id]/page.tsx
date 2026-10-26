@@ -6,12 +6,14 @@ import useSWR, { mutate } from "swr";
 import { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import Badge from "@/components/ui/Badge";
+import DesignStatusBadge from "@/components/creator/DesignStatusBadge";
+import DesignRevisionForm from "@/components/creator/DesignRevisionForm";
 import Button from "@/components/ui/Button";
 import LoadingState from "@/components/ui/LoadingState";
 import { getMyDesigns, confirmApparel, submitDesign } from "@/services/creator";
 import { storageUrl } from "@/lib/storage";
 import { getErrorMessage } from "@/lib/api";
+import { toast } from "@/store/toast-store";
 
 export default function EditorPreviewMultiApparelPage() {
   const t = useTranslations("creator.designPreview");
@@ -24,14 +26,18 @@ export default function EditorPreviewMultiApparelPage() {
 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [confirmingId, setConfirmingId] = useState<number | null>(null);
 
   async function handleConfirm(productId: number) {
-    setLoading(true);
+    setConfirmingId(productId);
+    setError(null);
     try {
       await confirmApparel(designId, productId);
-      mutate("/creator/designs");
+      await mutate("/creator/designs");
+    } catch (err) {
+      setError(getErrorMessage(err, tCommon("errorGeneric")));
     } finally {
-      setLoading(false);
+      setConfirmingId(null);
     }
   }
 
@@ -40,6 +46,7 @@ export default function EditorPreviewMultiApparelPage() {
     setError(null);
     try {
       await submitDesign(designId);
+      toast(t("submitSuccess"), "success");
       router.push("/creator/designs");
     } catch (err) {
       setError(
@@ -61,7 +68,7 @@ export default function EditorPreviewMultiApparelPage() {
     <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-8 px-4 py-8 md:px-20">
       <div className="flex items-center justify-between">
         <h1 className="font-heading text-h3 font-semibold text-text-primary">{design.title}</h1>
-        <Badge variant="neutral">{tCommon(`designStatus.${design.status}`)}</Badge>
+        <DesignStatusBadge status={design.status} />
       </div>
 
       {design.status === "ditolak" && design.rejection_reason && (
@@ -70,6 +77,13 @@ export default function EditorPreviewMultiApparelPage() {
           <p className="font-body text-sm text-danger">{design.rejection_reason}</p>
         </div>
       )}
+
+      {design.status === "ditolak" && <DesignRevisionForm key={design.apparel?.map((a) => a.confirmed_at ?? "-").join()} design={design} />}
+
+      {design.status === "menunggu_approval" && (
+        <p className="font-body text-sm text-text-secondary">{t("pendingInfo")}</p>
+      )}
+      {design.status === "aktif" && <p className="font-body text-sm text-text-secondary">{t("activeInfo")}</p>}
 
       <div className="flex flex-wrap justify-center gap-6">
         {(design.apparel ?? []).map((apparel) => (
@@ -92,7 +106,8 @@ export default function EditorPreviewMultiApparelPage() {
             ) : (
               <Button
                 variant="secondary"
-                loading={loading}
+                loading={confirmingId === apparel.product_id}
+                disabled={confirmingId !== null}
                 onClick={() => handleConfirm(apparel.product_id)}
               >
                 {t("confirmPreview")}
@@ -103,15 +118,13 @@ export default function EditorPreviewMultiApparelPage() {
       </div>
 
       {error && <p className="font-body text-xs text-danger">{error}</p>}
-      {design.status === "draft" && (
-        <Button
-          loading={loading}
-          disabled={!allConfirmed}
-          onClick={handleSubmit}
-          className="self-start"
-        >
-          {t("submitForApproval")}
-        </Button>
+      {(design.status === "draft" || design.status === "ditolak") && (
+        <div className="flex flex-col items-start gap-2">
+          <Button loading={loading} disabled={!allConfirmed} onClick={handleSubmit}>
+            {design.status === "ditolak" ? t("resubmitForApproval") : t("submitForApproval")}
+          </Button>
+          {!allConfirmed && <p className="font-body text-xs text-text-secondary">{t("submitHint")}</p>}
+        </div>
       )}
     </div>
   );

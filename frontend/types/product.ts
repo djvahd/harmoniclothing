@@ -33,7 +33,7 @@ export interface Product {
   variants?: ProductVariant[];
 }
 
-export type DesignStatus = "draft" | "menunggu_approval" | "published" | "ditolak";
+export type DesignStatus = "draft" | "menunggu_approval" | "aktif" | "ditolak";
 
 export interface DesignApparel {
   product_id: number;
