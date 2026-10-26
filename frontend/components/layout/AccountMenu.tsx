@@ -5,8 +5,9 @@ import Link from "next/link";
 import { UserRound } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { User } from "@/types/user";
+import { creatorEntry, useCreatorApplication } from "@/hooks/useCreatorApplication";
 
-const ACCOUNT_LINKS = (isAdmin: boolean) =>
+const ACCOUNT_LINKS = (isAdmin: boolean, creator: ReturnType<typeof creatorEntry>) =>
   isAdmin
     ? // Admin is operational only (2.5_Permission_Matrix): no shopping, creator or notification-inbox entries.
       ([
@@ -19,16 +20,18 @@ const ACCOUNT_LINKS = (isAdmin: boolean) =>
         { href: "/account/wishlist", key: "wishlist" },
         { href: "/cart", key: "cart" },
         { href: "/account/orders", key: "orders" },
-        { href: "/account/become-creator", key: "becomeCreator" },
+        { href: creator.href, key: creator.key },
         { href: "/notifications", key: "notifications" },
       ] as const);
 
 /** The account links reused by both the desktop dropdown and the mobile drawer. */
 export function AccountMenuLinks({ user, onNavigate }: { user: User | null; onNavigate: () => void }) {
   const t = useTranslations("layout.account");
+  const isAdmin = user?.role === "admin";
+  const { applied, status } = useCreatorApplication(!!user && !isAdmin);
   return (
     <div className="flex flex-col">
-      {ACCOUNT_LINKS(user?.role === "admin").map((link) => (
+      {ACCOUNT_LINKS(isAdmin, creatorEntry(applied, status)).map((link) => (
         <Link
           key={link.href}
           href={link.href}

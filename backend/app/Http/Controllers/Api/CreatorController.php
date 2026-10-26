@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreatorApplicationRequest;
+use App\Http\Requests\CreatorProfileUpdateRequest;
 use App\Http\Requests\CreatorVerificationRequest;
 use App\Http\Resources\CommissionResource;
 use App\Services\CommissionService;
@@ -39,6 +40,18 @@ class CreatorController extends Controller
         $profile = $this->creators->submitVerification($request->user(), $request->validated());
 
         return response()->json(['data' => ['status' => $profile->status]]);
+    }
+
+    /** GET /creator/profile */
+    public function profile(Request $request): JsonResponse
+    {
+        return response()->json(['data' => $this->creators->profile($request->user())]);
+    }
+
+    /** PATCH /creator/profile */
+    public function updateProfile(CreatorProfileUpdateRequest $request): JsonResponse
+    {
+        return response()->json(['data' => $this->creators->updateProfile($request->user(), $request->validated())]);
     }
 
     /** GET /creator/dashboard — FE-020, requires creator.active middleware. */

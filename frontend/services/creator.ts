@@ -81,6 +81,24 @@ export function submitVerification(payload: VerificationPayload) {
   });
 }
 
+export interface CreatorProfile {
+  slug: string;
+  brand_name: string | null;
+  bio: string | null;
+  portfolio_url: string | null;
+  payout_method: VerificationPayload["payout_method"] | null;
+  payout_account_masked: string | null;
+  payout_account_holder: string | null;
+}
+
+export function getCreatorProfile() {
+  return apiFetch<{ data: CreatorProfile }>("/creator/profile");
+}
+
+export function updateCreatorProfile(payload: { brand_name: string | null; bio: string | null; portfolio_url: string | null }) {
+  return apiFetch<{ data: CreatorProfile }>("/creator/profile", { method: "PATCH", body: payload });
+}
+
 export function getCreatorDashboard() {
   return apiFetch<{ data: CreatorDashboard }>("/creator/dashboard");
 }

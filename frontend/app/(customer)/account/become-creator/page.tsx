@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Award, Palette, Wallet } from "lucide-react";
@@ -12,6 +12,7 @@ import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { becomeCreator } from "@/services/creator";
 import { getErrorMessage } from "@/lib/api";
+import { creatorEntry, useCreatorApplication } from "@/hooks/useCreatorApplication";
 
 export default function AjukanUpgradeCreatorPage() {
   const t = useTranslations("customer.becomeCreator");
@@ -23,6 +24,12 @@ export default function AjukanUpgradeCreatorPage() {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { applied, status } = useCreatorApplication();
+
+  // Someone who already applied (or is already an active creator) cannot apply again; send them to where their application lives.
+  useEffect(() => {
+    if (applied) router.replace(creatorEntry(applied, status).href);
+  }, [applied, status, router]);
 
   async function handleApply(e: React.FormEvent) {
     e.preventDefault();

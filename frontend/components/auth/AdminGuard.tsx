@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { Loader2, ShieldAlert } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Button from "@/components/ui/Button";
 import { useAuthStore } from "@/store/auth-store";
 import { useAuthModalStore } from "@/store/auth-modal-store";
 
@@ -34,6 +35,9 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
       <div className="flex min-h-[60vh] w-full flex-col items-center justify-center gap-2 bg-background text-center">
         <ShieldAlert className="size-8 text-text-secondary" />
         <p className="font-body text-sm text-text-secondary">{t("adminAccessDenied")}</p>
+        <Button href="/" variant="secondary" className="mt-3">
+          {t("backHome")}
+        </Button>
       </div>
     );
   }
