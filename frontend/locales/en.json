@@ -64,6 +64,8 @@
       "registerFree": "Sign Up Free",
       "logout": "Log Out",
       "openMenu": "Open menu",
+      "searchLabel": "Search products",
+      "searchPlaceholder": "Search products...",
       "closeMenu": "Close menu"
     },
     "cart": {

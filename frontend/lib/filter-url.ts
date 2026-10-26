@@ -14,6 +14,8 @@ const PRICE_MIN = "harga_min";
 const PRICE_MAX = "harga_max";
 export const SORT_KEY = "urut";
 export const SEARCH_KEY = "q";
+/** Fired by the header search when the catalog is already open, so its list updates without a navigation. */
+export const HEADER_SEARCH_EVENT = "harmoni:header-search";
 
 function list(sp: URLSearchParams, key: string): string[] {
   const raw = sp.get(key);
