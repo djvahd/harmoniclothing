@@ -152,6 +152,19 @@ export default function DetailPesananPage() {
           </div>
         )}
 
+        {order.address && (
+          <div className="flex flex-col gap-1 rounded-md border border-border bg-surface p-5">
+            <p className="font-body text-sm font-semibold text-text-primary">{t("shippingAddress")}</p>
+            <p className="font-body text-sm text-text-primary">
+              {order.address.recipient_name} · {order.address.phone}
+            </p>
+            <p className="font-body text-sm text-text-secondary">
+              {order.address.address_line}, {order.address.district}, {order.address.city}, {order.address.province}{" "}
+              {order.address.postal_code}
+            </p>
+          </div>
+        )}
+
         <div className="flex flex-col gap-3 rounded-md border border-border bg-surface p-5">
           {order.items.map((item) => (
             <div key={item.id} className="flex flex-col gap-3">
