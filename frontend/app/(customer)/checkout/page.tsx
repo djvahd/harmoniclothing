@@ -135,8 +135,8 @@ function CheckoutPageContent() {
                 key={`${rate.courier_company}-${rate.courier_type}`}
                 selected={courier?.company === rate.courier_company && courier?.type === rate.courier_type}
                 onSelect={() => setCourier({ company: rate.courier_company, type: rate.courier_type })}
-                label={rate.courier_service_name}
-                sublabel={rate.duration ?? undefined}
+                label={rate.courier_service_name.replace(/^(\S+) \1\b/i, "$1")}
+                sublabel={rate.duration?.replace(/\bdays?\b/i, "hari")}
                 price={new Intl.NumberFormat("id-ID").format(rate.price)}
               />
             ))}

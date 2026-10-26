@@ -81,11 +81,11 @@
     "account": {
       "adminDashboard": "Admin Dashboard",
       "profile": "Kelola Profil",
-      "addresses": "Address Book",
-      "wishlist": "Wishlist",
+      "addresses": "Buku Alamat",
+      "wishlist": "Daftar Keinginan",
       "cart": "Keranjang",
       "orders": "Riwayat Pesanan",
-      "becomeCreator": "Ajukan Upgrade Creator",
+      "becomeCreator": "Ajukan Jadi Kreator",
       "notifications": "Notifikasi"
     },
     "chatWidget": {
@@ -592,7 +592,7 @@
     "checkout": {
       "title": "Checkout",
       "shippingAddress": "Alamat Pengiriman",
-      "noSavedAddress": "Belum ada alamat tersimpan. Tambahkan alamat di Address Book.",
+      "noSavedAddress": "Belum ada alamat tersimpan. Tambahkan alamat di Buku Alamat.",
       "shippingCourier": "Kurir Pengiriman",
       "loadingRates": "Menghitung ongkir...",
       "noRatesAvailable": "Kurir tidak tersedia untuk alamat ini.",
@@ -610,7 +610,7 @@
     "checkoutBulk": {
       "title": "Checkout Bulk Order",
       "shippingAddress": "Alamat Pengiriman",
-      "noSavedAddress": "Belum ada alamat tersimpan. Tambahkan alamat di Address Book.",
+      "noSavedAddress": "Belum ada alamat tersimpan. Tambahkan alamat di Buku Alamat.",
       "shippingCourier": "Kurir Pengiriman",
       "loadingRates": "Menghitung ongkir...",
       "noRatesAvailable": "Kurir tidak tersedia untuk alamat ini.",
@@ -631,10 +631,10 @@
     },
     "accountSidebar": {
       "profile": "Profil",
-      "addresses": "Address Book",
+      "addresses": "Buku Alamat",
       "orders": "Riwayat Pesanan",
-      "wishlist": "Wishlist",
-      "becomeCreator": "Ajukan Upgrade Creator",
+      "wishlist": "Daftar Keinginan",
+      "becomeCreator": "Ajukan Jadi Kreator",
       "notifications": "Notifikasi"
     },
     "profile": {
@@ -653,7 +653,7 @@
       "photoUploadError": "Gagal mengunggah foto. Pastikan format JPG/PNG/WebP dan ukuran di bawah 5MB."
     },
     "addresses": {
-      "title": "Address Book",
+      "title": "Buku Alamat",
       "addAddress": "Tambah Alamat",
       "fields": {
         "label": "Label (mis. Rumah)",
@@ -672,17 +672,20 @@
       "defaultBadge": "Utama",
       "delete": "Hapus",
       "saveSuccess": "Alamat berhasil disimpan.",
+      "deleteConfirmTitle": "Hapus alamat?",
+      "deleteConfirmMessage": "Alamat ini akan dihapus dari buku alamatmu.",
+      "deleteFailed": "Gagal menghapus alamat. Silakan coba lagi.",
       "deleteSuccess": "Alamat berhasil dihapus."
     },
     "wishlist": {
-      "title": "Wishlist",
+      "title": "Daftar Keinginan",
       "empty": "Belum ada item di wishlist.",
       "removeAria": "Hapus dari wishlist",
       "unavailable": "Tidak Tersedia",
       "browseCatalog": "Jelajahi Katalog"
     },
     "becomeCreator": {
-      "title": "Ajukan Upgrade Creator",
+      "title": "Ajukan Jadi Kreator",
       "subtitle": "Jadi Kreator di Harmoni Clothing dan dapatkan komisi dari setiap penjualan desainmu.",
       "benefits": {
         "upload": { "title": "Upload Desain Bebas", "description": "Unggah karya orisinalmu kapan saja." },
@@ -728,6 +731,13 @@
       "shippingCost": "Ongkos Kirim",
       "total": "Total",
       "trackingNumber": "Resi",
+      "cancelConfirmTitle": "Batalkan pesanan?",
+      "cancelConfirmMessage": "Pesanan yang dibatalkan tidak dapat dipulihkan. Yakin ingin membatalkan?",
+      "cancelConfirmYes": "Ya, Batalkan",
+      "actionFailed": "Aksi gagal. Silakan coba lagi.",
+      "reorderSuccess": "Item ditambahkan ke keranjang.",
+      "courier": "Kurir",
+      "payBefore": "Selesaikan pembayaran sebelum {date}, atau pesanan dibatalkan otomatis.",
       "cancelOrder": "Batalkan Pesanan",
       "payNow": "Bayar Sekarang",
       "payUnavailable": "Tautan pembayaran belum tersedia. Silakan coba lagi nanti atau hubungi kami.",

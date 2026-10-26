@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import Badge from "@/components/ui/Badge";
@@ -9,9 +9,12 @@ import ProductThumbnail from "@/components/ui/ProductThumbnail";
 import PriceSummaryRow from "@/components/ui/PriceSummaryRow";
 import Button from "@/components/ui/Button";
 import LoadingState from "@/components/ui/LoadingState";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import OrderItemReview from "@/components/order/OrderItemReview";
 import { cancelOrder, confirmReceived, payOrder, reorder } from "@/services/orders";
 import { useOrder, invalidateOrder, refreshAfterPayment } from "@/hooks/useOrders";
+import { invalidateCart } from "@/hooks/useCart";
+import { toast } from "@/store/toast-store";
 import { storageUrl } from "@/lib/storage";
 import { payWithSnap } from "@/lib/snap";
 import { formatCurrency, formatDateTime } from "@/lib/format";
@@ -29,11 +32,13 @@ const TIMELINE_STEPS: { status: string; tKey: string }[] = [
 export default function DetailPesananPage() {
   const t = useTranslations("customer.orderDetail");
   const tCommon = useTranslations("common");
+  const router = useRouter();
   const params = useParams<{ id: string }>();
   const orderId = Number(params.id);
   const { order, isLoading } = useOrder(orderId);
   const [loading, setLoading] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
+  const [cancelOpen, setCancelOpen] = useState(false);
 
   // Arriving from checkout right after the Snap popup: wait for the webhook.
   useEffect(() => {
@@ -55,10 +60,13 @@ export default function DetailPesananPage() {
   }
 
   async function handleCancel() {
+    setCancelOpen(false);
     setLoading(true);
     try {
       await cancelOrder(orderId);
       invalidateOrder(orderId);
+    } catch {
+      toast(t("actionFailed"), "danger");
     } finally {
       setLoading(false);
     }
@@ -86,6 +94,11 @@ export default function DetailPesananPage() {
     setLoading(true);
     try {
       await reorder(orderId);
+      void invalidateCart();
+      toast(t("reorderSuccess"), "success");
+      router.push("/cart");
+    } catch {
+      toast(t("actionFailed"), "danger");
     } finally {
       setLoading(false);
     }
@@ -96,6 +109,8 @@ export default function DetailPesananPage() {
     try {
       await confirmReceived(orderId);
       invalidateOrder(orderId);
+    } catch {
+      toast(t("actionFailed"), "danger");
     } finally {
       setLoading(false);
     }
@@ -184,6 +199,17 @@ export default function DetailPesananPage() {
           <PriceSummaryRow label={t("total")} amount={order.total} emphasis />
         </div>
 
+        {order.courier_company && (
+          <p className="font-body text-xs text-text-secondary">
+            {t("courier")}: {[order.courier_company, order.courier_type].filter(Boolean).join(" ").toUpperCase()}
+          </p>
+        )}
+        {order.status === "belum_dibayar" && (
+          <p className="font-body text-xs text-text-secondary">
+            {t("payBefore", { date: formatDateTime(new Date(new Date(order.created_at).getTime() + 24 * 60 * 60 * 1000).toISOString()) })}
+          </p>
+        )}
+
         {order.shipment?.tracking_number && (
           <p className="font-body text-xs text-text-secondary">
             {order.shipment.courier} - {t("trackingNumber")}: {order.shipment.tracking_number}
@@ -204,7 +230,7 @@ export default function DetailPesananPage() {
             </>
           )}
           {(order.status === "menunggu_approval" || order.status === "belum_dibayar") && (
-            <Button variant="danger" loading={loading} onClick={handleCancel}>
+            <Button variant="danger" loading={loading} onClick={() => setCancelOpen(true)}>
               {t("cancelOrder")}
             </Button>
           )}
@@ -219,13 +245,22 @@ export default function DetailPesananPage() {
             </Button>
           )}
           {/* An invoice exists only once payment succeeded (FR-018). */}
-          {order.status !== "belum_dibayar" && (
+          {order.status !== "belum_dibayar" && order.status !== "dibatalkan" && (
             <Button href={`/account/orders/${order.id}/invoice`} variant="secondary" fullWidth>
-                {t("viewInvoice")}
-              </Button>
+              {t("viewInvoice")}
+            </Button>
           )}
         </div>
       </div>
+      <ConfirmDialog
+        open={cancelOpen}
+        title={t("cancelConfirmTitle")}
+        message={t("cancelConfirmMessage")}
+        confirmLabel={t("cancelConfirmYes")}
+        cancelLabel={tCommon("cancel")}
+        onConfirm={handleCancel}
+        onCancel={() => setCancelOpen(false)}
+      />
     </div>
   );
 }

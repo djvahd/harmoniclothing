@@ -672,6 +672,9 @@
       "defaultBadge": "Default",
       "delete": "Delete",
       "saveSuccess": "Address saved successfully.",
+      "deleteConfirmTitle": "Delete address?",
+      "deleteConfirmMessage": "This address will be removed from your address book.",
+      "deleteFailed": "Failed to delete the address. Please try again.",
       "deleteSuccess": "Address deleted successfully."
     },
     "wishlist": {
@@ -728,6 +731,13 @@
       "shippingCost": "Shipping Cost",
       "total": "Total",
       "trackingNumber": "Tracking No.",
+      "cancelConfirmTitle": "Cancel this order?",
+      "cancelConfirmMessage": "A cancelled order cannot be restored. Are you sure?",
+      "cancelConfirmYes": "Yes, Cancel",
+      "actionFailed": "Action failed. Please try again.",
+      "reorderSuccess": "Items added to your cart.",
+      "courier": "Courier",
+      "payBefore": "Complete payment before {date}, or the order is cancelled automatically.",
       "cancelOrder": "Cancel Order",
       "payNow": "Pay Now",
       "payUnavailable": "The payment link is not available yet. Please try again later or contact us.",
