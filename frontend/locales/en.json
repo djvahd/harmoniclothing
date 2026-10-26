@@ -598,6 +598,8 @@
       "shippingCourier": "Shipping Courier",
       "loadingRates": "Calculating shipping...",
       "noRatesAvailable": "No courier available for this address.",
+      "changeAddress": "Change address",
+      "shippingPending": "Select a courier",
       "selectAddressFirst": "Select a shipping address to see courier options.",
       "orderSummary": "Order Summary",
       "notesPrefix": "Notes:",
@@ -607,7 +609,9 @@
       "createOrder": "Place Order",
       "securePayment": "Secure & encrypted payment",
       "selectAddressError": "Please select a shipping address first.",
-      "selectCourierError": "Please select a shipping courier first."
+      "selectCourierError": "Please select a shipping courier first.",
+      "emptyCart": "There are no items to check out.",
+      "backToCart": "Back to Cart"
     },
     "checkoutBulk": {
       "title": "Bulk Order Checkout",
@@ -616,6 +620,8 @@
       "shippingCourier": "Shipping Courier",
       "loadingRates": "Calculating shipping...",
       "noRatesAvailable": "No courier available for this address.",
+      "changeAddress": "Change address",
+      "shippingPending": "Select a courier",
       "selectAddressFirst": "Select a shipping address to see courier options.",
       "orderSummary": "Bulk Order Summary",
       "designPrefix": "Design:",
@@ -772,7 +778,7 @@
     },
     "bulkOrder": {
       "title": "Bulk Order",
-      "subtitle": "Enter the quantity for each color/size combination. The per-unit price is set by the COMBINED total quantity across all combinations (BR-012), not per size.",
+      "subtitle": "Enter the quantity for each color/size combination. The per-unit price is set by the COMBINED total quantity across all combinations, not per size.",
       "byCreator": "by {name}",
       "uploadLabel": "Upload Your Own Design (optional)",
       "uploadStatusUploading": "Uploading...",
@@ -1364,6 +1370,7 @@
       "designCount": "{count} designs"
     },
     "quantityStepper": {
+      "quantityLabel": "Quantity",
       "decrease": "Decrease quantity",
       "increase": "Increase quantity"
     }

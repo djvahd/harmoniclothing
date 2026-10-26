@@ -191,7 +191,10 @@ function BulkOrderForm() {
                     <QuantityStepper
                       min={0}
                       value={quantities[v.id] ?? 0}
-                      onChange={(qty) => setQuantities((prev) => ({ ...prev, [v.id]: qty }))}
+                      onChange={(qty) => {
+                        setQuantities((prev) => ({ ...prev, [v.id]: qty }));
+                        setError(null);
+                      }}
                     />
                   </div>
                 ))}

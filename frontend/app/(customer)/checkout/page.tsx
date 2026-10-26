@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import useSWR from "swr";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, ShoppingCart } from "lucide-react";
 import { useTranslations } from "next-intl";
 import OptionRow from "@/components/ui/OptionRow";
 import PriceSummaryRow from "@/components/ui/PriceSummaryRow";
 import Button from "@/components/ui/Button";
+import EmptyState from "@/components/ui/EmptyState";
+import LoadingState from "@/components/ui/LoadingState";
 import { getAddresses } from "@/services/account";
 import { checkout, getShippingRates } from "@/services/checkout";
 import { payWithSnap } from "@/lib/snap";
@@ -19,7 +22,7 @@ function CheckoutPageContent() {
   const tCommon = useTranslations("common");
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { items: allItems } = useCart();
+  const { items: allItems, isLoading: cartLoading } = useCart();
   const { data: addressData } = useSWR("/account/addresses", getAddresses);
 
   // /cart lets the customer pick a subset to buy; ?items carries that
@@ -64,6 +67,7 @@ function CheckoutPageContent() {
     : 0;
 
   async function handleSubmit() {
+    if (items.length === 0) return;
     if (!addressId) {
       setError(t("selectAddressError"));
       return;
@@ -93,6 +97,20 @@ function CheckoutPageContent() {
     }
   }
 
+  if (cartLoading) return <LoadingState />;
+
+  if (items.length === 0) {
+    return (
+      <div className="mx-auto flex w-full max-w-[1440px] flex-col px-4 py-8 md:px-20">
+        <EmptyState
+          icon={ShoppingCart}
+          title={t("emptyCart")}
+          action={<Button href="/cart">{t("backToCart")}</Button>}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-8 md:px-20">
       <h1 className="font-heading text-h3 font-semibold text-text-primary">{t("title")}</h1>
@@ -110,7 +128,10 @@ function CheckoutPageContent() {
               <OptionRow
                 key={address.id}
                 selected={addressId === address.id}
-                onSelect={() => setAddressId(address.id)}
+                onSelect={() => {
+                  setAddressId(address.id);
+                  setError(null);
+                }}
                 label={`${address.label} - ${address.recipient_name}`}
                 sublabel={`${address.address_line}, ${address.district}, ${address.city}, ${address.province} ${address.postal_code}`}
               />
@@ -128,13 +149,21 @@ function CheckoutPageContent() {
               <p className="font-body text-sm text-text-secondary">{t("loadingRates")}</p>
             )}
             {addressId && !ratesLoading && rates.length === 0 && (
-              <p className="font-body text-sm text-text-secondary">{t("noRatesAvailable")}</p>
+              <p className="font-body text-sm text-text-secondary">
+                {t("noRatesAvailable")}{" "}
+                <Link href="/account/addresses" className="font-medium text-primary hover:underline">
+                  {t("changeAddress")}
+                </Link>
+              </p>
             )}
             {rates.map((rate) => (
               <OptionRow
                 key={`${rate.courier_company}-${rate.courier_type}`}
                 selected={courier?.company === rate.courier_company && courier?.type === rate.courier_type}
-                onSelect={() => setCourier({ company: rate.courier_company, type: rate.courier_type })}
+                onSelect={() => {
+                  setCourier({ company: rate.courier_company, type: rate.courier_type });
+                  setError(null);
+                }}
                 label={rate.courier_service_name.replace(/^(\S+) \1\b/i, "$1")}
                 sublabel={rate.duration?.replace(/\bdays?\b/i, "hari")}
                 price={new Intl.NumberFormat("id-ID").format(rate.price)}
@@ -166,11 +195,18 @@ function CheckoutPageContent() {
           ))}
           <div className="border-t border-border pt-3">
             <PriceSummaryRow label={t("subtotal")} amount={subtotal} />
-            <PriceSummaryRow label={t("shippingCost")} amount={shippingCost} />
+            {courier ? (
+              <PriceSummaryRow label={t("shippingCost")} amount={shippingCost} />
+            ) : (
+              <div className="flex items-center justify-between font-body text-sm">
+                <p className="text-text-secondary">{t("shippingCost")}</p>
+                <p className="text-text-secondary">{t("shippingPending")}</p>
+              </div>
+            )}
           </div>
           <PriceSummaryRow label={t("total")} amount={subtotal + shippingCost} emphasis />
           {error && <p className="font-body text-xs text-danger">{error}</p>}
-          <Button fullWidth loading={loading} onClick={handleSubmit}>
+          <Button fullWidth loading={loading} disabled={items.length === 0} onClick={handleSubmit}>
             {t("createOrder")}
           </Button>
           <p className="flex items-center gap-1.5 font-body text-xs text-text-secondary">

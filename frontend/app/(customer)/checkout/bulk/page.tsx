@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import { ShieldCheck } from "lucide-react";
@@ -130,7 +131,10 @@ export default function BulkCheckoutPage() {
               <OptionRow
                 key={address.id}
                 selected={addressId === address.id}
-                onSelect={() => setAddressId(address.id)}
+                onSelect={() => {
+                  setAddressId(address.id);
+                  setError(null);
+                }}
                 label={`${address.label} - ${address.recipient_name}`}
                 sublabel={`${address.address_line}, ${address.district}, ${address.city}, ${address.province} ${address.postal_code}`}
               />
@@ -148,13 +152,21 @@ export default function BulkCheckoutPage() {
               <p className="font-body text-sm text-text-secondary">{t("loadingRates")}</p>
             )}
             {addressId && !ratesLoading && rates.length === 0 && (
-              <p className="font-body text-sm text-text-secondary">{t("noRatesAvailable")}</p>
+              <p className="font-body text-sm text-text-secondary">
+                {t("noRatesAvailable")}{" "}
+                <Link href="/account/addresses" className="font-medium text-primary hover:underline">
+                  {t("changeAddress")}
+                </Link>
+              </p>
             )}
             {rates.map((rate) => (
               <OptionRow
                 key={`${rate.courier_company}-${rate.courier_type}`}
                 selected={courier?.company === rate.courier_company && courier?.type === rate.courier_type}
-                onSelect={() => setCourier({ company: rate.courier_company, type: rate.courier_type })}
+                onSelect={() => {
+                  setCourier({ company: rate.courier_company, type: rate.courier_type });
+                  setError(null);
+                }}
                 label={rate.courier_service_name}
                 sublabel={rate.duration ?? undefined}
                 price={new Intl.NumberFormat("id-ID").format(rate.price)}
@@ -194,7 +206,14 @@ export default function BulkCheckoutPage() {
           <div className="border-t border-border pt-3">
             <PriceSummaryRow label={t("pricePerUnit", { qty: totalQuantity })} amount={unitPrice} />
             <PriceSummaryRow label={t("subtotal")} amount={subtotal} />
-            <PriceSummaryRow label={t("shippingCost")} amount={shippingCost} />
+            {courier ? (
+              <PriceSummaryRow label={t("shippingCost")} amount={shippingCost} />
+            ) : (
+              <div className="flex items-center justify-between font-body text-sm">
+                <p className="text-text-secondary">{t("shippingCost")}</p>
+                <p className="text-text-secondary">{t("shippingPending")}</p>
+              </div>
+            )}
           </div>
           <PriceSummaryRow label={t("total")} amount={subtotal + shippingCost} emphasis />
           {error && <p className="font-body text-xs text-danger">{error}</p>}
