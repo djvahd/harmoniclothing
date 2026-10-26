@@ -47,5 +47,10 @@ export default function AdminSidebar({
       ],
     },
   ];
-  return <SidebarNav groups={groups} className={className} onNavigate={onNavigate} />;
+  return <SidebarNav
+      groups={groups}
+      className={className}
+      onNavigate={onNavigate}
+      ariaLabel={t("menuLabel")}
+    />;
 }
