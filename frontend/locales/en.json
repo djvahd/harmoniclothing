@@ -919,7 +919,43 @@
         "entity": "Entity",
         "description": "Description"
       },
-      "empty": "No activity recorded yet."
+      "empty": "No activity recorded yet.",
+      "filterAction": "Filter by action",
+      "allActions": "All actions",
+      "actions": {
+        "product_create": "Created a product",
+        "product_update": "Changed a product base price",
+        "variant_create": "Created a product variant",
+        "variant_update": "Changed a variant price",
+        "bulk_pricing_tier_create": "Added a bulk pricing tier",
+        "design_approve": "Approved a design",
+        "design_reject": "Rejected a design",
+        "creator_approve": "Approved a creator",
+        "creator_reject": "Rejected a creator",
+        "creator_ban": "Banned a creator",
+        "order_status_update": "Changed an order status",
+        "order_reject": "Rejected an order",
+        "order_shipment_book": "Booked a shipment",
+        "payout_paid": "Recorded a creator payout",
+        "notification_setting_update": "Changed a notification setting"
+      },
+      "entities": {
+        "Product": "Product",
+        "ProductVariant": "Variant",
+        "BulkPricingTier": "Bulk pricing tier",
+        "Design": "Design",
+        "CreatorProfile": "Creator",
+        "Order": "Order",
+        "NotificationSetting": "Notification setting"
+      },
+      "descriptions": {
+        "base_price": "Base price set to {value}",
+        "price_modifier": "Variant price modifier set to {value}",
+        "enabled": "Notification enabled",
+        "disabled": "Notification disabled",
+        "courier": "Courier: {value}",
+        "statusTo": "Status set to {status}"
+      }
     },
     "creatorApproval": {
       "title": "Creator Approval",

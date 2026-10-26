@@ -919,7 +919,43 @@
         "entity": "Entitas",
         "description": "Deskripsi"
       },
-      "empty": "Belum ada aktivitas tercatat."
+      "empty": "Belum ada aktivitas tercatat.",
+      "filterAction": "Filter aksi",
+      "allActions": "Semua aksi",
+      "actions": {
+        "product_create": "Menambah produk",
+        "product_update": "Mengubah harga dasar produk",
+        "variant_create": "Menambah varian produk",
+        "variant_update": "Mengubah harga varian",
+        "bulk_pricing_tier_create": "Menambah tier harga bulk",
+        "design_approve": "Menyetujui desain",
+        "design_reject": "Menolak desain",
+        "creator_approve": "Menyetujui creator",
+        "creator_reject": "Menolak creator",
+        "creator_ban": "Memblokir creator",
+        "order_status_update": "Mengubah status pesanan",
+        "order_reject": "Menolak pesanan",
+        "order_shipment_book": "Memesan pengiriman",
+        "payout_paid": "Mencatat pencairan creator",
+        "notification_setting_update": "Mengubah pengaturan notifikasi"
+      },
+      "entities": {
+        "Product": "Produk",
+        "ProductVariant": "Varian",
+        "BulkPricingTier": "Tier harga bulk",
+        "Design": "Desain",
+        "CreatorProfile": "Creator",
+        "Order": "Pesanan",
+        "NotificationSetting": "Pengaturan notifikasi"
+      },
+      "descriptions": {
+        "base_price": "Harga dasar menjadi {value}",
+        "price_modifier": "Tambahan harga varian menjadi {value}",
+        "enabled": "Notifikasi diaktifkan",
+        "disabled": "Notifikasi dinonaktifkan",
+        "courier": "Kurir: {value}",
+        "statusTo": "Status menjadi {status}"
+      }
     },
     "creatorApproval": {
       "title": "Approval Creator",
