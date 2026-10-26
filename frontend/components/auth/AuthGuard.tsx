@@ -20,7 +20,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     if (!user) {
       if (!useAuthModalStore.getState().view) openAuthModal("login", t("guestMessage"));
     }
-  }, [status, user, openAuthModal]);
+  }, [status, user, openAuthModal, t]);
 
   if (status === "ready" && !user) {
     return (
