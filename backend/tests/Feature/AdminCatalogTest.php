@@ -118,4 +118,25 @@ class AdminCatalogTest extends TestCase
 
         $response->assertCreated()->assertJsonPath('data.min_qty', 50);
     }
+
+    public function test_base_price_must_be_at_least_one(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)->postJson('/api/admin/catalog/products', [
+            'name_id' => 'Kaos Gratis',
+            'name_en' => 'Free Shirt',
+            'base_price' => 0,
+        ])->assertUnprocessable()->assertJsonValidationErrors('base_price');
+    }
+
+    public function test_admin_can_list_product_categories_only(): void
+    {
+        $admin = User::factory()->admin()->create();
+        Category::factory()->product()->create();
+        Category::factory()->create(['type' => 'design']);
+
+        $this->actingAs($admin)->getJson('/api/admin/catalog/categories')
+            ->assertOk()->assertJsonCount(1, 'data')->assertJsonStructure(['data' => [['id', 'name', 'slug']]]);
+    }
 }

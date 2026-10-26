@@ -158,6 +158,7 @@ Route::middleware(['auth:sanctum', 'auth.session', 'user.active', 'admin'])->pre
     Route::post('/designs/{design}/reject', [AdminDesignController::class, 'reject']); // BR-028
 
     Route::get('/catalog/products', [AdminCatalogController::class, 'index']); // admin management list (gap-filled)
+    Route::get('/catalog/categories', [AdminCatalogController::class, 'categories']);
     Route::post('/catalog/products', [AdminCatalogController::class, 'storeProduct']); // FR-031
     Route::patch('/catalog/products/{product}', [AdminCatalogController::class, 'updateProduct']);
     Route::post('/catalog/products/{product}/variants', [AdminCatalogController::class, 'storeVariant']); // FE-046

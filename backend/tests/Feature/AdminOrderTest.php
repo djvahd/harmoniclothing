@@ -169,4 +169,17 @@ class AdminOrderTest extends TestCase
         $this->actingAs($admin)->postJson("/api/admin/orders/{$order->id}/shipment", ['courier_company' => 'sicepat', 'courier_type' => 'reg'])
             ->assertUnprocessable();
     }
+
+    public function test_admin_order_list_can_search_by_order_number_or_customer(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $budi = User::factory()->create(['name' => 'Budi Santoso']);
+        $target = Order::factory()->create(['user_id' => $budi->id]);
+        Order::factory()->create();
+
+        $this->actingAs($admin)->getJson('/api/admin/orders?search=Budi')
+            ->assertOk()->assertJsonCount(1, 'data')->assertJsonPath('data.0.id', $target->id);
+        $this->actingAs($admin)->getJson('/api/admin/orders?search='.$target->order_number)
+            ->assertOk()->assertJsonCount(1, 'data');
+    }
 }

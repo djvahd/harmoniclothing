@@ -12,6 +12,7 @@ import PromptModal from "@/components/ui/PromptModal";
 import DataTable from "@/components/ui/DataTable";
 import EmptyState from "@/components/ui/EmptyState";
 import { bookShipment, getProductionQueue } from "@/services/admin";
+import { toast } from "@/store/toast-store";
 import type { Order } from "@/types/order";
 
 export default function KelolaPengirimanPage() {
@@ -37,6 +38,10 @@ export default function KelolaPengirimanPage() {
     if (overrideId === null) return;
     const id = overrideId;
     const [courier_company, courier_type] = value.split(":").map((s) => s.trim());
+    if (!courier_company || !courier_type) {
+      toast(t("overrideModal.invalidFormat"), "danger");
+      return;
+    }
     setOverrideId(null);
     setLoadingId(id);
     try {
@@ -72,7 +77,7 @@ export default function KelolaPengirimanPage() {
             <tr className="border-b border-border last:border-0">
               <td className="p-4 font-medium text-text-primary">{order.order_number}</td>
               <td className="p-4 text-text-secondary">
-                {order.courier_company ? `${order.courier_company} ${order.courier_type ?? ""}`.trim() : "-"}
+                {order.courier_company ? `${order.courier_company} ${order.courier_type ?? ""}`.trim().toUpperCase() : "-"}
               </td>
               <td className="p-4 text-text-secondary">{order.shipment?.courier ?? "-"}</td>
               <td className="p-4 text-text-secondary">{order.shipment?.tracking_number ?? "-"}</td>

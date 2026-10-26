@@ -63,6 +63,8 @@ export interface Order {
   courier_type: string | null;
   total: number;
   created_at: string;
+  /** Only on GET /admin/orders. */
+  user?: { id: number; name: string; email: string };
   items: OrderItem[];
   shipment: Shipment | null;
   /** When each status was reached; only present on the order detail endpoint. */

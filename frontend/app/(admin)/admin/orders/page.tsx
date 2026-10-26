@@ -9,20 +9,30 @@ import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
 import PromptModal from "@/components/ui/PromptModal";
 import DataTable from "@/components/ui/DataTable";
 import EmptyState from "@/components/ui/EmptyState";
 import Pagination from "@/components/ui/Pagination";
 import { getOrders, rejectOrder } from "@/services/admin";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatDate } from "@/lib/format";
 import { ORDER_STATUS_VARIANT } from "@/lib/order-status";
-import type { Order } from "@/types/order";
+import { Search } from "lucide-react";
+import type { Order, OrderStatus } from "@/types/order";
+
+const ORDER_STATUSES = Object.keys(ORDER_STATUS_VARIANT) as OrderStatus[];
 
 export default function KelolaPesananPage() {
   const t = useTranslations("admin.orders");
   const tCommon = useTranslations("common");
   const [page, setPage] = useState(1);
-  const { data, isLoading } = useSWR(["/admin/orders", page], () => getOrders({ page }));
+  const [statusFilter, setStatusFilter] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState("");
+  const listKey = ["/admin/orders", page, statusFilter, search] as const;
+  const { data, isLoading } = useSWR(listKey, () =>
+    getOrders({ page, status: statusFilter || undefined, search: search || undefined }),
+  );
   const orders = data?.data ?? [];
   const [loadingId, setLoadingId] = useState<number | null>(null);
   const [rejectingId, setRejectingId] = useState<number | null>(null);
@@ -34,7 +44,7 @@ export default function KelolaPesananPage() {
     setLoadingId(id);
     try {
       await rejectOrder(id, reason);
-      mutate(["/admin/orders", page]);
+      mutate(listKey);
     } finally {
       setLoadingId(null);
     }
@@ -44,9 +54,44 @@ export default function KelolaPesananPage() {
     <SidebarPageShell sidebar={<AdminSidebar />}>
       <div className="flex flex-col gap-6">
         <h1 className="font-heading text-h3 font-semibold text-text-primary">{t("title")}</h1>
+        <form
+          className="flex flex-wrap items-end gap-3"
+          onSubmit={(e) => {
+            e.preventDefault();
+            setPage(1);
+            setSearch(searchInput.trim());
+          }}
+        >
+          <div className="min-w-60 flex-1">
+            <Input
+              icon={Search}
+              type="search"
+              aria-label={t("searchPlaceholder")}
+              placeholder={t("searchPlaceholder")}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+            />
+          </div>
+          <select
+            aria-label={t("columns.status")}
+            value={statusFilter}
+            onChange={(e) => {
+              setPage(1);
+              setStatusFilter(e.target.value);
+            }}
+            className="rounded-sm border border-border bg-surface px-3 py-2.5 font-body text-sm text-text-primary outline-none"
+          >
+            <option value="">{t("statusAll")}</option>
+            {ORDER_STATUSES.map((s) => (
+              <option key={s} value={s}>{tCommon(`orderStatus.${s}`)}</option>
+            ))}
+          </select>
+        </form>
         <DataTable<Order>
           columns={[
             { key: "order_number", header: t("columns.orderNumber") },
+            { key: "customer", header: t("columns.customer") },
+            { key: "date", header: t("columns.date") },
             { key: "total", header: t("columns.total") },
             { key: "status", header: t("columns.status") },
             { key: "actions", header: t("columns.actions") },
@@ -59,6 +104,8 @@ export default function KelolaPesananPage() {
             <>
             <tr className="border-b border-border last:border-0">
               <td className="p-4 font-medium text-text-primary">{order.order_number}</td>
+              <td className="p-4 text-text-secondary">{order.user?.name ?? "-"}</td>
+              <td className="p-4 text-text-secondary">{formatDate(order.created_at)}</td>
               <td className="p-4 text-text-secondary">{formatCurrency(order.total)}</td>
               <td className="p-4">
                 <Badge variant={ORDER_STATUS_VARIANT[order.status]}>
@@ -77,7 +124,7 @@ export default function KelolaPesananPage() {
                 )}
               </td>
             </tr>
-            <OrderItemDesigns order={order} colSpan={4} />
+            <OrderItemDesigns order={order} colSpan={6} />
             </>
           )}
         />

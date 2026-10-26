@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import useSWR from "swr";
 import { useTranslations } from "next-intl";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { toast } from "@/store/toast-store";
-import { createProduct, updateProduct, type AdminProduct } from "@/services/admin";
+import { createProduct, getProductCategories, updateProduct, type AdminProduct } from "@/services/admin";
 import { getErrorMessage } from "@/lib/api";
 import type { GenderSegment } from "@/types/product";
 
@@ -13,6 +14,7 @@ const EMPTY_FORM = {
   name_id: "",
   name_en: "",
   base_price: "",
+  category_id: "",
   gender_segment: "",
   description_id: "",
   description_en: "",
@@ -25,6 +27,7 @@ function formFromProduct(product?: AdminProduct) {
     name_id: product.name_id,
     name_en: product.name_en,
     base_price: String(product.base_price),
+    category_id: product.category_id ? String(product.category_id) : "",
     gender_segment: product.gender_segment ?? "",
     description_id: product.description_id ?? "",
     description_en: product.description_en ?? "",
@@ -39,6 +42,7 @@ export default function ProductForm({ product, onSaved }: { product?: AdminProdu
   const [form, setForm] = useState(() => formFromProduct(product));
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const { data: categories } = useSWR("/admin/catalog/categories", getProductCategories);
 
   function update<K extends keyof typeof form>(field: K, value: (typeof form)[K]) {
     setForm((f) => ({ ...f, [field]: value }));
@@ -52,6 +56,7 @@ export default function ProductForm({ product, onSaved }: { product?: AdminProdu
       name_id: form.name_id,
       name_en: form.name_en,
       base_price: Number(form.base_price),
+      category_id: form.category_id ? Number(form.category_id) : undefined,
       gender_segment: form.gender_segment ? (form.gender_segment as GenderSegment) : undefined,
       description_id: form.description_id || undefined,
       description_en: form.description_en || undefined,
@@ -81,7 +86,20 @@ export default function ProductForm({ product, onSaved }: { product?: AdminProdu
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Input label={t("nameId")} value={form.name_id} onChange={(e) => update("name_id", e.target.value)} required />
         <Input label={t("nameEn")} value={form.name_en} onChange={(e) => update("name_en", e.target.value)} required />
-        <Input label={t("basePrice")} type="number" value={form.base_price} onChange={(e) => update("base_price", e.target.value)} required />
+        <Input label={t("basePrice")} type="number" min={1} value={form.base_price} onChange={(e) => update("base_price", e.target.value)} required />
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="product-category" className="font-body text-xs font-medium text-text-secondary">{t("category")}</label>
+          <select id="product-category"
+            value={form.category_id}
+            onChange={(e) => update("category_id", e.target.value)}
+            className="rounded-sm border border-border bg-surface px-3 py-2.5 font-body text-sm text-text-primary outline-none"
+          >
+            <option value="">{t("categoryUnset")}</option>
+            {categories?.data.map((c) => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </select>
+        </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor="product-segment" className="font-body text-xs font-medium text-text-secondary">{t("segment")}</label>
           <select id="product-segment"

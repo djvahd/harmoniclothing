@@ -9,7 +9,9 @@ use App\Http\Requests\ProductVariantRequest;
 use App\Http\Requests\UploadMockupFileRequest;
 use App\Http\Resources\AdminProductResource;
 use App\Http\Resources\BulkPricingTierResource;
+use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ProductVariantResource;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Services\CatalogService;
@@ -42,6 +44,14 @@ class AdminCatalogController extends Controller
                 'per_page' => $products->perPage(),
                 'total' => $products->total(),
             ],
+        ]);
+    }
+
+    /** GET /admin/catalog/categories — product categories for the product form's category select. */
+    public function categories(Request $request): JsonResponse
+    {
+        return response()->json([
+            'data' => CategoryResource::collection(Category::query()->where('type', 'product')->orderBy('name_id')->get()),
         ]);
     }
 

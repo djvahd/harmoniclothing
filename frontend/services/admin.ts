@@ -78,7 +78,7 @@ export function getDashboardSummary() {
   return apiFetch<{ data: AdminDashboardSummary }>("/admin/dashboard");
 }
 
-export function getUsers(params?: { role?: string; status?: string; page?: number }) {
+export function getUsers(params?: { role?: string; status?: string; search?: string; page?: number }) {
   return apiFetch<Paginated<User>>(`/admin/users${buildQuery(params)}`);
 }
 
@@ -148,6 +148,10 @@ export interface AdminProduct {
 
 export function getAdminProducts(params?: { per_page?: number; page?: number }) {
   return apiFetch<Paginated<AdminProduct>>(`/admin/catalog/products${buildQuery(params)}`);
+}
+
+export function getProductCategories() {
+  return apiFetch<{ data: Category[] }>("/admin/catalog/categories");
 }
 
 export function createProduct(payload: {
@@ -223,7 +227,7 @@ export function getProductionQueue() {
   return apiFetch<{ data: Order[] }>("/admin/production-queue");
 }
 
-export function getOrders(params?: { status?: string; page?: number }) {
+export function getOrders(params?: { status?: string; search?: string; page?: number }) {
   return apiFetch<Paginated<Order>>(`/admin/orders${buildQuery(params)}`);
 }
 
