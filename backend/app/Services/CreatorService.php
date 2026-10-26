@@ -102,6 +102,31 @@ class CreatorService
         ];
     }
 
+    /** GET /creator/profile — brand fields plus a read-only, masked payout destination. */
+    public function profile(User $user): array
+    {
+        $profile = $user->creatorProfile;
+        $account = (string) $profile->payout_account_number;
+
+        return [
+            'slug' => $profile->slug,
+            'brand_name' => $profile->brand_name,
+            'bio' => $profile->bio,
+            'portfolio_url' => $profile->portfolio_url,
+            'payout_method' => $profile->payout_method,
+            'payout_account_masked' => $account === '' ? null : str_repeat('•', max(strlen($account) - 4, 0)).substr($account, -4),
+            'payout_account_holder' => $profile->payout_account_holder,
+        ];
+    }
+
+    /** PATCH /creator/profile — the slug stays fixed so the public URL does not change. */
+    public function updateProfile(User $user, array $data): array
+    {
+        $user->creatorProfile->update($data);
+
+        return $this->profile($user->fresh());
+    }
+
     /** GET /creator/dashboard — FE-020. */
     public function dashboard(User $user): array
     {

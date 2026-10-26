@@ -217,4 +217,36 @@ class CreatorTest extends TestCase
         $this->actingAs($rejected->user)->postJson('/api/creator/verification', $this->adultVerificationPayload())->assertOk();
         $this->assertSame('menunggu_approval', $rejected->fresh()->status);
     }
+
+    public function test_active_creator_can_read_profile_with_masked_payout_and_update_brand_fields(): void
+    {
+        $profile = CreatorProfile::factory()->aktif()->create(['payout_account_number' => '1234567890']);
+
+        $this->actingAs($profile->user)->getJson("/api/creator/profile")
+            ->assertOk()
+            ->assertJsonPath('data.payout_account_masked', '••••••7890')
+            ->assertJsonMissingPath('data.payout_account_number');
+
+        $this->actingAs($profile->user)->patchJson('/api/creator/profile', [
+            'brand_name' => 'Brand Baru',
+            'bio' => 'Bio baru',
+            'portfolio_url' => 'https://example.com/me',
+            'payout_account_number' => '9999999999',
+        ])->assertOk()->assertJsonPath('data.brand_name', 'Brand Baru');
+
+        $fresh = $profile->fresh();
+        $this->assertSame('Brand Baru', $fresh->brand_name);
+        $this->assertSame('1234567890', $fresh->payout_account_number);
+        $this->assertSame($profile->slug, $fresh->slug);
+    }
+
+    public function test_creator_profile_is_not_available_before_approval_and_validates_url(): void
+    {
+        $pending = CreatorProfile::factory()->create(['status' => 'menunggu_approval']);
+        $this->actingAs($pending->user)->patchJson('/api/creator/profile', ['brand_name' => 'X'])->assertForbidden();
+
+        $active = CreatorProfile::factory()->aktif()->create();
+        $this->actingAs($active->user)->patchJson('/api/creator/profile', ['portfolio_url' => 'bukan-url'])
+            ->assertUnprocessable()->assertJsonValidationErrors('portfolio_url');
+    }
 }
