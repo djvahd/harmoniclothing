@@ -1183,7 +1183,8 @@
       "sizeChart": "Size Chart"
     },
     "gallery": {
-      "bestSeller": "Terlaris"
+      "bestSeller": "Terlaris",
+      "viewImage": "Lihat gambar {number}"
     },
     "sizeChart": {
       "size": "Ukuran",

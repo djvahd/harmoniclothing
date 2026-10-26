@@ -1183,7 +1183,8 @@
       "sizeChart": "Size Chart"
     },
     "gallery": {
-      "bestSeller": "Best Seller"
+      "bestSeller": "Best Seller",
+      "viewImage": "View image {number}"
     },
     "sizeChart": {
       "size": "Size",
