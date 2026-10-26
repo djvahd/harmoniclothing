@@ -11,6 +11,7 @@ return [
         'invalid_credentials' => 'Email atau password salah.',
         'session_expired' => 'Sesi Anda sudah berakhir karena kata sandi diubah. Silakan masuk kembali.',
         'account_banned' => 'Akun Anda telah diblokir. Hubungi admin Harmoni Clothing untuk informasi lebih lanjut.',
+        'account_inactive' => 'Akun Anda dinonaktifkan oleh admin. Hubungi admin Harmoni Clothing untuk informasi lebih lanjut.',
         'email_not_verified' => 'Akun belum verifikasi email. Silakan cek email Anda atau kirim ulang tautan verifikasi.',
         'verification_link_expired' => 'Tautan verifikasi tidak valid atau sudah kedaluwarsa.',
         'verification_link_invalid' => 'Tautan verifikasi tidak valid.',
@@ -77,6 +78,11 @@ return [
         'nothing_owed' => 'Creator ini tidak memiliki komisi yang perlu dibayar.',
         'below_minimum' => 'Total komisi belum mencapai minimum pencairan.',
         'no_destination' => 'Creator belum mengisi rekening/e-wallet tujuan pencairan.',
+    ],
+
+    'admin_user' => [
+        'cannot_change_admin' => 'Akun admin tidak dapat dinonaktifkan.',
+        'banned' => 'Akun yang diblokir tidak dapat diubah statusnya dari sini.',
     ],
 
     'creator' => [

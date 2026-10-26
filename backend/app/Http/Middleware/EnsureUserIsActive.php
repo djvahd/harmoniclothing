@@ -20,7 +20,8 @@ class EnsureUserIsActive
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user()?->status === UserStatus::Banned) {
+        $status = $request->user()?->status;
+        if ($status === UserStatus::Banned || $status === UserStatus::Nonaktif) {
             Auth::guard('web')->logout();
 
             // A token-authenticated or non-stateful request has no session to end.
@@ -29,7 +30,7 @@ class EnsureUserIsActive
                 $request->session()->regenerateToken();
             }
 
-            return response()->json(['message' => __('messages.auth.account_banned')], 403);
+            return response()->json(['message' => $status === UserStatus::Banned ? __('messages.auth.account_banned') : __('messages.auth.account_inactive')], 403);
         }
 
         return $next($request);

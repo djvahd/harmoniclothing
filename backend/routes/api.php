@@ -145,6 +145,7 @@ Route::get('/bulk-pricing-tiers', [BulkPricingController::class, 'index']);
 Route::middleware(['auth:sanctum', 'auth.session', 'user.active', 'admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index']); // FE-042
     Route::get('/users', [AdminUserController::class, 'index']); // FR-030
+    Route::patch('/users/{user}/status', [AdminUserController::class, 'updateStatus']); // #52
 
     Route::get('/creators', [AdminCreatorController::class, 'index']); // daftar aktif/banned, untuk aksi Ban
     Route::get('/creators/pending', [AdminCreatorController::class, 'pending']);
@@ -172,6 +173,7 @@ Route::middleware(['auth:sanctum', 'auth.session', 'user.active', 'admin'])->pre
     Route::post('/orders/{order}/reject', [AdminOrderController::class, 'reject']); // FR-043
 
     Route::get('/payments', [AdminPaymentController::class, 'index']); // FR-032
+    Route::get('/shipping/couriers', [AdminOrderController::class, 'couriers']); // #63
     Route::post('/orders/{order}/shipment', [AdminOrderController::class, 'bookShipment']); // FR-022
 
     Route::get('/chat/threads', [AdminChatController::class, 'index']); // FE-041

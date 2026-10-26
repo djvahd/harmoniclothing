@@ -8,12 +8,52 @@ import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
-import PromptModal from "@/components/ui/PromptModal";
+import Portal from "@/components/ui/Portal";
 import DataTable from "@/components/ui/DataTable";
 import EmptyState from "@/components/ui/EmptyState";
-import { bookShipment, getProductionQueue } from "@/services/admin";
-import { toast } from "@/store/toast-store";
+import { useEscapeKey } from "@/hooks/useEscapeKey";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { bookShipment, getCouriers, getProductionQueue } from "@/services/admin";
 import type { Order } from "@/types/order";
+
+const SELECT_CLASS =
+  "rounded-sm border border-border bg-surface px-3 py-2.5 font-body text-sm text-text-primary outline-none";
+
+/** Picks the replacement courier from the server's validated list; confirms as "company:type". */
+function CourierOverrideModal({ open, onConfirm, onCancel }: { open: boolean; onConfirm: (value: string) => void; onCancel: () => void }) {
+  const t = useTranslations("admin.shipments.overrideModal");
+  const tCommon = useTranslations("common");
+  const { data } = useSWR(open ? "/admin/shipping/couriers" : null, getCouriers);
+  const options = (data?.data ?? []).flatMap((c) => c.types.map((type) => `${c.company}:${type}`));
+  const [value, setValue] = useState("");
+  useEscapeKey(open, onCancel);
+  const dialogRef = useFocusTrap<HTMLDivElement>(open);
+
+  if (!open) return null;
+  const selected = value || options[0] || "";
+
+  return (
+    <Portal>
+      <div className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center bg-black/45 px-4">
+        <div ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={t("title")} className="flex w-full max-w-sm flex-col gap-4 rounded-md bg-surface p-6">
+          <p className="font-heading text-lg font-semibold text-text-primary">{t("title")}</p>
+          <label className="flex flex-col gap-1.5 font-body text-sm text-text-primary">
+            {t("label")}
+            <select value={selected} onChange={(e) => setValue(e.target.value)} className={SELECT_CLASS} autoFocus>
+              {options.map((o) => (
+                <option key={o} value={o}>{o.replace(":", " ").toUpperCase()}</option>
+              ))}
+            </select>
+          </label>
+          <div className="flex justify-end gap-3">
+            <Button variant="secondary" onClick={onCancel}>{tCommon("cancel")}</Button>
+            <Button disabled={!selected} onClick={() => onConfirm(selected)}>{t("confirm")}</Button>
+          </div>
+        </div>
+      </div>
+    </Portal>
+  );
+}
 
 export default function KelolaPengirimanPage() {
   const t = useTranslations("admin.shipments");
@@ -37,11 +77,7 @@ export default function KelolaPengirimanPage() {
   async function handleOverride(value: string) {
     if (overrideId === null) return;
     const id = overrideId;
-    const [courier_company, courier_type] = value.split(":").map((s) => s.trim());
-    if (!courier_company || !courier_type) {
-      toast(t("overrideModal.invalidFormat"), "danger");
-      return;
-    }
+    const [courier_company, courier_type] = value.split(":");
     setOverrideId(null);
     setLoadingId(id);
     try {
@@ -106,12 +142,8 @@ export default function KelolaPengirimanPage() {
           )}
         />
       </div>
-      <PromptModal
+      <CourierOverrideModal
         open={overrideId !== null}
-        title={t("overrideModal.title")}
-        label={t("overrideModal.label")}
-        minLength={3}
-        confirmLabel={t("overrideModal.confirm")}
         onConfirm={handleOverride}
         onCancel={() => setOverrideId(null)}
       />

@@ -61,6 +61,14 @@ return [
         // Couriers offered at checkout rate-check time — comma-separated,
         // passed straight through to Biteship's `couriers` param.
         'couriers' => env('BITESHIP_COURIERS', 'jne,jnt,sicepat'),
+
+        // Service types per courier, for the admin "Ganti Kurir" dropdown and
+        // its validation. Companies not listed here have no selectable type.
+        'courier_types' => [
+            'jne' => ['reg', 'yes', 'oke'],
+            'jnt' => ['ez'],
+            'sicepat' => ['reg', 'best', 'halu'],
+        ],
     ],
 
     // BR-007 (2026-07-22): automatic commission payout. No account signed up

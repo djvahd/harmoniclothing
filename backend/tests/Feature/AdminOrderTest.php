@@ -135,6 +135,29 @@ class AdminOrderTest extends TestCase
             ->assertJsonPath('data.status', 'menunggu_pickup');
     }
 
+    public function test_admin_can_list_valid_couriers(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)->getJson('/api/admin/shipping/couriers')
+            ->assertOk()
+            ->assertJsonFragment(['company' => 'jne', 'types' => ['reg', 'yes', 'oke']]);
+    }
+
+    public function test_booking_rejects_unknown_courier_or_mismatched_type(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $order = Order::factory()->diprosesProduksi()->create();
+        $url = "/api/admin/orders/{$order->id}/shipment";
+
+        $this->actingAs($admin)->postJson($url, ['courier_company' => 'abc', 'courier_type' => 'reg'])
+            ->assertUnprocessable()->assertJsonValidationErrors('courier_company');
+        $this->actingAs($admin)->postJson($url, ['courier_company' => 'jne', 'courier_type' => 'ez'])
+            ->assertUnprocessable()->assertJsonValidationErrors('courier_type');
+        $this->actingAs($admin)->postJson($url, ['courier_company' => 'jne'])
+            ->assertUnprocessable()->assertJsonValidationErrors('courier_type');
+    }
+
     /** No override passed — defaults to whatever courier the customer picked at checkout. */
     public function test_admin_booking_defaults_to_the_checkout_time_courier(): void
     {

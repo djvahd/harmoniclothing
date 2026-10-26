@@ -484,11 +484,11 @@ class QcRegressionTest extends TestCase
         $admin = User::factory()->admin()->create();
         $order = Order::factory()->diprosesProduksi()->create(['courier_company' => 'jne', 'courier_type' => 'reg']);
 
-        $this->actingAs($admin)->postJson("/api/admin/orders/{$order->id}/shipment", ['courier_company' => 'gojek', 'courier_type' => 'instant'])
-            ->assertCreated()->assertJsonPath('data.courier', 'gojek')->assertJsonPath('data.courier_type', 'instant');
+        $this->actingAs($admin)->postJson("/api/admin/orders/{$order->id}/shipment", ['courier_company' => 'sicepat', 'courier_type' => 'reg'])
+            ->assertCreated()->assertJsonPath('data.courier', 'sicepat')->assertJsonPath('data.courier_type', 'reg');
 
         Http::assertSent(fn ($r) => str_contains($r->url(), 'api.biteship.com/v1/orders')
-            && $r['courier_company'] === 'gojek' && $r['courier_type'] === 'instant');
+            && $r['courier_company'] === 'sicepat' && $r['courier_type'] === 'reg');
         $this->assertSame('bs-10', Shipment::where('order_id', $order->id)->first()->biteship_order_id);
     }
 

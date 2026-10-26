@@ -960,6 +960,8 @@
         "design_reject": "Rejected a design",
         "creator_approve": "Approved a creator",
         "creator_reject": "Rejected a creator",
+        "user_deactivate": "Deactivated a user",
+        "user_activate": "Activated a user",
         "creator_ban": "Banned a creator",
         "order_status_update": "Changed an order status",
         "order_reject": "Rejected an order",
@@ -1040,8 +1042,15 @@
         "name": "Name",
         "email": "Email",
         "role": "Role",
-        "status": "Status"
+        "status": "Status",
+        "actions": "Actions"
       },
+      "deactivate": "Deactivate",
+      "activate": "Activate",
+      "deactivateConfirmTitle": "Deactivate account?",
+      "deactivateConfirmMessage": "Deactivate {name}? They cannot sign in until reactivated.",
+      "activateConfirmTitle": "Activate account?",
+      "activateConfirmMessage": "Reactivate {name}?",
       "empty": "No users yet.",
       "searchPlaceholder": "Search name or email",
       "roleAll": "All roles",
@@ -1105,9 +1114,8 @@
       "overrideCourier": "Change Courier",
       "overrideModal": {
         "title": "Change Courier",
-        "label": "Format company:type (e.g. jne:reg)",
-        "confirm": "Book",
-        "invalidFormat": "Use the format company:type, e.g. jne:reg."
+        "label": "Select courier",
+        "confirm": "Book"
       }
     },
     "reports": {

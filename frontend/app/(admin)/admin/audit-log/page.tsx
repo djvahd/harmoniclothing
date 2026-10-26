@@ -15,7 +15,7 @@ import { formatCurrency, formatDateTime } from "@/lib/format";
 /** Action codes the backend records (AuditLogService::record callers); unknown future codes fall back to the raw code. */
 const ACTIONS = [
   "product.create", "product.update", "variant.create", "variant.update", "bulk_pricing_tier.create",
-  "design.approve", "design.reject", "creator.approve", "creator.reject", "creator.ban",
+  "design.approve", "design.reject", "creator.approve", "creator.reject", "creator.ban", "user.deactivate", "user.activate",
   "order.status_update", "order.reject", "order.shipment_book", "payout.paid", "notification_setting.update",
 ];
 
