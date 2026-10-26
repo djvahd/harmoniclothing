@@ -843,8 +843,12 @@
     },
     "orders": {
       "title": "Manage Orders",
+      "searchPlaceholder": "Search order no. or customer",
+      "statusAll": "All statuses",
       "columns": {
         "orderNumber": "Order No.",
+        "customer": "Customer",
+        "date": "Date",
         "total": "Total",
         "status": "Status",
         "actions": "Actions"
@@ -1037,7 +1041,27 @@
         "role": "Role",
         "status": "Status"
       },
-      "empty": "No users yet."
+      "empty": "No users yet.",
+      "searchPlaceholder": "Search name or email",
+      "roleAll": "All roles",
+      "statusAll": "All statuses",
+      "roles": {
+        "customer": "Customer",
+        "creator": "Creator",
+        "admin": "Admin"
+      },
+      "statuses": {
+        "aktif": "Active",
+        "nonaktif": "Inactive",
+        "banned": "Banned"
+      }
+    },
+    "payoutMethods": {
+        "bank_transfer": "Bank Transfer",
+        "gopay": "GoPay",
+        "ovo": "OVO",
+        "dana": "DANA",
+        "shopeepay": "ShopeePay"
     },
     "payments": {
       "title": "Manage Payments & Invoices",
@@ -1081,7 +1105,8 @@
       "overrideModal": {
         "title": "Change Courier",
         "label": "Format company:type (e.g. jne:reg)",
-        "confirm": "Book"
+        "confirm": "Book",
+        "invalidFormat": "Use the format company:type, e.g. jne:reg."
       }
     },
     "reports": {
@@ -1175,6 +1200,9 @@
         "nameId": "Name (ID)",
         "nameEn": "Name (EN)",
         "basePrice": "Base Price",
+        "basePriceHint": "Minimum Rp 1.",
+        "category": "Category",
+        "categoryUnset": "No category",
         "segment": "Segment",
         "segmentUnset": "Unspecified",
         "segmentMen": "Men's",
@@ -1196,6 +1224,7 @@
         "material": "Material",
         "priceAddon": "Price Add-on",
         "mockupAssetPath": "Mockup Photo",
+        "mockupRequired": "Required before the variant can be saved.",
         "mockupDropzone": "Click to upload photo",
         "mockupUploading": "Uploading...",
         "printArea": "Print Area",

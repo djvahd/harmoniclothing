@@ -843,8 +843,12 @@
     },
     "orders": {
       "title": "Kelola Pesanan",
+      "searchPlaceholder": "Cari no. pesanan atau customer",
+      "statusAll": "Semua status",
       "columns": {
         "orderNumber": "No. Pesanan",
+        "customer": "Customer",
+        "date": "Tanggal",
         "total": "Total",
         "status": "Status",
         "actions": "Aksi"
@@ -884,16 +888,16 @@
         "users": "Kelola User & Creator",
         "creatorApproval": "Approval Creator",
         "designApproval": "Approval Desain",
-        "catalog": "Kelola Product Catalog",
+        "catalog": "Kelola Katalog Produk",
         "production": "Kelola Antrian Produksi",
         "orders": "Kelola Pesanan",
         "payments": "Kelola Pembayaran & Invoice",
         "payouts": "Pencairan Komisi",
         "shipments": "Kelola Pengiriman",
-        "chat": "Chat Management",
+        "chat": "Manajemen Chat",
         "notificationSettings": "Konfigurasi Notifikasi",
-        "salesReport": "Sales Report",
-        "auditLog": "Audit Log"
+        "salesReport": "Laporan Penjualan",
+        "auditLog": "Log Audit"
       }
     },
     "header": {
@@ -1037,7 +1041,27 @@
         "role": "Role",
         "status": "Status"
       },
-      "empty": "Belum ada pengguna."
+      "empty": "Belum ada pengguna.",
+      "searchPlaceholder": "Cari nama atau email",
+      "roleAll": "Semua peran",
+      "statusAll": "Semua status",
+      "roles": {
+        "customer": "Customer",
+        "creator": "Creator",
+        "admin": "Admin"
+      },
+      "statuses": {
+        "aktif": "Aktif",
+        "nonaktif": "Nonaktif",
+        "banned": "Diblokir"
+      }
+    },
+    "payoutMethods": {
+        "bank_transfer": "Transfer Bank",
+        "gopay": "GoPay",
+        "ovo": "OVO",
+        "dana": "DANA",
+        "shopeepay": "ShopeePay"
     },
     "payments": {
       "title": "Kelola Pembayaran & Invoice",
@@ -1081,7 +1105,8 @@
       "overrideModal": {
         "title": "Ganti Kurir",
         "label": "Format perusahaan:tipe (mis. jne:reg)",
-        "confirm": "Booking"
+        "confirm": "Booking",
+        "invalidFormat": "Format harus perusahaan:tipe, contoh jne:reg."
       }
     },
     "reports": {
@@ -1175,12 +1200,15 @@
         "nameId": "Nama (ID)",
         "nameEn": "Nama (EN)",
         "basePrice": "Harga Dasar",
+        "basePriceHint": "Minimal Rp 1.",
+        "category": "Kategori",
+        "categoryUnset": "Tanpa kategori",
         "segment": "Segmen",
         "segmentUnset": "Tidak ditentukan",
-        "segmentMen": "Men's",
-        "segmentWomen": "Women's",
+        "segmentMen": "Pria",
+        "segmentWomen": "Wanita",
         "segmentUnisex": "Unisex",
-        "segmentKids": "Kids",
+        "segmentKids": "Anak",
         "descriptionId": "Deskripsi (ID)",
         "descriptionEn": "Deskripsi (EN)",
         "isActive": "Produk aktif (tampil di katalog)",
@@ -1196,6 +1224,7 @@
         "material": "Material",
         "priceAddon": "Tambahan Harga",
         "mockupAssetPath": "Foto Mockup",
+        "mockupRequired": "Wajib diunggah sebelum varian bisa disimpan.",
         "mockupDropzone": "Klik untuk unggah foto",
         "mockupUploading": "Mengunggah...",
         "printArea": "Print Area",

@@ -20,6 +20,7 @@ import { toast } from "@/store/toast-store";
 /** BR-007 (manual payout): admin transfers the money outside the app, then records the reference here. */
 export default function PencairanKomisiPage() {
   const t = useTranslations("admin.payouts");
+  const tPayout = useTranslations("admin.payoutMethods");
   const { data, isLoading, error } = useSWR("/admin/payouts", getPayouts);
   const rows = data?.data ?? [];
   const [paying, setPaying] = useState<PayoutRow | null>(null);
@@ -63,7 +64,7 @@ export default function PencairanKomisiPage() {
               <td className="p-4 text-text-secondary">
                 {row.has_destination ? (
                   <div className="flex flex-col">
-                    <span>{`${row.payout_method} · ${row.payout_account_number}`}</span>
+                    <span>{`${row.payout_method ? tPayout(row.payout_method) : "-"} · ${row.payout_account_number}`}</span>
                     <span className="text-xs">{row.payout_account_holder}</span>
                   </div>
                 ) : (

@@ -28,6 +28,7 @@ import {
 export default function ApprovalCreatorPage() {
   const t = useTranslations("admin.creatorApproval");
   const tCommon = useTranslations("common");
+  const tPayout = useTranslations("admin.payoutMethods");
   const { data, isLoading } = useSWR("/admin/creators/pending", getPendingCreators);
   const creators = data?.data ?? [];
   const [loadingId, setLoadingId] = useState<number | null>(null);
@@ -111,7 +112,7 @@ export default function ApprovalCreatorPage() {
                   )}
                   {creator.payout_method && (
                     <p className="font-body text-xs text-text-secondary">
-                      {t("payoutLabel")}: {creator.payout_method} · {creator.payout_account_number} {t("accountHolderPrefix")} {creator.payout_account_holder}
+                      {t("payoutLabel")}: {tPayout(creator.payout_method)} · {creator.payout_account_number} {t("accountHolderPrefix")} {creator.payout_account_holder}
                     </p>
                   )}
                   {creator.is_minor && creator.guardian_name && (
