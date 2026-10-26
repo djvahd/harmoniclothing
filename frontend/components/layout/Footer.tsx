@@ -40,10 +40,10 @@ export default async function Footer() {
           <p className="w-[200px] font-body text-xs text-text-on-accent">{t("tagline")}</p>
         </div>
         {FOOTER_COLUMNS.map((column) => (
-          <div key={column.titleKey} className="flex flex-col gap-2">
+          <div key={column.titleKey} className="flex flex-col md:gap-2">
             <p className="font-body text-xs font-bold text-text-on-accent">{t(column.titleKey)}</p>
             {column.links.map((link) => (
-              <a key={link.href} href={link.href} className="font-body text-xs text-text-on-accent">
+              <a key={link.href} href={link.href} className="inline-flex min-h-11 items-center font-body text-xs text-text-on-accent md:min-h-0">
                 {t(link.key)}
               </a>
             ))}

@@ -128,7 +128,7 @@ export default function SiteHeader() {
       <button
         type="button"
         aria-label={t("openMenu")}
-        className="animate-fade-slide-in text-text-primary lg:hidden"
+        className="-m-2.5 flex size-11 animate-fade-slide-in items-center justify-center text-text-primary lg:hidden"
         onClick={() => setDrawerOpen(true)}
       >
         <Menu className="size-6" />

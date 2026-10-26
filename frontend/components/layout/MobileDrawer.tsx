@@ -21,7 +21,7 @@ export default function MobileDrawer({ open, onClose, children }: MobileDrawerPr
           type="button"
           aria-label={t("closeMenu")}
           onClick={onClose}
-          className="self-end text-text-secondary"
+          className="-m-2.5 flex size-11 items-center justify-center self-end text-text-secondary"
         >
           <X className="size-5" />
         </button>

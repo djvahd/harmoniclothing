@@ -50,7 +50,7 @@ export default function LanguageSwitcher({
             aria-pressed={l === locale}
             onClick={() => handleChange(l)}
             className={clsx(
-              "rounded-full px-2 py-0.5 font-body text-xs font-medium uppercase transition-colors",
+              "inline-flex min-h-11 min-w-11 items-center justify-center rounded-full px-2 py-0.5 font-body md:min-h-0 md:min-w-0 text-xs font-medium uppercase transition-colors",
               variant === "dark"
                 ? l === locale
                   ? "bg-surface text-primary"
