@@ -16,9 +16,10 @@ interface SidebarNavProps {
   groups: SidebarGroup[];
   className?: string;
   onNavigate?: () => void;
+  ariaLabel?: string;
 }
 
-export default function SidebarNav({ groups, className, onNavigate }: SidebarNavProps) {
+export default function SidebarNav({ groups, className, onNavigate, ariaLabel }: SidebarNavProps) {
   const t = useTranslations("layout.header");
   const tLogoutConfirm = useTranslations("ui.logoutConfirm");
   const tCommon = useTranslations("common");
@@ -28,6 +29,7 @@ export default function SidebarNav({ groups, className, onNavigate }: SidebarNav
   return (
     <>
     <nav
+      aria-label={ariaLabel}
       className={clsx(
         "flex w-full flex-col md:w-[260px] gap-0.5 rounded-md border border-border bg-surface p-3",
         className,

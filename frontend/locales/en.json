@@ -850,6 +850,8 @@
       "startProduction": "Start Production"
     },
     "sidebar": {
+      "menuLabel": "Admin menu",
+      "skipToContent": "Skip to content",
       "dashboard": "Dashboard",
       "groups": {
         "management": "MANAGEMENT",
@@ -1046,7 +1048,13 @@
     "chat": {
       "title": "Chat Management",
       "noConversations": "No conversations yet.",
-      "replyPlaceholder": "Reply to message..."
+      "replyPlaceholder": "Reply to message...",
+      "replyLabel": "Reply to message",
+      "sendLabel": "Send message",
+      "messagesLabel": "Conversation history",
+      "threadsLabel": "Conversation list",
+      "offline": "Real-time connection lost. Messages refresh automatically every few seconds.",
+      "online": "Connected"
     },
     "catalog": {
       "title": "Manage Product Catalog",

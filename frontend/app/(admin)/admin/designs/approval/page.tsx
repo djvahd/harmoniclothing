@@ -65,7 +65,7 @@ export default function ApprovalDesainPage() {
                 <div className="flex items-center gap-3">
                   <div className="relative size-14 shrink-0 overflow-hidden rounded-sm bg-border">
                     {thumbnail && (
-                      <Image src={thumbnail} alt={design.title} fill className="object-cover" />
+                      <Image src={thumbnail} alt={design.title} fill sizes="56px" className="object-cover" />
                     )}
                   </div>
                   <div className="flex flex-col">

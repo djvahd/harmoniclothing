@@ -850,6 +850,8 @@
       "startProduction": "Mulai Produksi"
     },
     "sidebar": {
+      "menuLabel": "Menu admin",
+      "skipToContent": "Lewati ke konten",
       "dashboard": "Dashboard",
       "groups": {
         "management": "MANAJEMEN",
@@ -1046,7 +1048,13 @@
     "chat": {
       "title": "Chat Management",
       "noConversations": "Belum ada percakapan.",
-      "replyPlaceholder": "Balas pesan..."
+      "replyPlaceholder": "Balas pesan...",
+      "replyLabel": "Balas pesan",
+      "sendLabel": "Kirim pesan",
+      "messagesLabel": "Riwayat percakapan",
+      "threadsLabel": "Daftar percakapan",
+      "offline": "Koneksi real-time terputus. Pesan diperbarui otomatis tiap beberapa detik.",
+      "online": "Terhubung"
     },
     "catalog": {
       "title": "Kelola Product Catalog",
