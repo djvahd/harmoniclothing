@@ -847,7 +847,10 @@
         "actions": "Actions"
       },
       "empty": "No production queue yet.",
-      "startProduction": "Start Production"
+      "startProduction": "Start Production",
+      "startConfirmTitle": "Start production?",
+      "startConfirmMessage": "Start production for order {orderNumber}? The order status will change and cannot be undone from here.",
+      "startSuccess": "Order production started."
     },
     "sidebar": {
       "dashboard": "Dashboard",
@@ -941,6 +944,8 @@
       "reject": "Reject",
       "approve": "Approve",
       "approveSuccess": "Creator approved successfully.",
+      "approveConfirmTitle": "Approve creator?",
+      "approveConfirmMessage": "Approve {name} as a creator? They will be notified.",
       "rejectSuccess": "Creator application rejected.",
       "rejectModal": {
         "title": "Reject Creator Application",
@@ -954,6 +959,8 @@
       "reject": "Reject",
       "approve": "Approve",
       "approveSuccess": "Design approved successfully.",
+      "approveConfirmTitle": "Approve design?",
+      "approveConfirmMessage": "Approve design \"{name}\"? The creator will be notified.",
       "rejectSuccess": "Design rejected.",
       "rejectModal": {
         "title": "Reject Design",
@@ -1059,6 +1066,7 @@
       "empty": "No products yet.",
       "productVariants": "Product Variants",
       "inactive": "Inactive",
+      "toggleProduct": "Show/hide details and variants of {name}",
       "productDetails": "Product Details",
       "bulkTiers": {
         "title": "Bulk Order Price Tiers",
@@ -1070,7 +1078,9 @@
         "pricePerUnit": "Price per Unit",
         "empty": "No price tiers yet.",
         "add": "Add Tier",
-        "saved": "Price tier added."
+        "saved": "Price tier added.",
+        "confirmTitle": "Add price tier?",
+        "confirmMessage": "This tier is global and cannot be edited or deleted once created. Continue?"
       },
       "variantColumns": {
         "color": "Color",

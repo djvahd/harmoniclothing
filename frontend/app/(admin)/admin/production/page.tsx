@@ -13,6 +13,8 @@ import DataTable from "@/components/ui/DataTable";
 import EmptyState from "@/components/ui/EmptyState";
 import { getProductionQueue, updateOrderStatus } from "@/services/admin";
 import { formatCurrency } from "@/lib/format";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
+import { toast } from "@/store/toast-store";
 import { ORDER_STATUS_VARIANT } from "@/lib/order-status";
 import type { Order } from "@/types/order";
 
@@ -22,12 +24,17 @@ export default function KelolaAntrianProduksiPage() {
   const { data, isLoading } = useSWR("/admin/production-queue", getProductionQueue);
   const orders = data?.data ?? [];
   const [loadingId, setLoadingId] = useState<number | null>(null);
+  const [starting, setStarting] = useState<Order | null>(null);
 
-  async function handleAdvance(id: number) {
+  async function handleAdvance() {
+    if (!starting) return;
+    const id = starting.id;
+    setStarting(null);
     setLoadingId(id);
     try {
       await updateOrderStatus(id);
       mutate("/admin/production-queue");
+      toast(t("startSuccess"), "success");
     } finally {
       setLoadingId(null);
     }
@@ -62,7 +69,7 @@ export default function KelolaAntrianProduksiPage() {
               </td>
               <td className="p-4">
                 {order.status === "menunggu_approval" && (
-                  <Button loading={loadingId === order.id} onClick={() => handleAdvance(order.id)}>
+                  <Button loading={loadingId === order.id} onClick={() => setStarting(order)}>
                     {t("startProduction")}
                   </Button>
                 )}
@@ -73,6 +80,15 @@ export default function KelolaAntrianProduksiPage() {
           )}
         />
       </div>
+      <ConfirmDialog
+        open={starting !== null}
+        title={t("startConfirmTitle")}
+        message={t("startConfirmMessage", { orderNumber: starting?.order_number ?? "" })}
+        confirmLabel={t("startProduction")}
+        cancelLabel={tCommon("cancel")}
+        onConfirm={handleAdvance}
+        onCancel={() => setStarting(null)}
+      />
     </SidebarPageShell>
   );
 }

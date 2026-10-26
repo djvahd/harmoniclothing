@@ -8,6 +8,7 @@ import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Button from "@/components/ui/Button";
 import PromptModal from "@/components/ui/PromptModal";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import BanCreatorModal from "@/components/admin/BanCreatorModal";
 import { swrKeys } from "@/lib/swr-keys";
 import LoadingState from "@/components/ui/LoadingState";
@@ -26,10 +27,12 @@ import {
 
 export default function ApprovalCreatorPage() {
   const t = useTranslations("admin.creatorApproval");
+  const tCommon = useTranslations("common");
   const { data, isLoading } = useSWR("/admin/creators/pending", getPendingCreators);
   const creators = data?.data ?? [];
   const [loadingId, setLoadingId] = useState<number | null>(null);
   const [rejectingId, setRejectingId] = useState<number | null>(null);
+  const [approving, setApproving] = useState<AdminCreatorProfile | null>(null);
   const { data: activeData } = useSWR(swrKeys.adminCreators("aktif"), () => getCreatorsByStatus("aktif"));
   const activeCreators = activeData?.data ?? [];
   const [banning, setBanning] = useState<AdminCreatorProfile | null>(null);
@@ -48,7 +51,10 @@ export default function ApprovalCreatorPage() {
     }
   }
 
-  async function handleApprove(id: number) {
+  async function handleApprove() {
+    if (!approving) return;
+    const id = approving.id;
+    setApproving(null);
     setLoadingId(id);
     try {
       await approveCreator(id);
@@ -117,7 +123,7 @@ export default function ApprovalCreatorPage() {
                     <a
                       href={kycDocumentUrl(creator.id)}
                       target="_blank"
-                      rel="noreferrer"
+                      rel="noopener"
                       className="font-body text-xs font-medium text-primary underline"
                     >
                       {t("viewKtpPhoto")}
@@ -132,7 +138,7 @@ export default function ApprovalCreatorPage() {
                   >
                     {t("reject")}
                   </Button>
-                  <Button loading={loadingId === creator.id} onClick={() => handleApprove(creator.id)}>
+                  <Button loading={loadingId === creator.id} onClick={() => setApproving(creator)}>
                     {t("approve")}
                   </Button>
                 </div>
@@ -162,6 +168,15 @@ export default function ApprovalCreatorPage() {
         creatorName={banning?.brand_name ?? banning?.user.name ?? ""}
         onConfirm={handleBan}
         onCancel={() => setBanning(null)}
+      />
+      <ConfirmDialog
+        open={approving !== null}
+        title={t("approveConfirmTitle")}
+        message={t("approveConfirmMessage", { name: approving?.brand_name ?? approving?.user.name ?? "" })}
+        confirmLabel={t("approve")}
+        cancelLabel={tCommon("cancel")}
+        onConfirm={handleApprove}
+        onCancel={() => setApproving(null)}
       />
       <PromptModal
         open={rejectingId !== null}

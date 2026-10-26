@@ -5,6 +5,7 @@ import { mutate } from "swr";
 import { useTranslations } from "next-intl";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { toast } from "@/store/toast-store";
 import { useBulkPricingTiers } from "@/hooks/useBulkPricing";
 import { createBulkPricingTier } from "@/services/admin";
@@ -22,9 +23,15 @@ export default function BulkPricingTiers() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [confirming, setConfirming] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setConfirming(true);
+  }
+
+  async function handleConfirm() {
+    setConfirming(false);
     setSaving(true);
     setError(null);
     try {
@@ -85,6 +92,15 @@ export default function BulkPricingTiers() {
           <Button type="submit" loading={saving}>{t("add")}</Button>
         </div>
       </form>
+      <ConfirmDialog
+        open={confirming}
+        title={t("confirmTitle")}
+        message={t("confirmMessage")}
+        confirmLabel={t("add")}
+        cancelLabel={tCommon("cancel")}
+        onConfirm={handleConfirm}
+        onCancel={() => setConfirming(false)}
+      />
     </section>
   );
 }
