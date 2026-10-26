@@ -8,11 +8,13 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   icon?: LucideIcon;
   error?: string;
+  /** Replaces the browser's default (English) message when the value fails `pattern`/`required`. */
+  invalidMessage?: string;
 }
 
 /** Labeled text input with optional leading icon and inline error message. */
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, icon: Icon, error, className, id, ...props }, ref) => {
+  ({ label, icon: Icon, error, invalidMessage, className, id, onInvalid, onInput, ...props }, ref) => {
     // Always connect label and input (and the error text) so screen readers can announce them.
     const generatedId = useId();
     const inputId = id ?? generatedId;
@@ -44,6 +46,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               className,
             )}
             {...props}
+            onInvalid={(e) => {
+              if (invalidMessage) e.currentTarget.setCustomValidity(invalidMessage);
+              onInvalid?.(e);
+            }}
+            onInput={(e) => {
+              if (invalidMessage) e.currentTarget.setCustomValidity("");
+              onInput?.(e);
+            }}
           />
         </div>
         {error && (

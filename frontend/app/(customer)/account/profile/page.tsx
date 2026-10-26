@@ -50,7 +50,7 @@ export default function KelolaProfilPage() {
         )}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-md border border-border bg-surface p-5">
           <Input label={t("fullName")} value={name} onChange={(e) => setName(e.target.value)} required />
-          <Input label={t("phoneNumber")} value={phone} onChange={(e) => setPhone(e.target.value)} inputMode="tel" pattern="[0-9+ ]{9,20}" maxLength={20} />
+          <Input label={t("phoneNumber")} value={phone} onChange={(e) => setPhone(e.target.value)} inputMode="tel" pattern="[0-9+ ]{9,20}" invalidMessage={t("phoneInvalid")} maxLength={20} />
           <Input label={t("email")} value={user?.email ?? ""} disabled />
           {saved && <p className="font-body text-xs text-accent">{t("saveSuccess")}</p>}
           <Button type="submit" loading={loading}>

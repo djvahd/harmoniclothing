@@ -649,6 +649,7 @@
       "title": "Manage Profile",
       "fullName": "Full Name",
       "phoneNumber": "Phone Number",
+      "phoneInvalid": "Phone number must be 9-20 characters of digits, spaces, or +.",
       "email": "Email",
       "saveSuccess": "Changes saved successfully.",
       "saveChanges": "Save Changes",
@@ -671,6 +672,8 @@
         "city": "City/Regency",
         "district": "District",
         "postalCode": "Postal Code",
+        "phoneInvalid": "Phone number must be 9-20 characters of digits, spaces, or +.",
+        "postalCodeInvalid": "Postal code must be 5 digits.",
         "addressLine": "Full Address"
       },
       "setAsDefault": "Set as default address",

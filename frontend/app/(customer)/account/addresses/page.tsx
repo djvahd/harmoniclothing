@@ -107,11 +107,11 @@ export default function AddressBookPage() {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <Input label={t("fields.label")} value={form.label} onChange={(e) => update("label", e.target.value)} required />
               <Input label={t("fields.recipientName")} value={form.recipient_name} onChange={(e) => update("recipient_name", e.target.value)} required />
-              <Input label={t("fields.phone")} value={form.phone} onChange={(e) => update("phone", e.target.value)} inputMode="tel" pattern="[0-9+ ]{9,20}" maxLength={20} required />
+              <Input label={t("fields.phone")} value={form.phone} onChange={(e) => update("phone", e.target.value)} inputMode="tel" pattern="[0-9+ ]{9,20}" invalidMessage={t("fields.phoneInvalid")} maxLength={20} required />
               <Input label={t("fields.province")} value={form.province} onChange={(e) => update("province", e.target.value)} required />
               <Input label={t("fields.city")} value={form.city} onChange={(e) => update("city", e.target.value)} required />
               <Input label={t("fields.district")} value={form.district} onChange={(e) => update("district", e.target.value)} required />
-              <Input label={t("fields.postalCode")} value={form.postal_code} onChange={(e) => update("postal_code", e.target.value)} inputMode="numeric" pattern="[0-9]{5}" maxLength={5} required />
+              <Input label={t("fields.postalCode")} value={form.postal_code} onChange={(e) => update("postal_code", e.target.value)} inputMode="numeric" pattern="[0-9]{5}" invalidMessage={t("fields.postalCodeInvalid")} maxLength={5} required />
             </div>
             <Input label={t("fields.addressLine")} value={form.address_line} onChange={(e) => update("address_line", e.target.value)} required />
             <label className="flex items-center gap-2 font-body text-sm text-text-secondary">
