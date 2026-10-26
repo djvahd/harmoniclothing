@@ -2,17 +2,17 @@
 
 import clsx from "clsx";
 import { Bell } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import AccountSidebar from "@/components/layout/AccountSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import LoadingState from "@/components/ui/LoadingState";
 import EmptyState from "@/components/ui/EmptyState";
+import { formatDateTime } from "@/lib/format";
 import { markNotificationRead } from "@/services/notifications";
 import { useNotifications, invalidateNotifications } from "@/hooks/useNotifications";
 
 export default function NotifikasiPage() {
   const t = useTranslations("customer.notifications");
-  const locale = useLocale();
   const { notifications, isLoading } = useNotifications();
 
   async function handleClick(id: number, isRead: boolean) {
@@ -48,7 +48,7 @@ export default function NotifikasiPage() {
                 <p className="font-body text-sm font-semibold text-text-primary">{n.title}</p>
                 <p className="font-body text-sm text-text-secondary">{n.body}</p>
                 <p className="font-body text-xs text-text-secondary">
-                  {new Date(n.created_at).toLocaleString(locale === "id" ? "id-ID" : "en-US")}
+                  {formatDateTime(n.created_at)}
                 </p>
               </div>
             </button>

@@ -131,6 +131,7 @@ export default function SalesReportPage() {
 
             <div className="rounded-md border border-border bg-surface p-5">
               <p className="font-body text-sm font-semibold text-text-primary">{t("topProducts")}</p>
+              <p className="mt-1 font-body text-xs text-text-secondary">{t("topProductsNote")}</p>
               <div className="mt-3 flex flex-col gap-2">
                 {report.top_products.map((p) => (
                   <div key={p.product_id} className="flex justify-between font-body text-sm">
