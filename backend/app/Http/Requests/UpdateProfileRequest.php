@@ -20,7 +20,14 @@ class UpdateProfileRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:150'],
-            'phone' => ['nullable', 'string', 'max:20'],
+            'phone' => ['nullable', 'string', 'regex:/^\+?[0-9][0-9 ]{7,18}[0-9]$/'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'phone.regex' => 'Nomor telepon hanya boleh berisi angka, spasi, atau awalan +, dengan panjang 9-20 karakter.',
         ];
     }
 }
