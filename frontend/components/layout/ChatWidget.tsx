@@ -58,7 +58,7 @@ export default function ChatWidget() {
   if (!user || user.role === "admin") return null;
 
   return (
-    <div className="fixed bottom-10 right-10 z-40">
+    <div className="fixed bottom-24 right-4 z-40 md:bottom-10 md:right-10">
       {panelMounted && (
         <div
           className={`flex h-[380px] w-[340px] flex-col overflow-hidden rounded-md border border-border bg-surface shadow-lg ${
