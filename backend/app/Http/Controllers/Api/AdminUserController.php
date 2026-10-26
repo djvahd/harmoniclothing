@@ -18,7 +18,7 @@ class AdminUserController extends Controller
         $request->validate(['per_page' => ['sometimes', 'integer', 'min:1', 'max:100']]);
 
         $users = $this->users->paginate(
-            $request->only(['role', 'status']),
+            $request->only(['role', 'status', 'search']),
             (int) $request->query('per_page', 20),
         );
 

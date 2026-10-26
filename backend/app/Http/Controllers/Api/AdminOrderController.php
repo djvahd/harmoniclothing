@@ -26,6 +26,7 @@ class AdminOrderController extends Controller
         $orders = $this->orders->listAllOrders(
             $request->query('status'),
             (int) $request->query('per_page', 20),
+            $request->query('search'),
         );
 
         return response()->json([

@@ -23,6 +23,8 @@ class UserResource extends JsonResource
             'role' => $this->role->value,
             'status' => $this->status->value,
             'email_verified_at' => $this->email_verified_at,
+            // Only on GET /admin/users (relation eager-loaded): lets the admin UI tell creators apart from customers.
+            'creator_status' => $this->whenLoaded('creatorProfile', fn () => $this->creatorProfile?->status),
         ];
     }
 }

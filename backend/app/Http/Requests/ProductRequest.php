@@ -26,8 +26,13 @@ class ProductRequest extends FormRequest
             'name_en' => ['required', 'string', 'max:150'],
             'description_id' => ['nullable', 'string'],
             'description_en' => ['nullable', 'string'],
-            'base_price' => ['required', 'numeric', 'min:0'],
+            'base_price' => ['required', 'numeric', 'min:1'],
             'is_active' => ['sometimes', 'boolean'],
         ];
+    }
+
+    public function messages(): array
+    {
+        return ['base_price.min' => 'Harga dasar minimal Rp 1.'];
     }
 }

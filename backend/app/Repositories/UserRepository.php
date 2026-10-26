@@ -21,7 +21,13 @@ class UserRepository
     public function paginate(array $filters, int $perPage): LengthAwarePaginator
     {
         return User::query()
-            ->when($filters['role'] ?? null, fn ($query, $role) => $query->where('role', $role))
+            ->with('creatorProfile:id,user_id,status')
+            ->when($filters['role'] ?? null, fn ($query, $role) => $role === 'creator'
+                ? $query->whereHas('creatorProfile', fn ($q) => $q->whereIn('status', ['aktif', 'nonaktif', 'banned']))
+                : $query->where('role', $role))
+            ->when($filters['search'] ?? null, fn ($query, $search) => $query->where(
+                fn ($q) => $q->where('name', 'like', "%{$search}%")->orWhere('email', 'like', "%{$search}%")
+            ))
             ->when($filters['status'] ?? null, fn ($query, $status) => $query->where('status', $status))
             ->latest()->latest('id')
             ->paginate($perPage);

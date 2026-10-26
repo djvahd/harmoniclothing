@@ -31,10 +31,14 @@ class OrderRepository
      * this covers every status with an optional filter, paginated, same
      * eager-load set as paginateForUser() plus 'user' for the admin view.
      */
-    public function paginateAll(?string $status, int $perPage): LengthAwarePaginator
+    public function paginateAll(?string $status, int $perPage, ?string $search = null): LengthAwarePaginator
     {
         return Order::query()
             ->when($status, fn ($query, $status) => $query->where('status', $status))
+            ->when($search, fn ($query, $search) => $query->where(
+                fn ($q) => $q->where('order_number', 'like', "%{$search}%")
+                    ->orWhereHas('user', fn ($u) => $u->where('name', 'like', "%{$search}%")->orWhere('email', 'like', "%{$search}%"))
+            ))
             ->with(['items.productVariant.product', 'items.design', 'shipment', 'user'])
             ->latest()->latest('id')
             ->paginate($perPage);

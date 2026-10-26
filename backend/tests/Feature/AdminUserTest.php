@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\CreatorProfile;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -41,5 +42,19 @@ class AdminUserTest extends TestCase
         $response = $this->actingAs($admin)->getJson('/api/admin/users?role=admin');
 
         $response->assertOk()->assertJsonCount(1, 'data');
+    }
+
+    public function test_admin_can_search_users_and_see_creator_status(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $creator = User::factory()->create(['name' => 'Sinta Creator']);
+        CreatorProfile::factory()->aktif()->create(['user_id' => $creator->id]);
+        User::factory()->create(['name' => 'Andi Biasa']);
+
+        $response = $this->actingAs($admin)->getJson('/api/admin/users?search=Sinta');
+        $response->assertOk()->assertJsonCount(1, 'data')->assertJsonPath('data.0.creator_status', 'aktif');
+
+        $this->actingAs($admin)->getJson('/api/admin/users?role=creator')
+            ->assertOk()->assertJsonCount(1, 'data')->assertJsonPath('data.0.id', $creator->id);
     }
 }
