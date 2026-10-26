@@ -89,8 +89,8 @@ export default function VariantForm({
           onChange={(e) => setForm((f) => ({ ...f, price_modifier: e.target.value }))}
         />
         <div className="flex flex-col gap-1.5">
-          <label className="font-body text-xs font-medium text-text-secondary">{t("mockupAssetPath")}</label>
-          <label className="flex cursor-pointer items-center gap-2 rounded-sm border border-dashed border-border px-3 py-2.5 text-center">
+          <span className="font-body text-xs font-medium text-text-secondary">{t("mockupAssetPath")} *</span>
+          <label className="flex cursor-pointer items-center gap-2 rounded-sm border border-dashed border-border px-3 py-2.5 text-center focus-within:border-primary">
             <Upload className="size-4 shrink-0 text-text-secondary" />
             <span className="truncate font-body text-xs text-text-secondary">
               {uploading ? t("mockupUploading") : mockupFileName ?? t("mockupDropzone")}
@@ -98,10 +98,11 @@ export default function VariantForm({
             <input
               type="file"
               accept="image/png,image/svg+xml"
-              className="hidden"
+              className="sr-only"
               onChange={(e) => handleMockupUpload(e.target.files?.[0])}
             />
           </label>
+          {!form.mockup_asset_path && <p className="font-body text-xs text-text-secondary">{t("mockupRequired")}</p>}
         </div>
       </div>
       <div className="flex flex-col gap-1.5">

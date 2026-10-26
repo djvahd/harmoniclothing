@@ -1,4 +1,6 @@
 export type UserRole = "customer" | "admin";
+/** Effective role shown in the admin user list (a creator is a `customer` account with a creator profile). */
+export type UserListRole = UserRole | "creator";
 export type UserStatus = "aktif" | "nonaktif" | "banned";
 
 export interface User {
@@ -10,6 +12,8 @@ export interface User {
   role: UserRole;
   status: UserStatus;
   email_verified_at: string | null;
+  /** Only on GET /admin/users: status of the creator profile, null when the user has none. */
+  creator_status?: string | null;
 }
 
 export interface Address {
