@@ -14,7 +14,7 @@ export default function StatCard({ icon: Icon, label, value }: StatCardProps) {
         <Icon className="size-5 text-accent" />
       </div>
       <p className="text-center font-body text-xs font-medium text-text-secondary">{label}</p>
-      <p className="max-w-full min-w-0 text-center [overflow-wrap:anywhere] font-heading text-[20px] font-semibold text-text-primary sm:text-[26px]">
+      <p className="max-w-full min-w-0 text-center font-heading text-[clamp(16px,1.9vw,26px)] font-semibold whitespace-nowrap text-text-primary">
         {value}
       </p>
     </div>
