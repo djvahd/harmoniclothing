@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Services\BiteshipService;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 /** POST /admin/orders/{id}/shipment — FR-022. */
 class ShipmentRequest extends FormRequest
@@ -19,9 +21,12 @@ class ShipmentRequest extends FormRequest
      */
     public function rules(): array
     {
+        $couriers = collect(app(BiteshipService::class)->availableCouriers());
+        $types = $couriers->firstWhere('company', $this->input('courier_company'))['types'] ?? [];
+
         return [
-            'courier_company' => ['nullable', 'string', 'max:50'],
-            'courier_type' => ['nullable', 'string', 'max:50'],
+            'courier_company' => ['nullable', 'required_with:courier_type', 'string', Rule::in($couriers->pluck('company')->all())],
+            'courier_type' => ['nullable', 'required_with:courier_company', 'string', Rule::in($types)],
         ];
     }
 }

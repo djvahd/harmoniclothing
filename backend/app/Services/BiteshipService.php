@@ -15,6 +15,27 @@ use Illuminate\Support\Facades\Http;
 class BiteshipService
 {
     /**
+     * Valid courier/service pairs for the admin override dropdown: companies from
+     * BITESHIP_COURIERS, types from the static map. No Biteship API call.
+     *
+     * @return array<int, array{company: string, types: array<int, string>}>
+     */
+    public function availableCouriers(): array
+    {
+        $companies = array_filter(array_map('trim', explode(',', (string) config('services.biteship.couriers'))));
+        $map = config('services.biteship.courier_types', []);
+
+        $couriers = [];
+        foreach ($companies as $company) {
+            if (! empty($map[$company])) {
+                $couriers[] = ['company' => $company, 'types' => array_values($map[$company])];
+            }
+        }
+
+        return $couriers;
+    }
+
+    /**
      * POST /checkout/shipping-rates — customer-facing rate check, called
      * server-side both when the customer previews rates and again (with the
      * customer's chosen courier) during checkout itself, so the price

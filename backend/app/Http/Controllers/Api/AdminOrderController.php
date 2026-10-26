@@ -9,6 +9,7 @@ use App\Http\Requests\ShipmentRequest;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\ShipmentResource;
 use App\Models\Order;
+use App\Services\BiteshipService;
 use App\Services\OrderService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -62,6 +63,12 @@ class AdminOrderController extends Controller
     }
 
     /** POST /admin/orders/{order}/shipment — FR-022, Biteship booking. */
+    /** GET /admin/shipping/couriers — valid courier/service options for the "Ganti Kurir" dropdown. */
+    public function couriers(BiteshipService $biteship): JsonResponse
+    {
+        return response()->json(['data' => $biteship->availableCouriers()]);
+    }
+
     public function bookShipment(ShipmentRequest $request, Order $order): JsonResponse
     {
         $shipment = $this->orders->bookShipment(
