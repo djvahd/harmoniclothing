@@ -11,6 +11,7 @@ import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import LoadingState from "@/components/ui/LoadingState";
 import EmptyState from "@/components/ui/EmptyState";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { toast } from "@/store/toast-store";
 import { createAddress, deleteAddress, getAddresses, updateAddress } from "@/services/account";
 import type { Address } from "@/types/user";
@@ -35,6 +36,7 @@ export default function AddressBookPage() {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState<Omit<Address, "id">>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null); // null = form menambah alamat baru
 
   function update<K extends keyof typeof form>(field: K, value: (typeof form)[K]) {
@@ -74,10 +76,17 @@ export default function AddressBookPage() {
     setShowForm(false);
   }
 
-  async function handleDelete(id: number) {
-    await deleteAddress(id);
-    mutate("/account/addresses");
-    toast(t("deleteSuccess"), "success");
+  async function handleDelete() {
+    if (deleteId === null) return;
+    const id = deleteId;
+    setDeleteId(null);
+    try {
+      await deleteAddress(id);
+      await mutate("/account/addresses");
+      toast(t("deleteSuccess"), "success");
+    } catch {
+      toast(t("deleteFailed"), "danger");
+    }
   }
 
   return (
@@ -150,7 +159,7 @@ export default function AddressBookPage() {
                 <button onClick={() => openEditForm(address)} className="font-body text-sm font-medium text-primary">
                   {t("edit")}
                 </button>
-                <button onClick={() => handleDelete(address.id)} className="font-body text-sm font-medium text-danger">
+                <button onClick={() => setDeleteId(address.id)} className="font-body text-sm font-medium text-danger">
                   {t("delete")}
                 </button>
               </div>
@@ -158,6 +167,15 @@ export default function AddressBookPage() {
           ))}
         </div>
       </div>
+      <ConfirmDialog
+        open={deleteId !== null}
+        title={t("deleteConfirmTitle")}
+        message={t("deleteConfirmMessage")}
+        confirmLabel={t("delete")}
+        cancelLabel={tCommon("cancel")}
+        onConfirm={handleDelete}
+        onCancel={() => setDeleteId(null)}
+      />
     </SidebarPageShell>
   );
 }
