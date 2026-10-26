@@ -10,6 +10,7 @@ use App\Models\ProductVariant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 /** 5.2_API_List.md §4 — POST /checkout (FE-027, FE-052/056: bulk tier pricing applies automatically). */
@@ -53,6 +54,64 @@ class CheckoutTest extends TestCase
         $this->assertDatabaseHas('order_status_histories', [
             'to_status' => 'belum_dibayar',
             'changed_by' => 'customer',
+        ]);
+    }
+
+    public function test_payment_methods_lists_the_configured_channels(): void
+    {
+        $this->getJson('/api/checkout/payment-methods')->assertUnauthorized();
+
+        $this->actingAs(User::factory()->create())->getJson('/api/checkout/payment-methods')
+            ->assertOk()
+            ->assertJsonPath('data.0', ['code' => 'bca_va', 'label' => 'BCA Virtual Account', 'group' => 'virtual_account'])
+            ->assertJsonCount(count(config('services.midtrans.payment_methods')), 'data');
+    }
+
+    public function test_checkout_restricts_snap_to_the_chosen_payment_method(): void
+    {
+        $this->checkoutWithPayment(['payment_method' => 'mandiri_va'])->assertCreated()
+            ->assertJsonPath('data.midtrans_redirect_url', 'https://pay.test/snap');
+
+        Http::assertSent(fn ($request) => str_contains($request->url(), 'midtrans.com')
+            && $request->data()['enabled_payments'] === ['echannel']);
+    }
+
+    public function test_checkout_without_a_payment_method_leaves_snap_unrestricted(): void
+    {
+        $this->checkoutWithPayment([])->assertCreated();
+
+        Http::assertSent(fn ($request) => str_contains($request->url(), 'midtrans.com')
+            && ! array_key_exists('enabled_payments', $request->data()));
+    }
+
+    public function test_checkout_rejects_an_unknown_payment_method(): void
+    {
+        $this->checkoutWithPayment(['payment_method' => 'bitcoin'])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors('payment_method');
+    }
+
+    private function checkoutWithPayment(array $extra): TestResponse
+    {
+        config(['services.biteship.api_key' => 'test-key', 'services.midtrans.server_key' => 'test-server-key']);
+        Http::fake([
+            'api.biteship.com/v1/rates/couriers' => Http::response($this->fakeBiteshipRatesResponse()),
+            '*midtrans.com/*' => Http::response(['redirect_url' => 'https://pay.test/snap'], 201),
+        ]);
+
+        $user = User::factory()->create();
+        $address = Address::factory()->for($user)->create();
+        $cartItem = CartItem::factory()->for($user)->for(ProductVariant::factory()->create(), 'productVariant')->create([
+            'quantity' => 1,
+            'unit_price_snapshot' => 100000,
+        ]);
+
+        return $this->actingAs($user)->postJson('/api/checkout', [
+            'address_id' => $address->id,
+            'cart_item_ids' => [$cartItem->id],
+            'courier_company' => 'jne',
+            'courier_type' => 'reg',
+            ...$extra,
         ]);
     }
 

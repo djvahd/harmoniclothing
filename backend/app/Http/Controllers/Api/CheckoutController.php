@@ -48,7 +48,21 @@ class CheckoutController extends Controller
 
         $order = $this->checkout->checkout($request->user(), $dto);
 
-        return $this->respondWithPayment($order, $request);
+        return $this->respondWithPayment($order, $request, $request->validated('payment_method'));
+    }
+
+    /** GET /checkout/payment-methods — channels the customer can pick before the order is created. */
+    public function paymentMethods(): JsonResponse
+    {
+        $methods = collect(config('services.midtrans.payment_methods'))
+            ->map(fn (array $method, string $code) => [
+                'code' => $code,
+                'label' => $method['label'],
+                'group' => $method['group'],
+            ])
+            ->values();
+
+        return response()->json(['data' => $methods]);
     }
 
     /** POST /checkout/bulk — Flow 7, always creates orders.type = 'bulk'. */
@@ -74,9 +88,9 @@ class CheckoutController extends Controller
      * midtrans_redirect_url — null locally until real Midtrans credentials
      * exist (PaymentService::initiate() note).
      */
-    private function respondWithPayment($order, Request $request): JsonResponse
+    private function respondWithPayment($order, Request $request, ?string $paymentMethod = null): JsonResponse
     {
-        $redirectUrl = $this->payments->initiate($order);
+        $redirectUrl = $this->payments->initiate($order, $paymentMethod);
 
         return response()->json([
             'data' => [
