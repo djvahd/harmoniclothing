@@ -31,6 +31,18 @@ class OrderTest extends TestCase
         $this->actingAs($user)->getJson('/api/orders')->assertJsonCount(2, 'data');
     }
 
+    public function test_order_detail_includes_shipping_address(): void
+    {
+        $user = User::factory()->create();
+        $address = Address::factory()->for($user)->create();
+        $order = Order::factory()->for($user)->for($address, 'address')->create();
+
+        $this->actingAs($user)->getJson("/api/orders/{$order->id}")
+            ->assertOk()
+            ->assertJsonPath('data.address.recipient_name', $address->recipient_name)
+            ->assertJsonPath('data.address.postal_code', $address->postal_code);
+    }
+
     public function test_user_cannot_view_another_users_order(): void
     {
         $owner = User::factory()->create();
