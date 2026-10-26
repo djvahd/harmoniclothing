@@ -859,7 +859,10 @@
         "actions": "Aksi"
       },
       "empty": "Belum ada antrian produksi.",
-      "startProduction": "Mulai Produksi"
+      "startProduction": "Mulai Produksi",
+      "startConfirmTitle": "Mulai produksi?",
+      "startConfirmMessage": "Mulai produksi untuk pesanan {orderNumber}? Status pesanan akan berubah dan tidak bisa dibatalkan dari sini.",
+      "startSuccess": "Produksi pesanan dimulai."
     },
     "sidebar": {
       "menuLabel": "Menu admin",
@@ -997,6 +1000,8 @@
       "reject": "Tolak",
       "approve": "Setujui",
       "approveSuccess": "Creator berhasil disetujui.",
+      "approveConfirmTitle": "Setujui creator?",
+      "approveConfirmMessage": "Setujui {name} sebagai creator? Creator akan menerima notifikasi.",
       "rejectSuccess": "Pengajuan creator ditolak.",
       "rejectModal": {
         "title": "Tolak Pengajuan Creator",
@@ -1010,6 +1015,8 @@
       "reject": "Tolak",
       "approve": "Setujui",
       "approveSuccess": "Desain berhasil disetujui.",
+      "approveConfirmTitle": "Setujui desain?",
+      "approveConfirmMessage": "Setujui desain \"{name}\"? Creator akan menerima notifikasi.",
       "rejectSuccess": "Desain ditolak.",
       "rejectModal": {
         "title": "Tolak Desain",
@@ -1133,6 +1140,7 @@
       "empty": "Belum ada produk.",
       "productVariants": "Varian Produk",
       "inactive": "Nonaktif",
+      "toggleProduct": "Tampilkan/sembunyikan detail dan varian {name}",
       "productDetails": "Detail Produk",
       "bulkTiers": {
         "title": "Tier Harga Bulk Order",
@@ -1144,7 +1152,9 @@
         "pricePerUnit": "Harga per Unit",
         "empty": "Belum ada tier harga.",
         "add": "Tambah Tier",
-        "saved": "Tier harga berhasil ditambahkan."
+        "saved": "Tier harga berhasil ditambahkan.",
+        "confirmTitle": "Tambah tier harga?",
+        "confirmMessage": "Tier ini berlaku global dan tidak bisa diubah atau dihapus setelah dibuat. Lanjutkan?"
       },
       "variantColumns": {
         "color": "Warna",

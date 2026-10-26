@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Button from "./Button";
 import Portal from "./Portal";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -24,6 +25,8 @@ export default function ConfirmDialog({
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
+  const dialogRef = useFocusTrap<HTMLDivElement>(open);
+
   useEffect(() => {
     if (!open) return;
     function onKeyDown(e: KeyboardEvent) {
@@ -47,6 +50,8 @@ export default function ConfirmDialog({
       onClick={onCancel}
     >
       <div
+        ref={dialogRef}
+        tabIndex={-1}
         role="dialog"
         aria-modal="true"
         aria-label={title}

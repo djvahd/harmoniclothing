@@ -84,11 +84,18 @@ export default function KelolaKatalogPage() {
                     className="cursor-pointer border-b border-border last:border-0 hover:bg-border/20"
                   >
                     <td className="p-4 text-text-secondary">
-                      {expandedProductId === product.id ? (
-                        <ChevronDown className="size-4" />
-                      ) : (
-                        <ChevronRight className="size-4" />
-                      )}
+                      <button
+                        type="button"
+                        aria-expanded={expandedProductId === product.id}
+                        aria-label={t("toggleProduct", { name: product.name_id })}
+                        className="rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+                      >
+                        {expandedProductId === product.id ? (
+                          <ChevronDown className="size-4" />
+                        ) : (
+                          <ChevronRight className="size-4" />
+                        )}
+                      </button>
                     </td>
                     <td className="p-4 font-medium text-text-primary">
                       {product.name_id}

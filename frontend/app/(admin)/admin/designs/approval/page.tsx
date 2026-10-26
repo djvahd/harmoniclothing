@@ -9,6 +9,7 @@ import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
 import Button from "@/components/ui/Button";
 import PromptModal from "@/components/ui/PromptModal";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import LoadingState from "@/components/ui/LoadingState";
 import EmptyState from "@/components/ui/EmptyState";
 import { toast } from "@/store/toast-store";
@@ -17,12 +18,17 @@ import { storageUrl } from "@/lib/storage";
 
 export default function ApprovalDesainPage() {
   const t = useTranslations("admin.designApproval");
+  const tCommon = useTranslations("common");
   const { data, isLoading } = useSWR("/admin/designs/pending", getPendingDesigns);
   const designs = data?.data ?? [];
   const [loadingId, setLoadingId] = useState<number | null>(null);
   const [rejectingId, setRejectingId] = useState<number | null>(null);
+  const [approving, setApproving] = useState<{ id: number; title: string } | null>(null);
 
-  async function handleApprove(id: number) {
+  async function handleApprove() {
+    if (!approving) return;
+    const id = approving.id;
+    setApproving(null);
     setLoadingId(id);
     try {
       await approveDesign(id);
@@ -79,7 +85,7 @@ export default function ApprovalDesainPage() {
                   <Button variant="secondary" loading={loadingId === design.id} onClick={() => setRejectingId(design.id)}>
                     {t("reject")}
                   </Button>
-                  <Button loading={loadingId === design.id} onClick={() => handleApprove(design.id)}>
+                  <Button loading={loadingId === design.id} onClick={() => setApproving({ id: design.id, title: design.title })}>
                     {t("approve")}
                   </Button>
                 </div>
@@ -88,6 +94,15 @@ export default function ApprovalDesainPage() {
           })}
         </div>
       </div>
+      <ConfirmDialog
+        open={approving !== null}
+        title={t("approveConfirmTitle")}
+        message={t("approveConfirmMessage", { name: approving?.title ?? "" })}
+        confirmLabel={t("approve")}
+        cancelLabel={tCommon("cancel")}
+        onConfirm={handleApprove}
+        onCancel={() => setApproving(null)}
+      />
       <PromptModal
         open={rejectingId !== null}
         title={t("rejectModal.title")}
