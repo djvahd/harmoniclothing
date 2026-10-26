@@ -1076,6 +1076,14 @@
     "notificationSettings": {
       "title": "Konfigurasi Notifikasi",
       "toggleAria": "Aktifkan notifikasi: {label}",
+      "enabledToast": "Notifikasi \"{label}\" diaktifkan.",
+      "disabledToast": "Notifikasi \"{label}\" dinonaktifkan.",
+      "confirmDisable": {
+        "title": "Nonaktifkan notifikasi penting?",
+        "message": "Notifikasi \"{label}\" termasuk notifikasi penting. Jika dinonaktifkan, pesan ini tidak akan terkirim lagi.",
+        "confirm": "Nonaktifkan",
+        "cancel": "Batal"
+      },
       "types": {
         "chat_message": { "label": "Pesan chat baru", "description": "Dikirim saat ada pesan chat baru." },
         "creator_approved": { "label": "Creator disetujui", "description": "Dikirim ke pemohon saat pengajuan creator disetujui." },

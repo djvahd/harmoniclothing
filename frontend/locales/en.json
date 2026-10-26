@@ -1075,6 +1075,14 @@
     },
     "notificationSettings": {
       "title": "Notification Settings",
+      "enabledToast": "\"{label}\" notifications enabled.",
+      "disabledToast": "\"{label}\" notifications disabled.",
+      "confirmDisable": {
+        "title": "Disable an important notification?",
+        "message": "\"{label}\" is an important notification. If you turn it off, this message will no longer be sent.",
+        "confirm": "Disable",
+        "cancel": "Cancel"
+      },
       "toggleAria": "Enable notification: {label}",
       "types": {
         "chat_message": { "label": "New chat message", "description": "Sent when a new chat message arrives." },
