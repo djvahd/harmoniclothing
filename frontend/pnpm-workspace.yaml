@@ -25,6 +25,7 @@ overrides:
   # minimatch@9 does `import expand from 'brace-expansion'` (default export),
   # which v5 dropped — keep it on the patched 2.x line.
   minimatch@9>brace-expansion: ^2.1.7
+  minimatch@3>brace-expansion: ^1.1.12
   nanoid: ^6.0.1
   js-yaml: ^5.3.0
   source-map-js: ^1.2.2
