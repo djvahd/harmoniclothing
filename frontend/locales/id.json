@@ -892,7 +892,13 @@
     },
     "dashboard": {
       "title": "Dashboard Admin",
-      "attentionNotice": "{count} item perlu perhatian: {pendingOrders} pesanan menunggu approval, {pendingCreators} creator menunggu approval.",
+      "attentionNotice": "{count} item perlu perhatian:",
+      "attentionLink": "{count} {label}",
+      "attentionLinks": {
+        "orders": "pesanan menunggu approval",
+        "creators": "creator menunggu approval",
+        "designs": "desain menunggu approval"
+      },
       "stats": {
         "pendingOrders": "Pesanan Menunggu Approval",
         "totalRevenue": "Total Pendapatan",
@@ -927,7 +933,43 @@
         "entity": "Entitas",
         "description": "Deskripsi"
       },
-      "empty": "Belum ada aktivitas tercatat."
+      "empty": "Belum ada aktivitas tercatat.",
+      "filterAction": "Filter aksi",
+      "allActions": "Semua aksi",
+      "actions": {
+        "product_create": "Menambah produk",
+        "product_update": "Mengubah harga dasar produk",
+        "variant_create": "Menambah varian produk",
+        "variant_update": "Mengubah harga varian",
+        "bulk_pricing_tier_create": "Menambah tier harga bulk",
+        "design_approve": "Menyetujui desain",
+        "design_reject": "Menolak desain",
+        "creator_approve": "Menyetujui creator",
+        "creator_reject": "Menolak creator",
+        "creator_ban": "Memblokir creator",
+        "order_status_update": "Mengubah status pesanan",
+        "order_reject": "Menolak pesanan",
+        "order_shipment_book": "Memesan pengiriman",
+        "payout_paid": "Mencatat pencairan creator",
+        "notification_setting_update": "Mengubah pengaturan notifikasi"
+      },
+      "entities": {
+        "Product": "Produk",
+        "ProductVariant": "Varian",
+        "BulkPricingTier": "Tier harga bulk",
+        "Design": "Desain",
+        "CreatorProfile": "Creator",
+        "Order": "Pesanan",
+        "NotificationSetting": "Pengaturan notifikasi"
+      },
+      "descriptions": {
+        "base_price": "Harga dasar menjadi {value}",
+        "price_modifier": "Tambahan harga varian menjadi {value}",
+        "enabled": "Notifikasi diaktifkan",
+        "disabled": "Notifikasi dinonaktifkan",
+        "courier": "Kurir: {value}",
+        "statusTo": "Status menjadi {status}"
+      }
     },
     "creatorApproval": {
       "title": "Approval Creator",
@@ -1031,7 +1073,11 @@
     },
     "reports": {
       "title": "Sales Report",
-      "period": "Periode: {from} - {to} (30 hari terakhir)",
+      "period": "Periode: {from} - {to}",
+      "scopeNote": "Berbeda dengan Total Pendapatan di dashboard yang mencakup semua waktu. Tanpa rentang tanggal, laporan memakai 30 hari terakhir.",
+      "filter": { "from": "Dari tanggal", "to": "Sampai tanggal", "reset": "Atur ulang", "invalid": "Tanggal awal tidak boleh setelah tanggal akhir." },
+      "exportCsv": "Ekspor CSV",
+      "csv": { "period": "Periode", "quantity": "Jumlah terjual", "revenue": "Pendapatan" },
       "stats": {
         "totalRevenue": "Total Pendapatan",
         "avgOrderValue": "Rata-rata Nilai Pesanan",
@@ -1044,6 +1090,14 @@
     "notificationSettings": {
       "title": "Konfigurasi Notifikasi",
       "toggleAria": "Aktifkan notifikasi: {label}",
+      "enabledToast": "Notifikasi \"{label}\" diaktifkan.",
+      "disabledToast": "Notifikasi \"{label}\" dinonaktifkan.",
+      "confirmDisable": {
+        "title": "Nonaktifkan notifikasi penting?",
+        "message": "Notifikasi \"{label}\" termasuk notifikasi penting. Jika dinonaktifkan, pesan ini tidak akan terkirim lagi.",
+        "confirm": "Nonaktifkan",
+        "cancel": "Batal"
+      },
       "types": {
         "chat_message": { "label": "Pesan chat baru", "description": "Dikirim saat ada pesan chat baru." },
         "creator_approved": { "label": "Creator disetujui", "description": "Dikirim ke pemohon saat pengajuan creator disetujui." },

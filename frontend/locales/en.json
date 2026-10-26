@@ -892,7 +892,13 @@
     },
     "dashboard": {
       "title": "Admin Dashboard",
-      "attentionNotice": "{count} items need attention: {pendingOrders} orders awaiting approval, {pendingCreators} creators awaiting approval.",
+      "attentionNotice": "{count} items need attention:",
+      "attentionLink": "{count} {label}",
+      "attentionLinks": {
+        "orders": "orders awaiting approval",
+        "creators": "creators awaiting approval",
+        "designs": "designs awaiting approval"
+      },
       "stats": {
         "pendingOrders": "Orders Awaiting Approval",
         "totalRevenue": "Total Revenue",
@@ -927,7 +933,43 @@
         "entity": "Entity",
         "description": "Description"
       },
-      "empty": "No activity recorded yet."
+      "empty": "No activity recorded yet.",
+      "filterAction": "Filter by action",
+      "allActions": "All actions",
+      "actions": {
+        "product_create": "Created a product",
+        "product_update": "Changed a product base price",
+        "variant_create": "Created a product variant",
+        "variant_update": "Changed a variant price",
+        "bulk_pricing_tier_create": "Added a bulk pricing tier",
+        "design_approve": "Approved a design",
+        "design_reject": "Rejected a design",
+        "creator_approve": "Approved a creator",
+        "creator_reject": "Rejected a creator",
+        "creator_ban": "Banned a creator",
+        "order_status_update": "Changed an order status",
+        "order_reject": "Rejected an order",
+        "order_shipment_book": "Booked a shipment",
+        "payout_paid": "Recorded a creator payout",
+        "notification_setting_update": "Changed a notification setting"
+      },
+      "entities": {
+        "Product": "Product",
+        "ProductVariant": "Variant",
+        "BulkPricingTier": "Bulk pricing tier",
+        "Design": "Design",
+        "CreatorProfile": "Creator",
+        "Order": "Order",
+        "NotificationSetting": "Notification setting"
+      },
+      "descriptions": {
+        "base_price": "Base price set to {value}",
+        "price_modifier": "Variant price modifier set to {value}",
+        "enabled": "Notification enabled",
+        "disabled": "Notification disabled",
+        "courier": "Courier: {value}",
+        "statusTo": "Status set to {status}"
+      }
     },
     "creatorApproval": {
       "title": "Creator Approval",
@@ -1031,7 +1073,11 @@
     },
     "reports": {
       "title": "Sales Report",
-      "period": "Period: {from} - {to} (last 30 days)",
+      "period": "Period: {from} - {to}",
+      "scopeNote": "Unlike the dashboard Total Revenue, which covers all time. Without a date range the report uses the last 30 days.",
+      "filter": { "from": "From date", "to": "To date", "reset": "Reset", "invalid": "The start date cannot be after the end date." },
+      "exportCsv": "Export CSV",
+      "csv": { "period": "Period", "quantity": "Units sold", "revenue": "Revenue" },
       "stats": {
         "totalRevenue": "Total Revenue",
         "avgOrderValue": "Average Order Value",
@@ -1043,6 +1089,14 @@
     },
     "notificationSettings": {
       "title": "Notification Settings",
+      "enabledToast": "\"{label}\" notifications enabled.",
+      "disabledToast": "\"{label}\" notifications disabled.",
+      "confirmDisable": {
+        "title": "Disable an important notification?",
+        "message": "\"{label}\" is an important notification. If you turn it off, this message will no longer be sent.",
+        "confirm": "Disable",
+        "cancel": "Cancel"
+      },
       "toggleAria": "Enable notification: {label}",
       "types": {
         "chat_message": { "label": "New chat message", "description": "Sent when a new chat message arrives." },

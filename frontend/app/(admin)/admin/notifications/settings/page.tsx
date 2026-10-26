@@ -1,15 +1,23 @@
 "use client";
 
-import useSWR, { mutate } from "swr";
+import { useState } from "react";
+import useSWR from "swr";
 import { useTranslations } from "next-intl";
 import AdminSidebar from "@/components/layout/AdminSidebar";
 import SidebarPageShell from "@/components/layout/SidebarPageShell";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import LoadingState from "@/components/ui/LoadingState";
 import { getNotificationSettings, updateNotificationSetting } from "@/services/admin";
+import { toast } from "@/store/toast-store";
+
+/** Turning these off silently drops key customer/admin messages, so it needs a confirmation. */
+const CRITICAL_TYPES = ["order.paid", "order.shipped"];
 
 export default function KonfigurasiNotifikasiPage() {
   const t = useTranslations("admin.notificationSettings");
-  const { data, isLoading } = useSWR("/admin/notification-settings", getNotificationSettings);
+  const [pending, setPending] = useState<string[]>([]);
+  const [confirmType, setConfirmType] = useState<string | null>(null);
+  const { data, isLoading, mutate } = useSWR("/admin/notification-settings", getNotificationSettings);
   const settings = data?.data ?? [];
 
   // "order.paid" -> translation key "order_paid"; unknown future types fall back to the raw name.
@@ -17,9 +25,31 @@ export default function KonfigurasiNotifikasiPage() {
   const typeLabel = (type: string) =>
     t.has(`types.${typeKey(type)}.label`) ? t(`types.${typeKey(type)}.label`) : type;
 
-  async function handleToggle(type: string, current: boolean) {
-    await updateNotificationSetting(type, !current);
-    mutate("/admin/notification-settings");
+  async function applyToggle(type: string, enabled: boolean) {
+    setPending((p) => [...p, type]);
+    // Flip the switch immediately; the refetch below reconciles (and reverts on failure).
+    mutate(
+      (current) =>
+        current && {
+          ...current,
+          data: current.data.map((s) => (s.notification_type === type ? { ...s, is_enabled: enabled } : s)),
+        },
+      { revalidate: false },
+    );
+    try {
+      await updateNotificationSetting(type, enabled);
+      toast(t(enabled ? "enabledToast" : "disabledToast", { label: typeLabel(type) }), "success");
+    } catch {
+      // apiFetch already shows the error toast.
+    } finally {
+      setPending((p) => p.filter((x) => x !== type));
+      mutate();
+    }
+  }
+
+  function handleToggle(type: string, current: boolean) {
+    if (current && CRITICAL_TYPES.includes(type)) setConfirmType(type);
+    else applyToggle(type, !current);
   }
 
   return (
@@ -49,12 +79,14 @@ export default function KonfigurasiNotifikasiPage() {
                 type="button"
                 role="switch"
                 aria-checked={setting.is_enabled}
+                disabled={pending.includes(setting.notification_type)}
                 aria-label={t("toggleAria", { label: typeLabel(setting.notification_type) })}
                 onClick={() => handleToggle(setting.notification_type, setting.is_enabled)}
                 className={
-                  setting.is_enabled
+                  (setting.is_enabled
                     ? "flex h-6 w-11 shrink-0 items-center rounded-full bg-accent p-0.5"
-                    : "flex h-6 w-11 shrink-0 items-center rounded-full bg-border p-0.5"
+                    : "flex h-6 w-11 shrink-0 items-center rounded-full bg-border p-0.5") +
+                  " disabled:cursor-wait disabled:opacity-60"
                 }
               >
                 <span
@@ -69,6 +101,18 @@ export default function KonfigurasiNotifikasiPage() {
           ))}
         </div>
       </div>
+      <ConfirmDialog
+        open={confirmType !== null}
+        title={t("confirmDisable.title")}
+        message={t("confirmDisable.message", { label: confirmType ? typeLabel(confirmType) : "" })}
+        confirmLabel={t("confirmDisable.confirm")}
+        cancelLabel={t("confirmDisable.cancel")}
+        onConfirm={() => {
+          if (confirmType) applyToggle(confirmType, false);
+          setConfirmType(null);
+        }}
+        onCancel={() => setConfirmType(null)}
+      />
     </SidebarPageShell>
   );
 }
