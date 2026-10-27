@@ -6,7 +6,7 @@ import { Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { HEADER_SEARCH_EVENT, SEARCH_KEY } from "@/lib/filter-url";
 
-const CATALOG_PATH = "/catalog";
+const CATALOG_PATH = "/produk";
 
 /** Product search that works from any page: on the catalog it updates the open list, elsewhere it opens the catalog with `?q=`. */
 function SearchForm({ onDone, autoFocus }: { onDone?: () => void; autoFocus?: boolean }) {
