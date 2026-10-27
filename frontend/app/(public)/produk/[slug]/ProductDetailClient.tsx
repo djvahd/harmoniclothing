@@ -163,7 +163,7 @@ export default function DetailProdukPage() {
     return (
       <DetailNotFound
         message={t("notFoundMessage")}
-        backHref="/catalog"
+        backHref="/produk"
         backLabel={t("notFoundBackLabel")}
       />
     );
@@ -174,16 +174,16 @@ export default function DetailProdukPage() {
   const isLaris = hasSold && (product.sold_count ?? 0) >= 20;
 
   return (
-    <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 px-4 py-10 md:px-20">
+    <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 px-4 pb-28 pt-10 md:px-20 md:py-10">
       <nav className="flex flex-wrap items-center gap-1.5 font-body text-sm text-text-secondary">
-        <Link href="/catalog" className="transition-colors hover:text-primary">
+        <Link href="/produk" className="transition-colors hover:text-primary">
           {t("breadcrumbCatalog")}
         </Link>
         {product.category && (
           <>
             <ChevronRight className="size-3.5" />
             <Link
-              href={`/catalog?kategori=${product.category.slug}`}
+              href={`/produk?kategori=${product.category.slug}`}
               className="transition-colors hover:text-primary"
             >
               {product.category.name}
@@ -282,7 +282,9 @@ export default function DetailProdukPage() {
 
           {error && <p className="font-body text-xs text-danger">{error}</p>}
 
-          <div className="flex flex-col gap-3 sm:flex-row">
+          {/* Pinned to the bottom of the screen below md so the buy actions are never a long scroll away. */}
+          <div className="fixed inset-x-0 bottom-0 z-30 flex items-center gap-3 border-t border-border bg-surface px-4 py-3 shadow-lg md:static md:z-auto md:border-0 md:bg-transparent md:p-0 md:shadow-none">
+            <p className="shrink-0 font-heading text-base font-semibold text-primary md:hidden">{formatCurrency(total)}</p>
             <Button
               fullWidth
               loading={pendingAction === "cart"}
@@ -357,6 +359,7 @@ export default function DetailProdukPage() {
               reviews={reviews}
               reviewsLoading={reviewsLoading}
               meta={reviewsMeta}
+              distribution={reviewsMeta?.rating_distribution}
               onPageChange={setReviewPage}
             />
           )}
@@ -377,7 +380,7 @@ function YouMightLike({ categorySlug, excludeId }: { categorySlug?: string; excl
 
   return (
     <RelatedGrid
-      seeAllHref={categorySlug ? `/catalog?kategori=${categorySlug}` : "/catalog"}
+      seeAllHref={categorySlug ? `/produk?kategori=${categorySlug}` : "/produk"}
       isLoading={isLoading}
       items={items}
       renderItem={(p: Product) => <ProductCard key={p.id} product={p} />}

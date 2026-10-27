@@ -1335,6 +1335,7 @@
       "shippingContent": "Produk umumnya diproduksi 1–3 hari kerja setelah pesanan dikonfirmasi, lalu dikirim ke seluruh Indonesia menggunakan kurir pilihanmu saat checkout. Estimasi tiba mengikuti layanan kurir yang dipilih.",
       "ratingSummary": "Rating {rating} dari {count} ulasan pembeli.",
       "loadingReviews": "Memuat ulasan...",
+      "satisfiedBuyers": "{percent}% pembeli puas",
       "buyerFallback": "Pembeli"
     },
     "variantPicker": {
@@ -1424,6 +1425,7 @@
     "card": {
       "startingFrom": "Mulai dari {price}",
       "sold": "{count} terjual",
+      "reviewCountOnly": "{count} ulasan",
       "byCreator": "by {name}",
       "designCount": "{count} desain"
     },

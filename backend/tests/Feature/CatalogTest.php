@@ -293,4 +293,22 @@ class CatalogTest extends TestCase
             ->assertJsonPath('data.0.rating', 5)
             ->assertJsonPath('data.0.user.name', $review->user->name);
     }
+
+    public function test_review_list_reports_the_star_distribution_for_that_product_only(): void
+    {
+        $product = Product::factory()->create();
+        $variant = ProductVariant::factory()->for($product)->create();
+        foreach ([5, 5, 4] as $rating) {
+            $item = OrderItem::factory()->for($variant, 'productVariant')->create();
+            Review::factory()->for($item, 'orderItem')->create(['rating' => $rating]);
+        }
+
+        $otherVariant = ProductVariant::factory()->for(Product::factory()->create())->create();
+        $otherItem = OrderItem::factory()->for($otherVariant, 'productVariant')->create();
+        Review::factory()->for($otherItem, 'orderItem')->create(['rating' => 1]);
+
+        $this->getJson("/api/catalog/products/{$product->slug}/reviews")
+            ->assertOk()
+            ->assertJsonPath('meta.rating_distribution', ['5' => 2, '4' => 1, '3' => 0, '2' => 0, '1' => 0]);
+    }
 }

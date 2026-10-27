@@ -37,7 +37,7 @@ export default function WishlistPage() {
           ))}
         </div>
         {items.length === 0 && !isLoading && (
-          <Link href="/catalog" className="font-body text-sm font-medium text-primary">
+          <Link href="/produk" className="font-body text-sm font-medium text-primary">
             {t("browseCatalog")}
           </Link>
         )}

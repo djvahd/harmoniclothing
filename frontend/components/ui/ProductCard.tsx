@@ -5,9 +5,12 @@ import SafeImage from "@/components/ui/SafeImage";
 import { Star } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { storageUrl } from "@/lib/storage";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatSoldCount } from "@/lib/format";
 import type { Product } from "@/types/product";
 import WishlistButton from "./WishlistButton";
+
+/** Below this many reviews the average is mostly noise (one 1-star review reads as "1.0"), so only the count is shown. */
+const MIN_REVIEWS_FOR_RATING = 5;
 
 export function ProductCardSkeleton() {
   return (
@@ -28,13 +31,15 @@ export default function ProductCard({ product }: { product: Product }) {
   const t = useTranslations("ui.card");
   const thumbnail = storageUrl(product.variants?.[0]?.mockup_asset_path);
 
-  const hasRating = !!product.review_count && product.review_count > 0 && product.rating_average != null;
+  const reviewCount = product.review_count ?? 0;
+  const hasRating = reviewCount >= MIN_REVIEWS_FOR_RATING && product.rating_average != null;
+  const hasFewReviews = reviewCount > 0 && !hasRating;
   const hasSold = !!product.sold_count && product.sold_count > 0;
 
   return (
     <div className="relative w-full max-w-[196px] transition-transform duration-200 hover:-translate-y-0.5">
     <Link
-      href={`/catalog/${product.slug}`}
+      href={`/produk/${product.slug}`}
       className="group flex w-full flex-col gap-[5px] rounded-md border border-border bg-surface p-[14px] transition-all duration-200 hover:border-primary/30 hover:shadow-md"
     >
       <div className="relative h-[155px] w-full shrink-0 overflow-hidden rounded-sm bg-border">
@@ -60,7 +65,7 @@ export default function ProductCard({ product }: { product: Product }) {
       </p>
 
       <div className="flex items-center gap-1 font-body text-[11px] text-text-secondary">
-        {hasRating || hasSold ? (
+        {hasRating || hasFewReviews || hasSold ? (
           <>
             {hasRating && (
               <span className="flex items-center gap-0.5">
@@ -68,8 +73,9 @@ export default function ProductCard({ product }: { product: Product }) {
                 {product.rating_average}
               </span>
             )}
-            {hasRating && hasSold && <span>·</span>}
-            {hasSold && <span>{t("sold", { count: product.sold_count ?? 0 })}</span>}
+            {hasFewReviews && <span>{t("reviewCountOnly", { count: reviewCount })}</span>}
+            {(hasRating || hasFewReviews) && hasSold && <span>·</span>}
+            {hasSold && <span>{t("sold", { count: formatSoldCount(product.sold_count ?? 0) })}</span>}
           </>
         ) : (
           <>&nbsp;</>
