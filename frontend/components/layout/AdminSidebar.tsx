@@ -20,6 +20,7 @@ export default function AdminSidebar({
         { href: "/admin/creators/approval", label: t("items.creatorApproval") },
         { href: "/admin/designs/approval", label: t("items.designApproval") },
         { href: "/admin/catalog", label: t("items.catalog") },
+        { href: "/admin/vouchers", label: t("items.vouchers") },
       ],
     },
     {
