@@ -54,7 +54,7 @@ export default function QuantityStepper({
         aria-label={t("decrease")}
         disabled={value <= min}
         onClick={() => step(Math.max(min, value - 1))}
-        className="flex size-9 items-center justify-center text-text-primary disabled:opacity-40"
+        className="flex size-11 items-center justify-center text-text-primary md:size-9 disabled:opacity-40"
       >
         <Minus className="size-4" />
       </button>
@@ -78,14 +78,14 @@ export default function QuantityStepper({
         onKeyDown={(e) => {
           if (e.key === "Enter") commit(e.currentTarget.value);
         }}
-        className="h-9 w-12 border-none bg-transparent text-center font-body text-sm font-medium text-text-primary outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+        className="h-11 w-12 border-none md:h-9 bg-transparent text-center font-body text-sm font-medium text-text-primary outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
       />
       <button
         type="button"
         aria-label={t("increase")}
         disabled={value >= max}
         onClick={() => step(Math.min(max, value + 1))}
-        className="flex size-9 items-center justify-center text-text-primary disabled:opacity-40"
+        className="flex size-11 items-center justify-center text-text-primary md:size-9 disabled:opacity-40"
       >
         <Plus className="size-4" />
       </button>

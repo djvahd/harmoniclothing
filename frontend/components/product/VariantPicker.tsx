@@ -43,7 +43,8 @@ export default function VariantPicker({
                 aria-label={c}
                 aria-pressed={activeColor === c}
                 className={clsx(
-                  "size-8 rounded-full border-2 transition-colors",
+                  // before: stretches the tap area to 44px without enlarging the swatch.
+                  "relative size-8 rounded-full border-2 transition-colors before:absolute before:-inset-1.5 before:content-['']",
                   activeColor === c ? "border-accent" : "border-border hover:border-primary/50",
                 )}
                 style={{ backgroundColor: swatchColor(c) }}
@@ -60,7 +61,7 @@ export default function VariantPicker({
             <button
               type="button"
               onClick={onToggleSizeChart}
-              className="flex items-center gap-1 font-body text-xs text-text-secondary transition-colors hover:text-primary"
+              className="flex min-h-11 items-center gap-1 font-body text-xs text-text-secondary transition-colors hover:text-primary"
             >
               <Ruler className="size-3.5" />
               {t("sizeChart")}
@@ -68,7 +69,13 @@ export default function VariantPicker({
           </div>
           <div className="flex flex-wrap gap-2">
             {sizes.map((s) => (
-              <button key={s} type="button" onClick={() => onSelectSize(s)} aria-pressed={activeSize === s}>
+              <button
+                key={s}
+                type="button"
+                onClick={() => onSelectSize(s)}
+                aria-pressed={activeSize === s}
+                className="relative before:absolute before:-inset-y-2 before:inset-x-0 before:content-['']"
+              >
                 <Tag active={activeSize === s} size="sm">
                   {s}
                 </Tag>

@@ -24,7 +24,7 @@ export default function PopularProductsSection() {
               {t("title")}
             </h2>
           </div>
-          <Link href="/produk" className="shrink-0 font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4">
+          <Link href="/produk" className="inline-flex min-h-11 shrink-0 items-center font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4">
             {t("viewAll")}
           </Link>
         </div>

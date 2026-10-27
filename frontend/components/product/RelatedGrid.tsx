@@ -32,7 +32,7 @@ export default function RelatedGrid<T>({
         </h2>
         <Link
           href={seeAllHref}
-          className="shrink-0 font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4"
+          className="inline-flex min-h-11 shrink-0 items-center font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4"
         >
           {t("viewAll")}
         </Link>
