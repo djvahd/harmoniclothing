@@ -64,6 +64,8 @@
       "registerFree": "Daftar Gratis",
       "logout": "Keluar",
       "openMenu": "Buka menu",
+      "searchLabel": "Cari produk",
+      "searchPlaceholder": "Cari produk...",
       "closeMenu": "Tutup menu"
     },
     "cart": {

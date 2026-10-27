@@ -14,7 +14,14 @@ import { CATALOG_PER_PAGE, type ProductSort } from "@/services/catalog";
 import { useProducts, useProductFilters } from "@/hooks/useProducts";
 import type { Product } from "@/types/product";
 import type { Paginated } from "@/types/api";
-import { filtersFromParams, normalizePriceRange, syncFiltersToUrl, SORT_KEY, SEARCH_KEY } from "@/lib/filter-url";
+import {
+  filtersFromParams,
+  normalizePriceRange,
+  syncFiltersToUrl,
+  HEADER_SEARCH_EVENT,
+  SORT_KEY,
+  SEARCH_KEY,
+} from "@/lib/filter-url";
 
 const PER_PAGE = CATALOG_PER_PAGE;
 
@@ -52,6 +59,13 @@ function KatalogPageContent({ initial }: { initial?: Paginated<Product> }) {
       f.categories.join(",") === fromUrl ? f : { ...f, categories: fromUrl ? fromUrl.split(",") : [] },
     );
   }, [kategoriParam]);
+
+  // Header search while this page is already open (elsewhere it arrives as ?q= on a fresh load).
+  useEffect(() => {
+    const onHeaderSearch = (e: Event) => setSearch((e as CustomEvent<string>).detail);
+    window.addEventListener(HEADER_SEARCH_EVENT, onHeaderSearch);
+    return () => window.removeEventListener(HEADER_SEARCH_EVENT, onHeaderSearch);
+  }, []);
 
   useEffect(() => {
     syncFiltersToUrl(filters, { [SORT_KEY]: sort === "terbaru" ? undefined : sort, [SEARCH_KEY]: search || undefined });

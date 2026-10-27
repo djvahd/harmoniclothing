@@ -10,6 +10,7 @@ import Logo from "./Logo";
 import MobileDrawer from "./MobileDrawer";
 import LanguageSwitcher from "./LanguageSwitcher";
 import HeaderNav from "./HeaderNav";
+import { HeaderSearchButton, MobileSearch } from "./HeaderSearch";
 import CartPopover from "./CartPopover";
 import NotificationPopover from "./NotificationPopover";
 import AccountMenu, { AccountMenuLinks } from "./AccountMenu";
@@ -64,6 +65,7 @@ export default function SiteHeader() {
       <HeaderNav variant="desktop" pathname={pathname} className="animate-fade-slide-in" />
 
       <div className="hidden animate-fade-slide-in items-center gap-4 lg:flex lg:justify-self-end">
+        <HeaderSearchButton />
         <LanguageSwitcher />
         {user ? (
           <>
@@ -135,6 +137,7 @@ export default function SiteHeader() {
       </button>
 
       <MobileDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+        <MobileSearch onDone={() => setDrawerOpen(false)} />
         <HeaderNav variant="mobile" pathname={pathname} onNavigate={() => setDrawerOpen(false)} />
         <div className="border-t border-border pt-4">
           {user ? (
