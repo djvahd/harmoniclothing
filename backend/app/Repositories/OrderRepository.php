@@ -20,7 +20,7 @@ class OrderRepository
     public function paginateForUser(User $user, int $perPage): LengthAwarePaginator
     {
         return $user->orders()
-            ->with(['items.productVariant.product', 'items.design', 'shipment'])
+            ->with(['items.productVariant.product', 'items.design', 'shipment', 'voucher'])
             ->latest()->latest('id')
             ->paginate($perPage);
     }

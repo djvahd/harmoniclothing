@@ -43,6 +43,15 @@ return [
         'variant_combination_exists' => 'This color/size/cut combination already exists for this product.',
     ],
 
+    'voucher' => [
+        'invalid' => 'Voucher code not found or inactive.',
+        'not_started' => 'This voucher is not valid yet.',
+        'expired' => 'This voucher has expired.',
+        'min_subtotal' => 'Minimum spend for this voucher is Rp :amount.',
+        'quota_reached' => 'This voucher has been fully redeemed.',
+        'already_used' => 'You have already used this voucher.',
+    ],
+
     'order' => [
         'cancel_invalid_status' => 'This order can only be cancelled while its status is Unpaid or Awaiting Approval.',
         'pay_invalid_status' => 'Payment can only be resumed for orders with Unpaid status.',

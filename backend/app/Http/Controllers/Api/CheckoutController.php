@@ -8,9 +8,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BulkCheckoutRequest;
 use App\Http\Requests\CheckoutRequest;
 use App\Http\Requests\ShippingRateRequest;
+use App\Http\Requests\VoucherPreviewRequest;
 use App\Http\Resources\OrderResource;
+use App\Models\CartItem;
 use App\Services\CheckoutService;
 use App\Services\PaymentService;
+use App\Services\VoucherService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -20,6 +23,7 @@ class CheckoutController extends Controller
     public function __construct(
         private readonly CheckoutService $checkout,
         private readonly PaymentService $payments,
+        private readonly VoucherService $vouchers,
     ) {}
 
     /** POST /checkout/shipping-rates — preview courier options before checking out. */
@@ -44,11 +48,38 @@ class CheckoutController extends Controller
             courierCompany: $request->validated('courier_company'),
             courierType: $request->validated('courier_type'),
             notes: $request->validated('notes'),
+            voucherCode: $request->validated('voucher_code'),
         );
 
         $order = $this->checkout->checkout($request->user(), $dto);
 
         return $this->respondWithPayment($order, $request, $request->validated('payment_method'));
+    }
+
+    /**
+     * POST /checkout/voucher/preview — what a code would take off right now. Display only: the order total is
+     * always re-derived (and the voucher re-validated under lock) when the order is created.
+     */
+    public function previewVoucher(VoucherPreviewRequest $request): JsonResponse
+    {
+        $subtotal = CartItem::query()
+            ->where('user_id', $request->user()->id)
+            ->whereIn('id', $request->validated('cart_item_ids'))
+            ->get()
+            ->reduce(fn ($carry, CartItem $item) => bcadd($carry, $item->subtotal(), 2), '0');
+
+        [$voucher, $discount] = $this->vouchers->resolve(
+            $request->validated('code'),
+            $request->user(),
+            $subtotal,
+            (int) $request->validated('shipping_cost', 0),
+        );
+
+        return response()->json(['data' => [
+            'code' => $voucher->code,
+            'type' => $voucher->type,
+            'discount' => $discount,
+        ]]);
     }
 
     /** GET /checkout/payment-methods — channels the customer can pick before the order is created. */

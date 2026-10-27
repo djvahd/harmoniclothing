@@ -12,5 +12,6 @@ class CheckoutDTO
         public readonly string $courierCompany,
         public readonly string $courierType,
         public readonly ?string $notes = null,
+        public readonly ?string $voucherCode = null,
     ) {}
 }

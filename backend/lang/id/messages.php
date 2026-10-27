@@ -43,6 +43,15 @@ return [
         'variant_combination_exists' => 'Kombinasi warna/ukuran/potongan ini sudah ada untuk produk ini.',
     ],
 
+    'voucher' => [
+        'invalid' => 'Kode voucher tidak ditemukan atau tidak aktif.',
+        'not_started' => 'Voucher ini belum berlaku.',
+        'expired' => 'Voucher ini sudah kedaluwarsa.',
+        'min_subtotal' => 'Minimal belanja untuk voucher ini Rp :amount.',
+        'quota_reached' => 'Kuota voucher ini sudah habis.',
+        'already_used' => 'Kamu sudah pernah memakai voucher ini.',
+    ],
+
     'order' => [
         'cancel_invalid_status' => 'Pesanan hanya dapat dibatalkan selama status Belum Dibayar atau Menunggu Approval.',
         'pay_invalid_status' => 'Pembayaran hanya dapat dilanjutkan untuk pesanan berstatus Belum Dibayar.',

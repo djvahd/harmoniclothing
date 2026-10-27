@@ -20,6 +20,8 @@ class OrderResource extends JsonResource
             'notes' => $this->notes,
             'subtotal' => $this->subtotal,
             'shipping_cost' => $this->shipping_cost,
+            'discount_amount' => $this->discount_amount,
+            'voucher_code' => $this->whenLoaded('voucher', fn () => $this->voucher?->code),
             'courier_company' => $this->courier_company,
             'courier_type' => $this->courier_type,
             'total' => $this->total,

@@ -9,10 +9,11 @@ use App\Http\Controllers\Api\AdminDashboardController;
 use App\Http\Controllers\Api\AdminDesignController;
 use App\Http\Controllers\Api\AdminNotificationSettingController;
 use App\Http\Controllers\Api\AdminOrderController;
-use App\Http\Controllers\Api\AdminPayoutController;
 use App\Http\Controllers\Api\AdminPaymentController;
+use App\Http\Controllers\Api\AdminPayoutController;
 use App\Http\Controllers\Api\AdminReportController;
 use App\Http\Controllers\Api\AdminUserController;
+use App\Http\Controllers\Api\AdminVoucherController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BiteshipWebhookController;
 use App\Http\Controllers\Api\BulkPricingController;
@@ -77,6 +78,7 @@ Route::middleware(['auth:sanctum', 'auth.session', 'user.active'])->group(functi
         // 5.2_API_List.md §4 — /checkout (FE-027) and /checkout/bulk (FE-052/056, BR-026: separate flow, never mixed)
         Route::post('/checkout/shipping-rates', [CheckoutController::class, 'shippingRates']);
         Route::get('/checkout/payment-methods', [CheckoutController::class, 'paymentMethods']);
+        Route::post('/checkout/voucher/preview', [CheckoutController::class, 'previewVoucher']); // #98
         Route::post('/checkout', [CheckoutController::class, 'store']);
         Route::post('/checkout/bulk', [CheckoutController::class, 'storeBulk']);
     });
@@ -188,4 +190,8 @@ Route::middleware(['auth:sanctum', 'auth.session', 'user.active', 'admin'])->pre
     Route::get('/payouts', [AdminPayoutController::class, 'index']); // BR-007: manual commission payout
     Route::post('/payouts/{creator}', [AdminPayoutController::class, 'pay']);
     Route::get('/audit-logs', [AdminAuditLogController::class, 'index']); // 2.5_Permission_Matrix.md §10
+
+    Route::get('/vouchers', [AdminVoucherController::class, 'index']); // #98
+    Route::post('/vouchers', [AdminVoucherController::class, 'store']);
+    Route::patch('/vouchers/{voucher}', [AdminVoucherController::class, 'update']);
 });
