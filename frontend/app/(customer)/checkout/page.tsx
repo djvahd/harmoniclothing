@@ -12,9 +12,9 @@ import Button from "@/components/ui/Button";
 import EmptyState from "@/components/ui/EmptyState";
 import LoadingState from "@/components/ui/LoadingState";
 import { getAddresses } from "@/services/account";
-import { checkout, getPaymentMethods, getShippingRates } from "@/services/checkout";
+import { checkout, getPaymentMethods, getShippingRates, previewVoucher } from "@/services/checkout";
 import { payWithSnap } from "@/lib/snap";
-import { getErrorMessage } from "@/lib/api";
+import { ApiError, getErrorMessage } from "@/lib/api";
 import { useCart } from "@/hooks/useCart";
 
 function CheckoutPageContent() {
@@ -41,6 +41,11 @@ function CheckoutPageContent() {
   const [courier, setCourier] = useState<{ company: string; type: string } | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
   const [orderNotes, setOrderNotes] = useState("");
+  const [voucherInput, setVoucherInput] = useState("");
+  const [voucher, setVoucher] = useState<{ code: string; type: string } | null>(null);
+  const [voucherDiscount, setVoucherDiscount] = useState(0);
+  const [voucherError, setVoucherError] = useState<string | null>(null);
+  const [voucherChecking, setVoucherChecking] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -81,6 +86,40 @@ function CheckoutPageContent() {
         ?.price ?? 0)
     : 0;
 
+  async function applyVoucher() {
+    const code = voucherInput.trim();
+    if (!code || cartItemIds.length === 0) return;
+    setVoucherChecking(true);
+    setVoucherError(null);
+    try {
+      const { data } = await previewVoucher({ code, cart_item_ids: cartItemIds, shipping_cost: shippingCost });
+      setVoucher({ code: data.code, type: data.type });
+      setVoucherDiscount(Number(data.discount));
+      setVoucherInput("");
+    } catch (err) {
+      setVoucher(null);
+      setVoucherDiscount(0);
+      setVoucherError(getErrorMessage(err, tCommon("errorGeneric")));
+    } finally {
+      setVoucherChecking(false);
+    }
+  }
+
+  function removeVoucher() {
+    setVoucher(null);
+    setVoucherDiscount(0);
+    setVoucherError(null);
+  }
+
+  // A free-shipping code is worth whatever the chosen courier costs, so re-price it when the courier changes.
+  const cartKey = cartItemIds.join(",");
+  useEffect(() => {
+    if (voucher?.type !== "free_shipping") return;
+    previewVoucher({ code: voucher.code, cart_item_ids: cartKey.split(",").map(Number), shipping_cost: shippingCost })
+      .then(({ data }) => setVoucherDiscount(Number(data.discount)))
+      .catch(() => {});
+  }, [voucher, shippingCost, cartKey]);
+
   async function handleSubmit() {
     if (items.length === 0) return;
     if (!addressId) {
@@ -100,6 +139,7 @@ function CheckoutPageContent() {
         courier_company: selectedCourier.company,
         courier_type: selectedCourier.type,
         payment_method: selectedPayment,
+        voucher_code: voucher?.code,
         notes: orderNotes.trim() || undefined,
       });
       if (order.midtrans_redirect_url) {
@@ -108,7 +148,13 @@ function CheckoutPageContent() {
         router.push(`/account/orders/${order.id}`);
       }
     } catch (err) {
-      setError(getErrorMessage(err, tCommon("errorGeneric")));
+      if (err instanceof ApiError && err.errors?.voucher_code) {
+        // The code stopped being valid between preview and checkout (quota, expiry): drop it and say why.
+        removeVoucher();
+        setVoucherError(err.errors.voucher_code[0]);
+      } else {
+        setError(getErrorMessage(err, tCommon("errorGeneric")));
+      }
     } finally {
       setLoading(false);
     }
@@ -253,6 +299,44 @@ function CheckoutPageContent() {
               )}
             </div>
           ))}
+          <div className="flex flex-col gap-2 border-t border-border pt-3">
+            <label htmlFor="voucher-code" className="font-body text-sm font-medium text-text-primary">
+              {t("voucher")}
+            </label>
+            {voucher ? (
+              <div className="flex items-center justify-between rounded-sm border border-accent bg-accent/5 px-3 py-2 font-body text-sm">
+                <span className="font-semibold text-text-primary">{voucher.code}</span>
+                <button type="button" onClick={removeVoucher} className="text-xs font-medium text-primary hover:underline">
+                  {t("voucherRemove")}
+                </button>
+              </div>
+            ) : (
+              <form
+                className="flex gap-2"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  applyVoucher();
+                }}
+              >
+                <input
+                  id="voucher-code"
+                  value={voucherInput}
+                  onChange={(e) => setVoucherInput(e.target.value.toUpperCase())}
+                  placeholder={t("voucherPlaceholder")}
+                  maxLength={40}
+                  className="min-w-0 flex-1 rounded-sm border border-border bg-surface px-3 py-2 font-body text-sm uppercase text-text-primary outline-none transition-colors hover:border-primary focus:border-primary"
+                />
+                <Button type="submit" variant="secondary" loading={voucherChecking} disabled={!voucherInput.trim()}>
+                  {t("voucherApply")}
+                </Button>
+              </form>
+            )}
+            {voucherError && (
+              <p role="alert" className="font-body text-xs text-danger">
+                {voucherError}
+              </p>
+            )}
+          </div>
           <div className="border-t border-border pt-3">
             <PriceSummaryRow label={t("subtotal")} amount={subtotal} />
             {selectedCourier ? (
@@ -264,7 +348,10 @@ function CheckoutPageContent() {
               </div>
             )}
           </div>
-          <PriceSummaryRow label={t("total")} amount={subtotal + shippingCost} emphasis />
+          {voucherDiscount > 0 && (
+            <PriceSummaryRow label={t("voucherDiscount", { code: voucher?.code ?? "" })} amount={-voucherDiscount} />
+          )}
+          <PriceSummaryRow label={t("total")} amount={subtotal + shippingCost - voucherDiscount} emphasis />
           {error && <p className="font-body text-xs text-danger">{error}</p>}
           <Button fullWidth loading={loading} disabled={items.length === 0} onClick={handleSubmit}>
             {t("createOrder")}

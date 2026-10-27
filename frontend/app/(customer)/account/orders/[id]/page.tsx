@@ -208,6 +208,9 @@ export default function DetailPesananPage() {
         <p className="font-heading text-lg font-semibold text-text-primary">{t("summary")}</p>
         <PriceSummaryRow label={t("subtotal")} amount={order.subtotal} />
         <PriceSummaryRow label={t("shippingCost")} amount={order.shipping_cost} />
+        {Number(order.discount_amount) > 0 && (
+          <PriceSummaryRow label={t("discount", { code: order.voucher_code ?? "" })} amount={-Number(order.discount_amount)} />
+        )}
         <div className="border-t border-border pt-3">
           <PriceSummaryRow label={t("total")} amount={order.total} emphasis />
         </div>

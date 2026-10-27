@@ -604,6 +604,11 @@
       "noRatesAvailable": "Kurir tidak tersedia untuk alamat ini.",
       "changeAddress": "Ubah alamat",
       "shippingPending": "Pilih kurir",
+      "voucher": "Kode Voucher",
+      "voucherPlaceholder": "Masukkan kode",
+      "voucherApply": "Pakai",
+      "voucherRemove": "Hapus",
+      "voucherDiscount": "Voucher {code}",
       "selectAddressFirst": "Pilih alamat pengiriman untuk melihat pilihan kurir.",
       "orderSummary": "Ringkasan Pesanan",
       "notesPrefix": "Catatan:",
@@ -755,6 +760,7 @@
       "summary": "Ringkasan",
       "subtotal": "Subtotal",
       "shippingCost": "Ongkos Kirim",
+      "discount": "Voucher {code}",
       "total": "Total",
       "trackingNumber": "Resi",
       "cancelConfirmTitle": "Batalkan pesanan?",
@@ -793,6 +799,7 @@
       "paidBadge": "Lunas",
       "subtotal": "Subtotal",
       "shippingCost": "Ongkos Kirim",
+      "discount": "Voucher {code}",
       "totalPaid": "Total Dibayar"
     },
     "bulkOrder": {
