@@ -33,7 +33,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
             {t("guestRegister")}
           </Button>
         </div>
-        <Link href="/catalog" className="font-body text-sm font-medium text-primary hover:underline">
+        <Link href="/produk" className="font-body text-sm font-medium text-primary hover:underline">
           {t("guestCatalog")}
         </Link>
       </div>

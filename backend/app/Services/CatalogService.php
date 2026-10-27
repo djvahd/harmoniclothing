@@ -46,6 +46,12 @@ class CatalogService
         return $this->products->paginateReviews($slug, $perPage);
     }
 
+    /** @return array<int, int> review count per star, 5 down to 1 */
+    public function productRatingDistribution(string $slug): array
+    {
+        return $this->products->ratingDistribution($slug);
+    }
+
     /** GET /admin/catalog/products — admin management list (gap-filled), includes inactive products. */
     public function listProductsForAdmin(?string $categorySlug, int $perPage): LengthAwarePaginator
     {

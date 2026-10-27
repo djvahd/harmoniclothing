@@ -6,9 +6,9 @@ const FOOTER_COLUMNS = [
   {
     titleKey: "productsTitle",
     links: [
-      { href: "/catalog?kategori=t-shirt", key: "tshirt" },
-      { href: "/catalog?kategori=hoodie", key: "hoodie" },
-      { href: "/catalog?kategori=jacket", key: "jacket" },
+      { href: "/produk?kategori=t-shirt", key: "tshirt" },
+      { href: "/produk?kategori=hoodie", key: "hoodie" },
+      { href: "/produk?kategori=jacket", key: "jacket" },
     ],
   },
   {

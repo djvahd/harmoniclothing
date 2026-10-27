@@ -24,7 +24,7 @@ export default function PopularProductsSection() {
               {t("title")}
             </h2>
           </div>
-          <Link href="/catalog" className="inline-flex min-h-11 shrink-0 items-center font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4">
+          <Link href="/produk" className="inline-flex min-h-11 shrink-0 items-center font-body text-sm font-medium text-primary transition-colors hover:text-accent hover:underline hover:underline-offset-4">
             {t("viewAll")}
           </Link>
         </div>
@@ -49,7 +49,7 @@ export default function PopularProductsSection() {
                 </div>
               ))}
               <Link
-                href="/catalog?sort=populer"
+                href="/produk?sort=populer"
                 aria-label={t("viewAllAria")}
                 className="flex size-11 shrink-0 snap-start items-center justify-center rounded-full border border-border bg-surface text-text-primary transition-all duration-150 hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-text-on-accent hover:shadow-md active:translate-y-0 active:scale-95"
               >

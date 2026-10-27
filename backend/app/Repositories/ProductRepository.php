@@ -167,14 +167,34 @@ class ProductRepository
     /** GET /catalog/products/{slug}/reviews — 5.4, joins back through order_items/product_variants to this product's slug. */
     public function paginateReviews(string $slug, int $perPage): LengthAwarePaginator
     {
-        return Review::query()
+        return $this->reviewsFor($slug)
             ->with('user')
-            ->join('order_items', 'order_items.id', '=', 'reviews.order_item_id')
-            ->join('product_variants', 'product_variants.id', '=', 'order_items.product_variant_id')
-            ->join('products', 'products.id', '=', 'product_variants.product_id')
-            ->where('products.slug', $slug)
             ->select('reviews.*')
             ->latest('reviews.created_at')
             ->paginate($perPage);
+    }
+
+    /**
+     * Review count per star (1-5, zero-filled) for the "Ulasan" tab summary.
+     *
+     * @return array<int, int>
+     */
+    public function ratingDistribution(string $slug): array
+    {
+        $counts = $this->reviewsFor($slug)
+            ->selectRaw('reviews.rating as rating, count(*) as total')
+            ->groupBy('reviews.rating')
+            ->pluck('total', 'rating');
+
+        return collect(range(5, 1))->mapWithKeys(fn (int $star) => [$star => (int) ($counts[$star] ?? 0)])->all();
+    }
+
+    private function reviewsFor(string $slug): Builder
+    {
+        return Review::query()
+            ->join('order_items', 'order_items.id', '=', 'reviews.order_item_id')
+            ->join('product_variants', 'product_variants.id', '=', 'order_items.product_variant_id')
+            ->join('products', 'products.id', '=', 'product_variants.product_id')
+            ->where('products.slug', $slug);
     }
 }

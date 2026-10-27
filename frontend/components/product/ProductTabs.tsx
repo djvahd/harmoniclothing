@@ -62,6 +62,7 @@ export function ReviewsTabContent({
   reviews,
   reviewsLoading,
   meta,
+  distribution,
   onPageChange,
 }: {
   hasRating: boolean;
@@ -71,13 +72,40 @@ export function ReviewsTabContent({
   reviews: Review[];
   reviewsLoading: boolean;
   meta?: PaginationMeta;
+  /** Review count per star ("5".."1"); omitted for items whose endpoint does not report it. */
+  distribution?: Record<string, number>;
   onPageChange: (page: number) => void;
 }) {
   const t = useTranslations("product.tabs");
   if (!hasRating) return <p>{emptyMessage}</p>;
+
+  const total = distribution ? Object.values(distribution).reduce((sum, n) => sum + n, 0) : 0;
+  const satisfied = (distribution?.["5"] ?? 0) + (distribution?.["4"] ?? 0);
   return (
     <div className="flex flex-col gap-4">
       <p>{t("ratingSummary", { rating: ratingAverage ?? 0, count: reviewCount ?? 0 })}</p>
+      {distribution && total > 0 && (
+        <div className="flex flex-col gap-2 rounded-md border border-border p-4">
+          <p className="font-medium text-text-primary">{t("satisfiedBuyers", { percent: Math.round((satisfied / total) * 100) })}</p>
+          {[5, 4, 3, 2, 1].map((star) => {
+            const count = distribution[String(star)] ?? 0;
+            return (
+              <div key={star} className="flex items-center gap-2 text-xs">
+                <span className="flex w-8 shrink-0 items-center gap-0.5 text-text-secondary">
+                  <Star className="size-3 fill-warning text-warning" />
+                  {star}
+                </span>
+                <div className="h-2 flex-1 overflow-hidden rounded-full bg-border">
+                  <div className="h-full rounded-full bg-warning" style={{ width: `${(count / total) * 100}%` }} />
+                </div>
+                <span className="w-12 shrink-0 text-right text-text-secondary">
+                  {Math.round((count / total) * 100)}% ({count})
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
       {reviewsLoading && <p className="text-xs text-text-secondary">{t("loadingReviews")}</p>}
       <div className="flex flex-col divide-y divide-border">
         {reviews.map((review) => (

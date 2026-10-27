@@ -117,7 +117,7 @@ function BulkOrderForm() {
     return (
       <DetailNotFound
         message={t("productNotFound")}
-        backHref="/catalog"
+        backHref="/produk"
         backLabel={t("backToCatalog")}
       />
     );

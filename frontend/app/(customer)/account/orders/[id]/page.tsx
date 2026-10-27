@@ -243,7 +243,13 @@ export default function DetailPesananPage() {
             </>
           )}
           {(order.status === "menunggu_approval" || order.status === "belum_dibayar") && (
-            <Button variant="danger" loading={loading} onClick={() => setCancelOpen(true)}>
+            // Outlined, not solid red, so it does not compete with "Pay now"; the confirm dialog still guards it.
+            <Button
+              variant="secondary"
+              className="mt-2 !border-danger !text-danger hover:!bg-danger hover:!text-danger-fg"
+              loading={loading}
+              onClick={() => setCancelOpen(true)}
+            >
               {t("cancelOrder")}
             </Button>
           )}

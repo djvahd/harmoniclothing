@@ -63,6 +63,7 @@ class CatalogController extends Controller
                 'current_page' => $reviews->currentPage(),
                 'per_page' => $reviews->perPage(),
                 'total' => $reviews->total(),
+                'rating_distribution' => $this->catalog->productRatingDistribution($slug),
             ],
         ]);
     }

@@ -58,7 +58,7 @@ function MarketplaceDesainPageContent() {
             >
               <Button variant="primary">{t("ctaBecomeCreator")}</Button>
             </Link>
-            <Button href="/catalog" variant="secondary">{t("ctaViewProducts")}</Button>
+            <Button href="/produk" variant="secondary">{t("ctaViewProducts")}</Button>
           </div>
         </div>
       </section>
