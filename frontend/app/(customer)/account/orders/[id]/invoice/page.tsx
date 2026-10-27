@@ -79,6 +79,9 @@ export default function InvoicePage() {
         <div className="border-t border-border pt-4">
           <PriceSummaryRow label={t("subtotal")} amount={order.subtotal} />
           <PriceSummaryRow label={t("shippingCost")} amount={order.shipping_cost} />
+          {Number(order.discount_amount) > 0 && (
+            <PriceSummaryRow label={t("discount", { code: order.voucher_code ?? "" })} amount={-Number(order.discount_amount)} />
+          )}
           <div className="mt-2 border-t border-border pt-2">
             <PriceSummaryRow label={t("totalPaid")} amount={order.total} emphasis />
           </div>

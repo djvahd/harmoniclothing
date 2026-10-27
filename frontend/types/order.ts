@@ -67,6 +67,9 @@ export interface Order {
   notes: string | null;
   subtotal: number;
   shipping_cost: number;
+  /** Voucher discount already taken off `total`; "0.00" when none. */
+  discount_amount?: number | string;
+  voucher_code?: string | null;
   courier_company: string | null;
   courier_type: string | null;
   total: number;

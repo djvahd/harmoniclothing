@@ -602,6 +602,11 @@
       "noRatesAvailable": "No courier available for this address.",
       "changeAddress": "Change address",
       "shippingPending": "Select a courier",
+      "voucher": "Voucher Code",
+      "voucherPlaceholder": "Enter code",
+      "voucherApply": "Apply",
+      "voucherRemove": "Remove",
+      "voucherDiscount": "Voucher {code}",
       "selectAddressFirst": "Select a shipping address to see courier options.",
       "orderSummary": "Order Summary",
       "notesPrefix": "Notes:",
@@ -751,6 +756,7 @@
       "summary": "Summary",
       "subtotal": "Subtotal",
       "shippingCost": "Shipping Cost",
+      "discount": "Voucher {code}",
       "total": "Total",
       "trackingNumber": "Tracking No.",
       "cancelConfirmTitle": "Cancel this order?",
@@ -789,6 +795,7 @@
       "paidBadge": "Paid",
       "subtotal": "Subtotal",
       "shippingCost": "Shipping Cost",
+      "discount": "Voucher {code}",
       "totalPaid": "Total Paid"
     },
     "bulkOrder": {

@@ -8,6 +8,7 @@ interface CheckoutPayload {
   courier_company: string;
   courier_type: string;
   payment_method?: string;
+  voucher_code?: string;
   notes?: string;
 }
 
@@ -25,6 +26,18 @@ export function getShippingRates(payload: ShippingRatePayload) {
 /** GET /checkout/payment-methods — channels the customer can pick before the order is created. */
 export function getPaymentMethods() {
   return apiFetch<{ data: PaymentMethod[] }>("/checkout/payment-methods");
+}
+
+interface VoucherPreview {
+  code: string;
+  type: "nominal" | "percent" | "free_shipping";
+  /** Whole rupiah, as a string (bcmath). */
+  discount: string;
+}
+
+/** POST /checkout/voucher/preview — what a code would take off now. Display only; checkout re-validates it. */
+export function previewVoucher(payload: { code: string; cart_item_ids: number[]; shipping_cost?: number }) {
+  return apiFetch<{ data: VoucherPreview }>("/checkout/voucher/preview", { method: "POST", body: payload });
 }
 
 export function checkout(payload: CheckoutPayload) {
