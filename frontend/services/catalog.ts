@@ -46,6 +46,13 @@ export function getProductBySlug(slug: string) {
   return apiFetch<{ data: Product }>(`/catalog/products/${slug}`);
 }
 
+/** Review count per star ("5" down to "1"), returned in `meta` by the product reviews endpoint. */
+export type RatingDistribution = Record<string, number>;
+
+export type ProductReviewsResponse = Omit<Paginated<Review>, "meta"> & {
+  meta: Paginated<Review>["meta"] & { rating_distribution?: RatingDistribution };
+};
+
 export function getProductReviews(slug: string, params?: { page?: number; per_page?: number }) {
-  return apiFetch<Paginated<Review>>(`/catalog/products/${slug}/reviews${buildQuery(params)}`);
+  return apiFetch<ProductReviewsResponse>(`/catalog/products/${slug}/reviews${buildQuery(params)}`);
 }
