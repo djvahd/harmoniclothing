@@ -21,7 +21,9 @@ class OrderResource extends JsonResource
             'subtotal' => $this->subtotal,
             'shipping_cost' => $this->shipping_cost,
             'discount_amount' => $this->discount_amount,
-            'voucher_code' => $this->whenLoaded('voucher', fn () => $this->voucher?->code),
+            // Lazy-loads the voucher only for orders that used one. A plain value, not when(): CheckoutController
+            // spreads toArray(), which would leave a MissingValue object in the JSON.
+            'voucher_code' => $this->voucher_id !== null ? $this->voucher?->code : null,
             'courier_company' => $this->courier_company,
             'courier_type' => $this->courier_type,
             'total' => $this->total,
