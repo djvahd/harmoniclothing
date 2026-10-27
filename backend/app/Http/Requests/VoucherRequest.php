@@ -21,6 +21,20 @@ class VoucherRequest extends FormRequest
         }
     }
 
+    /** Readable names for the default validation messages ("kode voucher sudah digunakan"). */
+    public function attributes(): array
+    {
+        return [
+            'code' => __('messages.voucher.attr_code'),
+            'value' => __('messages.voucher.attr_value'),
+            'max_discount' => __('messages.voucher.attr_max_discount'),
+            'min_subtotal' => __('messages.voucher.attr_min_subtotal'),
+            'quota' => __('messages.voucher.attr_quota'),
+            'starts_at' => __('messages.voucher.attr_starts_at'),
+            'expires_at' => __('messages.voucher.attr_expires_at'),
+        ];
+    }
+
     public function rules(): array
     {
         $required = $this->isMethod('post') ? 'required' : 'sometimes';

@@ -44,6 +44,13 @@ return [
     ],
 
     'voucher' => [
+        'attr_code' => 'voucher code',
+        'attr_value' => 'amount',
+        'attr_max_discount' => 'maximum discount',
+        'attr_min_subtotal' => 'minimum spend',
+        'attr_quota' => 'quota',
+        'attr_starts_at' => 'start date',
+        'attr_expires_at' => 'expiry date',
         'invalid' => 'Voucher code not found or inactive.',
         'not_started' => 'This voucher is not valid yet.',
         'expired' => 'This voucher has expired.',

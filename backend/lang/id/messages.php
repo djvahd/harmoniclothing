@@ -44,6 +44,13 @@ return [
     ],
 
     'voucher' => [
+        'attr_code' => 'kode voucher',
+        'attr_value' => 'nominal',
+        'attr_max_discount' => 'batas potongan',
+        'attr_min_subtotal' => 'minimal belanja',
+        'attr_quota' => 'kuota',
+        'attr_starts_at' => 'mulai berlaku',
+        'attr_expires_at' => 'tanggal berakhir',
         'invalid' => 'Kode voucher tidak ditemukan atau tidak aktif.',
         'not_started' => 'Voucher ini belum berlaku.',
         'expired' => 'Voucher ini sudah kedaluwarsa.',
