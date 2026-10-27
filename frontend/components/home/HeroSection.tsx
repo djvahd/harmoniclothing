@@ -131,7 +131,8 @@ export default function HeroSection() {
               <br />
               {t("headline2")}
               <br />
-              <span className="text-accent">{t("headline3")}</span>
+              {/* text-accent (mint on near-white) is only ~2:1, below even the 3:1 large-text minimum */}
+              <span className="text-primary">{t("headline3")}</span>
             </h1>
           </Reveal>
           <Reveal delay={120}>
@@ -139,8 +140,8 @@ export default function HeroSection() {
           </Reveal>
           <Reveal delay={240}>
             <div className="flex flex-wrap gap-3">
-              <Button href="/catalog" variant="primary">{t("ctaCustomDesign")}</Button>
-              <Button href="/catalog" variant="secondary">{t("ctaExploreProducts")}</Button>
+              <Button href="/produk" variant="primary">{t("ctaCustomDesign")}</Button>
+              <Button href="/produk" variant="secondary">{t("ctaExploreProducts")}</Button>
             </div>
           </Reveal>
           <Reveal delay={360}>

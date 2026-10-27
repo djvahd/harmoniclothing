@@ -39,7 +39,7 @@ export default function ProductCard({ product }: { product: Product }) {
   return (
     <div className="relative w-full max-w-[196px] transition-transform duration-200 hover:-translate-y-0.5">
     <Link
-      href={`/catalog/${product.slug}`}
+      href={`/produk/${product.slug}`}
       className="group flex w-full flex-col gap-[5px] rounded-md border border-border bg-surface p-[14px] transition-all duration-200 hover:border-primary/30 hover:shadow-md"
     >
       <div className="relative h-[155px] w-full shrink-0 overflow-hidden rounded-sm bg-border">
