@@ -89,6 +89,11 @@ class MidtransService
             $items[] = ['id' => 'shipping', 'price' => (int) $order->shipping_cost, 'quantity' => 1, 'name' => 'Ongkos kirim'];
         }
 
+        // Midtrans accepts a negative line, which keeps item_details adding up to gross_amount.
+        if ((int) $order->discount_amount > 0) {
+            $items[] = ['id' => 'discount', 'price' => -(int) $order->discount_amount, 'quantity' => 1, 'name' => 'Diskon voucher'];
+        }
+
         $sum = array_sum(array_map(fn ($i) => $i['price'] * $i['quantity'], $items));
 
         return $items !== [] && $sum === (int) $order->total ? $items : null;

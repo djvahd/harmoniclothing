@@ -29,6 +29,7 @@ class CheckoutRequest extends FormRequest
             'courier_company' => ['required', 'string', 'max:50'],
             'courier_type' => ['required', 'string', 'max:50'],
             'notes' => ['nullable', 'string'],
+            'voucher_code' => ['nullable', 'string', 'max:40'],
             // Optional: omitted keeps every channel open in Snap (older clients, the bulk flow).
             'payment_method' => ['nullable', 'string', Rule::in(array_keys(config('services.midtrans.payment_methods')))],
         ];

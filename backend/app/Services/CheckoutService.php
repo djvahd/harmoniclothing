@@ -29,6 +29,7 @@ class CheckoutService
         private readonly OrderRepository $orders,
         private readonly PricingService $pricing,
         private readonly BiteshipService $biteship,
+        private readonly VoucherService $vouchers,
     ) {}
 
     /**
@@ -44,9 +45,14 @@ class CheckoutService
         $subtotal = $items->reduce(fn ($carry, CartItem $item) => bcadd($carry, $item->subtotal(), 2), '0');
         $totalQuantity = $items->sum('quantity');
         $shippingCost = $this->resolveShippingCost($dto->addressId, $totalQuantity, $dto->courierCompany, $dto->courierType);
-        $total = bcadd($subtotal, (string) $shippingCost, 2);
 
-        return DB::transaction(function () use ($user, $dto, $items, $subtotal, $shippingCost, $total) {
+        return DB::transaction(function () use ($user, $dto, $items, $subtotal, $shippingCost) {
+            // Resolved inside the transaction so the voucher row stays locked until the order exists.
+            [$voucher, $discount] = filled($dto->voucherCode)
+                ? $this->vouchers->resolve($dto->voucherCode, $user, $subtotal, $shippingCost, lock: true)
+                : [null, '0'];
+            $total = bcsub(bcadd($subtotal, (string) $shippingCost, 2), $discount, 2);
+
             $order = $this->orders->create([
                 'user_id' => $user->id,
                 'address_id' => $dto->addressId,
@@ -55,6 +61,8 @@ class CheckoutService
                 'notes' => $dto->notes,
                 'subtotal' => $subtotal,
                 'shipping_cost' => $shippingCost,
+                'discount_amount' => $discount,
+                'voucher_id' => $voucher?->id,
                 'courier_company' => $dto->courierCompany,
                 'courier_type' => $dto->courierType,
                 'total' => $total,
@@ -75,7 +83,7 @@ class CheckoutService
 
             $items->each(fn (CartItem $item) => $item->delete());
 
-            return $order->load('items.productVariant.product', 'items.design');
+            return $order->load('items.productVariant.product', 'items.design', 'voucher');
         });
     }
 

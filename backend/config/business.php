@@ -45,4 +45,10 @@ return [
     */
     'creator_payout_minimum' => (float) env('CREATOR_PAYOUT_MINIMUM', 50000),
 
+    /*
+    | Voucher (#98) — sisa tagihan minimum setelah diskon. Midtrans menolak
+    | gross_amount 0, jadi potongan dibatasi agar total tetap >= nilai ini.
+    */
+    'voucher_min_payable' => (int) env('VOUCHER_MIN_PAYABLE', 1000),
+
 ];
