@@ -131,7 +131,8 @@ export default function HeroSection() {
               <br />
               {t("headline2")}
               <br />
-              <span className="text-accent">{t("headline3")}</span>
+              {/* text-accent (mint on near-white) is only ~2:1, below even the 3:1 large-text minimum */}
+              <span className="text-primary">{t("headline3")}</span>
             </h1>
           </Reveal>
           <Reveal delay={120}>
