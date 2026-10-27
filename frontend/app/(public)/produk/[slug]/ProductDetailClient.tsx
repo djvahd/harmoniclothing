@@ -163,7 +163,7 @@ export default function DetailProdukPage() {
     return (
       <DetailNotFound
         message={t("notFoundMessage")}
-        backHref="/catalog"
+        backHref="/produk"
         backLabel={t("notFoundBackLabel")}
       />
     );
@@ -176,14 +176,14 @@ export default function DetailProdukPage() {
   return (
     <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 px-4 pb-28 pt-10 md:px-20 md:py-10">
       <nav className="flex flex-wrap items-center gap-1.5 font-body text-sm text-text-secondary">
-        <Link href="/catalog" className="transition-colors hover:text-primary">
+        <Link href="/produk" className="transition-colors hover:text-primary">
           {t("breadcrumbCatalog")}
         </Link>
         {product.category && (
           <>
             <ChevronRight className="size-3.5" />
             <Link
-              href={`/catalog?kategori=${product.category.slug}`}
+              href={`/produk?kategori=${product.category.slug}`}
               className="transition-colors hover:text-primary"
             >
               {product.category.name}
@@ -379,7 +379,7 @@ function YouMightLike({ categorySlug, excludeId }: { categorySlug?: string; excl
 
   return (
     <RelatedGrid
-      seeAllHref={categorySlug ? `/catalog?kategori=${categorySlug}` : "/catalog"}
+      seeAllHref={categorySlug ? `/produk?kategori=${categorySlug}` : "/produk"}
       isLoading={isLoading}
       items={items}
       renderItem={(p: Product) => <ProductCard key={p.id} product={p} />}
