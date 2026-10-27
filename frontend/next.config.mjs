@@ -35,6 +35,8 @@ const nextConfig = {
         destination: "https://harmoniclothing.com/:path*",
         permanent: true,
       },
+      // Public product pages moved /catalog -> /produk (query string is preserved).
+      { source: "/catalog/:path*", destination: "/produk/:path*", permanent: true },
     ];
   },
   // Baseline security headers on every response (QC Keamanan #25/#26). Payment

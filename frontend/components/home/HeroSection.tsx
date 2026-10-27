@@ -139,8 +139,8 @@ export default function HeroSection() {
           </Reveal>
           <Reveal delay={240}>
             <div className="flex flex-wrap gap-3">
-              <Button href="/catalog" variant="primary">{t("ctaCustomDesign")}</Button>
-              <Button href="/catalog" variant="secondary">{t("ctaExploreProducts")}</Button>
+              <Button href="/produk" variant="primary">{t("ctaCustomDesign")}</Button>
+              <Button href="/produk" variant="secondary">{t("ctaExploreProducts")}</Button>
             </div>
           </Reveal>
           <Reveal delay={360}>

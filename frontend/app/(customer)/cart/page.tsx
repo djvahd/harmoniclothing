@@ -125,7 +125,7 @@ export default function KeranjangPage() {
           icon={ShoppingCart}
           title={t("empty")}
           action={
-            <Button href="/catalog">{t("startShopping")}</Button>
+            <Button href="/produk">{t("startShopping")}</Button>
           }
         />
       )}

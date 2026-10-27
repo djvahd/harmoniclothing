@@ -5,7 +5,7 @@ const BASE_URL = "https://harmoniclothing.com";
 
 const ROUTES = [
   "",
-  "/catalog",
+  "/produk",
   "/marketplace",
   "/about",
   "/faq",
@@ -31,7 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...ROUTES.map((route) => ({ url: `${BASE_URL}${route}` })),
-    ...(products?.data ?? []).map((p) => ({ url: `${BASE_URL}/catalog/${p.slug}` })),
+    ...(products?.data ?? []).map((p) => ({ url: `${BASE_URL}/produk/${p.slug}` })),
     ...(designs?.data ?? []).map((d) => ({ url: `${BASE_URL}/marketplace/design/${d.slug}` })),
   ];
 }
