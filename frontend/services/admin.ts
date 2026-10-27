@@ -292,6 +292,48 @@ export function payCreator(creatorId: number, reference: string) {
   });
 }
 
+export type VoucherType = "nominal" | "percent" | "free_shipping";
+
+export interface Voucher {
+  id: number;
+  code: string;
+  type: VoucherType;
+  value: string;
+  max_discount: string | null;
+  min_subtotal: string;
+  quota: number | null;
+  /** Redemptions from orders that were not cancelled. */
+  redeemed: number;
+  starts_at: string | null;
+  expires_at: string | null;
+  is_active: boolean;
+}
+
+export interface VoucherInput {
+  code: string;
+  type: VoucherType;
+  value?: number;
+  max_discount?: number | null;
+  min_subtotal?: number;
+  quota?: number | null;
+  starts_at?: string | null;
+  expires_at?: string | null;
+  is_active?: boolean;
+}
+
+/** #98: admin-managed voucher codes. Vouchers are deactivated, never deleted. */
+export function getVouchers() {
+  return apiFetch<Paginated<Voucher>>("/admin/vouchers?per_page=100");
+}
+
+export function createVoucher(payload: VoucherInput) {
+  return apiFetch<{ data: Voucher }>("/admin/vouchers", { method: "POST", body: payload });
+}
+
+export function updateVoucher(id: number, payload: Partial<VoucherInput>) {
+  return apiFetch<{ data: Voucher }>(`/admin/vouchers/${id}`, { method: "PATCH", body: payload });
+}
+
 export function getPayments(params?: { status?: string; page?: number }) {
   return apiFetch<Paginated<Payment>>(`/admin/payments${buildQuery(params)}`);
 }
